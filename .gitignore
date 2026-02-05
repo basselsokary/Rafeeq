@@ -10,3 +10,6 @@ Thumbs.db
 # Secrets
 .env
 .env.*
+
+# Others
+docs/notes.txt
