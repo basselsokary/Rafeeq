@@ -1,6 +1,6 @@
 using Application.DTOs;
 using FluentValidation;
-using static Domain.Constants.DomainConstants.Address;
+using static Domain.Common.Constants.DomainConstants.Address;
 
 namespace Application.Common.Validators;
 

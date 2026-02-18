@@ -4,11 +4,19 @@ namespace Domain.Common;
 
 public abstract class BaseEntity
 {
-    public Guid Id { get; protected set; } = Guid.NewGuid(); 
+    public Guid Id { get; protected set; } 
+    
+    protected BaseEntity()
+    {
+        Id = Guid.NewGuid();
+    }
+    
+    protected BaseEntity(Guid id)
+    {
+        Id = id;
+    }
 
     private readonly List<BaseEvent> _domainEvents = [];
-
-    [NotMapped]
     public IReadOnlyCollection<BaseEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     public void RaiseDomainEvent(BaseEvent domainEvent)

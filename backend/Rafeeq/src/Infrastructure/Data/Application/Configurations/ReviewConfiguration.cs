@@ -1,7 +1,8 @@
-using Domain.Entities;
+using Domain.Entities.PlaceAggregate;
+using Domain.Entities.ReviewAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static Domain.Constants.DomainConstants.Review;
+using static Domain.Common.Constants.DomainConstants.Review;
 
 namespace Infrastructure.Data.Application.Configurations;
 
@@ -12,19 +13,13 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
         builder.Property(r => r.Rating)
             .IsRequired();
 
-        builder.Property(r => r.Comment)
+        builder.Property(r => r.Text)
             .IsRequired(false)
-            .HasMaxLength(CommentMaxLength);
+            .HasMaxLength(MaxTextLength);
 
-        // builder.HasOne<Customer>()
-        //     .WithMany()
-        //     .HasForeignKey(r => r.CustomerId)
-        //     .IsRequired()
-        //     .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasOne<Product>()
+        builder.HasOne<Place>()
             .WithMany(p => p.Reviews)
-            .HasForeignKey(r => r.ProductId)
+            .HasForeignKey(r => r.AttractionId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
     }

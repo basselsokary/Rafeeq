@@ -2,11 +2,22 @@ namespace Domain.Common;
 
 public class BaseAuditableEntity : BaseEntity
 {
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; protected set; } = DateTime.UtcNow;
+    // public string? CreatedBy { get; protected set; }
 
-    public string? CreatedBy { get; set; }
+    public DateTime LastModified { get; protected set; } = DateTime.UtcNow;
+    // public string? LastModifiedBy { get; protected set; }
 
-    public DateTime LastModified { get; set; } = DateTime.UtcNow;
+    protected BaseAuditableEntity() : base()
+    {   
+    }
 
-    public string? LastModifiedBy { get; set; }
+    protected BaseAuditableEntity(Guid id) : base(id)
+    {
+    }
+
+    protected void MarkAsUpdated()
+    {
+        LastModified = DateTime.UtcNow;
+    }
 }

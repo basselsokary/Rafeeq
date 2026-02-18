@@ -44,14 +44,14 @@ public static class DependencyInjection
                 BearerFormat = "JWT",
                 Scheme = "Bearer"
             });
-            option.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+            option.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
-                    new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                    new OpenApiSecurityScheme
                     {
-                        Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                        Reference = new OpenApiReference
                         {
-                            Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                            Type = ReferenceType.SecurityScheme,
                             Id = "Bearer"
                         }
                     },

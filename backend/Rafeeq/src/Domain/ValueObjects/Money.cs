@@ -1,9 +1,13 @@
 using Domain.Common;
+using Domain.Common.Exceptions;
 
 namespace Domain.ValueObjects;
 
-public sealed class Money : ValueObject 
+public class Money : ValueObject 
 {
+    public decimal Amount { get; }
+    public string Currency { get; } = string.Empty;
+    
     private Money() { }
     private Money(decimal amount, string currency)
     {
@@ -11,16 +15,16 @@ public sealed class Money : ValueObject
         Currency = currency;
     }
 
-    public decimal Amount { get; }
-    public string Currency { get; } = string.Empty;
-
-    public static Money Create(decimal amount, string currency = "USD")
+    public static Money Create(decimal amount, string currency = "EGP")
     {
         if (amount < 0)
-            throw new ArgumentException("Amount cannot be negative");
+            throw new BusinessRuleValidationException("Amount cannot be negative.");
 
         if (string.IsNullOrWhiteSpace(currency))
-            throw new ArgumentException("Currency is required");
+            throw new BusinessRuleValidationException("Currency is required.");
+
+        if (currency.Length != 3)
+            throw new BusinessRuleValidationException("Currency must be a 3-letter ISO code.");
 
         return new(amount, currency);
     }
@@ -28,7 +32,7 @@ public sealed class Money : ValueObject
     public Money Add(Money other)
     {
         if (Currency != other.Currency)
-            throw new InvalidOperationException("Cannot add different currencies");
+            throw new InvalidOperationDomainException("Cannot add different currencies.");
 
         return new Money(Amount + other.Amount, Currency);
     }
@@ -36,20 +40,20 @@ public sealed class Money : ValueObject
     public Money Subtract(Money other)
     {
         if (Currency != other.Currency)
-            throw new InvalidOperationException("Cannot subtract different currencies");
+            throw new InvalidOperationDomainException("Cannot subtract different currencies.");
 
         return new Money(Amount - other.Amount, Currency);
     }
 
-    public Money Multiply(int quantity)
+    public Money Multiply(decimal factor)
     {
-        return new Money(Amount * quantity, Currency);
+        return new Money(Amount * factor, Currency);
     }
 
     public Money Divide(decimal divisor)
     {
         if (divisor == 0)
-            throw new DivideByZeroException("Cannot divide by 0.");
+            throw new InvalidOperationDomainException("Cannot divide by 0.");
 
         return new Money(Amount / divisor, Currency);
     }

@@ -1,5 +1,3 @@
-using EventMaster.Application.DTOs;
-
 namespace Application.Common.Interfaces.Repositories;
 
 public interface IRefreshTokenRepository

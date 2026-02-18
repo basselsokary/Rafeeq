@@ -1,7 +1,7 @@
 using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static Domain.Constants.DomainConstants.Money;
+using static Domain.Common.Constants.DomainConstants.Money;
 
 namespace Infrastructure.Data.Configurations.Owened;
 

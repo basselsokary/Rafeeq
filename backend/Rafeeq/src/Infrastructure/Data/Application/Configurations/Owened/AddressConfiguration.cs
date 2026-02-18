@@ -1,7 +1,7 @@
 using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static Domain.Constants.DomainConstants.Address;
+using static Domain.Common.Constants.DomainConstants.Address;
 
 namespace Infrastructure.Data.Application.Configurations.Owened;
 
@@ -20,8 +20,8 @@ public class AddressConfiguration
             .IsRequired()
             .HasMaxLength(CityMaxLength);
 
-        ownerBuilder.Property(a => a.District)
-            .HasColumnName(nameof(Address.District))
+        ownerBuilder.Property(a => a.Region)
+            .HasColumnName(nameof(Address.Region))
             .IsRequired()
             .HasMaxLength(DistrictMaxLength);
 

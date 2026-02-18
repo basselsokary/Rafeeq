@@ -1,6 +1,6 @@
 using Application.DTOs;
 using FluentValidation;
-using static Domain.Constants.DomainConstants.Money;
+using static Domain.Common.Constants.DomainConstants.Money;
 
 namespace Application.Common.Validators;
 

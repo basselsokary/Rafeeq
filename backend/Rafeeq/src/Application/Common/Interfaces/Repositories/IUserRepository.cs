@@ -1,7 +1,4 @@
-﻿using EventMaster.Application.DTOs;
-using EventMaster.Domain.Enums;
-
-namespace Application.Common.Interfaces.Repositories;
+﻿namespace Application.Common.Interfaces.Repositories;
 
 public interface IUserRepository
 {

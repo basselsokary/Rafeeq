@@ -1,29 +1,30 @@
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
-using Application.Common.Interfaces.Infrustructure;
 using System.Reflection;
 using Infrastructure.Data.Application.Configurations;
+using Domain.Enums;
+using Domain.Entities.ReviewAggregate;
+using Domain.Entities.TouristAggregate;
+using Domain.Entities.PlaceAggregate;
 
 namespace Infrastructure.Data.Application.Context;
 
 internal class AppDbContext(DbContextOptions<AppDbContext> options)
-    : DbContext(options), IAppDbContext
+    : DbContext(options)
 {
-    public DbSet<Cart> Carts { get; set; }
-    public DbSet<CartItem> CartItems { get; set; }
-    public DbSet<Order> Orders { get; set; }
-    public DbSet<OrderItem> OrderItems { get; set; }
-    public DbSet<Product> Products { get; set; }
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<CategoryProduct> CategoryProducts { get; set; }
-    public DbSet<Payment> Payments { get; set; }
+    public DbSet<Place> Places { get; set; }
+    public DbSet<PlaceCategory> PlaceCategories { get; set; }
+    public DbSet<PlaceImage> PlaceImages { get; set; }
     public DbSet<Review> Reviews { get; set; }
+    public DbSet<FavouriteAttraction> FavouritePlaces { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<City> Cities { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(
             Assembly.GetExecutingAssembly(),
-            x => x.Namespace == typeof(OrderConfiguration).Namespace);
+            x => x.Namespace == typeof(ReviewConfiguration).Namespace);
 
         base.OnModelCreating(modelBuilder);
     }

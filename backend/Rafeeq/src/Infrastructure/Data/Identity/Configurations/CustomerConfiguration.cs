@@ -2,7 +2,7 @@ using Infrastructure.Data.Application.Configurations.Owened;
 using Infrastructure.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static Domain.Constants.DomainConstants.Customer;
+using static Domain.Common.Constants.DomainConstants.Customer;
 
 namespace Infrastructure.Data.Identity.Configurations;
 

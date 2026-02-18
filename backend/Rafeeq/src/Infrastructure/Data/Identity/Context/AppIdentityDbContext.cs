@@ -3,12 +3,15 @@ using Infrastructure.User;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using Infrastructure.Data.Identity.Configurations;
+using Infrastructure.Authentication;
 
 namespace Infrastructure.Data.Identity.Context;
 
 internal class AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options)
     : IdentityDbContext<ApplicationUser>(options)
 {
+    public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(

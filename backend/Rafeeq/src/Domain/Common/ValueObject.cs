@@ -2,7 +2,7 @@ namespace Domain.Common;
 
 public abstract class ValueObject
 {
-    public static bool operator ==(ValueObject left, ValueObject right)
+    public static bool operator ==(ValueObject? left, ValueObject? right)
     {
         if (left is null ^ right is null)
         {
@@ -12,7 +12,7 @@ public abstract class ValueObject
         return left?.Equals(right) != false;
     }
 
-    public static bool operator !=(ValueObject left, ValueObject right)
+    public static bool operator !=(ValueObject? left, ValueObject? right)
     {
         return !(left == right);
     }
