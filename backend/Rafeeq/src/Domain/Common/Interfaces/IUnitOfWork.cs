@@ -5,12 +5,13 @@ namespace Domain.Common.Interfaces;
 public interface IUnitOfWork : IDisposable
 {
     // Repository access
+    ISiteRepository Sites { get; }
     IAttractionRepository Attractions { get; }
     ICityRepository Cities { get; }
     IContentReportRepository ContentReports { get; }
     IReviewRepository Reviews { get; }
     ISponsorRepository Sponsors { get; }
-    ITouristRepository Tourists { get; }
+    IUserRepository Tourists { get; }
     ITripRepository Trips { get; }
 
     // Transaction management

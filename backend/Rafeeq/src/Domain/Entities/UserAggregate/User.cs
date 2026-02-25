@@ -17,8 +17,8 @@ public class User : BaseAuditableEntity, IAggregateRoot
     public int TotalTrips { get; private set; }
     public int TotalReviews { get; private set; }
 
-    private readonly List<Favourite> _favouriteAttractions = [];
-    public IReadOnlyCollection<Favourite> FavouriteAttractions => _favouriteAttractions.AsReadOnly();
+    private readonly List<Favourite> _favourites = [];
+    public IReadOnlyCollection<Favourite> Favourites => _favourites.AsReadOnly();
 
     private User() { }
     private User(
@@ -94,22 +94,22 @@ public class User : BaseAuditableEntity, IAggregateRoot
         // RaiseDomainEvent(new UserStatusChangedEvent(Id, status));
     }
 
-    public void AddFavoriteAttraction(Guid attractionId)
+    public void AddFavorite(Guid entityId)
     {
-        if (_favouriteAttractions.Any(f => f.AttractionId == attractionId))
-            throw new BusinessRuleValidationException("Attraction is already in favorites.");
+        if (_favourites.Any(f => f.EntityId == entityId))
+            throw new BusinessRuleValidationException("Entity is already in favorites.");
 
-        var favorite = Favourite.Create(attractionId);
-        _favouriteAttractions.Add(favorite);
+        var favorite = Favourite.Create(entityId);
+        _favourites.Add(favorite);
         MarkAsUpdated();
     }
 
-    public void RemoveFavoriteAttraction(Guid attractionId)
+    public void RemoveFavorite(Guid entityId)
     {
-        var favorite = _favouriteAttractions.FirstOrDefault(f => f.AttractionId == attractionId)
-            ?? throw new EntityNotFoundException(nameof(Favourite), attractionId);
+        var favorite = _favourites.FirstOrDefault(f => f.EntityId == entityId)
+            ?? throw new EntityNotFoundException(nameof(Favourite), entityId);
 
-        _favouriteAttractions.Remove(favorite);
+        _favourites.Remove(favorite);
         MarkAsUpdated();
     }
 
@@ -125,8 +125,8 @@ public class User : BaseAuditableEntity, IAggregateRoot
         MarkAsUpdated();
     }
 
-    public bool IsFavoriteAttraction(Guid attractionId)
+    public bool IsFavorite(Guid entityId)
     {
-        return _favouriteAttractions.Any(f => f.AttractionId == attractionId);
+        return _favourites.Any(f => f.EntityId == entityId);
     }
 }

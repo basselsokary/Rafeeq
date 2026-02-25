@@ -1,11 +1,12 @@
 using Domain.Common;
+using Domain.Common.Interfaces;
 using Domain.Enums;
 using Domain.Exceptions;
 using Domain.ValueObjects;
 
 namespace Domain.Entities.AttractionAggregate;
 
-public class Attraction : BaseAuditableEntity
+public class Attraction : BaseAuditableEntity, IAggregateRoot
 {
     public Guid SiteId { get; private set; }
 
