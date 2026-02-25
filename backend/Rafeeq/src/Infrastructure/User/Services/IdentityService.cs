@@ -6,10 +6,10 @@ using SharedKernel.Models;
 using Domain.Enums;
 using Application.Helpers;
 using Microsoft.EntityFrameworkCore;
-using Domain.Errors;
 using Domain.ValueObjects;
 using Application.Mappers;
 using Application.Features.Users.Commands.Register;
+using Domain.Entities.TouristAggregate;
 
 namespace Infrastructure.User.Services;
 

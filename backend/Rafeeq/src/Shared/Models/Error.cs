@@ -4,14 +4,14 @@ public record Error
 {
     public string Code { get; }
 
-    public string Description { get; }
+    public string Message { get; }
 
     public ErrorType Type { get; }
     
-    private Error(string code, string description, ErrorType type)
+    private Error(string code, string message, ErrorType type)
     {
         Code = code;
-        Description = description;
+        Message = message;
         Type = type;
     }
 
@@ -21,21 +21,21 @@ public record Error
         "Null value was provided",
         ErrorType.Failure);
 
-    public static Error Failure(string code, string description) =>
-        new(code, description, ErrorType.Failure);
+    public static Error Failure(string code, string message) =>
+        new(code, message, ErrorType.Failure);
 
-    public static Error Validation(string code, string description) =>
-        new(code, description, ErrorType.Validation);
+    public static Error Validation(string code, string message) =>
+        new(code, message, ErrorType.Validation);
 
-    public static Error Conflict(string code, string description) =>
-        new(code, description, ErrorType.Conflict);
+    public static Error Conflict(string code, string message) =>
+        new(code, message, ErrorType.Conflict);
 
-    public static Error NotFound(string code, string description) =>
-        new(code, description, ErrorType.NotFound);
+    public static Error NotFound(string code, string message) =>
+        new(code, message, ErrorType.NotFound);
 
-    public static Error Unauthorized(string code, string description) =>
-        new(code, description, ErrorType.Unauthorized);
+    public static Error Unauthorized(string code, string message) =>
+        new(code, message, ErrorType.Unauthorized);
 
-    public static Error Forbidden(string code, string description) =>
-        new(code, description, ErrorType.Forbidden);
+    public static Error Forbidden(string code, string message) =>
+        new(code, message, ErrorType.Forbidden);
 }

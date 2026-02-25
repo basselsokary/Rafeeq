@@ -44,7 +44,7 @@ public static class DomainConstants
     {
         public const int MaxUserNameLength = 32;
         public const int MaxFullNameLength = 128;
-        public const int MaxEmailLength = 128;
+        public const int MaxEmailLength = 254; // // Maximum length of emails is 254
         public const int MaxPasswordLength = 64;
         public const int MinPasswordLength = 8;
         public const int MaxPasswordHashLength = 512;

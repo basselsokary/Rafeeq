@@ -1,6 +1,6 @@
 namespace Domain.Enums;
 
-public enum AttractionStatus
+public enum SiteStatus
 {
     Active,
     UnderMaintenance,

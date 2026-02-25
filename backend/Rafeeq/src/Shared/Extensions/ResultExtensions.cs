@@ -1,4 +1,6 @@
-namespace Shared.Models;
+using Shared.Models;
+
+namespace Shared.Extensions;
 
 public static class ResultExtensions
 {

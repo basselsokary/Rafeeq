@@ -8,7 +8,7 @@ public static class UserRoleExtension
     {
         UserRole.Admin => nameof(UserRole.Admin),
         UserRole.Tourist => nameof(UserRole.Tourist),
-        UserRole.Guest => nameof(UserRole.Guest),
+        UserRole.Moderator => nameof(UserRole.Moderator),
         _ => throw new ArgumentOutOfRangeException(nameof(role), role, null)
     };
 
@@ -16,7 +16,7 @@ public static class UserRoleExtension
     {
         nameof(UserRole.Admin) => UserRole.Admin,
         nameof(UserRole.Tourist) => UserRole.Tourist,
-        nameof(UserRole.Guest) => UserRole.Guest,
+        nameof(UserRole.Moderator) => UserRole.Moderator,
         _ => throw new ArgumentOutOfRangeException(roleString, roleString, null)
     };
 }

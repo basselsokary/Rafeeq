@@ -1,4 +1,4 @@
-namespace Domain.Common.Exceptions;
+namespace Domain.Exceptions;
 
 /// <summary>
 /// Base exception for all domain exceptions

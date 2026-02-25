@@ -1,5 +1,6 @@
 using Domain.Common;
-using Domain.Common.Exceptions;
+using Domain.Common.Constants;
+using Domain.Exceptions;
 using System.Text.RegularExpressions;
 
 namespace Domain.ValueObjects;
@@ -25,7 +26,7 @@ public sealed class Email : ValueObject
             throw new BusinessRuleValidationException("Email cannot be empty.");
 
         var normalizedEmail = value.Trim().ToLowerInvariant();
-        if (normalizedEmail.Length > 254) // Maximum length of emails is 254
+        if (normalizedEmail.Length > DomainConstants.User.MaxEmailLength) 
             throw new BusinessRuleValidationException("Email is too long.");
 
         if (!EmailRegex.IsMatch(normalizedEmail))

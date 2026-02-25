@@ -1,8 +1,5 @@
-namespace Domain.Common.Exceptions;
+namespace Domain.Exceptions;
 
-/// <summary>
-/// Exception thrown when an entity is not found
-/// </summary>
 public class EntityNotFoundException : DomainException
 {
     public EntityNotFoundException()

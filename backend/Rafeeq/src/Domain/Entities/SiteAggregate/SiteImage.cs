@@ -1,17 +1,17 @@
 using Domain.Common;
 using Domain.Exceptions;
 
-namespace Domain.Entities.AttractionAggregate;
+namespace Domain.Entities.SiteAggregate;
 
-public class AttractionImage : BaseAuditableEntity
+public class SiteImage : BaseAuditableEntity
 {
     public string ImageUrl { get; private set; } = null!;
     public string? Caption { get; private set; }
     public bool IsMain { get; private set; }
     public int DisplayOrder { get; private set; }
     
-    private AttractionImage() { }
-    private AttractionImage(string imageUrl, bool isMain, string? caption)
+    private SiteImage() { }
+    private SiteImage(string imageUrl, bool isMain, string? caption)
     {
         ImageUrl = imageUrl;
         IsMain = isMain;
@@ -20,12 +20,12 @@ public class AttractionImage : BaseAuditableEntity
         DisplayOrder = 0;
     }
 
-    internal static AttractionImage Create(string imageUrl, bool isMain, string? caption)
+    internal static SiteImage Create(string imageUrl, bool isMain, string? caption)
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
             throw new BusinessRuleValidationException("Image URL cannot be null or empty.");
 
-        return new AttractionImage(imageUrl, isMain, caption?.Trim());
+        return new SiteImage(imageUrl, isMain, caption?.Trim());
     }
 
     internal void SetAsMain(bool isMain)

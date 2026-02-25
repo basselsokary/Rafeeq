@@ -1,12 +1,12 @@
 using Domain.Common;
-using Domain.Common.Exceptions;
+using Domain.Exceptions;
 using Domain.ValueObjects;
 
 namespace Domain.Entities.TripAggregate;
 
-public class TripAttraction : BaseAuditableEntity
+public class TripSite : BaseAuditableEntity
 {
-    public Guid AttractionId { get; private set; }
+    public Guid SiteId { get; private set; }
     public DateTime VisitDate { get; private set; }
     public TimeRange? VisitTimeRange { get; private set; }
     public int EstimatedDurationMinutes { get; private set; }
@@ -16,15 +16,15 @@ public class TripAttraction : BaseAuditableEntity
     public int? ActualDurationMinutes { get; private set; }
     public string? Notes { get; private set; }
 
-    private TripAttraction() { }
-    private TripAttraction(
-        Guid attractionId,
+    private TripSite() { }
+    private TripSite(
+        Guid siteId,
         DateTime visitDate,
         TimeRange? visitTimeRange,
         int estimatedDurationMinutes,
         int displayOrder)
     {
-        AttractionId = attractionId;
+        SiteId = siteId;
         VisitDate = visitDate.Date;
         VisitTimeRange = visitTimeRange;
         EstimatedDurationMinutes = estimatedDurationMinutes;
@@ -33,8 +33,8 @@ public class TripAttraction : BaseAuditableEntity
         IsVisited = false;
     }
 
-    internal static TripAttraction Create(
-        Guid attractionId,
+    internal static TripSite Create(
+        Guid siteId,
         DateTime visitDate,
         TimeRange? visitTimeRange,
         int estimatedDurationMinutes,
@@ -46,8 +46,8 @@ public class TripAttraction : BaseAuditableEntity
         if (displayOrder < 0)
             throw new BusinessRuleValidationException("Display order cannot be negative.");
 
-        return new TripAttraction(
-            attractionId,
+        return new TripSite(
+            siteId,
             visitDate,
             visitTimeRange,
             estimatedDurationMinutes,

@@ -2,17 +2,16 @@ using Domain.Repositories;
 
 namespace Domain.Common.Interfaces;
 
-/// <summary>
-/// Unit of Work pattern interface for transaction management
-/// </summary>
 public interface IUnitOfWork : IDisposable
 {
     // Repository access
-    IAttractionRepository Places { get; }
-    ITouristRepository Tourists { get; }
-    ITripRepository Trips { get; }
+    IAttractionRepository Attractions { get; }
+    ICityRepository Cities { get; }
+    IContentReportRepository ContentReports { get; }
     IReviewRepository Reviews { get; }
     ISponsorRepository Sponsors { get; }
+    ITouristRepository Tourists { get; }
+    ITripRepository Trips { get; }
 
     // Transaction management
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
@@ -21,5 +20,5 @@ public interface IUnitOfWork : IDisposable
     Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
 
     /// Generic repository access
-    // IEntityBaseRepository<T> Repository<T>() where T : BaseEntity;
+    IBaseRepository<T> Repository<T>() where T : IAggregateRoot;
 }

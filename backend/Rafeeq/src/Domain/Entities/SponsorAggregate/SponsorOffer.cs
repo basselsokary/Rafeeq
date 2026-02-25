@@ -1,5 +1,5 @@
 using Domain.Common;
-using Domain.Common.Exceptions;
+using Domain.Exceptions;
 using Domain.ValueObjects;
 
 namespace Domain.Entities.SponsorAggregate;

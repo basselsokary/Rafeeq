@@ -1,16 +1,16 @@
 namespace Domain.Enums;
-
 public enum AttractionType
 {
-    Historical,
-    Museum,
+    Unknown,
+    Sculpture,
+    Painting,
+    Pottery,
+    Jewelry,
+    Textile,
+    Coin,
+    Manuscript,
+    Tool,
+    Weapon,
     Religious,
-    Archaeological,
-    Cultural,
-    Natural,
-    Entertainment,
-    Monument,
-    Palace,
-    Temple,
-    Other
+    Decorative
 }

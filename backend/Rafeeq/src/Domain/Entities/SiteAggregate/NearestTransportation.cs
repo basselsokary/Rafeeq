@@ -1,9 +1,9 @@
 using Domain.Common;
-using Domain.Common.Exceptions;
+using Domain.Exceptions;
 using Domain.Enums;
 using Domain.ValueObjects;
 
-namespace Domain.Entities.AttractionAggregate;
+namespace Domain.Entities.SiteAggregate;
 
 public class NearestTransportation : BaseAuditableEntity
 {

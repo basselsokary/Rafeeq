@@ -1,8 +1,5 @@
-namespace Domain.Common.Exceptions;
+namespace Domain.Exceptions;
 
-/// <summary>
-/// Exception thrown when a business rule is violated
-/// </summary>
 public class BusinessRuleValidationException : DomainException
 {
     public BusinessRuleValidationException(string message) : base(message)

@@ -2,7 +2,7 @@ using Domain.Common.Interfaces;
 using Domain.Common;
 using Domain.Enums;
 using Domain.ValueObjects;
-using Domain.Common.Exceptions;
+using Domain.Exceptions;
 using static Domain.Common.Constants.DomainConstants.Review;
 
 namespace Domain.Entities.SponsorAggregate;

@@ -57,3 +57,8 @@ artifacts/
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
+
+
+#Temporary
+src/Domain/Events
+src/Domain/Services

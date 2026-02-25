@@ -1,30 +1,30 @@
 using Domain.Common;
-using Domain.Common.Exceptions;
+using Domain.Exceptions;
 using Domain.Enums;
 
-namespace Domain.Entities.AttractionAggregate;
+namespace Domain.Entities.SiteAggregate;
 
-public class AttractionFacility : BaseAuditableEntity
+public class SiteFacility : BaseAuditableEntity
 {
     public string Name { get; private set; } = null!;
     public string? Description { get; private set; }
     public FacilityType Type { get; set; }
     public bool IsAvailable { get; private set; }
 
-    private AttractionFacility() { }
-    private AttractionFacility(string name, FacilityType type, string? description)
+    private SiteFacility() { }
+    private SiteFacility(string name, FacilityType type, string? description)
     {
         Name = name;
         Description = description;
         IsAvailable = true;
     }
 
-    public static AttractionFacility Create(string name, FacilityType type, string? description = null)
+    public static SiteFacility Create(string name, FacilityType type, string? description = null)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new BusinessRuleValidationException("Facility name cannot be empty.");
 
-        return new AttractionFacility(name.Trim(), type, description?.Trim());
+        return new SiteFacility(name.Trim(), type, description?.Trim());
     }
 
     public void Update(string name, string? description)
