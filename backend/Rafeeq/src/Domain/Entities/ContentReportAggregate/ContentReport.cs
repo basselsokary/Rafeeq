@@ -1,9 +1,8 @@
 using Domain.Common;
 using Domain.Common.Constants;
-using Domain.Common.Exceptions;
 using Domain.Common.Interfaces;
 using Domain.Enums;
-using Domain.Events;
+using Shared.Models;
 
 namespace Domain.Entities.ContentReportAggregate;
 
@@ -40,14 +39,14 @@ public class ContentReport : BaseAuditableEntity, IAggregateRoot
         Priority = CalculatePriority(reason);
     }
 
-    public static ContentReport Create(
+    public static Result<ContentReport> Create(
         Guid reportedBy,
         Guid reportedEntityId,
         ReportReason reason,
         string description)
     {
         if (string.IsNullOrWhiteSpace(description))
-            throw new BusinessRuleValidationException("Report description cannot be empty.");
+            return ContentReportErrors.DescriptionRequired;
 
         var report = new ContentReport(
             reportedBy,
@@ -55,15 +54,15 @@ public class ContentReport : BaseAuditableEntity, IAggregateRoot
             reason,
             description.Trim());
 
-        report.RaiseDomainEvent(new ContentReportedEvent(report.Id, report.ReportedEntityId));
+        // report.RaiseDomainEvent(new ContentReportedEvent(report.Id, report.ReportedEntityId));
 
         return report;
     }
 
-    public void Solve(Guid reviewerId, ModerationAction action, string? notes = null)
+    public Result Solve(Guid reviewerId, ModerationAction action, string? notes = null)
     {
         if (Status != ReportStatus.Pending && Status != ReportStatus.UnderReview)
-            throw new InvalidOperationDomainException("Only pending or under review reports can be reviewed.");
+            return ContentReportErrors.CantBeSolved;
 
         ReviewedBy = reviewerId;
         ReviewedAt = DateTime.UtcNow;
@@ -73,24 +72,28 @@ public class ContentReport : BaseAuditableEntity, IAggregateRoot
         
         MarkAsUpdated();
 
-        RaiseDomainEvent(new ContentReportResolvedEvent(Id, action));
+        // RaiseDomainEvent(new ContentReportResolvedEvent(Id, action));
+
+        return Result.Success();
     }
 
-    public void MarkAsUnderReview(Guid reviewerId)
+    public Result MarkAsUnderReview(Guid reviewerId)
     {
         if (Status != ReportStatus.Pending)
-            throw new InvalidOperationDomainException("Only pending reports can be marked as under review.");
+            return ContentReportErrors.CantBeReviewed;
 
         Status = ReportStatus.UnderReview;
         ReviewedBy = reviewerId;
         
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void Dismiss(Guid reviewerId, string reason)
+    public Result Dismiss(Guid reviewerId, string reason)
     {
         if (string.IsNullOrWhiteSpace(reason))
-            throw new BusinessRuleValidationException("Dismissal reason cannot be empty.");
+            return ContentReportErrors.CantBeDismissed;
 
         ReviewedBy = reviewerId;
         ReviewedAt = DateTime.UtcNow;
@@ -98,6 +101,8 @@ public class ContentReport : BaseAuditableEntity, IAggregateRoot
         ReviewNotes = reason.Trim();
         
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
     public void Escalate()

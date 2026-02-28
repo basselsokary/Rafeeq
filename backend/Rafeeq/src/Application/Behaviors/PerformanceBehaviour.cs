@@ -4,7 +4,7 @@ using Application.Common.Interfaces.Messaging.Behavior;
 using Application.Common.Interfaces.Messaging.Requests.Base;
 using Microsoft.Extensions.Logging;
 
-namespace Application.Common.Behaviors;
+namespace Application.Behaviors;
 
 public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>

@@ -1,5 +1,6 @@
 using Domain.Common;
 using Domain.Exceptions;
+using Shared.Models;
 
 namespace Domain.Entities.AttractionAggregate;
 
@@ -20,10 +21,10 @@ public class AttractionImage : BaseAuditableEntity
         DisplayOrder = 0;
     }
 
-    internal static AttractionImage Create(string imageUrl, bool isMain, string? caption)
+    internal static Result<AttractionImage> Create(string imageUrl, bool isMain, string? caption)
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
-            throw new BusinessRuleValidationException("Image URL cannot be null or empty.");
+            return AttractionErrors.ImageUrlRequired;
 
         return new AttractionImage(imageUrl, isMain, caption?.Trim());
     }
@@ -40,12 +41,14 @@ public class AttractionImage : BaseAuditableEntity
         MarkAsUpdated();
     }
 
-    internal void SetDisplayOrder(int order)
+    internal Result SetDisplayOrder(int order)
     {
         if (order < 0)
-            throw new BusinessRuleValidationException("Display order cannot be negative.");
+            return AttractionErrors.NegativeDisplayOrder;
 
         DisplayOrder = order;
         MarkAsUpdated();
+
+        return Result.Success();
     }
 }

@@ -1,31 +1,27 @@
 using Domain.Common;
-using Domain.Enums;
-using Domain.Exceptions;
+using Shared.Models;
 
 namespace Domain.Entities.TouristAggregate;
 
 public class Favourite : BaseAuditableEntity
 {
-    public Guid EntityId { get; private set; }
-    public FavouriteType Type { get; set; }
+    public Guid SiteId { get; private set; }
 
-    public DateTime AddedAt { get; private set; }
     public string? Notes { get; private set; }
 
     private Favourite() { }
-    private Favourite(Guid entityId)
+    private Favourite(Guid siteId)
     {
-        EntityId = entityId;
-
-        AddedAt = DateTime.UtcNow;
+        SiteId = siteId;
     }
 
-    public static Favourite Create(Guid entityId)
+    public static Result<Favourite> Create(Guid siteId)
     {
-        if (entityId == Guid.Empty)
-            throw new BusinessRuleValidationException("Entity ID cannot be empty.");
+        if (siteId == Guid.Empty)
+            return Error.Validation(
+                "EMPTY_SITE_ID", "Site ID cannot be empty.");
 
-        return new Favourite(entityId);
+        return new Favourite(siteId);
     }
 
     public void AddNotes(string notes)

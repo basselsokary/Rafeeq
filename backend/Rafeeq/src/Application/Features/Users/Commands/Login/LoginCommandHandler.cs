@@ -1,6 +1,6 @@
 using Application.Common.Interfaces.Authentication;
 using Domain.Common.Interfaces;
-using Domain.Entities.TouristAggregate;
+using Domain.Entities.UserAggregate;
 
 namespace Application.Features.Users.Commands.Login;
 

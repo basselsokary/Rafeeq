@@ -1,5 +1,5 @@
 using Domain.Common;
-using Domain.Exceptions;
+using Shared.Models;
 
 namespace Domain.Entities.SiteAggregate;
 
@@ -20,10 +20,10 @@ public class SiteImage : BaseAuditableEntity
         DisplayOrder = 0;
     }
 
-    internal static SiteImage Create(string imageUrl, bool isMain, string? caption)
+    internal static Result<SiteImage> Create(string imageUrl, bool isMain, string? caption)
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
-            throw new BusinessRuleValidationException("Image URL cannot be null or empty.");
+            return SiteErrors.ImageUrlRequired;
 
         return new SiteImage(imageUrl, isMain, caption?.Trim());
     }
@@ -40,12 +40,14 @@ public class SiteImage : BaseAuditableEntity
         MarkAsUpdated();
     }
 
-    internal void SetDisplayOrder(int order)
+    internal Result SetDisplayOrder(int order)
     {
         if (order < 0)
-            throw new BusinessRuleValidationException("Display order cannot be negative.");
+            return SiteErrors.NegativeDisplayOrder;
 
         DisplayOrder = order;
         MarkAsUpdated();
+
+        return Result.Success();
     }
 }

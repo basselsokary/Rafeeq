@@ -2,41 +2,39 @@ using Domain.Common.Interfaces;
 using Domain.Common;
 using Domain.Enums;
 using Domain.ValueObjects;
-using Domain.Exceptions;
 using static Domain.Common.Constants.DomainConstants.Review;
+using Shared.Models;
 
 namespace Domain.Entities.SponsorAggregate;
 
-/// <summary>
-/// Represents a sponsor (restaurant, hotel, shop, etc.) that can offer promotions to tourists
-/// </summary>
 public class Sponsor : BaseAuditableEntity, IAggregateRoot
 {
-    public string Name { get; private set; } = null!;
+    public string Title { get; private set; } = null!;
     public string Description { get; private set; } = null!;
     public SponsorType Type { get; private set; }
     public SponsorTier Tier { get; private set; }
     public GeoLocation Location { get; private set; } = null!;
+    
     public Address Address { get; private set; } = null!;
     public string? Website { get; private set; }
     public PhoneNumber ContactPhone { get; private set; } = null!;
     public Email ContactEmail { get; private set; } = null!;
-    public bool IsActive { get; private set; }
     public DateTime ContractStartDate { get; private set; }
     public DateTime ContractEndDate { get; private set; }
+    
     public double AverageRating { get; private set; }
     public int TotalRedemptions { get; private set; }
+    public bool IsActive { get; private set; }
 
-    private readonly List<SponsorOffer> _offers = [];
-    public IReadOnlyCollection<SponsorOffer> Offers => _offers.AsReadOnly();
+    private readonly List<Offer> _offers = [];
+    public IReadOnlyCollection<Offer> Offers => _offers.AsReadOnly();
     
     private readonly List<SponsorImage> _images = [];
     public IReadOnlyCollection<SponsorImage> Images => _images.AsReadOnly();
 
     private Sponsor() { }
-
     private Sponsor(
-        string name,
+        string title,
         string description,
         SponsorType type,
         SponsorTier tier,
@@ -47,7 +45,7 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         DateTime contractStartDate,
         DateTime contractEndDate)
     {
-        Name = name;
+        Title = title;
         Description = description;
         Type = type;
         Tier = tier;
@@ -63,8 +61,8 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         TotalRedemptions = 0;
     }
 
-    public static Sponsor Create(
-        string name,
+    public static Result<Sponsor> Create(
+        string title,
         string description,
         SponsorType type,
         SponsorTier tier,
@@ -75,17 +73,17 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         DateTime contractStartDate,
         DateTime contractEndDate)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new BusinessRuleValidationException("Sponsor name cannot be empty.");
+        if (string.IsNullOrWhiteSpace(title))
+            return SponsorErrors.TitleRequired;
 
         if (string.IsNullOrWhiteSpace(description))
-            throw new BusinessRuleValidationException("Sponsor description cannot be empty.");
+            return SponsorErrors.DescriptionRequired;
 
         if (contractStartDate >= contractEndDate)
-            throw new BusinessRuleValidationException("Contract start date must be before end date.");
+            return SponsorErrors.InvalidDate;
 
         var sponsor = new Sponsor(
-            name.Trim(),
+            title.Trim(),
             description.Trim(),
             type,
             tier,
@@ -96,23 +94,25 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
             contractStartDate,
             contractEndDate);
 
-        // sponsor.RaiseDomainEvent(new SponsorCreatedEvent(sponsor.Id, sponsor.Name, sponsor.Type));
+        // sponsor.RaiseDomainEvent(new SponsorCreatedEvent(sponsor.Id, sponsor.Title, sponsor.Type));
 
         return sponsor;
     }
 
-    public void UpdateBasicInfo(string name, string description, SponsorType type)
+    public Result UpdateBasicInfo(string title, string description, SponsorType type)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new BusinessRuleValidationException("Sponsor name cannot be empty.");
+        if (string.IsNullOrWhiteSpace(title))
+            return SponsorErrors.TitleRequired;
 
         if (string.IsNullOrWhiteSpace(description))
-            throw new BusinessRuleValidationException("Sponsor description cannot be empty.");
+            return SponsorErrors.DescriptionRequired;
 
-        Name = name.Trim();
+        Title = title.Trim();
         Description = description.Trim();
         Type = type;
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
     public void UpdateLocation(GeoLocation location, Address address)
@@ -139,22 +139,26 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         // RaiseDomainEvent(new SponsorTierChangedEvent(Id, tier));
     }
 
-    public void ExtendContract(DateTime newEndDate)
+    public Result ExtendContract(DateTime newEndDate)
     {
         if (newEndDate <= ContractEndDate)
-            throw new BusinessRuleValidationException("New end date must be after current end date.");
+            return SponsorErrors.InvalidExtendDate;
 
         ContractEndDate = newEndDate;
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void Activate()
+    public Result Activate()
     {
         if (DateTime.UtcNow > ContractEndDate)
-            throw new InvalidOperationDomainException("Cannot activate sponsor with expired contract.");
+            return SponsorErrors.ExpiredContract;
 
         IsActive = true;
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
     public void Deactivate()
@@ -163,36 +167,44 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         MarkAsUpdated();
     }
 
-    public void AddOffer(
+    public Result AddOffer(
         string title,
         string description,
         Money? discount,
         int? discountPercentage,
         DateRange validityPeriod,
-        string? termsAndConditions = null)
+        string? termsAndConditions)
     {
-        var offer = SponsorOffer.Create(
+        var offerResult = Offer.Create(
             title,
             description,
             discount,
             discountPercentage,
             validityPeriod,
             termsAndConditions);
+        if (offerResult.Failed)
+            return offerResult;
 
-        _offers.Add(offer);
+        _offers.Add(offerResult.Value);
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void RemoveOffer(Guid offerId)
+    public Result RemoveOffer(Guid offerId)
     {
-        var offer = _offers.FirstOrDefault(o => o.Id == offerId)
-            ?? throw new EntityNotFoundException(nameof(SponsorOffer), offerId);
+        var offer = _offers.FirstOrDefault(o => o.Id == offerId);
+        if (offer == null)
+            return SponsorErrors.OfferNotFound(offerId);
+
 
         _offers.Remove(offer);
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void UpdateOffer(
+    public Result UpdateOffer(
         Guid offerId,
         string title,
         string description,
@@ -200,16 +212,24 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         int? discountPercentage,
         string? termsAndConditions)
     {
-        var offer = _offers.FirstOrDefault(o => o.Id == offerId)
-            ?? throw new EntityNotFoundException(nameof(SponsorOffer), offerId);
+        var offer = _offers.FirstOrDefault(o => o.Id == offerId);
+        if (offer == null)
+            return SponsorErrors.OfferNotFound(offerId);
 
-        offer.Update(title, description, discount, discountPercentage, termsAndConditions);
+        var offerResult = offer.Update(title, description, discount, discountPercentage, termsAndConditions);
+        if (offerResult.Failed)
+            return offerResult;
+
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void AddImage(string imageUrl, bool isMain, string? caption = null)
+    public Result AddImage(string imageUrl, bool isMain, string? caption = null)
     {
-        var image = SponsorImage.Create(imageUrl, isMain, caption);
+        var imageResult = SponsorImage.Create(imageUrl, isMain, caption);
+        if (imageResult.Failed)
+            return imageResult;
         
         if (isMain)
         {
@@ -217,53 +237,45 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
                 img.SetAsMain(false);
         }
 
-        _images.Add(image);
+        _images.Add(imageResult.Value);
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void RemoveImage(Guid imageId)
+    public Result RemoveImage(Guid imageId)
     {
-        var image = _images.FirstOrDefault(i => i.Id == imageId)
-            ?? throw new EntityNotFoundException(nameof(SponsorImage), imageId);
+        var image = _images.FirstOrDefault(i => i.Id == imageId);
+        if (image == null)
+            return SponsorErrors.ImageNotFound;
 
         _images.Remove(image);
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void UpdateImage(Guid imageId, bool isMain, string? caption = null)
-    {
-        var image = _images.FirstOrDefault(img => img.Id == imageId)
-            ?? throw new EntityNotFoundException(nameof(SponsorImage), imageId);
-        
-        if (isMain)
-        {
-            foreach (var img in _images)
-                img.SetAsMain(false);
-            
-            image.SetAsMain(isMain);
-        }
-
-        image.UpdateCaption(caption);
-        MarkAsUpdated();
-    }
-
-    public void IncrementRedemptionCount(SponsorOffer offer)
+    public Result IncrementRedemptionCount(Offer offer)
     {
         TotalRedemptions++;
-        offer.IncrementRedemption();
+        var offerResult = offer.IncrementRedemption();
+        if (offerResult.Failed)
+            return offerResult;
+        
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void UpdateRating(double averageRating, int totalReviews)
+    public Result UpdateRating(double averageRating)
     {
         if (averageRating < 0 || averageRating > MaxRatingValue)
-            throw new BusinessRuleValidationException($"Average rating must be between 0 and {MaxRatingValue}.");
-
-        if (totalReviews < 0)
-            throw new BusinessRuleValidationException("Total reviews cannot be negative.");
+            return SponsorErrors.InvalidAverageRating;
 
         AverageRating = averageRating;
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
     public bool IsContractValid()
@@ -272,7 +284,7 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         return now >= ContractStartDate && now <= ContractEndDate;
     }
 
-    public IEnumerable<SponsorOffer> GetActiveOffers()
+    public IEnumerable<Offer> GetActiveOffers()
     {
         return _offers.Where(o => o.IsActive && o.IsValid());
     }

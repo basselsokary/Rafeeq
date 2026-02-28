@@ -2,7 +2,7 @@ namespace Domain.Common.Constants;
 
 public static class DomainConstants
 {
-    public static class Attraction
+    public static class Site
     {
         public const int MaxNameLength = 128;
         public const int MaxDescriptionLength = 2048;

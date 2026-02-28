@@ -2,7 +2,7 @@ using Application.Common.Interfaces.Messaging.Behavior;
 using Application.Common.Interfaces.Messaging.Requests.Base;
 using FluentValidation;
 
-namespace Application.Common.Behaviors;
+namespace Application.Behaviors;
 
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>

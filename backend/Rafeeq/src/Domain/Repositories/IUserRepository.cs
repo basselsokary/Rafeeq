@@ -1,5 +1,5 @@
 using Domain.Enums;
-using Domain.Entities.TouristAggregate;
+using Domain.Entities.UserAggregate;
 
 namespace Domain.Repositories;
 

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain.ValueObjects;
 using Application.Mappers;
 using Application.Features.Users.Commands.Register;
-using Domain.Entities.TouristAggregate;
+using Domain.Entities.UserAggregate;
 
 namespace Infrastructure.User.Services;
 

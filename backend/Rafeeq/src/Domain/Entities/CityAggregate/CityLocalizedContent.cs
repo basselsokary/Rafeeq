@@ -1,6 +1,6 @@
 using Domain.Common;
-using Domain.Exceptions;
 using Domain.Enums;
+using Shared.Models;
 
 namespace Domain.Entities.CityAggregate;
 
@@ -18,27 +18,29 @@ public class CityLocalizedContent : BaseAuditableEntity
         Description = description;
     }
 
-    internal static CityLocalizedContent Create(LanguageCode language, string name, string description)
+    internal static Result<CityLocalizedContent> Create(LanguageCode language, string name, string description)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new BusinessRuleValidationException("Localized name cannot be empty.");
+            return CityErrors.NameRequired;
         
         if (string.IsNullOrWhiteSpace(description))
-            throw new BusinessRuleValidationException("Description cannot be empty.");
+            return CityErrors.DescriptionRequired;
 
         return new CityLocalizedContent(language, name.Trim(), description.Trim());
     }
 
-    internal void Update(string name, string description)
+    internal Result Update(string name, string description)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new BusinessRuleValidationException("Localized name cannot be empty.");
+            return CityErrors.NameRequired;
         
         if (string.IsNullOrWhiteSpace(description))
-            throw new BusinessRuleValidationException("Description cannot be empty.");
+            return CityErrors.DescriptionRequired;
 
         Name = name.Trim();
         Description = description.Trim();
         MarkAsUpdated();
+
+        return Result.Success();
     }
 }

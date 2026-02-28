@@ -1,16 +1,15 @@
 using Domain.Common;
-using Domain.Exceptions;
 using Domain.Common.Interfaces;
 using Domain.Enums;
 using Domain.ValueObjects;
 using Shared.Models;
-using Domain.Entities.AttractionAggregate;
 
 namespace Domain.Entities.SiteAggregate;
 
 public class Site : BaseAuditableEntity, IAggregateRoot
 {
     public Guid CityId { get; private set; }
+    public string CityName { get; private set; } = null!;
     
     public string Name { get; private set; } = null!;
     public string Description { get; private set; } = null!;
@@ -18,6 +17,7 @@ public class Site : BaseAuditableEntity, IAggregateRoot
     public SiteType Type { get; private set; }
     public Address Address { get; private set; } = null!;
     public GeoLocation Location { get; private set; } = null!;
+    
     public Money? EntryFee { get; private set; }
 
     public string? WebsiteUrl { get; private set; }
@@ -27,9 +27,6 @@ public class Site : BaseAuditableEntity, IAggregateRoot
     public int TotalReviews { get; private set; }
     public bool IsActive { get; private set; }
 
-    private readonly List<Attraction> _attractions = [];
-    public IReadOnlyCollection<Attraction> Attractions => _attractions.AsReadOnly();
-    
     private readonly List<NearestTransportation> _nearestTransportations = [];
     public IReadOnlyCollection<NearestTransportation> NearestTransportations => _nearestTransportations.AsReadOnly();
     
@@ -39,8 +36,8 @@ public class Site : BaseAuditableEntity, IAggregateRoot
     private readonly List<SiteLocalizedContent> _localizedContents = [];
     public IReadOnlyCollection<SiteLocalizedContent> LocalizedContents => _localizedContents.AsReadOnly();
     
-    private readonly List<SiteFacility> _facilities = [];
-    public IReadOnlyCollection<SiteFacility> Facilities => _facilities.AsReadOnly();
+    private readonly List<Facility> _facilities = [];
+    public IReadOnlyCollection<Facility> Facilities => _facilities.AsReadOnly();
 
     private readonly List<OpeningHour> _openingHours = [];
     public IReadOnlyCollection<OpeningHour> OpeningHours => _openingHours.AsReadOnly();
@@ -48,6 +45,7 @@ public class Site : BaseAuditableEntity, IAggregateRoot
     private Site() { }
     private Site(
         Guid cityId,
+        string cityName,
         string name,
         string description,
         GeoLocation location,
@@ -55,6 +53,7 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         SiteType type)
     {
         CityId = cityId;
+        CityName = cityName;
         Name = name;
         Description = description;
         Location = location;
@@ -66,8 +65,9 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         TotalReviews = 0;
     }
 
-    public static Site Create(
+    public static Result<Site> Create(
         Guid cityId,
+        string cityName,
         string name,
         string description,
         GeoLocation location,
@@ -75,29 +75,31 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         SiteType type)
     {
         if (cityId == Guid.Empty)
-            throw new BusinessRuleValidationException("City ID cannot be empty.");
+            return SiteErrors.CityIdRequired;
         
         if (string.IsNullOrWhiteSpace(name))
-            throw new BusinessRuleValidationException("Site name cannot be null or empty.");
+            return SiteErrors.NameRequired;
         
         if (string.IsNullOrWhiteSpace(description))
-            throw new BusinessRuleValidationException("Site description cannot be null or empty.");
-
-        return new(cityId, name, description, location, address, type);
+            return SiteErrors.DescriptionRequired;
+        
+        return new Site(cityId, cityName, name, description, location, address, type);
     }
 
-    public void UpdateBasicInfo(string name, string description, SiteType type)
+    public Result UpdateBasicInfo(string name, string description, SiteType type)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new BusinessRuleValidationException("Site name cannot be empty.");
-
+            return SiteErrors.NameRequired;
+        
         if (string.IsNullOrWhiteSpace(description))
-            throw new BusinessRuleValidationException("Site description cannot be empty.");
+            return SiteErrors.DescriptionRequired;
 
         Name = name.Trim();
         Description = description.Trim();
         Type = type;
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
     public void UpdateLocation(GeoLocation location, Address address)
@@ -107,19 +109,17 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         MarkAsUpdated();
     }
 
-    public void UpdateCity(Guid cityId)
+    public void UpdateCity(Guid cityId, string cityName)
     {
         CityId = cityId;
+        CityName = cityName;
         MarkAsUpdated();
     }
 
     public Result AddOpeningHours(DayOfWeek dayOfWeek, TimeRange openingTime, bool isClosed)
     {
         if (_openingHours.Any(o => o.DayOfWeek == dayOfWeek))
-        {
-            return Result.Failure(
-                Error.Failure("OPENING_HOURS", $"Opening hours for {dayOfWeek} already exist."));
-        }
+            return OpeningHourErrors.AlreadyExist(dayOfWeek);
 
         var openingHours = OpeningHour.Create(dayOfWeek, openingTime, isClosed);
         _openingHours.Add(openingHours);
@@ -131,10 +131,7 @@ public class Site : BaseAuditableEntity, IAggregateRoot
     {
         var existing = _openingHours.FirstOrDefault(oh => oh.DayOfWeek == dayOfWeek);
         if (existing == null)
-        {
-            return Result.Failure(
-                Error.Failure("", $"Opening hours for {dayOfWeek} does not exist."));
-        }
+            return OpeningHourErrors.NotFound(dayOfWeek);
 
         var newOpeningHours = OpeningHour.Create(dayOfWeek, openingTime, isClosed);
         if (existing.Equals(newOpeningHours))
@@ -176,10 +173,11 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         MarkAsUpdated();
     }
 
-    public void AddImage(string imageUrl, bool isMain, string? caption = null)
+    public Result AddImage(string imageUrl, bool isMain, string? caption = null)
     {
-        if (string.IsNullOrWhiteSpace(imageUrl))
-            throw new BusinessRuleValidationException("Image URL cannot be empty.");
+        var imageResult = SiteImage.Create(imageUrl, isMain, caption);
+        if (imageResult.Failed)
+            return imageResult;
 
         if (isMain)
         {
@@ -187,47 +185,62 @@ public class Site : BaseAuditableEntity, IAggregateRoot
                 img.SetAsMain(false);
         }
 
-        var image = SiteImage.Create(imageUrl, isMain, caption);
-        _images.Add(image);
+        _images.Add(imageResult.Value);
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void RemoveImage(Guid imageId)
+    public Result RemoveImage(Guid imageId)
     {
         var image = _images.FirstOrDefault(i => i.Id == imageId);
         if (image == null)
-            throw new EntityNotFoundException(nameof(SiteImage), imageId);
+            return SiteErrors.ImageNotFound;
 
         _images.Remove(image);
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void AddLocalizedContent(LanguageCode language, string name, string description)
+    public Result AddLocalizedContent(LanguageCode language, string name, string description)
     {
         var existing = _localizedContents.FirstOrDefault(lc => lc.Language == language);
         if (existing != null)
             _localizedContents.Remove(existing);
 
-        var content = SiteLocalizedContent.Create(language, name, description);
-        _localizedContents.Add(content);
+        var contentResult = SiteLocalizedContent.Create(language, name, description);
+        if (contentResult.Failed)
+            return contentResult;
+
+        _localizedContents.Add(contentResult.Value);
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void AddFacility(string name, FacilityType type, string? description = null)
+    public Result AddFacility(string name, string description)
     {
-        var facility = SiteFacility.Create(name, type, description);
-        _facilities.Add(facility);
+        var facilityResult = Facility.Create(name, description);
+        if (facilityResult.Failed)
+            return facilityResult;
+
+        _facilities.Add(facilityResult.Value);
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void RemoveFacility(Guid facilityId)
+    public Result RemoveFacility(Guid facilityId)
     {
         var facility = _facilities.FirstOrDefault(f => f.Id == facilityId);
         if (facility == null)
-            throw new EntityNotFoundException(nameof(SiteFacility), facilityId);
+            return SiteErrors.FacilityNotFound;
 
         _facilities.Remove(facility);
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
     public bool IsOpenAt(DayOfWeek day, TimeSpan time)

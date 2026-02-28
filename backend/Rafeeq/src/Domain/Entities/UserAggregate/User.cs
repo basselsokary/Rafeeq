@@ -1,14 +1,16 @@
 using Domain.Common;
-using Domain.Exceptions;
 using Domain.Enums;
 using Domain.Common.Interfaces;
+using Domain.Entities.TouristAggregate;
+using Shared.Models;
 
-namespace Domain.Entities.TouristAggregate;
+namespace Domain.Entities.UserAggregate;
 
 public class User : BaseAuditableEntity, IAggregateRoot
 {
     public string FirstName { get; private set; } = null!;
     public string LastName { get; private set; } = null!;
+    public string Nationality { get; private set; } = null!;
 
     public UserRole Role { get; private set; }
     public UserStatus Status { get; private set; }
@@ -25,11 +27,13 @@ public class User : BaseAuditableEntity, IAggregateRoot
         Guid id,
         string firstName,
         string lastName,
+        string nationality,
         UserRole role,
         LanguageCode preferredLanguage) : base(id)
     {
         FirstName = firstName;
         LastName = lastName;
+        Nationality = nationality;
         Role = role;
         PreferredLanguage = preferredLanguage;
 
@@ -38,23 +42,28 @@ public class User : BaseAuditableEntity, IAggregateRoot
         TotalReviews = 0;
     }
 
-    public static User Create(
+    public static Result<User> Create(
+        Guid userId,
         string firstName,
         string lastName,
+        string nationality,
         UserRole role = UserRole.Tourist,
-        LanguageCode preferredLanguage = LanguageCode.English,
-        Guid? userId = null)
+        LanguageCode preferredLanguage = LanguageCode.English)
     {
         if (string.IsNullOrWhiteSpace(firstName))
-            throw new BusinessRuleValidationException("First name cannot be empty.");
+            return UserErrors.FirstNameRequired;
 
         if (string.IsNullOrWhiteSpace(lastName))
-            throw new BusinessRuleValidationException("Last name cannot be empty.");
+            return UserErrors.LastNameRequired;
 
+        if (string.IsNullOrWhiteSpace(nationality))
+            return UserErrors.NationalityRequired;
+        
         var user = new User(
-            userId ?? Guid.NewGuid(),
+            userId,
             firstName.Trim(),
             lastName.Trim(),
+            nationality,
             role,
             preferredLanguage);
 
@@ -63,20 +72,23 @@ public class User : BaseAuditableEntity, IAggregateRoot
 
     public string GetFullName() => $"{FirstName} {LastName}";
 
-    public void UpdateProfile(string firstName, string lastName, string? bio, string? nationality, DateTime? dateOfBirth)
+    public Result UpdateProfile(string firstName, string lastName, string nationality)
     {
         if (string.IsNullOrWhiteSpace(firstName))
-            throw new BusinessRuleValidationException("First name cannot be empty.");
+            return UserErrors.FirstNameRequired;
 
         if (string.IsNullOrWhiteSpace(lastName))
-            throw new BusinessRuleValidationException("Last name cannot be empty.");
-
-        if (dateOfBirth.HasValue && dateOfBirth.Value > DateTime.UtcNow)
-            throw new BusinessRuleValidationException("Date of birth cannot be in the future.");
+            return UserErrors.LastNameRequired;
+        
+        if (string.IsNullOrWhiteSpace(nationality))
+            return UserErrors.NationalityRequired;
 
         FirstName = firstName.Trim();
         LastName = lastName.Trim();
+        Nationality = nationality.Trim();
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
     public void SetPreferredLanguage(LanguageCode language)
@@ -94,23 +106,31 @@ public class User : BaseAuditableEntity, IAggregateRoot
         // RaiseDomainEvent(new UserStatusChangedEvent(Id, status));
     }
 
-    public void AddFavorite(Guid entityId)
+    public Result AddFavorite(Guid siteId)
     {
-        if (_favourites.Any(f => f.EntityId == entityId))
-            throw new BusinessRuleValidationException("Entity is already in favorites.");
+        if (_favourites.Any(f => f.SiteId == siteId))
+            return UserErrors.SiteAlreadyFavorite;
 
-        var favorite = Favourite.Create(entityId);
-        _favourites.Add(favorite);
+        var favoriteResult = Favourite.Create(siteId);
+        if (favoriteResult.Failed)
+            return favoriteResult;
+
+        _favourites.Add(favoriteResult.Value);
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void RemoveFavorite(Guid entityId)
+    public Result RemoveFavorite(Guid siteId)
     {
-        var favorite = _favourites.FirstOrDefault(f => f.EntityId == entityId)
-            ?? throw new EntityNotFoundException(nameof(Favourite), entityId);
+        var favorite = _favourites.FirstOrDefault(f => f.SiteId == siteId);
+        if (favorite == null)
+            return UserErrors.FavouriteNotFound(siteId);
 
         _favourites.Remove(favorite);
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
     public void IncrementTripCount()
@@ -127,6 +147,6 @@ public class User : BaseAuditableEntity, IAggregateRoot
 
     public bool IsFavorite(Guid entityId)
     {
-        return _favourites.Any(f => f.EntityId == entityId);
+        return _favourites.Any(f => f.SiteId == entityId);
     }
 }

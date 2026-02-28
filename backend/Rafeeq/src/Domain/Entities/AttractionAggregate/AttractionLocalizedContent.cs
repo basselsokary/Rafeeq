@@ -1,6 +1,7 @@
 using Domain.Common;
 using Domain.Enums;
 using Domain.Exceptions;
+using Shared.Models;
 
 namespace Domain.Entities.AttractionAggregate;
 
@@ -11,7 +12,6 @@ public class AttractionLocalizedContent : BaseAuditableEntity
     public string Description { get; private set; } = null!;
 
     private AttractionLocalizedContent() { }
-
     private AttractionLocalizedContent(LanguageCode language, string name, string description)
     {
         Language = language;
@@ -19,27 +19,29 @@ public class AttractionLocalizedContent : BaseAuditableEntity
         Description = description;
     }
 
-    public static AttractionLocalizedContent Create(LanguageCode language, string name, string description)
-    {
+    internal static Result<AttractionLocalizedContent> Create(LanguageCode language, string name, string description)
+    {    
         if (string.IsNullOrWhiteSpace(name))
-            throw new BusinessRuleValidationException("Name cannot be empty.");
-
+            return AttractionErrors.NameRequired;
+        
         if (string.IsNullOrWhiteSpace(description))
-            throw new BusinessRuleValidationException("Description cannot be empty.");
+            return AttractionErrors.DescriptionRequired;
 
         return new AttractionLocalizedContent(language, name.Trim(), description.Trim());
     }
 
-    public void Update(string name, string description)
+    internal Result Update(string name, string description)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new BusinessRuleValidationException("Name cannot be empty.");
-
+            return AttractionErrors.NameRequired;
+        
         if (string.IsNullOrWhiteSpace(description))
-            throw new BusinessRuleValidationException("Description cannot be empty.");
+            return AttractionErrors.DescriptionRequired;
 
         Name = name.Trim();
         Description = description.Trim();
         MarkAsUpdated();
+
+        return Result.Success();
     }
 }

@@ -1,8 +1,8 @@
 using Domain.Common;
-using Domain.Exceptions;
 using Domain.Common.Interfaces;
 using Domain.ValueObjects;
 using Domain.Enums;
+using Shared.Models;
 
 namespace Domain.Entities.CityAggregate;
 
@@ -12,7 +12,7 @@ public class City : BaseAuditableEntity, IAggregateRoot
     public string Description { get; private set; } = null!;
     public GeoLocation CenterLocation { get; private set; } = null!;
     public string? ImageUrl { get; private set; }
-    public int TotalAttractions { get; private set; }
+    public int TotalSites { get; private set; }
     public int DisplayOrder { get; private set; }
 
     private readonly List<CityLocalizedContent> _localizedContents = [];
@@ -26,31 +26,33 @@ public class City : BaseAuditableEntity, IAggregateRoot
         Description = description;
 
         DisplayOrder = 0;
-        TotalAttractions = 0;
+        TotalSites = 0;
     }
 
-    public static City Create(string name, string description, GeoLocation centerLocation)
+    public static Result<City> Create(string name, string description, GeoLocation centerLocation)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new BusinessRuleValidationException("City name cannot be null or empty.");
+            return CityErrors.NameRequired;
         
         if (string.IsNullOrWhiteSpace(description))
-            throw new BusinessRuleValidationException("Description cannot be null or empty.");
-
+            return CityErrors.DescriptionRequired;
+            
         return new City(name.Trim(), description.Trim(), centerLocation);
     }
 
-    public void UpdateBasicInfo(string name, string description)
+    public Result UpdateBasicInfo(string name, string description)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new BusinessRuleValidationException("City name cannot be empty.");
-        
+            return CityErrors.NameRequired;
+            
         if (string.IsNullOrWhiteSpace(description))
-            throw new BusinessRuleValidationException("Description cannot be null or empty.");
-
+            return CityErrors.DescriptionRequired;
+            
         Name = name.Trim();
         Description = description.Trim();
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
     public void SetCenterLocation(GeoLocation location)
@@ -59,67 +61,84 @@ public class City : BaseAuditableEntity, IAggregateRoot
         MarkAsUpdated();
     }
 
-    public void SetImage(string imageUrl)
+    public Result SetImage(string imageUrl)
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
-            throw new BusinessRuleValidationException("Image URL cannot be empty.");
+            return CityErrors.ImageUrlRequired;
 
         ImageUrl = imageUrl.Trim();
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void SetDisplayOrder(int order)
+    public Result SetDisplayOrder(int order)
     {
         if (order < 0)
-            throw new BusinessRuleValidationException("Display order cannot be negative.");
+            return CityErrors.NegativeDisplayOrder;
 
         DisplayOrder = order;
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
     public void IncrementAttractionCount()
     {
-        TotalAttractions++;
+        TotalSites++;
         MarkAsUpdated();
     }
 
     public void DecrementAttractionCount()
     {
-        if (TotalAttractions > 0)
+        if (TotalSites > 0)
         {
-            TotalAttractions--;
+            TotalSites--;
             MarkAsUpdated();
         }
     }
 
-    public void AddLocalizedContent(LanguageCode language, string name, string description)
+    public Result AddLocalizedContent(LanguageCode language, string name, string description)
     {
-        var content = CityLocalizedContent.Create(language, name, description);
+        var contentResult = CityLocalizedContent.Create(language, name, description);
+        if (contentResult.Failed)
+            return contentResult;
         
         var existing = _localizedContents.FirstOrDefault(lc => lc.Language == language);
         if (existing != null)
             _localizedContents.Remove(existing);
 
-        _localizedContents.Add(content);
+        _localizedContents.Add(contentResult.Value);
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void UpdateLocalizedContent(Guid contentId, string name, string description)
+    public Result UpdateLocalizedContent(Guid contentId, string name, string description)
     {
-        var content = _localizedContents.FirstOrDefault(lc => lc.Id == contentId)
-            ?? throw new EntityNotFoundException(nameof(CityLocalizedContent), contentId);
+        var content = _localizedContents.FirstOrDefault(lc => lc.Id == contentId);
+        if (content == null)
+            return CityErrors.LocalizedContentNotFound;
 
-        content.Update(name, description);
+        var result = content.Update(name, description);
+        if (result.Failed)
+            return result;
+
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void RemoveLocalizedContent(Guid contentId)
+    public Result RemoveLocalizedContent(Guid contentId)
     {
-        var content = _localizedContents.FirstOrDefault(lc => lc.Id == contentId)
-            ?? throw new EntityNotFoundException(nameof(CityLocalizedContent), contentId);
-        
+        var content = _localizedContents.FirstOrDefault(lc => lc.Id == contentId);
+        if (content == null)
+            return CityErrors.LocalizedContentNotFound;
+
         _localizedContents.Remove(content);
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
     public string GetLocalizedName(LanguageCode language)

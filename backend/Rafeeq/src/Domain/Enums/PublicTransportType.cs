@@ -1,10 +1,9 @@
 namespace Domain.Enums;
 
-// Transport Enums
 public enum TransportType
 {
-    Metro,
-    Bus,
-    Train,
-    Tram
+    Bus = 1,
+    Metro = 2,
+    Train = 3,
+    Tram = 4
 }

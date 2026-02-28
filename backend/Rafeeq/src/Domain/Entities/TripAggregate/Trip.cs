@@ -1,5 +1,4 @@
 using Domain.Common;
-using Domain.Common.Exceptions;
 using Domain.Enums;
 using Domain.ValueObjects;
 using Domain.Common.Interfaces;
@@ -15,12 +14,12 @@ public class Trip : BaseAuditableEntity, IAggregateRoot
     public DateRange DateRange { get; private set; } = null!;
     public TripStatus Status { get; private set; }
     public TransportationType PreferredTransportation { get; private set; }
-    public int TotalAttractions => _attractions.Count;
+    public int TotalSites => _sites.Count;
     public int EstimatedTotalDurationMinutes { get; private set; }
     public int ShareCount { get; private set; }
 
-    private readonly List<TripAttraction> _attractions = [];
-    public IReadOnlyCollection<TripAttraction> Attractions => _attractions.AsReadOnly();
+    private readonly List<TripSite> _sites = [];
+    public IReadOnlyCollection<TripSite> Sites => _sites.AsReadOnly();
 
     private Trip() { }
     private Trip(
@@ -75,8 +74,8 @@ public class Trip : BaseAuditableEntity, IAggregateRoot
         MarkAsUpdated();
     }
 
-    public void AddAttraction(
-        Guid attractionId,
+    public void AddSite(
+        Guid siteId,
         DateTime visitDate,
         TimeRange? visitTimeRange,
         int estimatedDurationMinutes,
@@ -85,51 +84,51 @@ public class Trip : BaseAuditableEntity, IAggregateRoot
         if (!DateRange.IsWithinRange(visitDate))
             throw new BusinessRuleValidationException("Visit date must be within trip date range.");
 
-        if (_attractions.Any(a => a.AttractionId == attractionId))
-            throw new BusinessRuleValidationException("Attraction is already in the trip.");
+        if (_sites.Any(a => a.SiteId == siteId))
+            throw new BusinessRuleValidationException("Site is already in the trip.");
 
         if (estimatedDurationMinutes <= 0)
             throw new BusinessRuleValidationException("Estimated duration must be greater than zero.");
 
-        var tripAttraction = TripAttraction.Create(
-            attractionId,
+        var tripSite = TripSite.Create(
+            siteId,
             visitDate,
             visitTimeRange,
             estimatedDurationMinutes,
             displayOrder);
 
-        _attractions.Add(tripAttraction);
+        _sites.Add(tripSite);
         RecalculateTotalDuration();
         MarkAsUpdated();
     }
 
-    public void RemoveAttraction(Guid tripAttractionId)
+    public void RemoveSite(Guid tripSiteId)
     {
-        var attraction = _attractions.FirstOrDefault(a => a.Id == tripAttractionId)
-            ?? throw new EntityNotFoundException(nameof(TripAttraction), tripAttractionId);
+        var site = _sites.FirstOrDefault(a => a.Id == tripSiteId)
+            ?? throw new EntityNotFoundException(nameof(TripSite), tripSiteId);
 
-        _attractions.Remove(attraction);
+        _sites.Remove(site);
         RecalculateTotalDuration();
-        ReorderAttractions();
+        ReorderSites();
         MarkAsUpdated();
     }
 
-    public void UpdateAttractionOrder(Guid tripAttractionId, int newOrder)
+    public void UpdateSiteOrder(Guid tripSiteId, int newOrder)
     {
-        var attraction = _attractions.FirstOrDefault(a => a.Id == tripAttractionId)
-            ?? throw new EntityNotFoundException(nameof(TripAttraction), tripAttractionId);
+        var site = _sites.FirstOrDefault(a => a.Id == tripSiteId)
+            ?? throw new EntityNotFoundException(nameof(TripSite), tripSiteId);
 
-        attraction.UpdateDisplayOrder(newOrder);
-        ReorderAttractions();
+        site.UpdateDisplayOrder(newOrder);
+        ReorderSites();
         MarkAsUpdated();
     }
 
-    public void MarkAttractionAsVisited(Guid tripAttractionId, int actualDurationMinutes)
+    public void MarkSiteAsVisited(Guid tripSiteId, int actualDurationMinutes)
     {
-        var attraction = _attractions.FirstOrDefault(a => a.Id == tripAttractionId)
-            ?? throw new EntityNotFoundException(nameof(TripAttraction), tripAttractionId);
+        var site = _sites.FirstOrDefault(a => a.Id == tripSiteId)
+            ?? throw new EntityNotFoundException(nameof(TripSite), tripSiteId);
 
-        attraction.MarkAsVisited(actualDurationMinutes);
+        site.MarkAsVisited(actualDurationMinutes);
         CheckIfTripCompleted();
         MarkAsUpdated();
     }
@@ -171,9 +170,9 @@ public class Trip : BaseAuditableEntity, IAggregateRoot
 
     public int GetCompletionPercentage()
     {
-        if (_attractions.Count == 0) return 0;
-        var visitedCount = _attractions.Count(a => a.IsVisited);
-        return (int)((double)visitedCount / _attractions.Count * 100);
+        if (_sites.Count == 0) return 0;
+        var visitedCount = _sites.Count(a => a.IsVisited);
+        return (int)((double)visitedCount / _sites.Count * 100);
     }
 
     private void UpdateStatus(TripStatus newStatus)
@@ -187,12 +186,12 @@ public class Trip : BaseAuditableEntity, IAggregateRoot
 
     private void RecalculateTotalDuration()
     {
-        EstimatedTotalDurationMinutes = _attractions.Sum(a => a.EstimatedDurationMinutes);
+        EstimatedTotalDurationMinutes = _sites.Sum(a => a.EstimatedDurationMinutes);
     }
 
-    private void ReorderAttractions()
+    private void ReorderSites()
     {
-        var ordered = _attractions.OrderBy(a => a.VisitDate).ThenBy(a => a.DisplayOrder).ToList();
+        var ordered = _sites.OrderBy(a => a.VisitDate).ThenBy(a => a.DisplayOrder).ToList();
         for (int i = 0; i < ordered.Count; i++)
         {
             ordered[i].UpdateDisplayOrder(i);
@@ -201,7 +200,7 @@ public class Trip : BaseAuditableEntity, IAggregateRoot
 
     private void CheckIfTripCompleted()
     {
-        if (Status == TripStatus.InProgress && _attractions.All(a => a.IsVisited))
+        if (Status == TripStatus.InProgress && _sites.All(a => a.IsVisited))
         {
             UpdateStatus(TripStatus.Completed);
         }

@@ -1,24 +1,26 @@
 using Domain.Common;
-using Domain.Exceptions;
 using Domain.ValueObjects;
+using Shared.Models;
 
 namespace Domain.Entities.SponsorAggregate;
 
-public class SponsorOffer : BaseAuditableEntity
+public class Offer : BaseAuditableEntity
 {
     public string Title { get; private set; } = null!;
     public string Description { get; private set; } = null!;
     public Money? DiscountAmount { get; private set; }
     public int? DiscountPercentage { get; private set; }
+    
     public DateRange ValidityPeriod { get; private set; } = null!;
     public string? TermsAndConditions { get; private set; }
     public bool IsActive { get; private set; }
+    
     public int RedemptionCount { get; private set; }
     public int? MaxRedemptions { get; private set; }
     public string? PromoCode { get; private set; }
 
-    private SponsorOffer() { }
-    private SponsorOffer(
+    private Offer() { }
+    private Offer(
         string title,
         string description,
         Money? discountAmount,
@@ -32,11 +34,12 @@ public class SponsorOffer : BaseAuditableEntity
         DiscountPercentage = discountPercentage;
         ValidityPeriod = validityPeriod;
         TermsAndConditions = termsAndConditions;
-        IsActive = true;
+        
+        IsActive = false;
         RedemptionCount = 0;
     }
 
-    internal static SponsorOffer Create(
+    internal static Result<Offer> Create(
         string title,
         string description,
         Money? discountAmount,
@@ -45,18 +48,18 @@ public class SponsorOffer : BaseAuditableEntity
         string? termsAndConditions = null)
     {
         if (string.IsNullOrWhiteSpace(title))
-            throw new BusinessRuleValidationException("Offer title cannot be empty.");
+            return SponsorErrors.TitleRequired;
 
         if (string.IsNullOrWhiteSpace(description))
-            throw new BusinessRuleValidationException("Offer description cannot be empty.");
-
+            return SponsorErrors.DescriptionRequired;
+            
         if (discountAmount == null && discountPercentage == null)
-            throw new BusinessRuleValidationException("Either discount amount or percentage must be provided.");
+            return SponsorErrors.DiscountRequired;
 
         if (discountPercentage.HasValue && (discountPercentage.Value < 0 || discountPercentage.Value > 100))
-            throw new BusinessRuleValidationException("Discount percentage must be between 0 and 100.");
-
-        return new SponsorOffer(
+            return SponsorErrors.DiscountPercentageInvalid;
+            
+        return new Offer(
             title.Trim(),
             description.Trim(),
             discountAmount,
@@ -65,7 +68,7 @@ public class SponsorOffer : BaseAuditableEntity
             termsAndConditions?.Trim());
     }
 
-    internal void Update(
+    internal Result Update(
         string title,
         string description,
         Money? discountAmount,
@@ -73,65 +76,75 @@ public class SponsorOffer : BaseAuditableEntity
         string? termsAndConditions)
     {
         if (string.IsNullOrWhiteSpace(title))
-            throw new BusinessRuleValidationException("Offer title cannot be empty.");
+            return SponsorErrors.TitleRequired;
 
         if (string.IsNullOrWhiteSpace(description))
-            throw new BusinessRuleValidationException("Offer description cannot be empty.");
-
+            return SponsorErrors.DescriptionRequired;
+            
         if (discountAmount == null && discountPercentage == null)
-            throw new BusinessRuleValidationException("Either discount amount or percentage must be provided.");
+            return SponsorErrors.DiscountRequired;
 
         if (discountPercentage.HasValue && (discountPercentage.Value < 0 || discountPercentage.Value > 100))
-            throw new BusinessRuleValidationException("Discount percentage must be between 0 and 100.");
-
+            return SponsorErrors.DiscountPercentageInvalid;
+        
         Title = title.Trim();
         Description = description.Trim();
         DiscountAmount = discountAmount;
         DiscountPercentage = discountPercentage;
         TermsAndConditions = termsAndConditions?.Trim();
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    internal void IncrementRedemption()
+    internal Result IncrementRedemption()
     {
         if (!IsActive)
-            throw new InvalidOperationDomainException("Cannot redeem an inactive offer.");
+            return SponsorErrors.InactiveOffer;
 
         if (!IsValid())
-            throw new InvalidOperationDomainException("Cannot redeem an expired offer.");
+            return SponsorErrors.ExpiredOffer;
 
         if (MaxRedemptions.HasValue && RedemptionCount >= MaxRedemptions.Value)
-            throw new InvalidOperationDomainException("Maximum redemptions reached.");
+            return SponsorErrors.MaximumRedemptionsReached;
 
         RedemptionCount++;
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void SetMaxRedemptions(int maxRedemptions)
+    public Result SetMaxRedemptions(int maxRedemptions)
     {
         if (maxRedemptions < 0)
-            throw new BusinessRuleValidationException("Max redemptions cannot be negative.");
+            return SponsorErrors.NegativeRedemptionsNumber;
 
         MaxRedemptions = maxRedemptions;
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void SetPromoCode(string promoCode)
+    public Result SetPromoCode(string promoCode)
     {
         if (string.IsNullOrWhiteSpace(promoCode))
-            throw new BusinessRuleValidationException("Promo code cannot be empty.");
+            return SponsorErrors.PromoCodeRequired;
 
         PromoCode = promoCode.Trim().ToUpperInvariant();
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
-    public void Activate()
+    public Result Activate()
     {
         if (!IsValid())
-            throw new InvalidOperationDomainException("Cannot activate an expired offer.");
+            return SponsorErrors.InactiveOffer;
 
         IsActive = true;
         MarkAsUpdated();
+
+        return Result.Success();
     }
 
     public void Deactivate()

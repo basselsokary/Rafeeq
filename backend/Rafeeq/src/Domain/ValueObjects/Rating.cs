@@ -1,5 +1,5 @@
 using Domain.Common;
-using Domain.Common.Exceptions;
+using Domain.Exceptions;
 using static Domain.Common.Constants.DomainConstants.Review;
 
 namespace Domain.ValueObjects;
