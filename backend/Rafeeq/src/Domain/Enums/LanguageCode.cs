@@ -2,8 +2,8 @@ namespace Domain.Enums;
 
 public enum LanguageCode
 {
-    English = 1,
-    Arabic = 2,
+    Arabic = 1,
+    English = 2,
     // French,
     // German,
     // Spanish,

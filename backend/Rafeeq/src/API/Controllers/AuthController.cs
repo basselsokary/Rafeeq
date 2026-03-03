@@ -1,6 +1,6 @@
 ﻿using API.Controllers.Base;
 using API.Services.Dispatchers;
-using Application.Features.Users.Commands.Login;
+using Application.Features.Users.Commands;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventMaster.API.Controllers;

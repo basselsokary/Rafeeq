@@ -1,6 +1,5 @@
-﻿using Application.Common.Behaviors;
+﻿using Application.Behaviors;
 using Application.Common.Interfaces.Messaging.Behavior;
-using Application.Common.Interfaces.Messaging.Requests.Base;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,7 +29,13 @@ public static class DependencyInjection
     private static void AddServicesByScrutor(this IServiceCollection services)
     {
         services.Scan(scan => scan.FromAssembliesOf(typeof(DependencyInjection))
-            .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)), publicOnly: false)
+            .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)), publicOnly: false)
+                .AsImplementedInterfaces()
+                .WithScopedLifetime()
+            .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)), publicOnly: false)
+                .AsImplementedInterfaces()
+                .WithScopedLifetime()
+            .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)), publicOnly: false)
                 .AsImplementedInterfaces()
                 .WithScopedLifetime());
     }

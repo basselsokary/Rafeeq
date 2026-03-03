@@ -1,5 +1,3 @@
-﻿using Application.Common.Interfaces.Messaging.Requests.Base;
+﻿namespace Application.Common.Interfaces.Messaging.Requests;
 
-namespace Application.Common.Interfaces.Messaging.Requests;
-
-public interface IQuery<TResponse> : IRequest<Result<TResponse>>;
+public interface IQuery<out TResponse>;

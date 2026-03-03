@@ -8,8 +8,8 @@ using Application.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Domain.ValueObjects;
 using Application.Mappers;
-using Application.Features.Users.Commands.Register;
 using Domain.Entities.UserAggregate;
+using Application.Features.Users.Commands;
 
 namespace Infrastructure.User.Services;
 
