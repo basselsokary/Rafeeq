@@ -5,6 +5,7 @@ Thumbs.db
 # IDEs
 .vscode/
 .idea/
+dataset/
 *.user
 
 # Secrets
