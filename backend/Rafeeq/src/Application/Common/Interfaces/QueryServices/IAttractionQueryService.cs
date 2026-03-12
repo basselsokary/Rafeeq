@@ -9,6 +9,7 @@ public interface IAttractionQueryService
     Task<AttractionDetailDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
         
     Task<PagedResult<AttractionListDto>> GetByTypeAsync(
+        Guid siteId,
         AttractionType type,
         PagingParameters? paging = null,
         CancellationToken cancellationToken = default);
