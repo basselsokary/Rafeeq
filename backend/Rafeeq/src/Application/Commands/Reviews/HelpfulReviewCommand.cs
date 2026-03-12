@@ -1,4 +1,3 @@
-using Application.Common.Interfaces.Messaging;
 using Domain.Common.Interfaces;
 using Domain.Entities.ReviewAggregate;
 

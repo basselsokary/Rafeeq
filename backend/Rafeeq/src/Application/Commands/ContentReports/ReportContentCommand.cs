@@ -1,5 +1,4 @@
 using Application.Common.Interfaces.Authentication;
-using Application.Common.Interfaces.Messaging;
 using Domain.Common.Interfaces;
 using Domain.Entities.ContentReportAggregate;
 using Domain.Enums;

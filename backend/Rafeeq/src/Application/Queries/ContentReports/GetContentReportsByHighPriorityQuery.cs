@@ -1,4 +1,3 @@
-using Application.Common.Interfaces.Messaging;
 using Application.Common.Interfaces.QueryServices;
 using Application.DTOs.Common;
 using Application.DTOs.ContentReports;

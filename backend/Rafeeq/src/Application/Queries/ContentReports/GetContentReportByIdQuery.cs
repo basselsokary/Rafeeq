@@ -1,4 +1,3 @@
-using Application.Common.Interfaces.Messaging;
 using Application.Common.Interfaces.QueryServices;
 using Application.DTOs.ContentReports;
 using Domain.Entities.ContentReportAggregate;
