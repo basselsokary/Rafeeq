@@ -1,7 +1,10 @@
-﻿namespace Application.Common.Interfaces.Authentication;
+﻿using Domain.Enums;
+
+namespace Application.Common.Interfaces.Authentication;
 
 public interface IUserContext
 {
-    string Id { get; }
+    Guid Id { get; }
+    LanguageCode Language { get; }
     bool IsAuthenticated { get; }
 }

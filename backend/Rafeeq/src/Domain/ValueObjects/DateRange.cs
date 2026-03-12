@@ -1,5 +1,5 @@
 using Domain.Common;
-using Domain.Common.Exceptions;
+using Shared.Models;
 
 namespace Domain.ValueObjects;
 
@@ -14,10 +14,10 @@ public class DateRange : ValueObject
         EndDate = endDate;
     }
 
-    public static DateRange Create(DateTime startDate, DateTime endDate)
+    public static Result<DateRange> Create(DateTime startDate, DateTime endDate)
     {
         if (startDate >= endDate)
-            throw new BusinessRuleValidationException("Start date must be before end date.");
+            return DateRangeErrors.StartDateNotBeforeEndDate;
 
         return new DateRange(startDate.Date, endDate.Date);
     }

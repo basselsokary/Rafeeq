@@ -19,29 +19,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Attractions\" />
-    <Folder Include="Features\Attractions\Commands\" />
-    <Folder Include="Features\Attractions\Queries\" />
-    <Folder Include="Features\Cities\Commands\" />
-    <Folder Include="Features\ContentReports\" />
-    <Folder Include="Features\ContentReports\Commands\" />
-    <Folder Include="Features\ContentReports\Queries\" />
-    <Folder Include="Features\Reviews\" />
-    <Folder Include="Features\Reviews\Commands\" />
-    <Folder Include="Features\Reviews\Queries\" />
-    <Folder Include="Features\Sites\" />
-    <Folder Include="Features\Sites\Queires\" />
-    <Folder Include="Features\Sponsors\" />
-    <Folder Include="Features\Sponsors\Commands\" />
-    <Folder Include="Features\Sponsors\Queries\" />
-    <Folder Include="Features\Trips\" />
-    <Folder Include="Features\Trips\Commands\" />
-    <Folder Include="Features\Trips\Queries\" />
-    <Folder Include="Features\Users\Queries\" />
-    <Folder Include="Features\Users\Tourists\" />
-    <Folder Include="Features\Users\Tourists\Commands\" />
-    <Folder Include="Features\Users\Tourists\Queries\" />
-    <Folder Include="Services\" />
+    <Folder Include="Commands\Trips\Validators\" />
+    <Folder Include="Commands\Trips\" />
+    <Folder Include="EventHandlers\Attractions\" />
+    <Folder Include="EventHandlers\ContentReports\" />
+    <Folder Include="EventHandlers\Reviews\" />
+    <Folder Include="EventHandlers\Sites\" />
+    <Folder Include="Queries\Sites\LocalizedContents\" />
+    <Folder Include="Queries\Sponsors\Offers\" />
+    <Folder Include="Queries\Sponsors\Validators" />
   </ItemGroup>
 
 </Project>

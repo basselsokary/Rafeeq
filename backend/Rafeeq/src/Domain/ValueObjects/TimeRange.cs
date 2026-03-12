@@ -1,5 +1,5 @@
 using Domain.Common;
-using Domain.Exceptions;
+using Shared.Models;
 
 namespace Domain.ValueObjects;
 
@@ -15,10 +15,10 @@ public class TimeRange : ValueObject
         EndTime = endTime;
     }
 
-    public static TimeRange Create(TimeSpan startTime, TimeSpan endTime)
+    public static Result<TimeRange> Create(TimeSpan startTime, TimeSpan endTime)
     {
         if (startTime >= endTime)
-            throw new BusinessRuleValidationException("Start time must be before end time.");
+            return TimeRangeErrors.StartTimeNotBeforeEndTime;
 
         return new TimeRange(startTime, endTime);
     }

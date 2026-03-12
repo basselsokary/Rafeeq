@@ -1,5 +1,5 @@
 using Domain.Common;
-using Domain.Exceptions;
+using Shared.Models;
 using static Domain.Common.Constants.DomainConstants.Review;
 
 namespace Domain.ValueObjects;
@@ -13,10 +13,10 @@ public class Rating : ValueObject
         Value = value;
     }
 
-    public static Rating Create(int value)
+    public static Result<Rating> Create(int value)
     {
         if (value < MinRatingValue || value > MaxRatingValue)
-            throw new BusinessRuleValidationException($"Rating must be between {MinRatingValue} and {MaxRatingValue}.");
+            return RatingErrors.OutOfRange(MinRatingValue, MaxRatingValue);
 
         return new Rating(value);
     }

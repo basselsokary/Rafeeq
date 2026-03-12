@@ -84,9 +84,12 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
 
     public void SetLocation(GeoLocation? exactLocation, string? locationDescription)
     {
-        Location = exactLocation;
-        LocationDescription = locationDescription?.Trim();
-        MarkAsUpdated();
+        if (exactLocation != null || locationDescription != null)
+        {   
+            Location = exactLocation;
+            LocationDescription = locationDescription?.Trim();
+            MarkAsUpdated();
+        }
     }
 
     public Result AddImage(string imageUrl, bool isMain, string? caption = null)
@@ -130,18 +133,6 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
             _localizedContents.Remove(existing);
 
         _localizedContents.Add(contentResult.Value);
-        MarkAsUpdated();
-
-        return Result.Success();
-    }
-
-    public Result RemoveLocalizedContent(Guid contentId)
-    {
-        var content = _localizedContents.FirstOrDefault(lc => lc.Id == contentId);
-        if (content == null)
-            return AttractionErrors.LocalizedContentNotFound;
-
-        _localizedContents.Remove(content);
         MarkAsUpdated();
 
         return Result.Success();

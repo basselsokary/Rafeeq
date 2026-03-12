@@ -1,4 +1,4 @@
-using Application.DTOs;
+using Application.DTOs.Common;
 using FluentValidation;
 using static Domain.Common.Constants.DomainConstants.Money;
 

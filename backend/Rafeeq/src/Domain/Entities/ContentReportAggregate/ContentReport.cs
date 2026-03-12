@@ -34,9 +34,10 @@ public class ContentReport : BaseAuditableEntity, IAggregateRoot
         ReportedEntityId = reportedEntityId;
         Reason = reason;
         Description = description;
+        
+        Priority = CalculatePriority(reason);
         Status = ReportStatus.Pending;
         ReportedAt = DateTime.UtcNow;
-        Priority = CalculatePriority(reason);
     }
 
     public static Result<ContentReport> Create(
@@ -62,7 +63,7 @@ public class ContentReport : BaseAuditableEntity, IAggregateRoot
     public Result Solve(Guid reviewerId, ModerationAction action, string? notes = null)
     {
         if (Status != ReportStatus.Pending && Status != ReportStatus.UnderReview)
-            return ContentReportErrors.CantBeSolved;
+            return ContentReportErrors.CannotBeSolved;
 
         ReviewedBy = reviewerId;
         ReviewedAt = DateTime.UtcNow;
@@ -80,7 +81,7 @@ public class ContentReport : BaseAuditableEntity, IAggregateRoot
     public Result MarkAsUnderReview(Guid reviewerId)
     {
         if (Status != ReportStatus.Pending)
-            return ContentReportErrors.CantBeReviewed;
+            return ContentReportErrors.CannotBeMarkedUnderReview;
 
         Status = ReportStatus.UnderReview;
         ReviewedBy = reviewerId;
@@ -93,7 +94,7 @@ public class ContentReport : BaseAuditableEntity, IAggregateRoot
     public Result Dismiss(Guid reviewerId, string reason)
     {
         if (string.IsNullOrWhiteSpace(reason))
-            return ContentReportErrors.CantBeDismissed;
+            return ContentReportErrors.CannotBeDismissed;
 
         ReviewedBy = reviewerId;
         ReviewedAt = DateTime.UtcNow;

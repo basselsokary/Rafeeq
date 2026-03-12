@@ -1,5 +1,4 @@
 ﻿using Application.Behaviors;
-using Application.Common.Interfaces.Messaging.Behavior;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,10 +19,7 @@ public static class DependencyInjection
 
     private static void AddBehaviors(this IServiceCollection services)
     {
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
+        
     }
 
     private static void AddServicesByScrutor(this IServiceCollection services)

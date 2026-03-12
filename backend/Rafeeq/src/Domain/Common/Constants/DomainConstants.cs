@@ -14,9 +14,15 @@ public static class DomainConstants
         public const int MaxRatingValue = 5;
     }
 
-    public static class Category
+    public static class Attraction
     {
-        public const int MaxNameLength = 512;
+        public const int MaxNameLength = 128;
+        public const int MaxDescriptionLength = 2048;
+    }
+
+    public static class City
+    {
+        public const int MaxNameLength = 128;
         public const int MaxDescriptionLength = 2048;
     }
 
@@ -31,6 +37,7 @@ public static class DomainConstants
     public static class ContentReport
     {
         public const int HighPriority = 4;
+        public const int MaxDescriptionLength = 2048;
     }
 
     public static class Money

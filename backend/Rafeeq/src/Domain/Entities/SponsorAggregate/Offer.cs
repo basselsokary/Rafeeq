@@ -26,7 +26,8 @@ public class Offer : BaseAuditableEntity
         Money? discountAmount,
         int? discountPercentage,
         DateRange validityPeriod,
-        string? termsAndConditions)
+        string? termsAndConditions,
+        int? maxRedemptions)
     {
         Title = title;
         Description = description;
@@ -34,6 +35,7 @@ public class Offer : BaseAuditableEntity
         DiscountPercentage = discountPercentage;
         ValidityPeriod = validityPeriod;
         TermsAndConditions = termsAndConditions;
+        MaxRedemptions = maxRedemptions;
         
         IsActive = false;
         RedemptionCount = 0;
@@ -45,7 +47,8 @@ public class Offer : BaseAuditableEntity
         Money? discountAmount,
         int? discountPercentage,
         DateRange validityPeriod,
-        string? termsAndConditions = null)
+        string? termsAndConditions = null,
+        int? maxRedemptions = null)
     {
         if (string.IsNullOrWhiteSpace(title))
             return SponsorErrors.TitleRequired;
@@ -65,7 +68,8 @@ public class Offer : BaseAuditableEntity
             discountAmount,
             discountPercentage,
             validityPeriod,
-            termsAndConditions?.Trim());
+            termsAndConditions?.Trim(),
+            maxRedemptions);
     }
 
     internal Result Update(
@@ -97,7 +101,7 @@ public class Offer : BaseAuditableEntity
         return Result.Success();
     }
 
-    internal Result IncrementRedemption()
+    internal Result Redeem()
     {
         if (!IsActive)
             return SponsorErrors.InactiveOffer;
