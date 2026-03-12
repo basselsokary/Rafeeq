@@ -1,5 +1,4 @@
 ﻿using API.Controllers.Base;
-using API.Services.Dispatchers;
 using Application.Commands.Users;
 using Application.Common.Interfaces.Messaging;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EventMaster.API.Controllers;
 
 [Route("api/[controller]")]
-public class AuthController(IRequestDispatcher dispatcher) : ApiBaseController(dispatcher)
+public class AuthController() : ApiBaseController
 {
     [HttpPost("login")]
     public async Task<IActionResult> Login(
