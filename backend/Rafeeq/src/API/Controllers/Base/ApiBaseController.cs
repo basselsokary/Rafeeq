@@ -64,7 +64,7 @@ public abstract class ApiBaseController(IRequestDispatcher dispatcher) : Control
         return new ProblemDetails
         {
             Title = error.Code,
-            Detail = error.Description,
+            Detail = error.Message,
             Status = statusCode,
             Instance = HttpContext.Request.Path
         };
