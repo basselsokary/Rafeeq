@@ -35,7 +35,7 @@ public class ContentReportsController : ApiBaseController
 			page <= 0 ? 1 : page,
 			pageSize <= 0 ? 20 : pageSize);
 
-		var query = new GetContentReportsByHighPriorityQuery(priority, status, reason, paging);
+		var query = new GetContentReportsByHighPriorityQuery(priority, paging, status, reason);
 		var result = await queryHandler.HandleAsync(query);
 
 		return HandleResult(result);

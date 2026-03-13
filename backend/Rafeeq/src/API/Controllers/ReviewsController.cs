@@ -1,6 +1,7 @@
 using API.Controllers.Base;
 using Application.Commands.Reviews;
 using Application.Common.Interfaces.Messaging;
+using Application.Common.Interfaces.QueryServices;
 using Application.DTOs.Common;
 using Application.DTOs.Reviews;
 using Application.Queries.Reviews;
@@ -26,17 +27,20 @@ public class ReviewsController : ApiBaseController
 	[HttpGet("site/{siteId:guid}")]
 	public async Task<IActionResult> GetBySiteId(
 		[FromRoute] Guid siteId,
-		[FromQuery] bool? approved,
-		[FromQuery] string? sortBy,
+		[FromQuery] ReviewStatus? status,
+		[FromQuery] ReviewOrderBy? sortBy,
 		[FromQuery] int page,
 		[FromQuery] int pageSize,
 		[FromServices] IQueryHandler<GetReviewsBySiteIdQuery, PagedResult<ReviewListDto>> queryHandler)
 	{
-		var paging = new PagingParameters(
-			page <= 0 ? 1 : page,
-			pageSize <= 0 ? 20 : pageSize);
+		var paging = new PagingParameters(page, pageSize);
 
-		var query = new GetReviewsBySiteIdQuery(siteId, approved ?? true, sortBy, paging);
+		var query = new GetReviewsBySiteIdQuery(
+            siteId,
+            paging,
+            status ?? ReviewStatus.Approved,
+            sortBy ?? ReviewOrderBy.Helpful);
+
 		var result = await queryHandler.HandleAsync(query);
 
 		return HandleResult(result);
@@ -67,11 +71,9 @@ public class ReviewsController : ApiBaseController
 		[FromQuery] int pageSize,
 		[FromServices] IQueryHandler<GetReviewsByStatusQuery, PagedResult<ReviewListDto>> queryHandler)
 	{
-		var paging = new PagingParameters(
-			page <= 0 ? 1 : page,
-			pageSize <= 0 ? 20 : pageSize);
+		var paging = new PagingParameters(page, pageSize);
 
-		var query = new GetReviewsByStatusQuery(status, paging);
+		var query = new GetReviewsByStatusQuery(paging, status);
 		var result = await queryHandler.HandleAsync(query);
 
 		return HandleResult(result);

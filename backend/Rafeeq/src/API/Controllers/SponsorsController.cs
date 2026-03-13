@@ -22,16 +22,15 @@ public class SponsorsController : ApiBaseController
 		[FromQuery] string? searchTerm,
 		[FromQuery] SponsorType? type,
 		[FromQuery] SponsorTier? tier,
-		[FromQuery] Guid? city,
 		[FromQuery] bool? activeOnly,
 		[FromQuery] int page,
 		[FromQuery] int pageSize,
 		[FromServices] IQueryHandler<GetSponsorsQuery, PagedResult<SponsorListDto>> queryHandler)
 	{
-		var filters = new SponsorFilters(type, tier, city, activeOnly);
+		var filters = new SponsorFilters(type, tier, activeOnly);
 		var paging = new PagingParameters(page, pageSize);
 
-		var query = new GetSponsorsQuery(filters, searchTerm, paging);
+		var query = new GetSponsorsQuery(filters, paging, searchTerm);
 		var result = await queryHandler.HandleAsync(query);
 
 		return HandleResult(result);
@@ -54,12 +53,11 @@ public class SponsorsController : ApiBaseController
 		[FromQuery] int radiusKm,
 		[FromQuery] SponsorType? type,
 		[FromQuery] SponsorTier? tier,
-		[FromQuery] Guid? city,
 		[FromQuery] bool? activeOnly,
 		[FromServices] IQueryHandler<GetNearbySponsorsQuery, List<NearbySponsorDto>> queryHandler)
 	{
-		var filters = new SponsorFilters(type, tier, city, activeOnly);
-		var query = new GetNearbySponsorsQuery(latitude, longitude, radiusKm, filters, null);
+		var filters = new SponsorFilters(type, tier, activeOnly);
+		var query = new GetNearbySponsorsQuery(latitude, longitude, filters, RadiusKm: radiusKm);
 		var result = await queryHandler.HandleAsync(query);
 
 		return HandleResult(result);
@@ -80,17 +78,16 @@ public class SponsorsController : ApiBaseController
 	public async Task<IActionResult> GetAllOffers(
 		[FromQuery] SponsorType? type,
 		[FromQuery] SponsorTier? tier,
-		[FromQuery] Guid? city,
 		[FromQuery] bool? sponsorActiveOnly,
 		[FromQuery] bool activeOnly,
 		[FromQuery] int page,
 		[FromQuery] int pageSize,
 		[FromServices] IQueryHandler<GetAllSiteOffersAsync, PagedResult<SponsorOfferListDto>> queryHandler)
 	{
-		var filters = new SponsorFilters(type, tier, city, sponsorActiveOnly);
+		var filters = new SponsorFilters(type, tier, sponsorActiveOnly);
 		var paging = new PagingParameters(page, pageSize);
 
-		var query = new GetAllSiteOffersAsync(filters, activeOnly, paging);
+		var query = new GetAllSiteOffersAsync(filters, paging, activeOnly);
 		var result = await queryHandler.HandleAsync(query);
 
 		return HandleResult(result);

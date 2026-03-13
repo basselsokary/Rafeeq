@@ -21,16 +21,16 @@ public class SitesController() : ApiBaseController
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery] string? searchTerm,
-        [FromQuery] List<SiteType>? types,
+        [FromQuery] SiteType? type,
         [FromQuery] Guid? city,
         [FromQuery] bool? isFree,
-        [FromQuery] double? minRating,
-        [FromQuery] double? maxRating,
+        [FromQuery] int? minRating,
+        [FromQuery] int? maxRating,
         [FromQuery] int page,
         [FromQuery] int pageSize,
         [FromServices] IQueryHandler<GetSitesQuery, PagedResult<SiteListDto>> queryHandler)
     {
-        var filters = new SiteFilters(types, city, isFree, minRating, maxRating);
+        var filters = new SiteFilters(type, city, isFree, minRating, maxRating);
         var paging = new PagingParameters(page, pageSize);
 
         var query = new GetSitesQuery(searchTerm, filters, paging);
@@ -66,20 +66,19 @@ public class SitesController() : ApiBaseController
         [FromQuery] double latitude,
         [FromQuery] double longitude,
         [FromQuery] int radiusKm,
-        [FromQuery] List<SiteType>? types,
+        [FromQuery] SiteType? types,
         [FromQuery] Guid? city,
         [FromQuery] bool? isFree,
-        [FromQuery] double? minRating,
-        [FromQuery] double? maxRating,
+        [FromQuery] int? minRating,
+        [FromQuery] int? maxRating,
         [FromServices] IQueryHandler<GetNearbySitesQuery, List<SiteListDto>> queryHandler)
     {
         var filters = new SiteFilters(types, city, isFree, minRating, maxRating);
         var query = new GetNearbySitesQuery(
             latitude,
             longitude,
-            radiusKm,
             filters,
-            null);
+            radiusKm);
 
         var result = await queryHandler.HandleAsync(query);
 
@@ -92,15 +91,15 @@ public class SitesController() : ApiBaseController
         [FromQuery] double southLatitude,
         [FromQuery] double eastLongitude,
         [FromQuery] double westLongitude,
-        [FromQuery] List<SiteType>? types,
+        [FromQuery] SiteType? type,
         [FromQuery] Guid? city,
         [FromQuery] bool? isFree,
-        [FromQuery] double? minRating,
-        [FromQuery] double? maxRating,
+        [FromQuery] int? minRating,
+        [FromQuery] int? maxRating,
         [FromServices] IQueryHandler<GetSitesWithinBoundsQuery, List<SiteMapMarkerDto>> queryHandler)
     {
         var bounds = new BoundingBox(northLatitude, southLatitude, eastLongitude, westLongitude);
-        var filters = new SiteFilters(types, city, isFree, minRating, maxRating);
+        var filters = new SiteFilters(type, city, isFree, minRating, maxRating);
         var query = new GetSitesWithinBoundsQuery(bounds, filters);
         var result = await queryHandler.HandleAsync(query);
 
