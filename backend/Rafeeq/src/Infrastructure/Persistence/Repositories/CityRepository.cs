@@ -14,5 +14,4 @@ internal class CityRepository(ApplicationDbContext context)
             .Include(c => c.LocalizedContents)
             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
-
 }

@@ -8,8 +8,7 @@ public record GetNearbySitesQuery(
     double Latitude,
     double Longitude,
     SiteFilters Filters,
-    int RadiusKm = 5,
-    PagingParameters? Paging = null) : IQuery<List<SiteListDto>>;
+    int RadiusKm = 5) : IQuery<List<SiteListDto>>;
 
 internal class GetNearbySitesQueryHandler(
     ISiteQueryService queryService) : IQueryHandler<GetNearbySitesQuery, List<SiteListDto>>

@@ -1,39 +1,43 @@
-using RafeeqApp.Domain.Common.Interfaces;
-using RafeeqApp.Domain.Repositories;
-using RafeeqApp.Infrastructure.Persistence.ApplicationDbContext;
+using Domain.Common.Interfaces;
+using Domain.Repositories;
+using Infrastructure.Persistence.ApplicationContext;
+using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace RafeeqApp.Infrastructure.Persistence;
+namespace Infrastructure.Persistence;
 
-public class UnitOfWork : IUnitOfWork
+internal class UnitOfWork(
+    ApplicationDbContext context) : IUnitOfWork
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ApplicationDbContext _context = context;
     private IDbContextTransaction? _currentTransaction;
 
-    public UnitOfWork(
-        ApplicationDbContext context,
-        ISiteRepository sites,
-        IUserRepository users,
-        IReviewRepository reviews,
-        ISponsorRepository sponsors,
-        ICityRepository cities,
-        IContentReportRepository contentReports)
-    {
-        _context = context;
-        Sites = sites;
-        Users = users;
-        Reviews = reviews;
-        Sponsors = sponsors;
-        Cities = cities;
-        ContentReports = contentReports;
-    }
+    private IUserRepository? _userRepository;
+    private ISiteRepository? _siteRepository;
+    private IReviewRepository? _reviewRepository;
+    private ISponsorRepository? _sponsorRepository;
+    private ICityRepository? _cityRepository;
+    private IContentReportRepository? _contentReportRepository;
+    private IAttractionRepository? _attractionRepository;
+    private ITripRepository? _tripRepository;
+    
+    public IUserRepository Users
+        => _userRepository ??= new UserRepository(_context);
+    public ISiteRepository Sites
+        => _siteRepository ??= new SiteRepository(_context);
+    public IReviewRepository Reviews
+        => _reviewRepository ??= new ReviewRepository(_context);
+    public ISponsorRepository Sponsors
+        => _sponsorRepository ??= new SponsorRepository(_context);
+    public ICityRepository Cities
+        => _cityRepository ??= new CityRepository(_context);
+    public IContentReportRepository ContentReports
+        => _contentReportRepository ??= new ContentReportRepository(_context);
+    public IAttractionRepository Attractions
+        => _attractionRepository ??= new AttractionRepository(_context);
+    // public ITripRepository Trips
+    //     => _tripRepository ??= new TripRepository(_context);
 
-    public ISiteRepository Sites { get; }
-    public IUserRepository Users { get; }
-    public IReviewRepository Reviews { get; }
-    public ISponsorRepository Sponsors { get; }
-    public ICityRepository Cities { get; }
-    public IContentReportRepository ContentReports { get; }
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

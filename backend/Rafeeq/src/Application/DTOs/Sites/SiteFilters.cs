@@ -3,7 +3,7 @@ using Domain.Enums;
 namespace Application.DTOs.Sites;
 
 public record SiteFilters(
-    List<SiteType>? Types,
+    SiteType? Type,
     Guid? City,
     bool? IsFree,
     int? MinRating,
