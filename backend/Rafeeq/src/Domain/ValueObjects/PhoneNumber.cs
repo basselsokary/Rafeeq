@@ -1,12 +1,14 @@
 using Domain.Common;
-using Domain.Common.Exceptions;
+using Shared.Models;
 using System.Text.RegularExpressions;
 
 namespace Domain.ValueObjects;
 
 public sealed class PhoneNumber : ValueObject
 {
-    private static readonly Regex PhoneRegex = new(@"^\+?[1-9]\d{1,12}$");
+    // private static readonly Regex PhoneRegex = new(@"^\+?[1-9]\d{1,12}$");
+    // +201234567890 | 01234567890 | 12345
+    private static readonly Regex PhoneRegex = new(@"^((\+201|01)[0-9]\d{8}|\d{5})$");
 
     public string Value { get; }
 
@@ -15,17 +17,33 @@ public sealed class PhoneNumber : ValueObject
         Value = value;
     }
 
-    public static PhoneNumber Create(string value)
+    public static Result<PhoneNumber> Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new BusinessRuleValidationException("Phone number cannot be empty.");
+            return PhoneNumberErrors.Empty;
 
-        var cleanedNumber = Regex.Replace(value, @"[^\d+]", "");
+        var normalizedNumber = NormalizeNumber(value.Trim());
 
-        if (!PhoneRegex.IsMatch(cleanedNumber))
-            throw new BusinessRuleValidationException($"'{value}' is not a valid phone number.");
+        if (!PhoneRegex.IsMatch(normalizedNumber))
+            return PhoneNumberErrors.InvalidFormat(value);
 
-        return new PhoneNumber(cleanedNumber);
+        return new PhoneNumber(normalizedNumber);
+    }
+
+    private static string NormalizeNumber(string phone)
+    {
+        if (Regex.IsMatch(phone, @"^\d{5}$"))
+            return phone; // short code
+
+        phone = phone.Replace(" ", "").Replace("-", "");
+
+        if (phone.StartsWith("20") && !phone.StartsWith("+"))
+            phone = "+" + phone;
+
+        if (phone.StartsWith("01"))
+            phone = "+2" + phone;
+
+        return phone;
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

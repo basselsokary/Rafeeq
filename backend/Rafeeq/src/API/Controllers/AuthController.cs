@@ -1,34 +1,40 @@
 ﻿using API.Controllers.Base;
-using API.Services.Dispatchers;
-using Application.Features.Users.Commands;
+using Application.Commands.Users;
+using Application.Common.Interfaces.Messaging;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventMaster.API.Controllers;
 
 [Route("api/[controller]")]
-public class AuthController(IRequestDispatcher dispatcher) : ApiBaseController(dispatcher)
+public class AuthController() : ApiBaseController
 {
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginCommand command)
+    public async Task<IActionResult> Login(
+        [FromBody] LoginCommand command,
+        [FromServices] ICommandHandler<LoginCommand, LoginResponse> commandHandler)
     {
-        var result = await Dispatcher.DispatchAsync(command);
+        var result = await commandHandler.HandleAsync(command);
 
-        return result.Succeeded ? Ok(result.Data) : BadRequest(result.Errors);
+        return HandleResult(result);
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterCommand command)
+    public async Task<IActionResult> Register(
+        [FromBody] RegisterCommand command,
+        [FromServices] ICommandHandler<RegisterCommand> commandHandler)
     {
-        var result = await Dispatcher.DispatchAsync(command);
+        var result = await commandHandler.HandleAsync(command);
 
-        return result.Succeeded ? Ok("User registerd successfully!") : BadRequest(result.Errors);
+        return HandleResult(result);
     }
 
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh([FromBody] RefreshCommand command)
+    public async Task<IActionResult> Refresh(
+        [FromBody] RefreshCommand command,
+        [FromServices] ICommandHandler<RefreshCommand, RefreshResponse> commandHandler)
     {
-        var result = await Dispatcher.DispatchAsync(command);
+        var result = await commandHandler.HandleAsync(command);
 
-        return result.Succeeded ? Ok(result.Data) : BadRequest(result.Errors);
+        return HandleResult(result);
     }
 }

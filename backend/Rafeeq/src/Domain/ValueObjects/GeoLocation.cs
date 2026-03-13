@@ -1,10 +1,13 @@
 using Domain.Common;
-using Domain.Exceptions;
+using Shared.Models;
 
 namespace Domain.ValueObjects;
 
 public class GeoLocation : ValueObject
 {
+    private const int BoundLatitude = 90;
+    private const int BoundLongitude = 180;
+    
     public double Latitude { get; }
     public double Longitude { get; }
     
@@ -15,13 +18,13 @@ public class GeoLocation : ValueObject
         Longitude = lng;
     }
 
-    public static GeoLocation Create(double latitude, double longitude)
-    {        
-        if (latitude < -90 || latitude > 90)
-            throw new BusinessRuleValidationException("Latitude must be between -90 and 90 degrees.");
+    public static Result<GeoLocation> Create(double latitude, double longitude)
+    {
+        if (latitude < -BoundLatitude || latitude > BoundLatitude)
+            return GeoLocationErrors.InvalidLatitude(BoundLatitude);
 
-        if (longitude < -180 || longitude > 180)
-            throw new BusinessRuleValidationException("Longitude must be between -180 and 180 degrees.");
+        if (longitude < -BoundLongitude || longitude > BoundLongitude)
+            return GeoLocationErrors.InvalidLongitude(BoundLongitude);
 
         return new GeoLocation(latitude, longitude);
     }

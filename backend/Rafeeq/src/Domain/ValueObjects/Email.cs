@@ -1,13 +1,10 @@
 using Domain.Common;
 using Domain.Common.Constants;
-using Domain.Exceptions;
+using Shared.Models;
 using System.Text.RegularExpressions;
 
 namespace Domain.ValueObjects;
 
-/// <summary>
-/// Represents an email address
-/// </summary>
 public sealed class Email : ValueObject
 {
     private static readonly Regex EmailRegex = new(
@@ -20,17 +17,17 @@ public sealed class Email : ValueObject
         Value = value;
     }
 
-    public static Email Create(string value)
+    public static Result<Email> Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new BusinessRuleValidationException("Email cannot be empty.");
+            return EmailErrors.Empty;
 
         var normalizedEmail = value.Trim().ToLowerInvariant();
-        if (normalizedEmail.Length > DomainConstants.User.MaxEmailLength) 
-            throw new BusinessRuleValidationException("Email is too long.");
+        if (normalizedEmail.Length > DomainConstants.User.MaxEmailLength)
+            return EmailErrors.TooLong;
 
         if (!EmailRegex.IsMatch(normalizedEmail))
-            throw new BusinessRuleValidationException($"'{value}' is not a valid email address.");
+            return EmailErrors.InvalidFormat(value);
 
         return new Email(normalizedEmail);
     }

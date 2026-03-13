@@ -57,8 +57,11 @@ public class City : BaseAuditableEntity, IAggregateRoot
 
     public void SetCenterLocation(GeoLocation location)
     {
-        CenterLocation = location;
-        MarkAsUpdated();
+        if (CenterLocation != location)
+        {   
+            CenterLocation = location;
+            MarkAsUpdated();
+        }
     }
 
     public Result SetImage(string imageUrl)
@@ -83,13 +86,13 @@ public class City : BaseAuditableEntity, IAggregateRoot
         return Result.Success();
     }
 
-    public void IncrementAttractionCount()
+    public void IncrementSiteCount()
     {
         TotalSites++;
         MarkAsUpdated();
     }
 
-    public void DecrementAttractionCount()
+    public void DecrementSiteCount()
     {
         if (TotalSites > 0)
         {
@@ -109,33 +112,6 @@ public class City : BaseAuditableEntity, IAggregateRoot
             _localizedContents.Remove(existing);
 
         _localizedContents.Add(contentResult.Value);
-        MarkAsUpdated();
-
-        return Result.Success();
-    }
-
-    public Result UpdateLocalizedContent(Guid contentId, string name, string description)
-    {
-        var content = _localizedContents.FirstOrDefault(lc => lc.Id == contentId);
-        if (content == null)
-            return CityErrors.LocalizedContentNotFound;
-
-        var result = content.Update(name, description);
-        if (result.Failed)
-            return result;
-
-        MarkAsUpdated();
-
-        return Result.Success();
-    }
-
-    public Result RemoveLocalizedContent(Guid contentId)
-    {
-        var content = _localizedContents.FirstOrDefault(lc => lc.Id == contentId);
-        if (content == null)
-            return CityErrors.LocalizedContentNotFound;
-
-        _localizedContents.Remove(content);
         MarkAsUpdated();
 
         return Result.Success();

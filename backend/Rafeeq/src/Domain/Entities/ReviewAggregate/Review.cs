@@ -3,6 +3,8 @@ using Domain.Common.Interfaces;
 using Domain.ValueObjects;
 using Shared.Models;
 using Domain.Enums;
+using Domain.Events;
+using Domain.Entities.SiteAggregate;
 
 namespace Domain.Entities.ReviewAggregate;
 
@@ -48,10 +50,10 @@ public class Review : BaseAuditableEntity, IAggregateRoot
         string content)
     {
         if (touristId == Guid.Empty)
-            return ReviewErrors.EntityIdRequired("User");
+            return ReviewErrors.TouristIdRequired;
         
         if (siteId == Guid.Empty)
-            return ReviewErrors.EntityIdRequired("Site");
+            return ReviewErrors.SiteIdRequired;
 
         if (string.IsNullOrWhiteSpace(title))
             return ReviewErrors.TitleRequired;
@@ -59,7 +61,11 @@ public class Review : BaseAuditableEntity, IAggregateRoot
         if (string.IsNullOrWhiteSpace(content))
             return ReviewErrors.ContentRequired;
         
-        return new Review(touristId, siteId, rating, title.Trim(), content.Trim());
+        var review = new Review(touristId, siteId, rating, title.Trim(), content.Trim());
+        
+        // review.RaiseDomainEvent(new ReviewCreatedEvent(review.Id, review.SiteId, review.UserId, review.Rating));
+        
+        return review;
     }
 
     public Result Update(Rating rating, string title, string content)
@@ -70,26 +76,42 @@ public class Review : BaseAuditableEntity, IAggregateRoot
         if (string.IsNullOrWhiteSpace(content))
             return ReviewErrors.ContentRequired;
 
+        var oldRating = Rating;
+
         Rating = rating;
         Content = content.Trim();
         Title = title.Trim();
+        Status = ReviewStatus.Pending;
+
+        MarkAsUpdated();
+        
+        RaiseDomainEvent(new ReviewUpdatedEvent(Id, SiteId, UserId, oldRating, Rating));
         
         return Result.Success();
     }
 
-    public void Approve()
+    public void Delete()
     {
-        if (Status == ReviewStatus.Approved) return;
+        RaiseDomainEvent(new ReviewDeletedEvent(Id, SiteId, UserId, Rating));
+    }
+
+    public Result Approve()
+    {
+        if (Status == ReviewStatus.Approved) return Result.Success();
 
         Status = ReviewStatus.Approved;
         RejectionReason = null;
         MarkAsUpdated();
+        
+        RaiseDomainEvent(new ReviewApprovedEvent(Id, SiteId, UserId, Rating));
+
+        return Result.Success();
     }
 
     public Result Reject(string reason)
     {
         if (string.IsNullOrWhiteSpace(reason))
-            return ReviewErrors.RejectionReasonReqiured;
+            return ReviewErrors.RejectionReasonRequired;
 
         Status = ReviewStatus.Rejected;
         RejectionReason = reason.Trim();
@@ -98,10 +120,11 @@ public class Review : BaseAuditableEntity, IAggregateRoot
         return Result.Success();
     }
 
-    public void Flag()
+    public Result Flag()
     {
         Status = ReviewStatus.Flagged;
         MarkAsUpdated();
+        return Result.Success();
     }
 
     public void MarkAsHelpful()

@@ -1,4 +1,5 @@
 using Domain.Common;
+using Domain.Exceptions;
 using Domain.Enums;
 using Domain.ValueObjects;
 using Domain.Common.Interfaces;

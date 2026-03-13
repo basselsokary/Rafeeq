@@ -2,7 +2,6 @@ using Domain.Common.Interfaces;
 using Domain.Common;
 using Domain.Enums;
 using Domain.ValueObjects;
-using static Domain.Common.Constants.DomainConstants.Review;
 using Shared.Models;
 
 namespace Domain.Entities.SponsorAggregate;
@@ -17,12 +16,11 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
     
     public Address Address { get; private set; } = null!;
     public string? Website { get; private set; }
-    public PhoneNumber ContactPhone { get; private set; } = null!;
-    public Email ContactEmail { get; private set; } = null!;
+    public PhoneNumber? ContactPhone { get; private set; }
+    public Email? ContactEmail { get; private set; }
     public DateTime ContractStartDate { get; private set; }
     public DateTime ContractEndDate { get; private set; }
     
-    public double AverageRating { get; private set; }
     public int TotalRedemptions { get; private set; }
     public bool IsActive { get; private set; }
 
@@ -40,8 +38,6 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         SponsorTier tier,
         GeoLocation location,
         Address address,
-        PhoneNumber phoneNumber,
-        Email email,
         DateTime contractStartDate,
         DateTime contractEndDate)
     {
@@ -53,11 +49,8 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         Address = address;
         ContractStartDate = contractStartDate;
         ContractEndDate = contractEndDate;
-        ContactPhone = phoneNumber;
-        ContactEmail = email;
         
-        IsActive = true;
-        AverageRating = 0;
+        IsActive = false;
         TotalRedemptions = 0;
     }
 
@@ -68,8 +61,6 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         SponsorTier tier,
         GeoLocation location,
         Address address,
-        PhoneNumber phoneNumber,
-        Email email,
         DateTime contractStartDate,
         DateTime contractEndDate)
     {
@@ -89,8 +80,6 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
             tier,
             location,
             address,
-            phoneNumber,
-            email,
             contractStartDate,
             contractEndDate);
 
@@ -117,17 +106,23 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
 
     public void UpdateLocation(GeoLocation location, Address address)
     {
-        Location = location;
-        Address = address;
-        MarkAsUpdated();
+        if (location != Location || address != Address)
+        {
+            Location = location;
+            Address = address;
+            MarkAsUpdated();
+        }
     }
 
-    public void UpdateContactInfo(PhoneNumber contactPhone, Email contactEmail, string? website)
+    public void SetContactInfo(PhoneNumber contactPhone, Email contactEmail, string? website)
     {
-        ContactPhone = contactPhone;
-        ContactEmail = contactEmail;
-        Website = website;
-        MarkAsUpdated();
+        if (ContactPhone != contactPhone || contactEmail != ContactEmail || !string.IsNullOrWhiteSpace(website))
+        {
+            ContactPhone = contactPhone;
+            ContactEmail = contactEmail;
+            Website = website;
+            MarkAsUpdated();
+        }
     }
 
     public void UpdateTier(SponsorTier tier)
@@ -173,7 +168,8 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         Money? discount,
         int? discountPercentage,
         DateRange validityPeriod,
-        string? termsAndConditions)
+        string? termsAndConditions,
+        int? maxRedemptions)
     {
         var offerResult = Offer.Create(
             title,
@@ -181,7 +177,9 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
             discount,
             discountPercentage,
             validityPeriod,
-            termsAndConditions);
+            termsAndConditions,
+            maxRedemptions);
+        
         if (offerResult.Failed)
             return offerResult;
 
@@ -255,24 +253,18 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         return Result.Success();
     }
 
-    public Result IncrementRedemptionCount(Offer offer)
+    public Result RedeemOffer(Guid offerId) 
     {
-        TotalRedemptions++;
-        var offerResult = offer.IncrementRedemption();
+        var offer = _offers.FirstOrDefault(o => o.Id == offerId);
+        if (offer == null)
+            return SponsorErrors.OfferNotFound(offerId);
+
+        var offerResult = offer.Redeem();
         if (offerResult.Failed)
             return offerResult;
         
-        MarkAsUpdated();
-
-        return Result.Success();
-    }
-
-    public Result UpdateRating(double averageRating)
-    {
-        if (averageRating < 0 || averageRating > MaxRatingValue)
-            return SponsorErrors.InvalidAverageRating;
-
-        AverageRating = averageRating;
+        TotalRedemptions++;
+        
         MarkAsUpdated();
 
         return Result.Success();

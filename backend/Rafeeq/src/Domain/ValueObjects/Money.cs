@@ -1,5 +1,5 @@
 using Domain.Common;
-using Domain.Common.Exceptions;
+using Shared.Models;
 
 namespace Domain.ValueObjects;
 
@@ -15,32 +15,32 @@ public class Money : ValueObject
         Currency = currency;
     }
 
-    public static Money Create(decimal amount, string currency = "EGP")
+    public static Result<Money> Create(decimal amount, string currency = "EGP")
     {
         if (amount < 0)
-            throw new BusinessRuleValidationException("Amount cannot be negative.");
+            return MoneyErrors.NegativeAmount;
 
         if (string.IsNullOrWhiteSpace(currency))
-            throw new BusinessRuleValidationException("Currency is required.");
+            return MoneyErrors.EmptyCurrency;
 
         if (currency.Length != 3)
-            throw new BusinessRuleValidationException("Currency must be a 3-letter ISO code.");
+            return MoneyErrors.InvalidCurrencyFormat;
 
-        return new(amount, currency);
+        return new Money(amount, currency.ToUpperInvariant());
     }
 
-    public Money Add(Money other)
+    public Result<Money> Add(Money other)
     {
         if (Currency != other.Currency)
-            throw new InvalidOperationDomainException("Cannot add different currencies.");
+            return MoneyErrors.CurrencyMismatch;
 
         return new Money(Amount + other.Amount, Currency);
     }
 
-    public Money Subtract(Money other)
+    public Result<Money> Subtract(Money other)
     {
         if (Currency != other.Currency)
-            throw new InvalidOperationDomainException("Cannot subtract different currencies.");
+            return MoneyErrors.CurrencyMismatch;
 
         return new Money(Amount - other.Amount, Currency);
     }
@@ -50,10 +50,10 @@ public class Money : ValueObject
         return new Money(Amount * factor, Currency);
     }
 
-    public Money Divide(decimal divisor)
+    public Result<Money> Divide(decimal divisor)
     {
         if (divisor == 0)
-            throw new InvalidOperationDomainException("Cannot divide by 0.");
+            return MoneyErrors.DivisionByZero;
 
         return new Money(Amount / divisor, Currency);
     }

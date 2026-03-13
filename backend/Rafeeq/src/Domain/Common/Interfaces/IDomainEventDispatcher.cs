@@ -1,5 +1,3 @@
-using Domain.Events;
-
 namespace Domain.Common.Interfaces;
 
 /// <summary>
@@ -7,6 +5,6 @@ namespace Domain.Common.Interfaces;
 /// </summary>
 public interface IDomainEventDispatcher
 {
-    Task DispatchAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default);
-    Task DispatchAsync(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken = default);
+    Task DispatchAsync(BaseEvent domainEvent, CancellationToken cancellationToken = default);
+    Task DispatchAsync(IEnumerable<BaseEvent> domainEvents, CancellationToken cancellationToken = default);
 }

@@ -1,14 +1,11 @@
-﻿using API.Services.Dispatchers;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Shared.Models;
 
 namespace API.Controllers.Base;
 
 [ApiController]
-public abstract class ApiBaseController(IRequestDispatcher dispatcher) : ControllerBase
+public abstract class ApiBaseController() : ControllerBase
 {
-    protected readonly IRequestDispatcher Dispatcher = dispatcher;
-
     protected ActionResult HandleResult<T>(Result<T> result)
     {
         if (result.Succeeded)
@@ -64,7 +61,7 @@ public abstract class ApiBaseController(IRequestDispatcher dispatcher) : Control
         return new ProblemDetails
         {
             Title = error.Code,
-            Detail = error.Description,
+            Detail = error.Message,
             Status = statusCode,
             Instance = HttpContext.Request.Path
         };

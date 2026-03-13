@@ -6,7 +6,7 @@ namespace Domain.Common.Interfaces;
 /// Interface for handling domain events
 /// </summary>
 public interface IDomainEventHandler<in TEvent>
-    where TEvent : IDomainEvent
+    where TEvent : BaseEvent
 {
     Task HandleAsync(TEvent domainEvent, CancellationToken cancellationToken = default);
 }

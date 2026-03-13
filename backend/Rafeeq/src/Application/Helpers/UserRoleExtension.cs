@@ -1,7 +1,6 @@
 using Domain.Enums;
 
 namespace Application.Helpers;
-
 public static class UserRoleExtension
 {
     public static string GetName(this UserRole role) => role switch

@@ -1,4 +1,5 @@
 ﻿using Domain.Common;
+using Shared.Models;
 
 namespace Domain.ValueObjects;
 
@@ -18,12 +19,18 @@ public class Address : ValueObject
         PostalCode = postalCode;
     }
 
-    public static Address Create(
+    public static Result<Address> Create(
         string street,
         string city,
         string? region,
         string? postalCode = null)
     {
+        if (string.IsNullOrWhiteSpace(street))
+            return AddressErrors.EmptyStreet;
+
+        if (string.IsNullOrWhiteSpace(city))
+            return AddressErrors.EmptyCity;
+
         return new Address(street.Trim(), city.Trim(), region?.Trim(), postalCode?.Trim());
     }
 
