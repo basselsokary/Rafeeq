@@ -7,5 +7,4 @@ public record OpeningHoursDto(
     string Day,
     string? OpenTime,
     string? CloseTime,
-    bool IsClosed,
-    bool IsToday);
+    bool IsClosed);

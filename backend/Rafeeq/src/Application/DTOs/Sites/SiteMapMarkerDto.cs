@@ -1,3 +1,5 @@
+using Application.DTOs.Common;
+
 namespace Application.DTOs.Sites;
 
 /// <summary>
@@ -7,8 +9,7 @@ public record SiteMapMarkerDto(
     Guid Id,
     string Name,
     string Type,
-    double Latitude,
-    double Longitude,
+    LocationDto Location,
     double AverageRating,
     string? PrimaryImageUrl,
     bool IsFeatured);

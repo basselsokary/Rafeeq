@@ -6,5 +6,5 @@ public record SiteFilters(
     List<SiteType>? Types,
     Guid? City,
     bool? IsFree,
-    double? MinRating,
-    double? MaxRating);
+    int? MinRating,
+    int? MaxRating);

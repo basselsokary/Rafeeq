@@ -10,8 +10,8 @@ public interface IContentReportQueryService
     
     Task<PagedResult<ContentReportListDto>> GetFilteredByPriorityAsync(
         int priority,
+        PagingParameters paging,
         ReportReason? reason = null,
         ReportStatus? status = null,
-        PagingParameters? paging = null,
         CancellationToken cancellationToken = default);
 }

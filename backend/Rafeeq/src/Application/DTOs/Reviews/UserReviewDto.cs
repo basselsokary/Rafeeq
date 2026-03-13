@@ -12,7 +12,6 @@ public record UserReviewDto(
     int Rating,
     string Title,
     string Status,
-    DateTime VisitDate,
     int HelpfulCount,
     DateTime CreatedAt,
     DateTime? UpdatedAt);

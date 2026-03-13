@@ -9,7 +9,6 @@ public record ReviewDetailDto(
     string SiteName,
     Guid UserId,
     string UserName,
-    int UserTotalReviews,
     int Rating,
     string Title,
     string Content,

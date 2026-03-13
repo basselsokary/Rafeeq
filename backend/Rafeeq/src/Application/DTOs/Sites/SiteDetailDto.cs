@@ -19,6 +19,5 @@ public record SiteDetailDto(
     List<OpeningHoursDto> OpeningHours,
     List<FacilityDto> Facilities,
     List<NearestTransportationDto> NearestTransportations,
-    bool IsFeatured,
-    bool IsCurrentlyOpen,
-    string? NextOpeningTime);
+    bool IsFree,
+    bool IsFeatured);

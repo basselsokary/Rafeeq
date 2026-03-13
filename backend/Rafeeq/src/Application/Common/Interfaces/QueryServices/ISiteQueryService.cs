@@ -19,7 +19,7 @@ public interface ISiteQueryService
     /// for map view
     Task<List<SiteMapMarkerDto>> GetWithinBoundsAsync(
         BoundingBox bounds,
-        SiteFilters? filters = null,
+        SiteFilters filters,
         int count = 20,
         CancellationToken cancellationToken = default);
 
@@ -30,13 +30,13 @@ public interface ISiteQueryService
     
     Task<PagedResult<SiteListDto>> SearchAsync(
         string searchTerm,
-        SiteFilters? filters = null,
-        PagingParameters? paging = null,
+        SiteFilters filters,
+        PagingParameters paging,
         CancellationToken cancellationToken = default);
 
-    Task<PagedResult<SiteListDto>> GetAllAsync(
-        SiteFilters? filters = null,
-        PagingParameters? paging = null,
+    Task<PagedResult<SiteListDto>> GetAsync(
+        SiteFilters filters,
+        PagingParameters paging,
         CancellationToken cancellationToken = default);
 
     Task<List<LocalizedContentDto>> GetLocalizedContentsAsync(

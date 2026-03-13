@@ -3,9 +3,9 @@ using Application.DTOs.Common;
 namespace Application.DTOs.Sites;
 
 public record NearestTransportationDto(
+    Guid Id,
     string Type,
     string Name,
-    double DistanceKm,
     LocationDto Location,
     AddressDto? Address,
     string? Description,

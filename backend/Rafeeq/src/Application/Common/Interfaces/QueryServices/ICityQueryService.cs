@@ -11,6 +11,6 @@ public interface ICityQueryService
         CancellationToken cancellationToken = default);
     
     Task<PagedResult<CityListDto>> GetAsync(
-        PagingParameters? paging = null,
+        PagingParameters paging,
         CancellationToken cancellationToken = default);
 }

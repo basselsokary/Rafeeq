@@ -11,20 +11,21 @@ public interface ISponsorQueryService
 
     Task<PagedResult<SponsorListDto>> GetAsync(
         SponsorFilters filters,
-        PagingParameters? paging = null,
+        PagingParameters paging,
         CancellationToken cancellationToken = default);
 
     Task<List<NearbySponsorDto>> GetNearbyAsync(
         double latitude,
         double longitude,
+        SponsorFilters filters,
         double radiusKm = 3,
-        SponsorFilters? filters = null,
+        int count = 10,
         CancellationToken cancellationToken = default);
 
     Task<PagedResult<SponsorListDto>> SearchAsync(
         string searchTerm,
         SponsorFilters filters,
-        PagingParameters? paging = null,
+        PagingParameters paging,
         CancellationToken cancellationToken = default);
     
     Task<List<SponsorOfferDto>> GetOffersAsync(
@@ -41,7 +42,7 @@ public interface ISponsorQueryService
     /// </summary>
     Task<PagedResult<SponsorOfferListDto>> GetAllOffersAsync(
         SponsorFilters filters,
+        PagingParameters paging,
         bool activeOnly = true,
-        PagingParameters? paging = null,
         CancellationToken cancellationToken = default);
 }

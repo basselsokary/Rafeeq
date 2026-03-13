@@ -10,14 +10,9 @@ public interface IReviewQueryService
 
     Task<PagedResult<ReviewListDto>> GetBySiteIdAsync(
         Guid siteId,
-        string? sortBy = "Helpful", // Helpful, Recent, Rating
-        PagingParameters? paging = null,
-        CancellationToken cancellationToken = default);
-
-    Task<PagedResult<ReviewListDto>> GetApprovedBySiteIdAsync(
-        Guid siteId,
-        string? sortBy = "Helpful",
-        PagingParameters? paging = null,
+        PagingParameters paging,
+        ReviewOrderBy orderBy = ReviewOrderBy.Helpful,
+        ReviewStatus status = ReviewStatus.Approved,
         CancellationToken cancellationToken = default);
     
     Task<List<ReviewSummaryDto>> GetRecentBySiteIdAsync(
@@ -33,12 +28,12 @@ public interface IReviewQueryService
     Task<PagedResult<ReviewListDto>> GetBySiteAndRatingAsync(
         Guid siteId,
         int rating,
-        PagingParameters? paging = null,
+        PagingParameters paging,
         CancellationToken cancellationToken = default);
     
     Task<PagedResult<UserReviewDto>> GetByUserIdAsync(
         Guid userId,
-        PagingParameters? paging = null,
+        PagingParameters paging,
         CancellationToken cancellationToken = default);
     
     Task<List<UserReviewDto>> GetRecentByUserIdAsync(
@@ -47,7 +42,14 @@ public interface IReviewQueryService
         CancellationToken cancellationToken = default);
 
     Task<PagedResult<ReviewListDto>> GetByStatusAsync(
+        PagingParameters paging,
         ReviewStatus status = ReviewStatus.Pending,
-        PagingParameters? paging = null,
         CancellationToken cancellationToken = default);
+}
+
+public enum ReviewOrderBy
+{
+    Helpful,
+    Recent,
+    Rating
 }
