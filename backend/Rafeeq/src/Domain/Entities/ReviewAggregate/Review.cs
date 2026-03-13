@@ -5,6 +5,7 @@ using Shared.Models;
 using Domain.Enums;
 using Domain.Events;
 using Domain.Entities.SiteAggregate;
+using Domain.Entities.UserAggregate;
 
 namespace Domain.Entities.ReviewAggregate;
 
@@ -12,6 +13,10 @@ public class Review : BaseAuditableEntity, IAggregateRoot
 {
     public Guid SiteId { get; private set; }
     public Guid UserId { get; private set; }
+    
+    /// Only to use them for read queries
+    public Site Site { get; private set; } = null!;
+    public User User { get; private set; } = null!;
 
     public Rating Rating { get; private set; } = null!;
     public string Title { get; private set; } = null!;

@@ -24,6 +24,7 @@ public class TimeRange : ValueObject
     }
 
     public TimeSpan Duration => EndTime - StartTime;
+    public int DurationInMinutes => (int)Duration.TotalMinutes;
 
     public bool IsWithinRange(TimeSpan time)
     {

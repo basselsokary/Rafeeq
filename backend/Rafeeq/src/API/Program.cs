@@ -1,4 +1,4 @@
-using Infrastructure;
+// using Infrastructure;
 using Application;
 
 namespace API;
@@ -11,8 +11,8 @@ public class Program
 
         builder.Services
             .AddPresentation()
-            .AddApplication()
-            .AddInfrastructure(builder.Configuration);
+            .AddApplication();
+            // .AddInfrastructure(builder.Configuration);
 
         var app = builder.Build();
 

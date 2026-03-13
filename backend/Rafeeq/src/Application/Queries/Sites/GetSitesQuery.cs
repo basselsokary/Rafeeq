@@ -17,7 +17,7 @@ internal class GetSitesQueryHandler(
         PagedResult<SiteListDto> sites;
         if (string.IsNullOrWhiteSpace(query.SearchTerm))
         {
-            sites = await queryService.GetAllAsync(
+            sites = await queryService.GetAsync(
                 query.Filters,
                 query.Paging,
                 cancellationToken);

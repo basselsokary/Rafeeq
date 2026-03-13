@@ -47,6 +47,14 @@ public static class DomainConstants
         public const int MaxCurrencyLength = 3;
     }
 
+    public static class Address
+    {
+        public const int StreetMaxLength = 256;
+        public const int CityMaxLength = 128;
+        public const int RegionMaxLength = 128;
+        public const int PostalCodeMaxLength = 16;
+    }
+
     public static class User
     {
         public const int MaxUserNameLength = 32;

@@ -1,5 +1,4 @@
 ﻿using API.Infrustructure;
-using API.Services.Dispatchers;
 using Microsoft.OpenApi.Models;
 
 namespace API;
@@ -25,8 +24,6 @@ public static class DependencyInjection
             // options.LowercaseQueryStrings = true; // Optional
         });
 
-        services.AddServices();
-
         return services;
     }
 
@@ -34,7 +31,7 @@ public static class DependencyInjection
     {
         services.AddSwaggerGen(static option =>
         {
-            option.SwaggerDoc("v1", new OpenApiInfo { Title = "EventMaster API", Version = "v1" });
+            option.SwaggerDoc("v1", new OpenApiInfo { Title = "Rafeeq API", Version = "v1" });
             option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Name = "Authorization",
@@ -80,13 +77,6 @@ public static class DependencyInjection
                     .AllowCredentials(); // Required for SignalR with authentication or cookies
             });
         });
-
-        return services;
-    }
-
-    private static IServiceCollection AddServices(this IServiceCollection services)
-    {
-        services.AddScoped<IRequestDispatcher, RequestDispatcher>();
 
         return services;
     }

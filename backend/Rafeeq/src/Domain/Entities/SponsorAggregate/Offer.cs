@@ -6,6 +6,8 @@ namespace Domain.Entities.SponsorAggregate;
 
 public class Offer : BaseAuditableEntity
 {
+    public Sponsor Sponsor { get; set; } = null!;
+
     public string Title { get; private set; } = null!;
     public string Description { get; private set; } = null!;
     public Money? DiscountAmount { get; private set; }

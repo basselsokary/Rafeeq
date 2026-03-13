@@ -6,7 +6,7 @@ using Application.DTOs.Reviews;
 namespace Application.Queries.Reviews;
 
 public record GetReviewsByUserIdQuery(
-    PagingParameters? Paging = null) : IQuery<PagedResult<UserReviewDto>>;
+    PagingParameters Paging) : IQuery<PagedResult<UserReviewDto>>;
 
 internal class GetReviewsByUserIdQueryHandler(
     IReviewQueryService queryService,

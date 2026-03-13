@@ -1,108 +1,109 @@
-﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Application.Common.Interfaces.QueryServices;
+using Domain.Common.Interfaces;
+using Domain.Repositories;
+using Infrastructure.Caching;
+using Infrastructure.ExternalServices.Mapping;
+using Infrastructure.Identity;
+using Infrastructure.Persistence;
+using Infrastructure.Persistence.Interceptors;
+using Infrastructure.Persistence.QueryServices;
+using Infrastructure.Persistence.Repositories;
 using System.Text;
-using Infrastructure.User;
-using Infrastructure.Authentication;
-using Infrastructure.Repositories.Implementations;
-using Application.Common.Interfaces.Repositories;
-using System.Security.Claims;
-using Application.Common.Interfaces.Authentication;
-using Infrastructure.Email;
-using Application.Common.Interfaces.Email;
-using Infrastructure.User.Services;
-using Application.Common.Interfaces.UnitOfWork;
-using Infrastructure.Repositories;
-using Infrastructure.Data.Application.Context;
-using Infrastructure.Data.Identity.Context;
+using Hangfire;
+using Hangfire.SqlServer;
+using Serilog;
+using Infrastructure.Persistence.IdentityContext;
+using Infrastructure.Persistence.ApplicationContext;
 
-namespace Infrastructure;
+namespace RafeeqApp.Infrastructure;
 
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
-        IConfiguration configuration) =>
-        services
-            .AddServices()
-            .AddDatabase(configuration)
-            .AddAuthentication(configuration)
-            .AddRepositories();
-
-    private static IServiceCollection AddServices(this IServiceCollection services)
+        IConfiguration configuration)
     {
-        services.AddSingleton<IUserContext, CurrentUser>();
+        // Add DbContexts
+        services.AddApplicationDbContext(configuration);
+        services.AddIdentityDbContext(configuration);
 
-        services.AddTransient<IEmailSender, EmailSender>();
+        // Add Interceptors
+        services.AddScoped<DomainEventDispatcherInterceptor>();
+        services.AddScoped<AuditableEntityInterceptor>();
 
-        services.AddScoped<IIdentityService, IdentityService>();
-        services.AddScoped<ITokenProvider, TokenProvider>();
+        // Add Repositories
+        services.AddRepositories();
 
+        // Add Query Services
+        services.AddQueryServices();
+
+        // Add Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-        services.AddAuthorization();
+        // Add Identity & Authentication
+        services.AddIdentityServices(configuration);
 
-        services.AddHttpContextAccessor();
+        // Add Caching
+        services.AddCachingServices(configuration);
 
-        return services;
-    }
+        // Add External Services
+        services.AddExternalServices(configuration);
 
-    private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddDbContext<AppDbContext>(option =>
-            option.UseSqlServer(configuration.GetConnectionString("SqlServer")));
+        // Add Background Jobs
+        services.AddBackgroundJobs(configuration);
 
-        services.AddDbContext<AppIdentityDbContext>(option =>
-            option.UseSqlServer(configuration.GetConnectionString("IdentitySqlServer")));
-
-        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-        {
-            options.Password.RequireDigit = false;
-            options.Password.RequireLowercase = false;
-            options.Password.RequireUppercase = false;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequiredLength = 3;
-        }).AddEntityFrameworkStores<AppIdentityDbContext>()
-          .AddDefaultTokenProviders();
+        // Add Logging
+        services.AddLogging(configuration);
 
         return services;
     }
 
-    private static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddApplicationDbContext(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        services.Configure<JwtSettings>(configuration.GetSection(nameof(JwtSettings)));
-
-        var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
-
-        services.Configure<DataProtectionTokenProviderOptions>(options =>
-            options.TokenLifespan = TimeSpan.FromDays(jwtSettings!.AccessTokenExpirationInMinutes));
-        services.AddAuthentication(options =>
+        services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
         {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(options =>
+            options.UseSqlServer(
+                configuration.GetConnectionString("DefaultConnection"),
+                b =>
+                {
+                    b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+                    b.EnableRetryOnFailure(
+                        maxRetryCount: 3,
+                        maxRetryDelay: TimeSpan.FromSeconds(5),
+                        errorNumbersToAdd: null);
+                });
+
+            options.EnableSensitiveDataLogging(false);
+            options.EnableDetailedErrors(false);
+        });
+
+        return services;
+    }
+
+    private static IServiceCollection AddIdentityDbContext(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddDbContext<IdentityDbContext>(options =>
         {
-            options.SaveToken = true;
-            options.RequireHttpsMetadata = false;
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidIssuer = jwtSettings!.Issuer,
-
-                ValidateAudience = true,
-                ValidAudience = jwtSettings.Audience,
-
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
-
-                ValidateLifetime = true,
-
-                NameClaimType = ClaimTypes.NameIdentifier // Important for UserIdentifier
-            };
+            options.UseSqlServer(
+                configuration.GetConnectionString("IdentityConnection"),
+                b =>
+                {
+                    b.MigrationsAssembly(typeof(IdentityDbContext).Assembly.FullName);
+                    b.EnableRetryOnFailure(
+                        maxRetryCount: 3,
+                        maxRetryDelay: TimeSpan.FromSeconds(5),
+                        errorNumbersToAdd: null);
+                });
         });
 
         return services;
@@ -110,8 +111,181 @@ public static class DependencyInjection
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
+        services.AddScoped<ISiteRepository, SiteRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<IReviewRepository, ReviewRepository>();
+        services.AddScoped<ISponsorRepository, SponsorRepository>();
+        services.AddScoped<ICityRepository, CityRepository>();
+        services.AddScoped<IContentReportRepository, ContentReportRepository>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddQueryServices(this IServiceCollection services)
+    {
+        services.AddScoped<ISiteQueryService, SiteQueryService>();
+        services.AddScoped<IUserQueryService, UserQueryService>();
+        services.AddScoped<IReviewQueryService, ReviewQueryService>();
+        services.AddScoped<ISponsorQueryService, SponsorQueryService>();
+        services.AddScoped<ICityQueryService, CityQueryService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddIdentityServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        // Add Identity
+        services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+        {
+            // Password settings
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequiredLength = 8;
+
+            // Lockout settings
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+            options.Lockout.MaxFailedAccessAttempts = 5;
+            options.Lockout.AllowedForNewUsers = true;
+
+            // User settings
+            options.User.RequireUniqueEmail = true;
+            options.SignIn.RequireConfirmedEmail = false;
+        })
+        .AddEntityFrameworkStores<IdentityDbContext>()
+        .AddDefaultTokenProviders();
+
+        // Add JWT Authentication
+        var jwtSecret = configuration["Jwt:Secret"]
+            ?? throw new InvalidOperationException("JWT Secret not configured");
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.SaveToken = true;
+            options.RequireHttpsMetadata = true;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = configuration["Jwt:Issuer"],
+                ValidAudience = configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+                ClockSkew = TimeSpan.Zero
+            };
+        });
+
+        services.AddAuthorization();
+
+        // Add Identity Services
+        services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddCachingServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        var redisConnection = configuration.GetConnectionString("Redis");
+
+        if (!string.IsNullOrEmpty(redisConnection))
+        {
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = redisConnection;
+                options.InstanceName = "RafeeqApp_";
+            });
+        }
+        else
+        {
+            // Fallback to in-memory cache for development
+            services.AddDistributedMemoryCache();
+        }
+
+        services.AddScoped<ICacheService, CacheService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddExternalServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        // Google Maps Service
+        services.AddHttpClient<IGoogleMapsService, GoogleMapsService>(client =>
+        {
+            client.Timeout = TimeSpan.FromSeconds(30);
+        });
+
+        // Add other external services here as needed
+        // services.AddHttpClient<IOpenAIService, OpenAIService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddBackgroundJobs(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        var hangfireConnection = configuration.GetConnectionString("Hangfire")
+            ?? configuration.GetConnectionString("DefaultConnection");
+
+        if (!string.IsNullOrEmpty(hangfireConnection))
+        {
+            services.AddHangfire(config =>
+            {
+                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    .UseSqlServerStorage(hangfireConnection, new SqlServerStorageOptions
+                    {
+                        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                        QueuePollInterval = TimeSpan.Zero,
+                        UseRecommendedIsolationLevel = true,
+                        DisableGlobalLocks = true
+                    });
+            });
+
+            services.AddHangfireServer(options =>
+            {
+                options.WorkerCount = 2;
+            });
+        }
+
+        return services;
+    }
+
+    private static IServiceCollection AddLogging(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .WriteTo.File(
+                path: "logs/rafeeq-.txt",
+                rollingInterval: RollingInterval.Day,
+                retainedFileCountLimit: 30)
+            .CreateLogger();
+
+        services.AddLogging(loggingBuilder =>
+        {
+            loggingBuilder.AddSerilog(dispose: true);
+        });
 
         return services;
     }

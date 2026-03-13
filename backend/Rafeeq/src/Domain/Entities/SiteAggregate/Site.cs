@@ -1,5 +1,6 @@
 using Domain.Common;
 using Domain.Common.Interfaces;
+using Domain.Entities.CityAggregate;
 using Domain.Enums;
 using Domain.ValueObjects;
 using Shared.Models;
@@ -9,6 +10,8 @@ namespace Domain.Entities.SiteAggregate;
 public class Site : BaseAuditableEntity, IAggregateRoot
 {
     public Guid CityId { get; private set; }
+    /// Read only
+    public City City { get; private set; }
 
     public string Name { get; private set; } = null!;
     public string Description { get; private set; } = null!;
@@ -19,7 +22,6 @@ public class Site : BaseAuditableEntity, IAggregateRoot
     
     public Money? EntryFee { get; private set; }
     public bool IsFree { get; private set; }
-
 
     public string? WebsiteUrl { get; private set; }
     public string? MainImageUrl { get; private set; }

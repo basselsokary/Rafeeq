@@ -1,25 +1,17 @@
-﻿using Application.Commands.Users;
+using Application.Common.Models;
+using Domain.Enums;
 
 namespace Application.Common.Interfaces.Authentication;
 
 public interface IIdentityService
 {
-    // Task<UserDto?> GetUserDtoByEmailAsync(string email);
-    // Task<UserDto?> GetUserDtoByIdAsync(string userId);
-    
-    Task<Result<LoginResponse>> SignInAsync(string email, string password, bool rememberMe = false, bool lockoutOnFailure = false);
-    Task<Result<RefreshResponse>> SignInAsync(string email, string password);
-    Task<Result> SignOutAsync();
-
-    Task<(Result Result, string CustomerId)> CreateCustomerAsync(RegisterCommand registerCommand);
-    
-    Task<bool> CheckPasswordAsync(string email, string password);
-    Task<Result> CheckUserExistsAsync(string userName, string email);
-
-    Task<Result> DeleteUserAsync(string userId);
-
-    Task<string?> GetRolesAsync(string userId);
-    Task<bool> AuthorizeAsync(string userId, string policyName);
-    Task<bool> IsInRoleAsync(string userId, string role);
-    Task<bool> AddRoleToUserAsync(string userId, string role);
+    Task<Result> RegisterAsync(string email, string password, string firstName, string lastName, UserRole role = UserRole.Tourist);
+    Task<AuthenticationResult> LoginAsync(string email, string password);
+    Task<AuthenticationResult> RefreshTokenAsync(string accessToken, string refreshToken);
+    Task<bool> RevokeTokenAsync(string refreshToken);
+    Task<bool> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword);
+    Task<bool> ResetPasswordAsync(string email, string token, string newPassword);
+    Task<string> GeneratePasswordResetTokenAsync(string email);
+    Task<bool> ConfirmEmailAsync(Guid userId, string token);
+    Task<string> GenerateEmailConfirmationTokenAsync(Guid userId);
 }
