@@ -1,6 +1,6 @@
 ﻿namespace Shared.Models;
 
-public enum ErrorType : byte
+public enum ErrorType
 {
     None,
     Failure,
