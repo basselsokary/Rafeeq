@@ -7,7 +7,7 @@ namespace Application.Queries.Reviews;
 public record GetReviewsBySiteIdAndRatingQuery(
     Guid SiteId,
     int Rating,
-    PagingParameters? Paging = null) : IQuery<PagedResult<ReviewListDto>>;
+    PagingParameters Paging) : IQuery<PagedResult<ReviewListDto>>;
 
 internal class GetReviewsBySiteIdAndRatingQueryHandler(
     IReviewQueryService queryService) : IQueryHandler<GetReviewsBySiteIdAndRatingQuery, PagedResult<ReviewListDto>>

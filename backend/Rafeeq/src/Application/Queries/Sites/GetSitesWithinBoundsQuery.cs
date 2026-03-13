@@ -6,7 +6,7 @@ namespace Application.Queries.Sites;
 
 public record GetSitesWithinBoundsQuery(
     BoundingBox Bounds,
-    SiteFilters? Filters = null) : IQuery<List<SiteMapMarkerDto>>;
+    SiteFilters Filters) : IQuery<List<SiteMapMarkerDto>>;
 
 internal class GetSitesWithinBoundsQueryHandler(
     ISiteQueryService queryService) : IQueryHandler<GetSitesWithinBoundsQuery, List<SiteMapMarkerDto>>

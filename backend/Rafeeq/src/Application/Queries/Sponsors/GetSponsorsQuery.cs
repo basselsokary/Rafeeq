@@ -6,8 +6,8 @@ namespace Application.Queries.Sponsors;
 
 public record GetSponsorsQuery(
     SponsorFilters Filters,
-    string? SearchTerm = null,
-    PagingParameters? Paging = null) : IQuery<PagedResult<SponsorListDto>>;
+    PagingParameters Paging,
+    string? SearchTerm = null) : IQuery<PagedResult<SponsorListDto>>;
 
 internal class GetSponsorsQueryHandler(
     ISponsorQueryService queryService) : IQueryHandler<GetSponsorsQuery, PagedResult<SponsorListDto>>

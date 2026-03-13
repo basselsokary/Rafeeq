@@ -6,8 +6,8 @@ namespace Application.Queries.Sponsors.Offers;
 
 public record GetAllSiteOffersAsync(
     SponsorFilters Filters,
-    bool ActiveOnly = true,
-    PagingParameters? Paging = null) : IQuery<PagedResult<SponsorOfferListDto>>;
+    PagingParameters Paging,
+    bool ActiveOnly = true) : IQuery<PagedResult<SponsorOfferListDto>>;
 
 internal class GetAllSiteOffersAsyncHandler(
     ISponsorQueryService queryService) : IQueryHandler<GetAllSiteOffersAsync, PagedResult<SponsorOfferListDto>>
@@ -16,8 +16,8 @@ internal class GetAllSiteOffersAsyncHandler(
     {
         var sponsorOfferDtos = await queryService.GetAllOffersAsync(
             query.Filters,
-            query.ActiveOnly,
             query.Paging,
+            query.ActiveOnly,
             cancellationToken);
         
         return sponsorOfferDtos;

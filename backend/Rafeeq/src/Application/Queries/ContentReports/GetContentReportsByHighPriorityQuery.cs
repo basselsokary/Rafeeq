@@ -7,9 +7,9 @@ namespace Application.Queries.ContentReports;
 
 public record GetContentReportsByHighPriorityQuery(
     int Priority,
+    PagingParameters Paging,
     ReportStatus? Status = null,
-    ReportReason? Reason = null,
-    PagingParameters? Paging = null) : IQuery<PagedResult<ContentReportListDto>>;
+    ReportReason? Reason = null) : IQuery<PagedResult<ContentReportListDto>>;
 
 internal class GetContentReportsByHighPriorityQueryHandler(IContentReportQueryService queryService) 
     : IQueryHandler<GetContentReportsByHighPriorityQuery, PagedResult<ContentReportListDto>>
@@ -20,9 +20,9 @@ internal class GetContentReportsByHighPriorityQueryHandler(IContentReportQuerySe
     {
         var pagedResult = await queryService.GetFilteredByPriorityAsync(
             query.Priority,
+            query.Paging,
             query.Reason,
             query.Status,
-            query.Paging,
             cancellationToken);
 
         return Result.Success(pagedResult);

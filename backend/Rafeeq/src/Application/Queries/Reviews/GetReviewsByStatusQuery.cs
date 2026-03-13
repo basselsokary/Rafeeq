@@ -6,8 +6,8 @@ using Domain.Enums;
 namespace Application.Queries.Reviews;
 
 public record GetReviewsByStatusQuery(
-    ReviewStatus Status = ReviewStatus.Pending,
-    PagingParameters? Paging = null) : IQuery<PagedResult<ReviewListDto>>;
+    PagingParameters Paging,
+    ReviewStatus Status = ReviewStatus.Pending) : IQuery<PagedResult<ReviewListDto>>;
 
 internal class GetReviewsByStatusQueryHandler(
     IReviewQueryService queryService) : IQueryHandler<GetReviewsByStatusQuery, PagedResult<ReviewListDto>>
@@ -15,8 +15,8 @@ internal class GetReviewsByStatusQueryHandler(
     public async Task<Result<PagedResult<ReviewListDto>>> HandleAsync(GetReviewsByStatusQuery query, CancellationToken cancellationToken)
     {
         PagedResult<ReviewListDto> pagedResult = await queryService.GetByStatusAsync(
-            query.Status,
             query.Paging,
+            query.Status,
             cancellationToken);
         
         return Result.Success(pagedResult);

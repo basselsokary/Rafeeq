@@ -7,8 +7,6 @@ using Domain.Entities.SiteAggregate;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Identity;
 using Domain.Enums;
-using System.Text.Json;
-using System.Reflection;
 
 namespace Infrastructure.Persistence.QueryServices;
 
@@ -123,8 +121,8 @@ internal class SiteQueryService(
     public async Task<List<SiteListDto>> GetNearbyAsync(
         double latitude,
         double longitude,
+        SiteFilters filters,
         int radiusKm = 5,
-        SiteFilters? filters = null,
         CancellationToken cancellationToken = default)
     {
         // coarse filter in SQL by bounding box, then exact distance in memory

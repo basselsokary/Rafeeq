@@ -12,8 +12,8 @@ public interface ISiteQueryService
     Task<List<SiteListDto>> GetNearbyAsync(
         double latitude,
         double longitude,
+        SiteFilters filters,
         int radiusKm = 5,
-        SiteFilters? filters = null,
         CancellationToken cancellationToken = default);
     
     /// for map view

@@ -7,8 +7,8 @@ namespace Application.Queries.Sites;
 public record GetNearbySitesQuery(
     double Latitude,
     double Longitude,
+    SiteFilters Filters,
     int RadiusKm = 5,
-    SiteFilters? Filters = null,
     PagingParameters? Paging = null) : IQuery<List<SiteListDto>>;
 
 internal class GetNearbySitesQueryHandler(
@@ -19,8 +19,8 @@ internal class GetNearbySitesQueryHandler(
         var siteListDtos = await queryService.GetNearbyAsync(
             query.Latitude,
             query.Longitude,
-            query.RadiusKm,
             query.Filters,
+            query.RadiusKm,
             cancellationToken);
 
             return Result.Success(siteListDtos);

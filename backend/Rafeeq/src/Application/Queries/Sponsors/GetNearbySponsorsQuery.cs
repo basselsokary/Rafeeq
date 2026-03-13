@@ -1,5 +1,4 @@
 using Application.Common.Interfaces.QueryServices;
-using Application.DTOs.Common;
 using Application.DTOs.Sponsors;
 
 namespace Application.Queries.Sponsors;
@@ -7,9 +6,9 @@ namespace Application.Queries.Sponsors;
 public record GetNearbySponsorsQuery(
     double Latitude,
     double Longitude,
-    int RadiusKm = 3,
-    SponsorFilters? Filters = null,
-    PagingParameters? Paging = null) : IQuery<List<NearbySponsorDto>>;
+    SponsorFilters Filters,
+    int Count = 10,
+    int RadiusKm = 3) : IQuery<List<NearbySponsorDto>>;
 
 internal class GetNearbySponsorsQueryHandler(
     ISponsorQueryService queryService) : IQueryHandler<GetNearbySponsorsQuery, List<NearbySponsorDto>>
@@ -19,8 +18,9 @@ internal class GetNearbySponsorsQueryHandler(
         var sponsorListDtos = await queryService.GetNearbyAsync(
             query.Latitude,
             query.Longitude,
-            query.RadiusKm,
             query.Filters,
+            query.RadiusKm,
+            query.Count,
             cancellationToken);
 
             return Result.Success(sponsorListDtos);
