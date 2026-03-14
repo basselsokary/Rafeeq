@@ -1,4 +1,5 @@
 using Application.Common.Interfaces.Authentication;
+using Shared.Extensions;
 
 namespace Application.Commands.Users;
 
@@ -12,15 +13,15 @@ public class LoginCommandHandler(
 {
     public async Task<Result<LoginResponse>> HandleAsync(LoginCommand command, CancellationToken cancellationToken)
     {
-        Result<LoginResponse> result = await identityService.SignInAsync(
+        var authenticationResult = await identityService.LoginAsync(
             command.Email,
             command.Password,
             command.RememberMe);
 
-        if (result.Failed)
-            return result;
-        
-        return result.Value;
+        if (authenticationResult.Failed)
+            return authenticationResult.To<LoginResponse>();
+
+        return new LoginResponse(authenticationResult.AccessToken!, authenticationResult.RefreshToken!);
     }
 }
 

@@ -1,3 +1,4 @@
+using Application.Common.Interfaces.Authentication;
 using Domain.Enums;
 
 namespace Application.Commands.Users;
@@ -9,10 +10,17 @@ public record RegisterCommand(
     string Password,
     LanguageCode PreferredLanguage) : ICommand;
 
-public class RegisterCommandHandler() : ICommandHandler<RegisterCommand>
+public class RegisterCommandHandler(
+    IIdentityService identityService) : ICommandHandler<RegisterCommand>
 {
-    public async Task<Result> HandleAsync(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(RegisterCommand command, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var result = await identityService.RegisterAsync(
+            command.Email,
+            command.Password,
+            command.FirstName,
+            command.LastName);
+
+        return result;
     }
 }

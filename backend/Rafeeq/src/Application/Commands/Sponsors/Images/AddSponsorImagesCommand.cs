@@ -14,7 +14,7 @@ internal class AddSponsorImagesCommandHandler(
 {
     public async Task<Result> HandleAsync(AddSponsorImagesCommand command, CancellationToken cancellationToken)
     {
-        var sponsor = await unitOfWork.Sponsors.GetByIdAsync(command.Id, cancellationToken);
+        var sponsor = await unitOfWork.Sponsors.GetWithImages(command.Id, cancellationToken);
         if (sponsor == null)
             return SponsorErrors.NotFound(command.Id);
 

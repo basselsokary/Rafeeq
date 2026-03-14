@@ -16,7 +16,6 @@ internal class DeleteReviewCommandHandler(
 
         review.Delete();
         await unitOfWork.Reviews.DeleteAsync(review, cancellationToken);
-
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

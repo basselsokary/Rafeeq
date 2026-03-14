@@ -1,4 +1,3 @@
-using Application.Common.Interfaces.Messaging;
 using Domain.Common.Interfaces;
 using Domain.Entities.SponsorAggregate;
 using Domain.ValueObjects;
@@ -21,8 +20,7 @@ internal class UpdateSponsorOfferCommandHandler(
 {
     public async Task<Result> HandleAsync(UpdateSponsorOfferCommand command, CancellationToken cancellationToken)
     {
-
-        var sponsor = await unitOfWork.Sponsors.GetByIdAsync(command.SponsorId, cancellationToken);
+        var sponsor = await unitOfWork.Sponsors.GetWithOffers(command.SponsorId, cancellationToken);
         if (sponsor == null)
             return SponsorErrors.NotFound(command.SponsorId);
 

@@ -15,7 +15,7 @@ internal class AddSiteOpeningHoursCommandHandler(
 {
     public async Task<Result> HandleAsync(AddSiteOpeningHoursCommand command, CancellationToken cancellationToken)
     {
-        var site = await unitOfWork.Sites.GetByIdAsync(command.Id, cancellationToken);
+        var site = await unitOfWork.Sites.GetWithOpeningHoursAsync(command.Id, cancellationToken);
         if (site == null)
             return SiteErrors.NotFound(command.Id);
 

@@ -12,7 +12,7 @@ internal class RemoveSiteFacilityCommandHandler(
 {
     public async Task<Result> HandleAsync(RemoveSiteFacilityCommand command, CancellationToken cancellationToken)
     {
-        var site = await unitOfWork.Sites.GetByIdAsync(command.Id, cancellationToken);
+        var site = await unitOfWork.Sites.GetWithFacilitiesAsync(command.Id, cancellationToken);
         if (site == null)
             return SiteErrors.NotFound(command.Id);
 

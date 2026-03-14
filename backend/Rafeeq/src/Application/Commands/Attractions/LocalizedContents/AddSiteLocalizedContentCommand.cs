@@ -15,7 +15,7 @@ internal class AddAttractionLocalizedContentCommandHandler(
 {
     public async Task<Result> HandleAsync(AddAttractionLocalizedContentCommand command, CancellationToken cancellationToken)
     {
-        var attraction = await unitOfWork.Attractions.GetByIdAsync(command.Id, cancellationToken);
+        var attraction = await unitOfWork.Attractions.GetWithLocalizedContentsAsync(command.Id, cancellationToken);
         if (attraction == null)
             return AttractionErrors.NotFound(command.Id);
 

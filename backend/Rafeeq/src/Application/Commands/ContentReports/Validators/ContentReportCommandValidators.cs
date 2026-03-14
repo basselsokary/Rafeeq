@@ -32,6 +32,7 @@ internal class ReportContentCommandValidator : AbstractValidator<ReportContentCo
             .WithMessage(ContentReportErrors.ExceededDescriptionLength.Message);
     }
 }
+
 internal class ResolveContentReportCommandValidator : AbstractValidator<ResolveContentReportCommand>
 {
     public ResolveContentReportCommandValidator()

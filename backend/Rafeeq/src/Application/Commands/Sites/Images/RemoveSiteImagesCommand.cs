@@ -12,7 +12,7 @@ internal class RemoveSiteImagesCommandHandler(
 {
     public async Task<Result> HandleAsync(RemoveSiteImagesCommand command, CancellationToken cancellationToken)
     {
-        var site = await unitOfWork.Sites.GetByIdAsync(command.Id, cancellationToken);
+        var site = await unitOfWork.Sites.GetWithImagesAsync(command.Id, cancellationToken);
         if (site == null)
             return SiteErrors.NotFound(command.Id);
 

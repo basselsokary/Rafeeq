@@ -14,7 +14,7 @@ internal class AddAttractionImagesCommandHandler(
 {
     public async Task<Result> HandleAsync(AddAttractionImagesCommand command, CancellationToken cancellationToken)
     {
-        var attraction = await unitOfWork.Attractions.GetByIdAsync(command.Id, cancellationToken);
+        var attraction = await unitOfWork.Attractions.GetWithImagesAsync(command.Id, cancellationToken);
         if (attraction == null)
             return AttractionErrors.NotFound(command.Id);
 

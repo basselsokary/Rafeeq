@@ -12,7 +12,7 @@ internal class RemoveSponsorImagesCommandHandler(
 {
     public async Task<Result> HandleAsync(RemoveSponsorImagesCommand command, CancellationToken cancellationToken)
     {
-        var sponsor = await unitOfWork.Sponsors.GetByIdAsync(command.Id, cancellationToken);
+        var sponsor = await unitOfWork.Sponsors.GetWithImages(command.Id, cancellationToken);
         if (sponsor == null)
             return SponsorErrors.NotFound(command.Id);
 
