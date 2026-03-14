@@ -21,6 +21,8 @@
   <ItemGroup>
     <Folder Include="Commands\Trips\Validators\" />
     <Folder Include="Commands\Trips\" />
+    <Folder Include="Commands\Users\Admins\" />
+    <Folder Include="Commands\Users\Moderators\" />
     <Folder Include="EventHandlers\Attractions\" />
     <Folder Include="EventHandlers\ContentReports\" />
     <Folder Include="EventHandlers\Reviews\" />

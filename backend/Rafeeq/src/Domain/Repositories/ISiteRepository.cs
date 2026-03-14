@@ -9,6 +9,4 @@ public interface ISiteRepository : IBaseRepository<Site>
     Task<Site?> GetWithFacilitiesAsync(Guid id, CancellationToken cancellationToken = default);
     Task<Site?> GetWithLocalizedContentsAsync(Guid id, CancellationToken cancellationToken = default);
     Task<Site?> GetWithOpeningHoursAsync(Guid id, CancellationToken cancellationToken = default);
-
-
 }
