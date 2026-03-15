@@ -12,7 +12,7 @@ internal class UnitOfWork(
     private readonly ApplicationDbContext _context = context;
     private IDbContextTransaction? _currentTransaction;
 
-    private IUserRepository? _userRepository;
+    private ITouristRepository? _userRepository;
     private ISiteRepository? _siteRepository;
     private IReviewRepository? _reviewRepository;
     private ISponsorRepository? _sponsorRepository;
@@ -21,8 +21,8 @@ internal class UnitOfWork(
     private IAttractionRepository? _attractionRepository;
     private ITripRepository? _tripRepository;
     
-    public IUserRepository Users
-        => _userRepository ??= new UserRepository(_context);
+    public ITouristRepository Tourists
+        => _userRepository ??= new TouristRepository(_context);
     public ISiteRepository Sites
         => _siteRepository ??= new SiteRepository(_context);
     public IReviewRepository Reviews

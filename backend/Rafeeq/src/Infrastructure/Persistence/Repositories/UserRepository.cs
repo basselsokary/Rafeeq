@@ -1,14 +1,14 @@
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Domain.Entities.UserAggregate;
+using Domain.Entities.TouristAggregate;
 using Infrastructure.Persistence.ApplicationContext;
 
 namespace Infrastructure.Persistence.Repositories;
 
-internal class UserRepository(ApplicationDbContext context)
-    : BaseRepository<User>(context), IUserRepository
+internal class TouristRepository(ApplicationDbContext context)
+    : BaseRepository<Tourist>(context), ITouristRepository
 {
-    public async Task<User?> GetWithFavouritesAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Tourist?> GetWithFavouritesAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbSet
             .Include(u => u.Favourites)

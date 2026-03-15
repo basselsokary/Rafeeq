@@ -19,8 +19,8 @@ internal class ReviewQueryService(ApplicationDbContext context) : IReviewQuerySe
                 r.Id,
                 r.SiteId,
                 r.Site.Name,
-                r.UserId,
-                r.User.FirstName,
+                r.TouristId,
+                r.Tourist.FirstName,
                 r.Rating,
                 r.Title,
                 r.Content,
@@ -37,12 +37,16 @@ internal class ReviewQueryService(ApplicationDbContext context) : IReviewQuerySe
     public async Task<PagedResult<ReviewListDto>> GetBySiteIdAsync(
         Guid siteId,
         PagingParameters paging,
+        int? rating = null,
         ReviewOrderBy orderBy = ReviewOrderBy.Helpful,
         ReviewStatus status = ReviewStatus.Approved,
         CancellationToken cancellationToken = default)
     {
         var query = context.Reviews.AsNoTracking()
             .Where(r => r.SiteId == siteId && r.Status == status);
+
+        if (rating.HasValue)
+            query = query.Where(r => r.Rating == rating);
         
         query = ApplySort(query, orderBy);
         
@@ -53,40 +57,8 @@ internal class ReviewQueryService(ApplicationDbContext context) : IReviewQuerySe
                 c.Id,
                 c.SiteId,
                 c.Site.Name,
-                c.UserId,
-                c.User.FirstName,
-                c.Rating,
-                c.Title,
-                c.Content,
-                c.Status.ToString(),
-                c.HelpfulCount,
-                c.NotHelpfulCount,
-                c.HelpfulCount + c.NotHelpfulCount == 0 ? 0 : (double)c.HelpfulCount / (c.HelpfulCount + c.NotHelpfulCount),
-                c.CreatedAt
-            ),
-            cancellationToken);
-    }
-
-    public async Task<PagedResult<ReviewListDto>> GetBySiteAndRatingAsync(
-        Guid siteId,
-        int rating,
-        PagingParameters paging,
-        CancellationToken cancellationToken = default)
-    {
-        var query = context.Reviews.AsNoTracking()
-            .Where(r => r.SiteId == siteId && r.Rating == rating);
-
-        query = ApplySort(query);
-
-        return await ToPagedResultAsync(
-            query,
-            paging,
-            c => new ReviewListDto(
-                c.Id,
-                c.SiteId,
-                c.Site.Name,
-                c.UserId,
-                c.User.FirstName,
+                c.TouristId,
+                c.Tourist.FirstName,
                 c.Rating,
                 c.Title,
                 c.Content,
@@ -112,8 +84,8 @@ internal class ReviewQueryService(ApplicationDbContext context) : IReviewQuerySe
                 r.Id,
                 r.SiteId,
                 r.Site.Name,
-                r.UserId,
-                r.User.FirstName,
+                r.TouristId,
+                r.Tourist.FirstName,
                 r.Rating,
                 r.Title,
                 r.Content,
@@ -126,16 +98,16 @@ internal class ReviewQueryService(ApplicationDbContext context) : IReviewQuerySe
             cancellationToken);
     }
 
-    public async Task<PagedResult<UserReviewDto>> GetByUserIdAsync(Guid userId, PagingParameters paging, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<TouristReviewDto>> GetByTouristIdAsync(Guid touristId, PagingParameters paging, CancellationToken cancellationToken = default)
     {
         var query = context.Reviews.AsNoTracking()
-            .Where(r => r.UserId == userId)
+            .Where(r => r.TouristId == touristId)
             .OrderByDescending(r => r.CreatedAt);
 
-        return await ToPagedResultAsync<UserReviewDto>(
+        return await ToPagedResultAsync<TouristReviewDto>(
             query,
             paging,
-            r => new UserReviewDto(
+            r => new TouristReviewDto(
                 r.Id,
                 r.SiteId,
                 r.Site.Name,
@@ -158,7 +130,7 @@ internal class ReviewQueryService(ApplicationDbContext context) : IReviewQuerySe
             .Take(count)
             .Select(r => new ReviewSummaryDto(
                 r.Id,
-                r.User.FirstName,
+                r.Tourist.FirstName,
                 r.Rating,
                 r.Title,
                 r.Content,
@@ -168,13 +140,13 @@ internal class ReviewQueryService(ApplicationDbContext context) : IReviewQuerySe
         return items;
     }
 
-    public async Task<List<UserReviewDto>> GetRecentByUserIdAsync(Guid userId, int count = 5, CancellationToken cancellationToken = default)
+    public async Task<List<TouristReviewDto>> GetRecentByTouristIdAsync(Guid touristId, int count = 5, CancellationToken cancellationToken = default)
     {
         var items = await context.Reviews.AsNoTracking()
-            .Where(r => r.UserId == userId)
+            .Where(r => r.TouristId == touristId)
             .OrderByDescending(r => r.CreatedAt)
             .Take(count)
-            .Select(r => new UserReviewDto(
+            .Select(r => new TouristReviewDto(
                 r.Id,
                 r.SiteId,
                 r.Site.Name,
@@ -202,7 +174,7 @@ internal class ReviewQueryService(ApplicationDbContext context) : IReviewQuerySe
             .Take(count)
             .Select(r => new ReviewSummaryDto(
                 r.Id,
-                r.User.FirstName,
+                r.Tourist.FirstName,
                 r.Rating,
                 r.Title,
                 r.Content,
