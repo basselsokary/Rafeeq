@@ -8,6 +8,7 @@ namespace Application.Queries.Reviews;
 public record GetReviewsBySiteIdQuery(
     Guid SiteId,
     PagingParameters Paging,
+    int? Rating = null,
     ReviewStatus Status = ReviewStatus.Approved,
     ReviewOrderBy OrderBy = ReviewOrderBy.Helpful) : IQuery<PagedResult<ReviewListDto>>;
 
@@ -19,6 +20,7 @@ internal class GetReviewsBySiteIdQueryHandler(
         PagedResult<ReviewListDto> pagedResult = await queryService.GetBySiteIdAsync(
             query.SiteId,
             query.Paging,
+            query.Rating,
             query.OrderBy,
             query.Status,
             cancellationToken);

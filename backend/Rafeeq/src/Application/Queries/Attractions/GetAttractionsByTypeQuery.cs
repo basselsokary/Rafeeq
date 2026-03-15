@@ -8,14 +8,14 @@ namespace Application.Queries.Attractions;
 public record GetAttractionsByTypeQuery(
     Guid SiteId,
     AttractionType Type,
-    PagingParameters? Paging = null) : IQuery<PagedResult<AttractionListDto>>;
+    PagingParameters Paging) : IQuery<PagedResult<AttractionListDto>>;
 
 internal class GetAttractionsByTypeQueryHandler(
     IAttractionQueryService queryService) : IQueryHandler<GetAttractionsByTypeQuery, PagedResult<AttractionListDto>>
 {
     public async Task<Result<PagedResult<AttractionListDto>>> HandleAsync(GetAttractionsByTypeQuery query, CancellationToken cancellationToken)
     {
-        PagedResult<AttractionListDto> pagedResult = await queryService.GetByTypeAsync(
+        PagedResult<AttractionListDto> pagedResult = await queryService.GetBySiteIdAsync(
             query.SiteId,
             query.Type,
             query.Paging,

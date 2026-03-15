@@ -1,6 +1,4 @@
-using Application.Common.Interfaces.Messaging;
-
-namespace Application.Commands.Users.Tourists;
+namespace Application.Commands.Users.Tourists.Favorites;
 
 public record DeleteFavoriteCommand() : ICommand;
 

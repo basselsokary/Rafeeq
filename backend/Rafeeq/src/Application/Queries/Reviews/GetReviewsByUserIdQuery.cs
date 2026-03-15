@@ -6,15 +6,15 @@ using Application.DTOs.Reviews;
 namespace Application.Queries.Reviews;
 
 public record GetReviewsByUserIdQuery(
-    PagingParameters Paging) : IQuery<PagedResult<UserReviewDto>>;
+    PagingParameters Paging) : IQuery<PagedResult<TouristReviewDto>>;
 
 internal class GetReviewsByUserIdQueryHandler(
     IReviewQueryService queryService,
-    IUserContext userContext) : IQueryHandler<GetReviewsByUserIdQuery, PagedResult<UserReviewDto>>
+    IUserContext userContext) : IQueryHandler<GetReviewsByUserIdQuery, PagedResult<TouristReviewDto>>
 {
-    public async Task<Result<PagedResult<UserReviewDto>>> HandleAsync(GetReviewsByUserIdQuery query, CancellationToken cancellationToken)
+    public async Task<Result<PagedResult<TouristReviewDto>>> HandleAsync(GetReviewsByUserIdQuery query, CancellationToken cancellationToken)
     {
-        PagedResult<UserReviewDto> pagedResult = await queryService.GetByUserIdAsync(
+        PagedResult<TouristReviewDto> pagedResult = await queryService.GetByUserIdAsync(
                 userContext.Id,
                 query.Paging,
                 cancellationToken);
