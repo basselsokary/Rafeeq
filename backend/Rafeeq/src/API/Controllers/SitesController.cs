@@ -18,6 +18,7 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class SitesController() : ApiBaseController
 {
+    #region Queries
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery] string? searchTerm,
@@ -106,6 +107,7 @@ public class SitesController() : ApiBaseController
         return HandleResult(result);
     }
 
+	#region Localized Contents
     [HttpGet("{id:guid}/localized-contents")]
     public async Task<IActionResult> GetLocalizedContents(
         [FromRoute] Guid id,
@@ -115,7 +117,10 @@ public class SitesController() : ApiBaseController
 
         return HandleResult(result);
     }
+    #endregion
+    #endregion
 
+    #region Commands
     [HttpPost]
     public async Task<IActionResult> Create(
         [FromBody] CreateSiteCommand command,
@@ -209,8 +214,9 @@ public class SitesController() : ApiBaseController
         var result = await commandHandler.HandleAsync(command);
 
         return HandleResult(result);
-    }
+    }    
     
+	#region Localized Contents
     public record AddSiteLocalizedContentRequest(
         LanguageCode Language,
         string Name,
@@ -227,7 +233,9 @@ public class SitesController() : ApiBaseController
 
         return HandleResult(result);
     }
+    #endregion
 
+	#region Images
     public record AddSiteImageRequest(
         string ImageUrl,
         bool IsMain,
@@ -255,7 +263,9 @@ public class SitesController() : ApiBaseController
 
         return HandleResult(result);
     }
+    #endregion
 
+	#region Facilities
     public record AddSiteFacilityRequest(
         string FacilityName,
         string FacilityDescription);
@@ -282,7 +292,9 @@ public class SitesController() : ApiBaseController
 
         return HandleResult(result);
     }
+    #endregion
 
+    #region Opening Hours
     public record AddOpeningHoursRequest(
         DayOfWeek DayOfWeek,
         TimeSpan StartTime,
@@ -304,4 +316,6 @@ public class SitesController() : ApiBaseController
 
         return HandleResult(result);
     }
+    #endregion
+    #endregion
 }

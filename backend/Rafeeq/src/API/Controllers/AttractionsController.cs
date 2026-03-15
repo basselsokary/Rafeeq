@@ -13,6 +13,7 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class AttractionsController : ApiBaseController
 {
+	#region Queries
 	[HttpGet("{id:guid}")]
 	public async Task<IActionResult> GetById(
 		[FromRoute] Guid id,
@@ -23,21 +24,23 @@ public class AttractionsController : ApiBaseController
 		return HandleResult(result);
 	}
 
-	[HttpGet("by-type")]
-	public async Task<IActionResult> GetByType(
-		[FromQuery] Guid siteId,
+	[HttpGet("site/{siteId:guid}")]
+	public async Task<IActionResult> GetAttractionsForSite(
+		[FromRoute] Guid siteId,
 		[FromQuery] AttractionType type,
 		[FromQuery] int pageNumber,
-		[FromQuery] int pageSize,
+		[FromQuery] int page,
 		[FromServices] IQueryHandler<GetAttractionsByTypeQuery, PagedResult<AttractionListDto>> queryHandler)
 	{
-		var paging = new PagingParameters(pageNumber, pageSize);
+		var paging = new PagingParameters(pageNumber, page);
 
 		var result = await queryHandler.HandleAsync(new GetAttractionsByTypeQuery(siteId, type, paging));
 
 		return HandleResult(result);
 	}
+	#endregion
 
+	#region Commands
 	[HttpPost]
 	public async Task<IActionResult> Create(
 		[FromBody] CreateAttractionCommand command,
@@ -86,6 +89,7 @@ public class AttractionsController : ApiBaseController
 		return HandleResult(result);
 	}
 
+	#region Image Commands
 	public record AddAttractionImageRequest(
 		string ImageUrl,
 		bool IsMain,
@@ -113,7 +117,9 @@ public class AttractionsController : ApiBaseController
 
 		return HandleResult(result);
 	}
+	#endregion
 
+	#region Localized Content Commands
 	public record AddAttractionLocalizedContentRequest(
 		LanguageCode Language,
 		string Name,
@@ -130,4 +136,6 @@ public class AttractionsController : ApiBaseController
 
 		return HandleResult(result);
 	}
+	#endregion
+	#endregion
 }

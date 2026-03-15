@@ -5,6 +5,7 @@ using Application.DTOs.Common;
 using Application.DTOs.ContentReports;
 using Application.Queries.ContentReports;
 using Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -12,6 +13,7 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class ContentReportsController : ApiBaseController
 {
+	#region Queries
 	[HttpGet("{id:guid}")]
 	public async Task<IActionResult> GetById(
 		[FromRoute] Guid id,
@@ -22,8 +24,9 @@ public class ContentReportsController : ApiBaseController
 		return HandleResult(result);
 	}
 
-	[HttpGet("high-priority")]
-	public async Task<IActionResult> GetHighPriority(
+	[HttpGet]
+	[Authorize(Roles = nameof(UserRole.Admin))]
+	public async Task<IActionResult> GetByPriority(
 		[FromQuery] int priority,
 		[FromQuery] ReportStatus? status,
 		[FromQuery] ReportReason? reason,
@@ -31,16 +34,16 @@ public class ContentReportsController : ApiBaseController
 		[FromQuery] int pageSize,
 		[FromServices] IQueryHandler<GetContentReportsByHighPriorityQuery, PagedResult<ContentReportListDto>> queryHandler)
 	{
-		var paging = new PagingParameters(
-			page <= 0 ? 1 : page,
-			pageSize <= 0 ? 20 : pageSize);
+		var paging = new PagingParameters(page, pageSize);
 
 		var query = new GetContentReportsByHighPriorityQuery(priority, paging, status, reason);
 		var result = await queryHandler.HandleAsync(query);
 
 		return HandleResult(result);
 	}
+	#endregion
 
+	#region Commands
 	[HttpPost]
 	public async Task<IActionResult> Report(
 		[FromBody] ReportContentCommand command,
@@ -51,7 +54,7 @@ public class ContentReportsController : ApiBaseController
 		return HandleResult(result);
 	}
 
-	[HttpPatch("{id:guid}/escalate")]
+	[HttpPut("{id:guid}/escalate")]
 	public async Task<IActionResult> Escalate(
 		[FromRoute] Guid id,
 		[FromServices] ICommandHandler<EscalateContentReportCommand> commandHandler)
@@ -61,7 +64,7 @@ public class ContentReportsController : ApiBaseController
 		return HandleResult(result);
 	}
 
-	[HttpPatch("{id:guid}/under-review")]
+	[HttpPut("{id:guid}/under-review")]
 	public async Task<IActionResult> MarkUnderReview(
 		[FromRoute] Guid id,
 		[FromServices] ICommandHandler<UnderReviewContentReportCommand> commandHandler)
@@ -76,7 +79,7 @@ public class ContentReportsController : ApiBaseController
 		ModerationAction? Action,
 		string? Notes);
 
-	[HttpPatch("{id:guid}/resolve")]
+	[HttpPut("{id:guid}/resolve")]
 	public async Task<IActionResult> Resolve(
 		[FromRoute] Guid id,
 		[FromBody] ResolveContentReportRequest request,
@@ -87,4 +90,5 @@ public class ContentReportsController : ApiBaseController
 
 		return HandleResult(result);
 	}
+	#endregion
 }

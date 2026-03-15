@@ -3,7 +3,7 @@ using Application.Commands.Users;
 using Application.Common.Interfaces.Messaging;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EventMaster.API.Controllers;
+namespace API.Controllers;
 
 [Route("api/[controller]")]
 public class AuthController() : ApiBaseController

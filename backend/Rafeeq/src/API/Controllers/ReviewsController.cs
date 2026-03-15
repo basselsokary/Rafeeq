@@ -14,6 +14,7 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class ReviewsController : ApiBaseController
 {
+	#region Queries
 	[HttpGet("{id:guid}")]
 	public async Task<IActionResult> GetById(
 		[FromRoute] Guid id,
@@ -29,6 +30,7 @@ public class ReviewsController : ApiBaseController
 		[FromRoute] Guid siteId,
 		[FromQuery] ReviewStatus? status,
 		[FromQuery] ReviewOrderBy? sortBy,
+		[FromQuery] int? rating,
 		[FromQuery] int page,
 		[FromQuery] int pageSize,
 		[FromServices] IQueryHandler<GetReviewsBySiteIdQuery, PagedResult<ReviewListDto>> queryHandler)
@@ -38,27 +40,10 @@ public class ReviewsController : ApiBaseController
 		var query = new GetReviewsBySiteIdQuery(
             siteId,
             paging,
+			rating,
             status ?? ReviewStatus.Approved,
             sortBy ?? ReviewOrderBy.Helpful);
 
-		var result = await queryHandler.HandleAsync(query);
-
-		return HandleResult(result);
-	}
-
-	[HttpGet("site/{siteId:guid}/rating/{rating:int}")]
-	public async Task<IActionResult> GetBySiteIdAndRating(
-		[FromRoute] Guid siteId,
-		[FromRoute] int rating,
-		[FromQuery] int page,
-		[FromQuery] int pageSize,
-		[FromServices] IQueryHandler<GetReviewsBySiteIdAndRatingQuery, PagedResult<ReviewListDto>> queryHandler)
-	{
-		var paging = new PagingParameters(
-			page <= 0 ? 1 : page,
-			pageSize <= 0 ? 20 : pageSize);
-
-		var query = new GetReviewsBySiteIdAndRatingQuery(siteId, rating, paging);
 		var result = await queryHandler.HandleAsync(query);
 
 		return HandleResult(result);
@@ -83,17 +68,17 @@ public class ReviewsController : ApiBaseController
 	public async Task<IActionResult> GetMyReviews(
 		[FromQuery] int page,
 		[FromQuery] int pageSize,
-		[FromServices] IQueryHandler<GetReviewsByUserIdQuery, PagedResult<UserReviewDto>> queryHandler)
+		[FromServices] IQueryHandler<GetReviewsByUserIdQuery, PagedResult<TouristReviewDto>> queryHandler)
 	{
-		var paging = new PagingParameters(
-			page <= 0 ? 1 : page,
-			pageSize <= 0 ? 20 : pageSize);
+		var paging = new PagingParameters(page, pageSize);
 
 		var result = await queryHandler.HandleAsync(new GetReviewsByUserIdQuery(paging));
 
 		return HandleResult(result);
 	}
+	#endregion
 
+	#region Commands
 	[HttpPost]
 	public async Task<IActionResult> Create(
 		[FromBody] CreateReviewCommand command,
@@ -159,4 +144,5 @@ public class ReviewsController : ApiBaseController
 
 		return HandleResult(result);
 	}
+	#endregion
 }

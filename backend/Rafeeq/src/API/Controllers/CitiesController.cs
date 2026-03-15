@@ -12,6 +12,7 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class CitiesController : ApiBaseController
 {
+	#region Queries
 	[HttpGet]
 	public async Task<IActionResult> GetAll(
 		[FromQuery] int page,
@@ -44,7 +45,9 @@ public class CitiesController : ApiBaseController
 
 		return HandleResult(result);
 	}
+	#endregion
 
+	#region Command
 	[HttpPost]
 	public async Task<IActionResult> Create(
 		[FromBody] CreateCityCommand command,
@@ -90,4 +93,5 @@ public class CitiesController : ApiBaseController
 
 		return HandleResult(result);
 	}
+	#endregion
 }

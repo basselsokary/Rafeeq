@@ -17,6 +17,7 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class SponsorsController : ApiBaseController
 {
+	#region Queries
 	[HttpGet]
 	public async Task<IActionResult> GetAll(
 		[FromQuery] string? searchTerm,
@@ -63,6 +64,7 @@ public class SponsorsController : ApiBaseController
 		return HandleResult(result);
 	}
 
+	#region Offers
     [HttpGet("{id:guid}/offers")]
 	public async Task<IActionResult> GetOffersBySponsor(
 		[FromRoute] Guid id,
@@ -102,7 +104,10 @@ public class SponsorsController : ApiBaseController
 
 		return HandleResult(result);
 	}
+	#endregion
+	#endregion
 
+	#region Commands
 	[HttpPost]
 	public async Task<IActionResult> Create(
 		[FromBody] CreateSponsorCommand command,
@@ -206,6 +211,7 @@ public class SponsorsController : ApiBaseController
 		return HandleResult(result);
 	}
 
+	#region Images
 	public record AddSponsorImageRequest(
 		string ImageUrl,
 		bool IsMain,
@@ -233,7 +239,9 @@ public class SponsorsController : ApiBaseController
 
 		return HandleResult(result);
 	}
+	#endregion
 
+	#region Offers
 	public record UpsertSponsorOfferRequest(
 		string Title,
 		string Description,
@@ -348,4 +356,6 @@ public class SponsorsController : ApiBaseController
 
 		return HandleResult(result);
 	}
+	#endregion
+	#endregion
 }
