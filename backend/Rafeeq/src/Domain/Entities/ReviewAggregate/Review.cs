@@ -5,18 +5,18 @@ using Shared.Models;
 using Domain.Enums;
 using Domain.Events;
 using Domain.Entities.SiteAggregate;
-using Domain.Entities.UserAggregate;
+using Domain.Entities.TouristAggregate;
 
 namespace Domain.Entities.ReviewAggregate;
 
 public class Review : BaseAuditableEntity, IAggregateRoot
 {
     public Guid SiteId { get; private set; }
-    public Guid UserId { get; private set; }
+    public Guid TouristId { get; private set; }
     
     /// Only to use them for read queries
     public Site Site { get; private set; } = null!;
-    public User User { get; private set; } = null!;
+    public Tourist Tourist { get; private set; } = null!;
 
     public Rating Rating { get; private set; } = null!;
     public string Title { get; private set; } = null!;
@@ -36,7 +36,7 @@ public class Review : BaseAuditableEntity, IAggregateRoot
         string title,
         string content)
     {
-        UserId = touristId;
+        TouristId = touristId;
         SiteId = siteId;
         Rating = rating;
         Title = title;
@@ -68,7 +68,7 @@ public class Review : BaseAuditableEntity, IAggregateRoot
         
         var review = new Review(touristId, siteId, rating, title.Trim(), content.Trim());
         
-        // review.RaiseDomainEvent(new ReviewCreatedEvent(review.Id, review.SiteId, review.UserId, review.Rating));
+        // review.RaiseDomainEvent(new ReviewCreatedEvent(review.Id, review.SiteId, review.TouristId, review.Rating));
         
         return review;
     }
@@ -90,14 +90,14 @@ public class Review : BaseAuditableEntity, IAggregateRoot
 
         MarkAsUpdated();
         
-        RaiseDomainEvent(new ReviewUpdatedEvent(Id, SiteId, UserId, oldRating, Rating));
+        RaiseDomainEvent(new ReviewUpdatedEvent(Id, SiteId, TouristId, oldRating, Rating));
         
         return Result.Success();
     }
 
     public void Delete()
     {
-        RaiseDomainEvent(new ReviewDeletedEvent(Id, SiteId, UserId, Rating));
+        RaiseDomainEvent(new ReviewDeletedEvent(Id, SiteId, TouristId, Rating));
     }
 
     public Result Approve()
@@ -108,7 +108,7 @@ public class Review : BaseAuditableEntity, IAggregateRoot
         RejectionReason = null;
         MarkAsUpdated();
         
-        RaiseDomainEvent(new ReviewApprovedEvent(Id, SiteId, UserId, Rating));
+        RaiseDomainEvent(new ReviewApprovedEvent(Id, SiteId, TouristId, Rating));
 
         return Result.Success();
     }

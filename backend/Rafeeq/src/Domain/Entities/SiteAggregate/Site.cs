@@ -11,7 +11,7 @@ public class Site : BaseAuditableEntity, IAggregateRoot
 {
     public Guid CityId { get; private set; }
     /// Read only
-    public City City { get; private set; }
+    public City City { get; private set; } = null!;
 
     public string Name { get; private set; } = null!;
     public string Description { get; private set; } = null!;

@@ -1,13 +1,16 @@
 ﻿using Shared.Models;
 
-namespace Domain.Entities.UserAggregate;
+namespace Domain.Entities.TouristAggregate;
 
-public class UserErrors
+public class TouristErrors
 {
     public static Error Unauthorized(string? userId) =>
         Error.Unauthorized("USER_UNAUTHORIZED", $"The user with id = '{userId}' is unauthorized.");
 
     public static Error NotFound(Guid key) =>
+        Error.NotFound("USER_NOT_FOUND", $"The user with = '{key}' was not found.");
+    
+    public static Error NotFound(string key) =>
         Error.NotFound("USER_NOT_FOUND", $"The user with = '{key}' was not found.");
     
     public static Error FavouriteNotFound(Guid key) =>
@@ -51,4 +54,7 @@ public class UserErrors
 
     public static Error SomethingWentWrong() =>
         Error.Failure("SOMETHING_WENT_WRONG", "Something went wrong.");
+
+    public static Error RequiredUserId
+        => Error.Validation("USER_ID_REQUIRED", "User ID is required.");
 }

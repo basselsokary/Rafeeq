@@ -1,19 +1,17 @@
 using Domain.Common;
 using Domain.Enums;
 using Domain.Common.Interfaces;
-using Domain.Entities.TouristAggregate;
 using Shared.Models;
 
-namespace Domain.Entities.UserAggregate;
+namespace Domain.Entities.TouristAggregate;
 
-public class User : BaseAuditableEntity, IAggregateRoot
+public class Tourist : BaseAuditableEntity, IAggregateRoot
 {
     public string FirstName { get; private set; } = null!;
     public string LastName { get; private set; } = null!;
     public string Nationality { get; private set; } = null!;
 
-    public UserRole Role { get; private set; }
-    public UserStatus Status { get; private set; }
+    public TouristStatus Status { get; private set; }
     public LanguageCode PreferredLanguage { get; private set; }
     
     public int TotalTrips { get; private set; }
@@ -22,52 +20,48 @@ public class User : BaseAuditableEntity, IAggregateRoot
     private readonly List<Favourite> _favourites = [];
     public IReadOnlyCollection<Favourite> Favourites => _favourites.AsReadOnly();
 
-    private User() { }
-    private User(
+    private Tourist() { }
+    private Tourist(
         Guid id,
         string firstName,
         string lastName,
         string nationality,
-        UserRole role,
         LanguageCode preferredLanguage) : base(id)
     {
         FirstName = firstName;
         LastName = lastName;
         Nationality = nationality;
-        Role = role;
         PreferredLanguage = preferredLanguage;
 
-        Status = UserStatus.Active;
+        Status = TouristStatus.Active;
         TotalTrips = 0;
         TotalReviews = 0;
     }
 
-    public static Result<User> Create(
-        Guid userId,
+    public static Result<Tourist> Create(
+        Guid TouristId,
         string firstName,
         string lastName,
         string nationality,
-        UserRole role = UserRole.Tourist,
         LanguageCode preferredLanguage = LanguageCode.English)
     {
         if (string.IsNullOrWhiteSpace(firstName))
-            return UserErrors.FirstNameRequired;
+            return TouristErrors.FirstNameRequired;
 
         if (string.IsNullOrWhiteSpace(lastName))
-            return UserErrors.LastNameRequired;
+            return TouristErrors.LastNameRequired;
 
         if (string.IsNullOrWhiteSpace(nationality))
-            return UserErrors.NationalityRequired;
+            return TouristErrors.NationalityRequired;
         
-        var user = new User(
-            userId,
+        var Tourist = new Tourist(
+            TouristId,
             firstName.Trim(),
             lastName.Trim(),
             nationality,
-            role,
             preferredLanguage);
 
-        return user;
+        return Tourist;
     }
 
     public string GetFullName() => $"{FirstName} {LastName}";
@@ -75,13 +69,13 @@ public class User : BaseAuditableEntity, IAggregateRoot
     public Result UpdateProfile(string firstName, string lastName, string nationality)
     {
         if (string.IsNullOrWhiteSpace(firstName))
-            return UserErrors.FirstNameRequired;
+            return TouristErrors.FirstNameRequired;
 
         if (string.IsNullOrWhiteSpace(lastName))
-            return UserErrors.LastNameRequired;
+            return TouristErrors.LastNameRequired;
         
         if (string.IsNullOrWhiteSpace(nationality))
-            return UserErrors.NationalityRequired;
+            return TouristErrors.NationalityRequired;
 
         FirstName = firstName.Trim();
         LastName = lastName.Trim();
@@ -93,23 +87,25 @@ public class User : BaseAuditableEntity, IAggregateRoot
 
     public void SetPreferredLanguage(LanguageCode language)
     {
+        if (PreferredLanguage == language) return;
+        
         PreferredLanguage = language;
         MarkAsUpdated();
     }
 
-    public void UpdateStatus(UserStatus status)
+    public void UpdateStatus(TouristStatus status)
     {
         if (Status == status) return;
 
         Status = status;
         MarkAsUpdated();
-        // RaiseDomainEvent(new UserStatusChangedEvent(Id, status));
+        // RaiseDomainEvent(new TouristStatusChangedEvent(Id, status));
     }
 
     public Result AddFavorite(Guid siteId)
     {
         if (_favourites.Any(f => f.SiteId == siteId))
-            return UserErrors.SiteAlreadyFavorite;
+            return TouristErrors.SiteAlreadyFavorite;
 
         var favoriteResult = Favourite.Create(siteId);
         if (favoriteResult.Failed)
@@ -125,7 +121,7 @@ public class User : BaseAuditableEntity, IAggregateRoot
     {
         var favorite = _favourites.FirstOrDefault(f => f.SiteId == siteId);
         if (favorite == null)
-            return UserErrors.FavouriteNotFound(siteId);
+            return TouristErrors.FavouriteNotFound(siteId);
 
         _favourites.Remove(favorite);
         MarkAsUpdated();
