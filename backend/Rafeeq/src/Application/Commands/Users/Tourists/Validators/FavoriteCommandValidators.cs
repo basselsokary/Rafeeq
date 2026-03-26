@@ -7,14 +7,16 @@ internal class AddFavoriteCommandValidator : AbstractValidator<AddFavoriteComman
 {
     public AddFavoriteCommandValidator()
     {
-        throw new NotImplementedException();
+        RuleFor(x => x.SiteId)
+            .NotEmpty();
     }
 }
 
-internal class DeleteFavoriteCommandValidator : AbstractValidator<DeleteFavoriteCommand>
+internal class RemoveFavoriteCommandValidator : AbstractValidator<RemoveFavoriteCommand>
 {
-    public DeleteFavoriteCommandValidator()
+    public RemoveFavoriteCommandValidator()
     {
-        throw new NotImplementedException();
+        RuleFor(x => x.SiteId)
+            .NotEmpty();
     }
 }

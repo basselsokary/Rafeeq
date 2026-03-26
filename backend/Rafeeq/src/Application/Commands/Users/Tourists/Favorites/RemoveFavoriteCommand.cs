@@ -4,20 +4,20 @@ using Domain.Entities.TouristAggregate;
 
 namespace Application.Commands.Users.Tourists.Favorites;
 
-public record AddFavoriteCommand(
+public record RemoveFavoriteCommand(
     Guid SiteId) : ICommand;
 
-internal class AddFavoriteCommandHandler(
+internal class RemoveFavoriteCommandHandler(
     IUnitOfWork unitOfWork,
-    IUserContext userContext) : ICommandHandler<AddFavoriteCommand>
+    IUserContext userContext) : ICommandHandler<RemoveFavoriteCommand>
 {
-    public async Task<Result> HandleAsync(AddFavoriteCommand command, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(RemoveFavoriteCommand command, CancellationToken cancellationToken)
     {
         var tourist = await unitOfWork.Tourists.GetWithFavouritesAsync(userContext.Id, cancellationToken);
         if (tourist == null)
             return TouristErrors.NotFound(userContext.Id);
 
-        Result result = tourist.AddFavorite(command.SiteId);
+        Result result = tourist.RemoveFavorite(command.SiteId);
         if (result.Failed)
             return result;
 
