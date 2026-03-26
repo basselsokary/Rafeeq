@@ -11,6 +11,7 @@ public interface IReviewQueryService
     Task<PagedResult<ReviewListDto>> GetBySiteIdAsync(
         Guid siteId,
         PagingParameters paging,
+        int? rating = null,
         ReviewOrderBy orderBy = ReviewOrderBy.Helpful,
         ReviewStatus status = ReviewStatus.Approved,
         CancellationToken cancellationToken = default);
@@ -25,19 +26,13 @@ public interface IReviewQueryService
         int count = 5,
         CancellationToken cancellationToken = default);
     
-    Task<PagedResult<ReviewListDto>> GetBySiteAndRatingAsync(
-        Guid siteId,
-        int rating,
+    Task<PagedResult<TouristReviewDto>> GetByTouristIdAsync(
+        Guid touristId,
         PagingParameters paging,
         CancellationToken cancellationToken = default);
     
-    Task<PagedResult<UserReviewDto>> GetByUserIdAsync(
-        Guid userId,
-        PagingParameters paging,
-        CancellationToken cancellationToken = default);
-    
-    Task<List<UserReviewDto>> GetRecentByUserIdAsync(
-        Guid userId,
+    Task<List<TouristReviewDto>> GetRecentByTouristIdAsync(
+        Guid touristId,
         int count = 5,
         CancellationToken cancellationToken = default);
 

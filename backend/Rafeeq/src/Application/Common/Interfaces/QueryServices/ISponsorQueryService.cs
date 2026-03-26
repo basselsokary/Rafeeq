@@ -8,6 +8,10 @@ public interface ISponsorQueryService
     Task<SponsorDetailDto?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default);
+    
+    Task<SponsorAdminDetailDto?> GetByIdForAdminAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
 
     Task<PagedResult<SponsorListDto>> GetAsync(
         SponsorFilters filters,

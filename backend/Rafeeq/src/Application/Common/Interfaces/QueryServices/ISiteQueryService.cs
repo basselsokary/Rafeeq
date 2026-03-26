@@ -1,5 +1,7 @@
 using Application.DTOs.Sites;
 using Application.DTOs.Common;
+using Application.DTOs.Admins;
+using Domain.Enums;
 
 namespace Application.Common.Interfaces.QueryServices;
 
@@ -8,12 +10,20 @@ public interface ISiteQueryService
     Task<SiteDetailDto?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default);
-
+    Task<SiteAdminDetailDto?> GetByIdForAdminAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
+        
     Task<List<SiteListDto>> GetNearbyAsync(
         double latitude,
         double longitude,
         SiteFilters filters,
         int radiusKm = 5,
+        CancellationToken cancellationToken = default);
+
+    Task<PagedResult<AdminSiteListDto>> GetByStatusAsync(
+        SiteStatus status,
+        PagingParameters paging,
         CancellationToken cancellationToken = default);
     
     /// for map view
@@ -39,24 +49,12 @@ public interface ISiteQueryService
         PagingParameters paging,
         CancellationToken cancellationToken = default);
 
-    Task<List<LocalizedContentDto>> GetLocalizedContentsAsync(
+    Task<List<DTOs.Sites.LocalizedContentDto>> GetLocalizedContentsAsync(
         Guid siteId,
         CancellationToken cancellationToken = default);
-    
-    /// <summary>
-    /// Get personalized recommendations for a user
-    /// </summary>
-    // Task<List<SiteListDto>> GetRecommendationsAsync(
-    //     Guid userId,
-    //     double? userLatitude = null,
-    //     double? userLongitude = null,
-    //     int count = 10,
-    //     CancellationToken cancellationToken = default);
 
     Task<List<SiteListDto>> GetSimilarAsync(
         Guid siteId,
         int count = 5,
         CancellationToken cancellationToken = default);
-        
-    // Task<Dictionary<string, int>> GetCountByTypeAsync(CancellationToken cancellationToken = default);
 }

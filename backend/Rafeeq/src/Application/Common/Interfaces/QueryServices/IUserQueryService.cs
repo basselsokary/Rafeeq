@@ -1,37 +1,47 @@
+using Application.DTOs.Admins;
 using Application.DTOs.Common;
-using Application.DTOs.Users;
+using Application.DTOs.Tourists;
 using Domain.Enums;
 
 namespace Application.Common.Interfaces.QueryServices;
 
 public interface IUserQueryService
 {
-    Task<UserProfileDto?> GetByIdAsync(
+    Task<TouristProfileDto?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default);
     
-    Task<UserProfileDto?> GetByEmailAsync(
+    Task<AdminUserDetailDto?> GetByIdForAdminAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
+
+    Task<TouristProfileDto?> GetByEmailAsync(
         string email,
         CancellationToken cancellationToken = default);
     
-    Task<PagedResult<UserListDto>> GetAllAsync(
-        string? searchTerm, // by name or email
+    Task<AdminUserDetailDto?> GetByEmailForAdminAsync(
+        string email,
+        CancellationToken cancellationToken = default);
+    
+    Task<PagedResult<TouristListDto>> GetAllAsync(
+        PagingParameters paging,
+        string? searchTerm = null, // by name or email
         UserRole? role = null,
         UserStatus status = UserStatus.Active,
-        PagingParameters? paging = null,
+        bool? emailVerified = null,
         CancellationToken cancellationToken = default);
     
     Task<PagedResult<FavoriteSiteDto>> GetFavoriteSitesAsync(
-        Guid userId,
-        PagingParameters? paging = null,
+        Guid touristId,
+        PagingParameters paging,
         CancellationToken cancellationToken = default);
     
     Task<bool> HasFavoritedSiteAsync(
-        Guid userId,
+        Guid touristId,
         Guid siteId,
         CancellationToken cancellationToken = default);
     
     Task<List<Guid>> GetFavoriteSiteIdsAsync(
-        Guid userId,
+        Guid touristId,
         CancellationToken cancellationToken = default);
 }

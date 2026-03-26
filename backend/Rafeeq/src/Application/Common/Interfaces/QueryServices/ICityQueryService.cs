@@ -6,6 +6,7 @@ namespace Application.Common.Interfaces.QueryServices;
 public interface ICityQueryService
 {
     Task<CityDetailDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<CityAdminDetailDto?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken = default);
     
     Task<List<CitySummaryDto>> GetAsync(
         CancellationToken cancellationToken = default);

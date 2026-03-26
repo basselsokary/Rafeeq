@@ -7,10 +7,11 @@ namespace Application.Common.Interfaces.QueryServices;
 public interface IAttractionQueryService
 {
     Task<AttractionDetailDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-        
-    Task<PagedResult<AttractionListDto>> GetByTypeAsync(
+    Task<AttractionAdminDetailDto?> GetByIdForAdminAsync(Guid siteId, CancellationToken cancellationToken);
+
+    Task<PagedResult<AttractionListDto>> GetBySiteIdAsync(
         Guid siteId,
         AttractionType type,
-        PagingParameters? paging = null,
+        PagingParameters paging,
         CancellationToken cancellationToken = default);
 }
