@@ -1,7 +1,6 @@
 using Application.Common.Interfaces.Authentication;
-using Application.Common.Interfaces.Messaging;
 using Application.Common.Interfaces.QueryServices;
-using Application.DTOs.Users;
+using Application.DTOs.Tourists;
 using Domain.Entities.TouristAggregate;
 
 namespace Application.Queries.Users.Tourists;
@@ -9,7 +8,7 @@ namespace Application.Queries.Users.Tourists;
 public record GetProfileQuery : IQuery<TouristProfileDto>;
 
 internal class GetProfileQueryHandler(
-    ITouristQueryService queryService,
+    IUserQueryService queryService,
     IUserContext userContext) : IQueryHandler<GetProfileQuery, TouristProfileDto>
 {
     public async Task<Result<TouristProfileDto>> HandleAsync(GetProfileQuery query, CancellationToken cancellationToken)

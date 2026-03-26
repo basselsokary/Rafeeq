@@ -1,12 +1,31 @@
 using FluentValidation;
+using Application.Queries.Common.Validators;
+using Domain.Common.Constants;
+using Domain.Entities.ReviewAggregate;
 
 namespace Application.Queries.Reviews.Validators;
 
-internal class GetReviewsQueryValidator : AbstractValidator<GetReviewsBySiteIdQuery>
+internal class GetReviewsBySiteIdQueryValidator : AbstractValidator<GetReviewsBySiteIdQuery>
 {
-    public GetReviewsQueryValidator()
+    public GetReviewsBySiteIdQueryValidator()
     {
-        throw new NotImplementedException();
+        RuleFor(x => x.SiteId)
+            .NotEmpty()
+            .WithMessage(ReviewErrors.SiteIdRequired.Message);
+
+        RuleFor(x => x.Paging)
+            .NotNull()
+            .SetValidator(new PagingParametersValidator());
+
+        RuleFor(x => x.Rating)
+            .InclusiveBetween(DomainConstants.Review.MinRatingValue, DomainConstants.Review.MaxRatingValue)
+            .When(x => x.Rating.HasValue);
+
+        RuleFor(x => x.Status)
+            .IsInEnum();
+
+        RuleFor(x => x.OrderBy)
+            .IsInEnum();
     }
 }
 
@@ -14,7 +33,9 @@ internal class GetReviewByIdQueryValidator : AbstractValidator<GetReviewByIdQuer
 {
     public GetReviewByIdQueryValidator()
     {
-        throw new NotImplementedException();
+        RuleFor(x => x.Id)
+            .NotEmpty()
+            .WithMessage(ReviewErrors.IdRequired.Message);
     }
 }
 
@@ -22,7 +43,9 @@ internal class GetReviewsByUserIdQueryValidator : AbstractValidator<GetReviewsBy
 {
     public GetReviewsByUserIdQueryValidator()
     {
-        throw new NotImplementedException();
+        RuleFor(x => x.Paging)
+            .NotNull()
+            .SetValidator(new PagingParametersValidator());
     }
 }
 
@@ -30,14 +53,11 @@ internal class GetReviewsByStatusQueryValidator : AbstractValidator<GetReviewsBy
 {
     public GetReviewsByStatusQueryValidator()
     {
-        throw new NotImplementedException();
-    }
-}
+        RuleFor(x => x.Paging)
+            .NotNull()
+            .SetValidator(new PagingParametersValidator());
 
-internal class GetReviewsBySiteIdAndRatingQueryValidator : AbstractValidator<GetReviewsBySiteIdAndRatingQuery>
-{
-    public GetReviewsBySiteIdAndRatingQueryValidator()
-    {
-        throw new NotImplementedException();
+        RuleFor(x => x.Status)
+            .IsInEnum();
     }
 }

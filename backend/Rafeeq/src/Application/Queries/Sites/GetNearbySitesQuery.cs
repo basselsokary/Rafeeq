@@ -1,5 +1,4 @@
 using Application.Common.Interfaces.QueryServices;
-using Application.DTOs.Common;
 using Application.DTOs.Sites;
 
 namespace Application.Queries.Sites;

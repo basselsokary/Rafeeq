@@ -14,7 +14,7 @@ internal class GetReviewsByUserIdQueryHandler(
 {
     public async Task<Result<PagedResult<TouristReviewDto>>> HandleAsync(GetReviewsByUserIdQuery query, CancellationToken cancellationToken)
     {
-        PagedResult<TouristReviewDto> pagedResult = await queryService.GetByUserIdAsync(
+        PagedResult<TouristReviewDto> pagedResult = await queryService.GetByTouristIdAsync(
                 userContext.Id,
                 query.Paging,
                 cancellationToken);

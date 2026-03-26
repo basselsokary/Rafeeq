@@ -6,8 +6,8 @@ using Domain.Enums;
 namespace Application.Queries.ContentReports;
 
 public record GetContentReportsByHighPriorityQuery(
-    int Priority,
     PagingParameters Paging,
+    int? Priority,
     ReportStatus? Status = null,
     ReportReason? Reason = null) : IQuery<PagedResult<ContentReportListDto>>;
 
@@ -18,9 +18,9 @@ internal class GetContentReportsByHighPriorityQueryHandler(IContentReportQuerySe
         GetContentReportsByHighPriorityQuery query,
         CancellationToken cancellationToken)
     {
-        var pagedResult = await queryService.GetFilteredByPriorityAsync(
-            query.Priority,
+        var pagedResult = await queryService.GetAsync(
             query.Paging,
+            query.Priority,
             query.Reason,
             query.Status,
             cancellationToken);

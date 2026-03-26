@@ -5,9 +5,9 @@ using Application.DTOs.Sites;
 namespace Application.Queries.Sites;
 
 public record GetSitesQuery(
-    string? SearchTerm = null,
-    SiteFilters? Filters = null,
-    PagingParameters? Paging = null) : IQuery<PagedResult<SiteListDto>>;
+    SiteFilters Filters,
+    PagingParameters Paging,
+    string? SearchTerm = null) : IQuery<PagedResult<SiteListDto>>;
 
 internal class GetSitesQueryHandler(
     ISiteQueryService queryService) : IQueryHandler<GetSitesQuery, PagedResult<SiteListDto>>
