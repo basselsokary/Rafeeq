@@ -7,49 +7,40 @@ using System.Text;
 
 namespace Infrastructure.Identity;
 
-public interface IJwtTokenGenerator
-{
-    string GenerateAccessToken(ApplicationUser user, IList<string> roles);
-    string GenerateRefreshToken();
-    ClaimsPrincipal? GetPrincipalFromExpiredToken(string token);
-}
-
-public class JwtTokenGenerator(IConfiguration configuration) : IJwtTokenGenerator
+public class JwtTokenGenerator(IConfiguration configuration)
 {
     public string GenerateAccessToken(ApplicationUser user, IList<string> roles)
     {
         var securityKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!));
+            Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"]!));
 
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new(JwtRegisteredClaimNames.PreferredUsername, user.UserName!),
             new(JwtRegisteredClaimNames.Email, user.Email!),
-            new(JwtRegisteredClaimNames.GivenName, user.FirstName),
-            new(JwtRegisteredClaimNames.FamilyName, user.LastName),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new("userId", user.Id.ToString()),
-            new("domainUserId", user.DomainUserId?.ToString() ?? string.Empty)
         };
 
         // Add roles as claims
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var token = new JwtSecurityToken(
-            issuer: configuration["Jwt:Issuer"],
-            audience: configuration["Jwt:Audience"],
+            issuer: configuration["JwtSettings:Issuer"],
+            audience: configuration["JwtSettings:Audience"],
             claims: claims,
             expires: DateTime.UtcNow.AddMinutes(
-                int.Parse(configuration["Jwt:ExpirationMinutes"]!)),
+                int.Parse(configuration["JwtSettings:ExpirationMinutes"]!)),
             signingCredentials: credentials
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public string GenerateRefreshToken()
+    public static string GenerateRefreshToken()
     {
         var randomNumber = new byte[64];
         using var rng = RandomNumberGenerator.Create();
@@ -65,7 +56,7 @@ public class JwtTokenGenerator(IConfiguration configuration) : IJwtTokenGenerato
             ValidateIssuer = false,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!)),
+                Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"]!)),
             ValidateLifetime = false // Don't validate expiration
         };
 
