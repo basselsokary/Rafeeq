@@ -78,7 +78,7 @@ public static class PhoneNumberErrors
 public static class RatingErrors
 {
     public static Error OutOfRange(int min, int max) =>
-        Error.Validation("RATING_OUT_OF_RANGE", $"Rating must be between {min} and {max}.");
+        Error.Validation("RATING_OUT_OF_RANGE", $"Rating must be between {min} and {max}, and max rating greater than or equal to min rating.");
 }
 
 public static class TimeRangeErrors

@@ -117,6 +117,21 @@ public class City : BaseAuditableEntity, IAggregateRoot
         return Result.Success();
     }
 
+    public Result UpdateLocalizedContent(Guid contentId, string name, string description)
+    {
+        var existing = _localizedContents.FirstOrDefault(lc => lc.Id == contentId);
+        if (existing == null)
+            return CityErrors.LocalizedContentNotFound;
+
+        Result result = existing.Update(name, description);
+        if (result.Failed)
+            return result;
+        
+        MarkAsUpdated();
+
+        return Result.Success();
+    }
+    
     public string GetLocalizedName(LanguageCode language)
     {
         var localized = _localizedContents.FirstOrDefault(lc => lc.Language == language);

@@ -30,6 +30,9 @@ public class AttractionErrors
     public static Error ImageNotFound =>
         Error.NotFound("ATTRACTION_IMAGE_NOT_FOUND", "Attraction Image does not exist.");
     
+    public static Error CaptionRequired =>
+        Error.NotFound("ATTRACTION_EMPTY_CAPTION", "Attraction caption is empty.");
+    
     public static Error NegativeDisplayOrder => 
         Error.Validation("ATTRACTION_NEGATIVE_DISPLAY_ORDER", "Attraction display order cannot be negative.");
 

@@ -1,5 +1,4 @@
 using Domain.Common;
-using Domain.Exceptions;
 using Shared.Models;
 
 namespace Domain.Entities.AttractionAggregate;
@@ -12,21 +11,23 @@ public class AttractionImage : BaseAuditableEntity
     public int DisplayOrder { get; private set; }
     
     private AttractionImage() { }
-    private AttractionImage(string imageUrl, bool isMain, string? caption)
+    private AttractionImage(string imageUrl, bool isMain, int displayOrder, string? caption)
     {
         ImageUrl = imageUrl;
         IsMain = isMain;
         Caption = caption;
-
-        DisplayOrder = 0;
+        DisplayOrder = displayOrder;
     }
 
-    internal static Result<AttractionImage> Create(string imageUrl, bool isMain, string? caption)
+    internal static Result<AttractionImage> Create(string imageUrl, bool isMain, int displayOrder, string? caption)
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
             return AttractionErrors.ImageUrlRequired;
 
-        return new AttractionImage(imageUrl, isMain, caption?.Trim());
+        if (displayOrder < 0)
+            return AttractionErrors.NegativeDisplayOrder;
+
+        return new AttractionImage(imageUrl, isMain, displayOrder, caption?.Trim());
     }
 
     internal void SetAsMain(bool isMain)

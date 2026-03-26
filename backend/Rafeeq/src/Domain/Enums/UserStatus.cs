@@ -5,5 +5,6 @@ public enum UserStatus
     Active,
     Inactive,
     Suspended,
+    Banned,
     Deleted
 }

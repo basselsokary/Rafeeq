@@ -5,8 +5,8 @@ namespace Domain.ValueObjects;
 
 public class GeoLocation : ValueObject
 {
-    private const int BoundLatitude = 90;
-    private const int BoundLongitude = 180;
+    public const int BoundLatitude = 90;
+    public const int BoundLongitude = 180;
     
     public double Latitude { get; }
     public double Longitude { get; }

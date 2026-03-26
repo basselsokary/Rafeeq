@@ -11,22 +11,22 @@ public class SponsorImage : BaseAuditableEntity
     public int DisplayOrder { get; private set; }
 
     private SponsorImage() { }
-    private SponsorImage(string imageUrl, bool isMain, string? caption)
+    private SponsorImage(string imageUrl, bool isMain, int displayOrder, string? caption)
     {
         ImageUrl = imageUrl;
         IsMain = isMain;
         Caption = caption;
-        DisplayOrder = 0;
+        DisplayOrder = displayOrder;
     }
 
-    internal static Result<SponsorImage> Create(string imageUrl, bool isMain, string? caption)
+    internal static Result<SponsorImage> Create(string imageUrl, bool isMain, int displayOrder, string? caption)
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
             return SponsorErrors.ImageUrlRequired;
 
-        return new SponsorImage(imageUrl, isMain, caption?.Trim());
+        return new SponsorImage(imageUrl, isMain, displayOrder, caption?.Trim());
     }
-
+    
     internal void SetAsMain(bool isMain)
     {
         IsMain = isMain;

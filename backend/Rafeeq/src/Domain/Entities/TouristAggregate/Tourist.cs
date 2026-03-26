@@ -11,7 +11,7 @@ public class Tourist : BaseAuditableEntity, IAggregateRoot
     public string LastName { get; private set; } = null!;
     public string Nationality { get; private set; } = null!;
 
-    public TouristStatus Status { get; private set; }
+    public UserStatus Status { get; private set; }
     public LanguageCode PreferredLanguage { get; private set; }
     
     public int TotalTrips { get; private set; }
@@ -33,7 +33,7 @@ public class Tourist : BaseAuditableEntity, IAggregateRoot
         Nationality = nationality;
         PreferredLanguage = preferredLanguage;
 
-        Status = TouristStatus.Active;
+        Status = UserStatus.Active;
         TotalTrips = 0;
         TotalReviews = 0;
     }
@@ -93,7 +93,7 @@ public class Tourist : BaseAuditableEntity, IAggregateRoot
         MarkAsUpdated();
     }
 
-    public void UpdateStatus(TouristStatus status)
+    public void UpdateStatus(UserStatus status)
     {
         if (Status == status) return;
 
@@ -141,8 +141,8 @@ public class Tourist : BaseAuditableEntity, IAggregateRoot
         MarkAsUpdated();
     }
 
-    public bool IsFavorite(Guid entityId)
+    public bool IsFavorite(Guid siteId)
     {
-        return _favourites.Any(f => f.SiteId == entityId);
+        return _favourites.Any(f => f.SiteId == siteId);
     }
 }

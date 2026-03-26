@@ -47,7 +47,7 @@ public class TouristErrors
         Error.Failure("INVALID_TOKEN", "Invalid access token.");
     
     public static Error InvalidRefreshToken =>
-        Error.Failure("INVALID_REFRESH_TOKEN", "Invalid refresh token.");
+        Error.Failure("INVALID_REFRESH_TOKEN", "Invalid or expired refresh token.");
     
     public static Error InvalidClaims =>
         Error.Failure("INVALID_CLAIMS", "Invalid token claims.");

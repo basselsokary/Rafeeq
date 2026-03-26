@@ -12,6 +12,7 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
 
     public string Name { get; private set; } = null!;
     public string Description { get; private set; } = null!;
+    public string? MainImageUrl { get; private set; }
     public AttractionType Type { get; private set; }
     public HistoricalPeriod HistoricalPeriod { get; private set; }
     public GeoLocation? Location { get; private set; } // Specific GPS if available
@@ -92,9 +93,9 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
         }
     }
 
-    public Result AddImage(string imageUrl, bool isMain, string? caption = null)
+    public Result AddImage(string imageUrl, bool isMain, int displayOrder, string? caption = null)
     {
-        var imageResult = AttractionImage.Create(imageUrl, isMain, caption);
+        var imageResult = AttractionImage.Create(imageUrl, isMain, displayOrder, caption);
         if (imageResult.Failed)
             return imageResult;
 
@@ -102,6 +103,8 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
         {
             foreach (var img in _images)
                 img.SetAsMain(false);
+
+            SetMainImage(imageUrl);
         }
 
         _images.Add(imageResult.Value);
@@ -117,6 +120,17 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
             return AttractionErrors.ImageNotFound;
 
         _images.Remove(image);
+        if (image.IsMain && _images.Count > 0)
+        {
+            var newMain = _images.First();
+            newMain.SetAsMain(true);
+            SetMainImage(newMain.ImageUrl);
+        }
+        else if (image.IsMain)
+        {
+            MainImageUrl = null;
+        }
+        
         MarkAsUpdated();
 
         return Result.Success();
@@ -136,5 +150,28 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
         MarkAsUpdated();
 
         return Result.Success();
+    }
+
+    public Result UpdateLocalizedContent(Guid contentId, string name, string description)
+    {
+        var existing = _localizedContents.FirstOrDefault(lc => lc.Id == contentId);
+        if (existing == null)
+            return AttractionErrors.LocalizedContentNotFound;
+
+        Result result = existing.Update(name, description);
+        if (result.Failed)
+            return result;
+        
+        MarkAsUpdated();
+
+        return Result.Success();
+    }
+
+    private void SetMainImage(string imageUrl)
+    {
+        if (MainImageUrl != imageUrl)
+        {
+            MainImageUrl = imageUrl;
+        }
     }
 }

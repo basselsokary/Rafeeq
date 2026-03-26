@@ -6,7 +6,6 @@ namespace Domain.ValueObjects;
 
 public sealed class PhoneNumber : ValueObject
 {
-    // private static readonly Regex PhoneRegex = new(@"^\+?[1-9]\d{1,12}$");
     // +201234567890 | 01234567890 | 12345
     private static readonly Regex PhoneRegex = new(@"^((\+201|01)[0-9]\d{8}|\d{5})$");
 

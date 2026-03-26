@@ -11,21 +11,23 @@ public class SiteImage : BaseAuditableEntity
     public int DisplayOrder { get; private set; }
     
     private SiteImage() { }
-    private SiteImage(string imageUrl, bool isMain, string? caption)
+    private SiteImage(string imageUrl, bool isMain, int displayOrder, string? caption)
     {
         ImageUrl = imageUrl;
         IsMain = isMain;
+        DisplayOrder = displayOrder;
         Caption = caption;
-
-        DisplayOrder = 0;
     }
 
-    internal static Result<SiteImage> Create(string imageUrl, bool isMain, string? caption)
+    internal static Result<SiteImage> Create(string imageUrl, bool isMain, int displayOrder, string? caption)
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
             return SiteErrors.ImageUrlRequired;
+        
+        if (displayOrder < 0)
+            return SiteErrors.NegativeDisplayOrder;
 
-        return new SiteImage(imageUrl, isMain, caption?.Trim());
+        return new SiteImage(imageUrl, isMain, displayOrder, caption?.Trim());
     }
 
     internal void SetAsMain(bool isMain)

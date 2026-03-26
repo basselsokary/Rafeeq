@@ -15,6 +15,7 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
     public GeoLocation Location { get; private set; } = null!;
     
     public Address Address { get; private set; } = null!;
+    public string? MainImageUrl { get; set; }
     public string? Website { get; private set; }
     public PhoneNumber? ContactPhone { get; private set; }
     public Email? ContactEmail { get; private set; }
@@ -195,7 +196,6 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         if (offer == null)
             return SponsorErrors.OfferNotFound(offerId);
 
-
         _offers.Remove(offer);
         MarkAsUpdated();
 
@@ -223,9 +223,9 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         return Result.Success();
     }
 
-    public Result AddImage(string imageUrl, bool isMain, string? caption = null)
+    public Result AddImage(string imageUrl, bool isMain, int displayOrder, string? caption = null)
     {
-        var imageResult = SponsorImage.Create(imageUrl, isMain, caption);
+        var imageResult = SponsorImage.Create(imageUrl, isMain, displayOrder, caption);
         if (imageResult.Failed)
             return imageResult;
         
@@ -233,6 +233,8 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         {
             foreach (var img in _images)
                 img.SetAsMain(false);
+
+            SetMainImage(imageUrl);
         }
 
         _images.Add(imageResult.Value);
@@ -248,6 +250,17 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
             return SponsorErrors.ImageNotFound;
 
         _images.Remove(image);
+        if (image.IsMain && _images.Count > 0)
+        {
+            var newMain = _images.First();
+            newMain.SetAsMain(true);
+            SetMainImage(newMain.ImageUrl);
+        }
+        else if (image.IsMain)
+        {
+            MainImageUrl = null;
+        }
+
         MarkAsUpdated();
 
         return Result.Success();
@@ -279,5 +292,13 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
     public IEnumerable<Offer> GetActiveOffers()
     {
         return _offers.Where(o => o.IsActive && o.IsValid());
+    }
+
+    private void SetMainImage(string imageUrl)
+    {
+        if (MainImageUrl != imageUrl)
+        {
+            MainImageUrl = imageUrl;
+        }
     }
 }

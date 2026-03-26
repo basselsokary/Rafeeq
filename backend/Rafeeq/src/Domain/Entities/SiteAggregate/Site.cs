@@ -205,15 +205,6 @@ public class Site : BaseAuditableEntity, IAggregateRoot
     //     MarkAsUpdated();
     // }
 
-    public void SetMainImage(string imageUrl)
-    {
-        if (MainImageUrl != imageUrl)
-        {
-            MainImageUrl = imageUrl;
-            MarkAsUpdated();
-        }
-    }
-
     public Result AddOpeningHours(DayOfWeek dayOfWeek, TimeRange openingTime, bool isClosed)
     {
         var newOpeningHours = OpeningHour.Create(dayOfWeek, openingTime, isClosed);
@@ -233,9 +224,9 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         return Result.Success();
     }
 
-    public Result AddImage(string imageUrl, bool isMain, string? caption = null)
+    public Result AddImage(string imageUrl, bool isMain, int displayOrder, string? caption = null)
     {
-        var imageResult = SiteImage.Create(imageUrl, isMain, caption);
+        var imageResult = SiteImage.Create(imageUrl, isMain, displayOrder, caption);
         if (imageResult.Failed)
             return imageResult;
 
@@ -292,6 +283,21 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         return Result.Success();
     }
 
+    public Result UpdateLocalizedContent(Guid contentId, string name, string description)
+    {
+        var existing = _localizedContents.FirstOrDefault(lc => lc.Id == contentId);
+        if (existing == null)
+            return SiteErrors.LocalizedContentNotFound;
+
+        Result result = existing.Update(name, description);
+        if (result.Failed)
+            return result;
+        
+        MarkAsUpdated();
+
+        return Result.Success();
+    }
+
     public Result AddFacility(string name, string description)
     {
         var facilityResult = Facility.Create(name, description);
@@ -332,5 +338,13 @@ public class Site : BaseAuditableEntity, IAggregateRoot
     {
         var hours = _openingHours.FirstOrDefault(oh => oh.DayOfWeek == day);
         return hours != null && !hours.IsClosed && hours.OpeningTime.IsWithinRange(time);
+    }
+
+    private void SetMainImage(string imageUrl)
+    {
+        if (MainImageUrl != imageUrl)
+        {
+            MainImageUrl = imageUrl;
+        }
     }
 }
