@@ -7,7 +7,7 @@ namespace Infrastructure.Persistence.ApplicationContext;
 /// <summary>
 /// Factory for creating ApplicationDbContext at design time (for migrations)
 /// </summary>
-public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
+internal class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
     public ApplicationDbContext CreateDbContext(string[] args)
     {
@@ -24,10 +24,6 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
             connectionString,
             b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
 
-        // Create dummy interceptors for design-time
-        var dummyEventDispatcher = new DomainEventDispatcherInterceptor(null!);
-        var dummyAuditInterceptor = new AuditableEntityInterceptor();
-
-        return new ApplicationDbContext(optionsBuilder.Options, dummyEventDispatcher, dummyAuditInterceptor);
+        return new ApplicationDbContext(optionsBuilder.Options);
     }
 }

@@ -7,16 +7,17 @@ using Domain.Entities.SiteAggregate;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Identity;
 using Domain.Enums;
+using Application.Common.Interfaces.Authentication;
 
 namespace Infrastructure.Persistence.QueryServices;
 
 internal class SiteQueryService(
     ApplicationDbContext context,
-    CurrentUser currentUser) : ISiteQueryService
+    IUserContext currentUser) : ISiteQueryService
 {
-    public Task<SiteDetailDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<SiteDetailDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return context.Sites.AsNoTracking()
+        return await context.Sites.AsNoTracking()
             .Where(s => s.Id == id)
             .Select(s => new SiteDetailDto(
                 s.Id,
@@ -290,9 +291,9 @@ internal class SiteQueryService(
 
     private static IQueryable<Site> ApplyFilters(IQueryable<Site> query, SiteFilters filters)
     {
-        if (filters.Types is { Count: > 0 })
+        if (filters.Type is not null)
         {
-            query = query.Where(s => filters.Types.Contains(s.Type));
+            query = query.Where(s => s.Type == filters.Type);
         }
 
         if (filters.City.HasValue && filters.City.Value != Guid.Empty)
@@ -371,4 +372,45 @@ internal class SiteQueryService(
         var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
         return R * c;
     }
+
+    public async Task<SiteAdminDetailDto?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await context.Sites.AsNoTracking()
+            .Where(s => s.Id == id)
+            .Select(s => new SiteAdminDetailDto(
+                s.Id,
+                s.Name,
+                s.Description,
+                s.Type.ToString(),
+                s.Status.ToString(),
+                new(s.Location.Latitude, s.Location.Longitude),
+                new(s.Address.Street, s.Address.City, s.Address.Region, s.Address.PostalCode, s.Address.ToString()),
+                s.ContactPhone,
+                s.WebsiteUrl,
+                s.AverageRating,
+                s.TotalReviews,
+                s.EntryFee != null ? new(s.EntryFee.Amount, s.EntryFee.Currency, s.EntryFee.ToString()) : null,
+                s.IsFree,
+                s.IsFeatured,
+                s.CreatedAt,
+                s.LastModifiedAt))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<PagedResult<SiteListDto>> GetByStatusAsync(SiteStatus status, SiteType type, PagingParameters paging, CancellationToken cancellationToken = default)
+    {
+        var query = context.Sites
+            .AsNoTracking()
+            .Where(s => s.Status == status && s.Type == type)
+            .OrderByDescending(s => s.IsFeatured)
+            .ThenByDescending(s => s.AverageRating)
+            .ThenByDescending(s => s.TotalReviews);
+
+        return ToPagedResultAsync(
+            query,
+            paging,
+            ConvertSiteToListDto(currentUser.Language),
+            cancellationToken);
+    }
+
 }

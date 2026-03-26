@@ -9,7 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.QueryServices;
 
-internal class ReviewQueryService(ApplicationDbContext context) : IReviewQueryService
+internal class ReviewQueryService(
+    ApplicationDbContext context) : IReviewQueryService
 {
     public async Task<ReviewDetailDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
@@ -30,7 +31,7 @@ internal class ReviewQueryService(ApplicationDbContext context) : IReviewQuerySe
                 r.HelpfulCount + r.NotHelpfulCount == 0 ? 0 : (double)r.HelpfulCount / (r.HelpfulCount + r.NotHelpfulCount),
                 r.RejectionReason,
                 r.CreatedAt,
-                r.LastModified))
+                r.LastModifiedAt))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -118,7 +119,7 @@ internal class ReviewQueryService(ApplicationDbContext context) : IReviewQuerySe
                 r.Status.ToString(),
                 r.HelpfulCount,
                 r.CreatedAt,
-                r.LastModified),
+                r.LastModifiedAt),
             cancellationToken);
     }
 
@@ -157,7 +158,7 @@ internal class ReviewQueryService(ApplicationDbContext context) : IReviewQuerySe
                 r.Status.ToString(),
                 r.HelpfulCount,
                 r.CreatedAt,
-                r.LastModified))
+                r.LastModifiedAt))
             .ToListAsync(cancellationToken);
 
         return items;

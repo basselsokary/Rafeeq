@@ -53,11 +53,11 @@ internal class AttractionQueryService(
         return new PagedResult<AttractionListDto>(items, totalCount, paging.PageNumber, paging.PageSize);
     }
 
-    public async Task<AttractionAdminDto?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<AttractionAdminDetailDto?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken)
     {
         return await context.Attractions
             .Where(a => a.Id == id)
-            .Select(a => new AttractionAdminDto(
+            .Select(a => new AttractionAdminDetailDto(
                 a.Id,
                 a.Name,
                 a.Description,
@@ -67,7 +67,7 @@ internal class AttractionQueryService(
                 a.LocationDescription,
                 a.Images.Select(i => new ImageDto(i.Id, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder)).ToList(),
                 a.CreatedAt,
-                a.LastModified))
+                a.LastModifiedAt))
             .FirstOrDefaultAsync(cancellationToken);
     }
 }

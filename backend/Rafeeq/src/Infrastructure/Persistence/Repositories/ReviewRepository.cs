@@ -11,7 +11,7 @@ internal class ReviewRepository(ApplicationDbContext context)
     public Task<bool> HasUserReviewedSiteAsync(Guid userId, Guid siteId, CancellationToken cancellationToken = default)
         => _dbSet
             .AnyAsync(
-            r => r.UserId == userId && r.SiteId == siteId,
+            r => r.TouristId == userId && r.SiteId == siteId,
             cancellationToken);
 
 }

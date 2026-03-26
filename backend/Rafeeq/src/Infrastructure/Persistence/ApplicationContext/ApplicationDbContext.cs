@@ -1,54 +1,53 @@
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.SiteAggregate;
-using Domain.Entities.UserAggregate;
 using Domain.Entities.ReviewAggregate;
 using Domain.Entities.SponsorAggregate;
 using Domain.Entities.CityAggregate;
 using Domain.Entities.ContentReportAggregate;
-using Infrastructure.Persistence.Interceptors;
 using Domain.Entities.AttractionAggregate;
+using Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Domain.Entities.TouristAggregate;
 
 namespace Infrastructure.Persistence.ApplicationContext;
 
-internal class ApplicationDbContext : DbContext
+internal class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
-    private readonly DomainEventDispatcherInterceptor _domainEventDispatcher;
-    private readonly AuditableEntityInterceptor _auditableEntityInterceptor;
-
     public ApplicationDbContext(
-        DbContextOptions<ApplicationDbContext> options,
-        DomainEventDispatcherInterceptor domainEventDispatcher,
-        AuditableEntityInterceptor auditableEntityInterceptor) 
+        DbContextOptions<ApplicationDbContext> options) 
         : base(options)
     {
-        _domainEventDispatcher = domainEventDispatcher;
-        _auditableEntityInterceptor = auditableEntityInterceptor;
     }
+
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     // DbSets for Aggregate Roots
-    public DbSet<Site> Sites => Set<Site>();
-    public DbSet<Attraction> Attractions => Set<Attraction>();
-    public DbSet<Review> Reviews => Set<Review>();
-    public DbSet<ContentReport> ContentReports => Set<ContentReport>();
-    public DbSet<City> Cities => Set<City>();
-    public DbSet<Sponsor> Sponsors => Set<Sponsor>();
-    public DbSet<User> Users => Set<User>();
+    public DbSet<Site> Sites { get; set; }
+    public DbSet<Attraction> Attractions { get; set; }
+    public DbSet<Review> Reviews { get; set; }
+    public DbSet<ContentReport> ContentReports { get; set; }
+    public DbSet<City> Cities { get; set; }
+    public DbSet<Sponsor> Sponsors { get; set; }
+    public DbSet<Tourist> Tourists { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        optionsBuilder.AddInterceptors(
-            _domainEventDispatcher,
-            _auditableEntityInterceptor);
-    }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(builder);
+        
+        // Customize table names
+        builder.Entity<ApplicationUser>().ToTable("Users");
+        builder.Entity<IdentityRole<Guid>>().ToTable("Roles");
+        builder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
+        builder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
+        builder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins");
+        builder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
+        builder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
 
         // Apply all entity configurations from this assembly
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
         // Configure default schema
-        modelBuilder.HasDefaultSchema("rafeeq");
+        builder.HasDefaultSchema("rafeeq");
     }
 }

@@ -7,43 +7,43 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.QueryServices;
 
-internal class ContentReportQueryService(ApplicationDbContext context)
-    : IContentReportQueryService
+internal class ContentReportQueryService(
+    ApplicationDbContext context) : IContentReportQueryService
 {
     public async Task<ContentReportDetailDto?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default)
     {
-        var dto = await context.ContentReports
+        return await context.ContentReports
             .AsNoTracking()
             .Where(x => x.Id == id)
             .Select(cr => new ContentReportDetailDto(
                 cr.Id,
                 cr.ReportedBy,
-                cr.ReportedEntityId,
+                cr.ContentId,
                 cr.Reason,
                 cr.Description,
                 cr.Status,
                 cr.ReportedAt,
-                cr.ReviewedBy,
                 cr.ReviewedAt,
                 cr.ReviewNotes,
                 cr.ActionTaken
             ))
             .FirstOrDefaultAsync(cancellationToken);
-
-        return dto;
     }
 
-    public async Task<PagedResult<ContentReportListDto>> GetFilteredByPriorityAsync(
-        int priority,
+    public async Task<PagedResult<ContentReportListDto>> GetAsync(
         PagingParameters paging,
+        int? priority,
         ReportReason? reason = null,
         ReportStatus? status = null,
         CancellationToken cancellationToken = default)
     {
         var query = context.ContentReports.AsNoTracking().AsQueryable();
 
+        if (priority.HasValue)
+            query = query.Where(cr => cr.Priority == priority);
+        
         if (reason is not null)
             query = query.Where(cr => cr.Reason == reason);
         
@@ -54,7 +54,7 @@ internal class ContentReportQueryService(ApplicationDbContext context)
             .Select(cr => new ContentReportListDto(
                 cr.Id,
                 cr.ReportedBy,
-                cr.ReportedEntityId,
+                cr.ContentId,
                 cr.Reason,
                 cr.Description,
                 cr.Status,
@@ -72,5 +72,28 @@ internal class ContentReportQueryService(ApplicationDbContext context)
             totalCount,
             paging.PageNumber,
             paging.PageSize);
+    }
+
+    public async Task<ContentReportAdminDetailDto?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await context.ContentReports
+            .AsNoTracking()
+            .Where(x => x.Id == id)
+            .Select(cr => new ContentReportAdminDetailDto(
+                cr.Id,
+                cr.ReportedBy,
+                cr.ContentId,
+                cr.Reason,
+                cr.Description,
+                cr.Status,
+                cr.Priority,
+                cr.ReportedAt,
+                cr.ReviewedBy,
+                cr.ReviewedAt,
+                cr.ReviewNotes,
+                cr.ActionTaken,
+                cr.CreatedAt,
+                cr.LastModifiedAt))
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

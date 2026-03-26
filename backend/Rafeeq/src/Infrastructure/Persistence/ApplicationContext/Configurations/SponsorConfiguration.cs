@@ -1,19 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RafeeqApp.Domain.Entities.SponsorAggregate;
+using Domain.Entities.SponsorAggregate;
 
-namespace RafeeqApp.Infrastructure.Persistence.ApplicationDbContext.Configurations;
+namespace Infrastructure.Persistence.ApplicationContext.Configurations;
 
 public class SponsorConfiguration : IEntityTypeConfiguration<Sponsor>
 {
     public void Configure(EntityTypeBuilder<Sponsor> builder)
     {
-        builder.ToTable("Sponsors");
-
-        builder.HasKey(s => s.Id);
-
-        // Properties
-        builder.Property(s => s.Name)
+        builder.Property(s => s.Title)
             .HasMaxLength(200)
             .IsRequired();
 
@@ -43,22 +38,13 @@ public class SponsorConfiguration : IEntityTypeConfiguration<Sponsor>
         builder.Property(s => s.ContractEndDate)
             .IsRequired();
 
-        builder.Property(s => s.AverageRating)
-            .HasPrecision(3, 2);
-
-        builder.Property(s => s.TotalReviews)
-            .HasDefaultValue(0);
-
-        builder.Property(s => s.TotalClicks)
-            .HasDefaultValue(0);
-
         builder.Property(s => s.TotalRedemptions)
             .HasDefaultValue(0);
 
         builder.Property(s => s.CreatedAt)
             .IsRequired();
 
-        builder.Property(s => s.UpdatedAt);
+        builder.Property(s => s.LastModifiedAt);
 
         // Value Objects - Location
         builder.OwnsOne(s => s.Location, location =>
@@ -90,11 +76,6 @@ public class SponsorConfiguration : IEntityTypeConfiguration<Sponsor>
             address.Property(a => a.Region)
                 .HasColumnName("Region")
                 .HasMaxLength(100);
-
-            address.Property(a => a.Country)
-                .HasColumnName("Country")
-                .HasMaxLength(100)
-                .IsRequired();
 
             address.Property(a => a.PostalCode)
                 .HasColumnName("PostalCode")
@@ -136,8 +117,8 @@ public class SponsorConfiguration : IEntityTypeConfiguration<Sponsor>
             .OnDelete(DeleteBehavior.Cascade);
 
         // Indexes
-        builder.HasIndex(s => s.Name)
-            .HasDatabaseName("IX_Sponsors_Name");
+        builder.HasIndex(s => s.Title)
+            .HasDatabaseName("IX_Sponsors_Title");
 
         builder.HasIndex(s => s.Type)
             .HasDatabaseName("IX_Sponsors_Type");
@@ -148,7 +129,7 @@ public class SponsorConfiguration : IEntityTypeConfiguration<Sponsor>
         builder.HasIndex(s => s.IsActive)
             .HasDatabaseName("IX_Sponsors_IsActive");
 
-        builder.HasIndex(s => new { s.Latitude, s.Longitude })
+        builder.HasIndex(s => new { s.Location.Latitude, s.Location.Longitude })
             .HasDatabaseName("IX_Sponsors_Location");
 
         builder.HasIndex(s => new { s.ContractStartDate, s.ContractEndDate })

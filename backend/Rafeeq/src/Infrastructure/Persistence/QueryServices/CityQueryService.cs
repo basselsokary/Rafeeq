@@ -1,13 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Application.DTOs.Cities;
 using Application.Common.Interfaces.QueryServices;
-using Infrastructure.Persistence.ApplicationContext;
 using Application.DTOs.Common;
+using Infrastructure.Persistence.ApplicationContext;
 
 namespace Infrastructure.Persistence.QueryServices;
 
-internal class CityQueryService(ApplicationDbContext context)
-    : ICityQueryService
+internal class CityQueryService(
+    ApplicationDbContext context) : ICityQueryService
 {
     public async Task<CityDetailDto?> GetByIdAsync(
         Guid id,
@@ -58,4 +58,21 @@ internal class CityQueryService(ApplicationDbContext context)
             paging.PageSize);
     }
 
+    public async Task<CityAdminDetailDto?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await context.Cities
+            .AsNoTracking()
+            .Where(c => c.Id == id)
+            .Select(c => new CityAdminDetailDto(
+                c.Id,
+                c.Name,
+                c.Description,
+                new(c.CenterLocation.Latitude, c.CenterLocation.Longitude),
+                c.ImageUrl,
+                c.TotalSites,
+                c.DisplayOrder,
+                c.CreatedAt,
+                c.LastModifiedAt))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 }

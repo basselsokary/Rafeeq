@@ -1,30 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RafeeqApp.Domain.Entities.ContentReportAggregate;
+using Domain.Entities.ContentReportAggregate;
 
-namespace RafeeqApp.Infrastructure.Persistence.ApplicationDbContext.Configurations;
+namespace Infrastructure.Persistence.ApplicationContext.Configurations;
 
 public class ContentReportConfiguration : IEntityTypeConfiguration<ContentReport>
 {
     public void Configure(EntityTypeBuilder<ContentReport> builder)
     {
-        builder.ToTable("ContentReports");
-
-        builder.HasKey(cr => cr.Id);
-
-        // Properties
-        builder.Property(cr => cr.ReporterId)
-            .IsRequired();
-
-        builder.Property(cr => cr.ContentType)
-            .HasConversion<string>()
-            .HasMaxLength(50)
+        builder.Property(cr => cr.ReportedBy)
             .IsRequired();
 
         builder.Property(cr => cr.ContentId)
             .IsRequired();
 
-        builder.Property(cr => cr.ReportReason)
+        builder.Property(cr => cr.Reason)
             .HasConversion<string>()
             .HasMaxLength(50)
             .IsRequired();
@@ -51,10 +41,10 @@ public class ContentReportConfiguration : IEntityTypeConfiguration<ContentReport
         builder.Property(cr => cr.CreatedAt)
             .IsRequired();
 
-        builder.Property(cr => cr.UpdatedAt);
+        builder.Property(cr => cr.LastModifiedAt);
 
         // Indexes
-        builder.HasIndex(cr => cr.ReporterId)
+        builder.HasIndex(cr => cr.ReportedBy)
             .HasDatabaseName("IX_ContentReports_ReporterId");
 
         builder.HasIndex(cr => cr.ContentId)
@@ -62,9 +52,6 @@ public class ContentReportConfiguration : IEntityTypeConfiguration<ContentReport
 
         builder.HasIndex(cr => cr.Status)
             .HasDatabaseName("IX_ContentReports_Status");
-
-        builder.HasIndex(cr => new { cr.ContentType, cr.ContentId })
-            .HasDatabaseName("IX_ContentReports_Content");
 
         builder.HasIndex(cr => cr.CreatedAt)
             .HasDatabaseName("IX_ContentReports_CreatedAt");
