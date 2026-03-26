@@ -20,27 +20,45 @@ public class RegisterCommandHandler(
 {
     public async Task<Result> HandleAsync(RegisterCommand command, CancellationToken cancellationToken)
     {
-        var result = await identityService.RegisterAsync(
-            command.UserName,
-            command.Email,
-            command.Password);
-        
-        if (result.Failed)
-            return result;
-
-        Result<Tourist> userResult = Tourist.Create(
-            result.Value,
+        Guid userId = Guid.NewGuid();
+        var userResult = Tourist.Create(
+            userId,
             command.FirstName,
             command.LastName,
             command.Nationality,
-            preferredLanguage: command.PreferredLanguage);
+            command.PreferredLanguage);
 
         if (userResult.Failed)
             return userResult;
 
-        await unitOfWork.Tourists.AddAsync(userResult.Value, cancellationToken);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.BeginTransactionAsync(cancellationToken);
         
-        return result;
+        try
+        {
+            var result = await identityService.RegisterAsync(
+                userId,
+                command.UserName,
+                command.Email,
+                command.Password);
+            
+            if (result.Failed)
+            {
+                await unitOfWork.RollbackTransactionAsync(cancellationToken);
+                /// Note: We return success to avoid exposing whether the email 
+                /// is already registered or not, which can be a security risk.
+                return Result.Success();
+            }
+
+            await unitOfWork.Tourists.AddAsync(userResult.Value, cancellationToken);
+
+            await unitOfWork.CommitTransactionAsync(cancellationToken);
+        }
+        catch
+        {
+            await unitOfWork.RollbackTransactionAsync(cancellationToken);
+            return Result.Failure(Error.Failure("", "An error occurred while registering the user."));
+        }
+        
+        return Result.Success();
     }
 }

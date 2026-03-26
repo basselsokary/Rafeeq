@@ -16,7 +16,6 @@ public class RefreshCommandHandler(
             command.AccessToken,
             command.RefreshToken);
         
-        
         if (authenticationResult.Failed)
             return authenticationResult.To<RefreshResponse>();
 
