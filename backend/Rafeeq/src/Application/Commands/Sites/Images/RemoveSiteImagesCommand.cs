@@ -5,7 +5,7 @@ namespace Application.Commands.Sites.Images;
 
 public record RemoveSiteImagesCommand(
     Guid Id,
-    Guid ImageId) : ICommand;
+    List<Guid> ImageIds) : ICommand;
 
 internal class RemoveSiteImagesCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<RemoveSiteImagesCommand>
@@ -16,9 +16,12 @@ internal class RemoveSiteImagesCommandHandler(
         if (site == null)
             return SiteErrors.NotFound(command.Id);
 
-        Result result = site.RemoveImage(command.ImageId);
-        if (result.Failed)
-            return result;
+        foreach (var imageId in command.ImageIds)
+        {
+            Result result = site.RemoveImage(imageId);
+            if (result.Failed)
+                return result;
+        }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

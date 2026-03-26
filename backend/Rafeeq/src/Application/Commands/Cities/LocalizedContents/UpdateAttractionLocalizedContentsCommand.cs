@@ -1,25 +1,24 @@
 using Domain.Common.Interfaces;
 using Domain.Entities.CityAggregate;
-using Domain.Enums;
 
 namespace Application.Commands.Cities.LocalizedContents;
 
-public record AddCityLocalizedContentCommand(
+public record UpdateCityLocalizedContentCommand(
     Guid Id,
-    LanguageCode Language,
+    Guid ContentId,
     string Name,
     string Description) : ICommand;
 
-internal class AddCityLocalizedContentCommandHandler(
-    IUnitOfWork unitOfWork) : ICommandHandler<AddCityLocalizedContentCommand>
+internal class UpdateCityLocalizedContentCommandHandler(
+    IUnitOfWork unitOfWork) : ICommandHandler<UpdateCityLocalizedContentCommand>
 {
-    public async Task<Result> HandleAsync(AddCityLocalizedContentCommand command, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(UpdateCityLocalizedContentCommand command, CancellationToken cancellationToken)
     {
         var city = await unitOfWork.Cities.GetWithLocalizedContentsAsync(command.Id, cancellationToken);
         if (city == null)
             return CityErrors.NotFound(command.Id);
 
-        Result result = city.AddLocalizedContent(command.Language, command.Name, command.Description);
+        Result result = city.UpdateLocalizedContent(command.ContentId, command.Name, command.Description);
         if (result.Failed)
             return result;
 
@@ -28,4 +27,3 @@ internal class AddCityLocalizedContentCommandHandler(
         return Result.Success();
     }
 }
-

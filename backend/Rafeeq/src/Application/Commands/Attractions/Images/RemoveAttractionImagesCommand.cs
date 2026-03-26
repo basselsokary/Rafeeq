@@ -1,11 +1,11 @@
 using Domain.Common.Interfaces;
 using Domain.Entities.AttractionAggregate;
 
-namespace Application.Commands.Attractions;
+namespace Application.Commands.Attractions.Images;
 
 public record RemoveAttractionImagesCommand(
     Guid Id,
-    Guid ImageId) : ICommand;
+    List<Guid> ImageIds) : ICommand;
 
 internal class RemoveImagesCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<RemoveAttractionImagesCommand>
@@ -17,9 +17,12 @@ internal class RemoveImagesCommandHandler(
         if (attraction == null)
             return AttractionErrors.NotFound(command.Id);
 
-        Result result = attraction.RemoveImage(command.ImageId);
-        if (result.Failed)
-            return result;
+        foreach (var imageId in command.ImageIds)
+        {
+            Result result = attraction.RemoveImage(imageId);
+            if (result.Failed)
+                return result;
+        }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

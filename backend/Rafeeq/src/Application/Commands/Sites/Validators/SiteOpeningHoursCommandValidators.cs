@@ -1,4 +1,5 @@
 using Application.Commands.Sites.OpeningHours;
+using Application.Commands.Common.Validators;
 using Domain.Entities.SiteAggregate;
 using FluentValidation;
 
@@ -12,11 +13,24 @@ internal class AddSiteOpeningHoursCommandValidator : AbstractValidator<AddSiteOp
             .NotEmpty()
             .WithMessage(SiteErrors.IdRequired.Message);
         
-        RuleFor(x => x.OpeningTime)
-            .NotNull();
-        
+        RuleFor(x => x.OpeningHours)
+            .NotEmpty();
+
+        RuleForEach(x => x.OpeningHours)
+            .SetValidator(new AddSiteOpeningHoursDtoCommandValidator());
+    }
+}
+
+internal class AddSiteOpeningHoursDtoCommandValidator : AbstractValidator<AddSiteOpeningHoursDtoCommand>
+{
+    public AddSiteOpeningHoursDtoCommandValidator()
+    {
         RuleFor(x => x.DayOfWeek)
             .IsInEnum();
+
+        RuleFor(x => x.OpeningTime)
+            .NotNull()
+            .SetValidator(new TimeRangeValidator());
     }
 }
 

@@ -6,9 +6,12 @@ namespace Application.Commands.Sites.OpeningHours;
 
 public record AddSiteOpeningHoursCommand(
     Guid Id,
+    List<AddSiteOpeningHoursDtoCommand> OpeningHours) : ICommand;
+
+public record AddSiteOpeningHoursDtoCommand(
     DayOfWeek DayOfWeek,
     TimeRange OpeningTime,
-    bool IsClosed) : ICommand;
+    bool IsClosed);
 
 internal class AddSiteOpeningHoursCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<AddSiteOpeningHoursCommand>
@@ -19,9 +22,12 @@ internal class AddSiteOpeningHoursCommandHandler(
         if (site == null)
             return SiteErrors.NotFound(command.Id);
 
-        Result result = site.AddOpeningHours(command.DayOfWeek, command.OpeningTime, command.IsClosed);
-        if (result.Failed)
-            return result;
+        foreach (var openingHour in command.OpeningHours)
+        {
+            Result result = site.AddOpeningHours(openingHour.DayOfWeek, openingHour.OpeningTime, openingHour.IsClosed);
+            if (result.Failed)
+                return result;
+        }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

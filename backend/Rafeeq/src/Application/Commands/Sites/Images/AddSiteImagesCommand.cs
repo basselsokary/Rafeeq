@@ -5,9 +5,13 @@ namespace Application.Commands.Sites.Images;
 
 public record AddSiteImagesCommand(
     Guid Id,
+    List<AddSiteImageDto> Images) : ICommand;
+
+public record AddSiteImageDto(
     string ImageUrl,
     bool IsMain,
-    string? Caption = null) : ICommand;
+    int DisplayOrder,
+    string? Caption = null);
 
 internal class AddSiteImagesCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<AddSiteImagesCommand>
@@ -18,9 +22,12 @@ internal class AddSiteImagesCommandHandler(
         if (site == null)
             return SiteErrors.NotFound(command.Id);
 
-        Result result = site.AddImage(command.ImageUrl, command.IsMain, command.Caption);
-        if (result.Failed)
-            return result;
+        foreach (var image in command.Images)
+        {
+            Result result = site.AddImage(image.ImageUrl, image.IsMain, image.DisplayOrder, image.Caption);
+            if (result.Failed)
+                return result;
+        }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

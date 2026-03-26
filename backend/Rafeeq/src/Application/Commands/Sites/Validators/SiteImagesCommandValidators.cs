@@ -12,9 +12,28 @@ internal class AddSiteImagesCommandValidator : AbstractValidator<AddSiteImagesCo
             .NotEmpty()
             .WithMessage(SiteErrors.IdRequired.Message);
         
+        RuleFor(x => x.Images)
+            .NotEmpty();
+
+        RuleForEach(x => x.Images)
+            .SetValidator(new AddSiteImageDtoValidator());
+    }
+}
+
+internal class AddSiteImageDtoValidator : AbstractValidator<AddSiteImageDto>
+{
+    public AddSiteImageDtoValidator()
+    {
         RuleFor(x => x.ImageUrl)
             .NotEmpty()
             .WithMessage(SiteErrors.ImageUrlRequired.Message);
+
+        RuleFor(x => x.DisplayOrder)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage(SiteErrors.NegativeDisplayOrder.Message);
+
+        RuleFor(x => x.Caption)
+            .Must(caption => caption == null || !string.IsNullOrWhiteSpace(caption));
     }
 }
 
@@ -26,9 +45,13 @@ internal class RemoveSiteImagesCommandValidator : AbstractValidator<RemoveSiteIm
             .NotEmpty()
             .WithMessage(SiteErrors.IdRequired.Message);
         
-        RuleFor(x => x.ImageId)
+        RuleFor(x => x.ImageIds)
             .NotEmpty()
-            .WithMessage(SiteErrors.ImageUrlRequired.Message);
+            .WithMessage(SiteErrors.ImageIdRequired.Message);
+        
+        RuleForEach(x => x.ImageIds)
+            .NotEmpty()
+            .WithMessage(SiteErrors.ImageIdRequired.Message);
     }
 }
 

@@ -91,6 +91,10 @@ internal class SetSiteContactInfoCommandValidator : AbstractValidator<SetSiteCon
         RuleFor(x => x.Phone)
             .NotEmpty()
             .WithMessage(SiteErrors.PhoneRequired.Message);
+
+        RuleFor(x => x.WebsiteUrl)
+            .NotEmpty()
+            .When(x => x.WebsiteUrl != null);
     }
 }
 

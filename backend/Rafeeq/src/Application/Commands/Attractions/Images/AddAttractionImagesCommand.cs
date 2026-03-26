@@ -1,13 +1,17 @@
 using Domain.Common.Interfaces;
 using Domain.Entities.AttractionAggregate;
 
-namespace Application.Commands.Attractions;
+namespace Application.Commands.Attractions.Images;
 
 public record AddAttractionImagesCommand(
     Guid Id,
+    List<AddAttractionImageDto> Images) : ICommand;
+
+public record AddAttractionImageDto(
     string ImageUrl,
     bool IsMain,
-    string? Caption = null) : ICommand;
+    int DisplayOrder,
+    string? Caption = null);
 
 internal class AddAttractionImagesCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<AddAttractionImagesCommand>
@@ -18,9 +22,12 @@ internal class AddAttractionImagesCommandHandler(
         if (attraction == null)
             return AttractionErrors.NotFound(command.Id);
 
-        Result result = attraction.AddImage(command.ImageUrl, command.IsMain, command.Caption);
-        if (result.Failed)
-            return result;
+        foreach (var image in command.Images)
+        {
+            Result result = attraction.AddImage(image.ImageUrl, image.IsMain, image.DisplayOrder, image.Caption);
+            if (result.Failed)
+                return result;
+        }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
