@@ -7,14 +7,15 @@ using Application.DTOs.Reviews;
 using Application.Queries.Reviews;
 using Domain.Enums;
 using Domain.ValueObjects;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
 public class ReviewsController : ApiBaseController
 {
-	#region Queries
 	[HttpGet("{id:guid}")]
 	public async Task<IActionResult> GetById(
 		[FromRoute] Guid id,
@@ -26,6 +27,7 @@ public class ReviewsController : ApiBaseController
 	}
 
 	[HttpGet("site/{siteId:guid}")]
+	[AllowAnonymous]
 	public async Task<IActionResult> GetBySiteId(
 		[FromRoute] Guid siteId,
 		[FromQuery] ReviewStatus? status,
@@ -49,21 +51,6 @@ public class ReviewsController : ApiBaseController
 		return HandleResult(result);
 	}
 
-	[HttpGet("status/{status}")]
-	public async Task<IActionResult> GetByStatus(
-		[FromRoute] ReviewStatus status,
-		[FromQuery] int page,
-		[FromQuery] int pageSize,
-		[FromServices] IQueryHandler<GetReviewsByStatusQuery, PagedResult<ReviewListDto>> queryHandler)
-	{
-		var paging = new PagingParameters(page, pageSize);
-
-		var query = new GetReviewsByStatusQuery(paging, status);
-		var result = await queryHandler.HandleAsync(query);
-
-		return HandleResult(result);
-	}
-
 	[HttpGet("me")]
 	public async Task<IActionResult> GetMyReviews(
 		[FromQuery] int page,
@@ -76,9 +63,7 @@ public class ReviewsController : ApiBaseController
 
 		return HandleResult(result);
 	}
-	#endregion
 
-	#region Commands
 	[HttpPost]
 	public async Task<IActionResult> Create(
 		[FromBody] CreateReviewCommand command,
@@ -106,25 +91,9 @@ public class ReviewsController : ApiBaseController
 		return HandleResult(result);
 	}
 
-	public record SetReviewStatusRequest(
-		ReviewStatus Status,
-		string RejectionReason = "");
-
-	[HttpPatch("{id:guid}/status")]
-	public async Task<IActionResult> SetStatus(
-		[FromRoute] Guid id,
-		[FromBody] SetReviewStatusRequest request,
-		[FromServices] ICommandHandler<SetReviewStatusCommand> commandHandler)
-	{
-		var command = new SetReviewStatusCommand(id, request.Status, request.RejectionReason);
-		var result = await commandHandler.HandleAsync(command);
-
-		return HandleResult(result);
-	}
-
 	public record MarkHelpfulRequest(bool IsHelpful);
 
-	[HttpPatch("{id:guid}/helpful")]
+	[HttpPut("{id:guid}/helpful")]
 	public async Task<IActionResult> MarkHelpful(
 		[FromRoute] Guid id,
 		[FromBody] MarkHelpfulRequest request,
@@ -144,5 +113,4 @@ public class ReviewsController : ApiBaseController
 
 		return HandleResult(result);
 	}
-	#endregion
 }

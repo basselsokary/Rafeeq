@@ -37,4 +37,34 @@ public class AuthController() : ApiBaseController
 
         return HandleResult(result);
     }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword(
+        [FromBody] ForgotPasswordCommand command,
+        [FromServices] ICommandHandler<ForgotPasswordCommand> commandHandler)
+    {
+        var result = await commandHandler.HandleAsync(command);
+
+        return HandleResult(result);
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword(
+        [FromBody] ResetPasswordCommand command,
+        [FromServices] ICommandHandler<ResetPasswordCommand> commandHandler)
+    {
+        var result = await commandHandler.HandleAsync(command);
+
+        return HandleResult(result);
+    }
+
+    [HttpPost("verify-email")]
+    public async Task<IActionResult> VerifyEmail(
+        [FromQuery] string token,
+        [FromServices] ICommandHandler<ConfirmEmailCommand> commandHandler)
+    {
+        var result = await commandHandler.HandleAsync(new ConfirmEmailCommand(token));
+    
+        return HandleResult(result);
+    }
 }
