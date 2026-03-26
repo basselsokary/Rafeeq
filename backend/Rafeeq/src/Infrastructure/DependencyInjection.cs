@@ -1,26 +1,25 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Application.Common.Interfaces.QueryServices;
 using Domain.Common.Interfaces;
 using Domain.Repositories;
-using Infrastructure.Identity;
 using Infrastructure.Persistence.QueryServices;
 using Infrastructure.Persistence.Repositories;
-using System.Text;
-using Hangfire;
-using Hangfire.SqlServer;
-using Serilog;
-using Infrastructure.Persistence.IdentityContext;
 using Infrastructure.Persistence.ApplicationContext;
-using RafeeqApp.Infrastructure.Persistence;
 using Infrastructure.Persistence;
+using Infrastructure.Services;
+using Application.Common.Interfaces.Email;
+using Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Application.Common.Interfaces.Authentication;
+using Application.Common.Interfaces.Services;
 
-namespace RafeeqApp.Infrastructure;
+namespace Infrastructure;
 
 public static class DependencyInjection
 {
@@ -29,8 +28,7 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         // Add DbContexts
-        // services.AddApplicationDbContext(configuration);
-        // services.AddIdentityDbContext(configuration);
+        services.AddApplicationDbContext(configuration);
 
         // Add Interceptors
         // services.AddScoped<DomainEventDispatcherInterceptor>();
@@ -45,8 +43,10 @@ public static class DependencyInjection
         // Add Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        services.AddServices(configuration);
+
         // Add Identity & Authentication
-        // services.AddIdentityServices(configuration);
+        services.AddIdentityServices(configuration);
 
         // // Add Caching
         // services.AddCachingServices(configuration);
@@ -63,9 +63,7 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddApplicationDbContext(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    private static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
         {
@@ -87,32 +85,25 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddIdentityDbContext(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<IdentityDbContext>(options =>
-        {
-            options.UseSqlServer(
-                configuration.GetConnectionString("IdentityConnection"),
-                b =>
-                {
-                    b.MigrationsAssembly(typeof(IdentityDbContext).Assembly.FullName);
-                    b.EnableRetryOnFailure(
-                        maxRetryCount: 3,
-                        maxRetryDelay: TimeSpan.FromSeconds(5),
-                        errorNumbersToAdd: null);
-                });
-        });
-
+        services.AddScoped<IUserContext, CurrentUser>();
+        services.AddScoped<IModeratorService, ModeratorService>();
+        services.AddScoped<IAdminService, AdminService>();
+        
+        // Add email service
+        services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+        services.AddScoped<IEmailService, EmailService>();
+        
         return services;
+        
     }
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IAttractionRepository, AttractionRepository>();
         services.AddScoped<ISiteRepository, SiteRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ITouristRepository, TouristRepository>();
         services.AddScoped<IReviewRepository, ReviewRepository>();
         services.AddScoped<ISponsorRepository, SponsorRepository>();
         services.AddScoped<ICityRepository, CityRepository>();
@@ -125,7 +116,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IAttractionQueryService, AttractionQueryService>();
         services.AddScoped<ISiteQueryService, SiteQueryService>();
-        services.AddScoped<IUserQueryService, UserQueryService>();
+        services.AddScoped<ITouristQueryService, TouristQueryService>();
         services.AddScoped<IReviewQueryService, ReviewQueryService>();
         services.AddScoped<ISponsorQueryService, SponsorQueryService>();
         services.AddScoped<ICityQueryService, CityQueryService>();
@@ -134,67 +125,67 @@ public static class DependencyInjection
         return services;
     }
 
-    // private static IServiceCollection AddIdentityServices(
-    //     this IServiceCollection services,
-    //     IConfiguration configuration)
-    // {
-    //     // Add Identity
-    //     services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
-    //     {
-    //         // Password settings
-    //         options.Password.RequireDigit = true;
-    //         options.Password.RequireLowercase = true;
-    //         options.Password.RequireUppercase = true;
-    //         options.Password.RequireNonAlphanumeric = true;
-    //         options.Password.RequiredLength = 8;
+    private static IServiceCollection AddIdentityServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        // Add Identity
+        services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+        {
+            // Password settings
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequiredLength = 8;
 
-    //         // Lockout settings
-    //         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
-    //         options.Lockout.MaxFailedAccessAttempts = 5;
-    //         options.Lockout.AllowedForNewUsers = true;
+            // Lockout settings
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+            options.Lockout.MaxFailedAccessAttempts = 5;
+            options.Lockout.AllowedForNewUsers = true;
 
-    //         // User settings
-    //         options.User.RequireUniqueEmail = true;
-    //         options.SignIn.RequireConfirmedEmail = false;
-    //     })
-    //     .AddEntityFrameworkStores<IdentityDbContext>()
-    //     .AddDefaultTokenProviders();
+            // User settings
+            options.User.RequireUniqueEmail = true;
+            options.SignIn.RequireConfirmedEmail = false;
+        })
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
 
-    //     // Add JWT Authentication
-    //     var jwtSecret = configuration["Jwt:Secret"]
-    //         ?? throw new InvalidOperationException("JWT Secret not configured");
+        // Add JWT Authentication
+        var jwtSecret = configuration["JwtSettings:SecretKey"]
+            ?? throw new InvalidOperationException("JWT Secret not configured");
 
-    //     services.AddAuthentication(options =>
-    //     {
-    //         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    //         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    //         options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    //     })
-    //     .AddJwtBearer(options =>
-    //     {
-    //         options.SaveToken = true;
-    //         options.RequireHttpsMetadata = true;
-    //         options.TokenValidationParameters = new TokenValidationParameters
-    //         {
-    //             ValidateIssuer = true,
-    //             ValidateAudience = true,
-    //             ValidateLifetime = true,
-    //             ValidateIssuerSigningKey = true,
-    //             ValidIssuer = configuration["Jwt:Issuer"],
-    //             ValidAudience = configuration["Jwt:Audience"],
-    //             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
-    //             ClockSkew = TimeSpan.Zero
-    //         };
-    //     });
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.SaveToken = true;
+            options.RequireHttpsMetadata = true;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = configuration["JwtSettings:Issuer"],
+                ValidAudience = configuration["JwtSettings:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+                ClockSkew = TimeSpan.Zero
+            };
+        });
 
-    //     services.AddAuthorization();
+        services.AddAuthorization();
 
-    //     // Add Identity Services
-    //     services.AddScoped<IIdentityService, IdentityService>();
-    //     services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        // Add Identity Services
+        services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<JwtTokenGenerator>();
 
-    //     return services;
-    // }
+        return services;
+    }
 
     // private static IServiceCollection AddCachingServices(
     //     this IServiceCollection services,

@@ -39,10 +39,7 @@
     <Folder Include="Caching\" />
     <Folder Include="ExternalServices\" />
     <Folder Include="Logging\" />
-    <Folder Include="Persistence\ApplicationContext\" />
-    <Folder Include="Persistence\IdentityContext\" />
     <Folder Include="Persistence\Interceptors\" />
-    <Folder Include="Persistence\QueryServices\" />
-    <Folder Include="Persistence\Repositories\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 </Project>
