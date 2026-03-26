@@ -1,7 +1,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 
-namespace Application.Abstractions.Behaviors;
+namespace Application.Decorators;
 
 internal static class ValidationDecorator
 {
@@ -58,7 +58,7 @@ internal static class ValidationDecorator
                 return await innerHandler.HandleAsync(query, cancellationToken);
             }
 
-            return Result.Failure<TResponse>(CreateValidationError(validationFailures));
+            return Result.Failure<TRespownse>(CreateValidationError(validationFailures));
         }
     }
     

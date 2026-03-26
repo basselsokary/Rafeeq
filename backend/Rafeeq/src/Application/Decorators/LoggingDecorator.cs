@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
 
-namespace Application.Abstractions.Behaviors;
+namespace Application.Decorators;
 
 internal static class LoggingDecorator
 {
