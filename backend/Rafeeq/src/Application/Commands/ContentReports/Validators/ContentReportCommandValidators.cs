@@ -44,6 +44,9 @@ internal class ResolveContentReportCommandValidator : AbstractValidator<ResolveC
         RuleFor(x => x)
             .Must(x => (x.Reason is null) ^ (x.Action is null))
             .WithMessage(ContentReportErrors.CannotBeResolved.Message);
+        
+        RuleFor(x => x.Notes)
+            .Must(notes => notes == null || !string.IsNullOrEmpty(notes));
     }
 }
 

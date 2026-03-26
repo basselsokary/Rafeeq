@@ -92,6 +92,10 @@ internal class SetSponsorContactInfoCommandValidator : AbstractValidator<SetSpon
         
         RuleFor(x => x.Email)
             .NotNull();
+
+        RuleFor(x => x.WebsiteUrl)
+            .NotEmpty()
+            .When(x => x.WebsiteUrl != null);
     }
 }
 

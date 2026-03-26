@@ -12,9 +12,28 @@ internal class AddSponsorImagesCommandValidator : AbstractValidator<AddSponsorIm
             .NotEmpty()
             .WithMessage(SponsorErrors.IdRequired.Message);
         
+        RuleFor(x => x.Images)
+            .NotEmpty();
+
+        RuleForEach(x => x.Images)
+            .SetValidator(new AddSponsorImageDtoValidator());
+    }
+}
+
+internal class AddSponsorImageDtoValidator : AbstractValidator<AddSponsorImageDto>
+{
+    public AddSponsorImageDtoValidator()
+    {
         RuleFor(x => x.ImageUrl)
             .NotEmpty()
             .WithMessage(SponsorErrors.ImageUrlRequired.Message);
+
+        RuleFor(x => x.DisplayOrder)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage(SponsorErrors.NegativeDisplayOrder.Message);
+
+        RuleFor(x => x.Caption)
+            .Must(caption => caption == null || !string.IsNullOrWhiteSpace(caption));
     }
 }
 
@@ -26,8 +45,12 @@ internal class RemoveSponsorImagesCommandValidator : AbstractValidator<RemoveSpo
             .NotEmpty()
             .WithMessage(SponsorErrors.IdRequired.Message);
         
-        RuleFor(x => x.ImageId)
+        RuleFor(x => x.ImageIds)
             .NotEmpty()
-            .WithMessage(SponsorErrors.ImageUrlRequired.Message);
+            .WithMessage(SponsorErrors.ImageIdRequired.Message);
+        
+        RuleForEach(x => x.ImageIds)
+            .NotEmpty()
+            .WithMessage(SponsorErrors.ImageIdRequired.Message);
     }
 }

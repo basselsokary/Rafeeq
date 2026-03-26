@@ -20,7 +20,7 @@ internal class AddSponsorOfferCommandHandler(
     public async Task<Result> HandleAsync(AddSponsorOfferCommand command, CancellationToken cancellationToken)
     {
 
-        var sponsor = await unitOfWork.Sponsors.GetWithOffers(command.SponsorId, cancellationToken);
+        var sponsor = await unitOfWork.Sponsors.GetWithOffersAsync(command.SponsorId, cancellationToken);
         if (sponsor == null)
             return SponsorErrors.NotFound(command.SponsorId);
 

@@ -1,6 +1,7 @@
 using Application.Commands.Sponsors.Offers;
 using Domain.Entities.SponsorAggregate;
 using FluentValidation;
+using Application.Common.Validators;
 
 namespace Application.Commands.Sponsors.Validators;
 
@@ -24,8 +25,26 @@ internal class AddSponsorOfferCommandValidator : AbstractValidator<AddSponsorOff
             .Must(x => x.DiscountAmount != null || x.DiscountPercentage != null)
             .WithMessage(SponsorErrors.DiscountRequired.Message);
         
+        RuleFor(x => x.DiscountAmount)
+            .SetValidator(new MoneyValidator()!)
+            .When(x => x.DiscountAmount is not null);
+
+        RuleFor(x => x.DiscountPercentage)
+            .InclusiveBetween(0, 100)
+            .When(x => x.DiscountPercentage.HasValue)
+            .WithMessage(SponsorErrors.DiscountPercentageInvalid.Message);
+
         RuleFor(x => x.ValidityPeriod)
-            .NotNull();
+            .NotNull()
+            .SetValidator(new DateRangeValidator());
+
+        RuleFor(x => x.MaxRedemptions)
+            .GreaterThan(0)
+            .When(x => x.MaxRedemptions.HasValue);
+
+        RuleFor(x => x.TermsAndConditions)
+            .NotEmpty()
+            .When(x => x.TermsAndConditions != null);
     }
 }
 
@@ -67,9 +86,27 @@ internal class UpdateSponsorOfferCommandValidator : AbstractValidator<UpdateSpon
         RuleFor(x => x)
             .Must(x => x.DiscountAmount != null || x.DiscountPercentage != null)
             .WithMessage(SponsorErrors.DiscountRequired.Message);
+
+        RuleFor(x => x.DiscountAmount)
+            .SetValidator(new MoneyValidator()!)
+            .When(x => x.DiscountAmount is not null);
+
+        RuleFor(x => x.DiscountPercentage)
+            .InclusiveBetween(0, 100)
+            .When(x => x.DiscountPercentage.HasValue)
+            .WithMessage(SponsorErrors.DiscountPercentageInvalid.Message);
         
         RuleFor(x => x.ValidityPeriod)
-            .NotNull();
+            .NotNull()
+            .SetValidator(new DateRangeValidator());
+
+        RuleFor(x => x.MaxRedemptions)
+            .GreaterThan(0)
+            .When(x => x.MaxRedemptions.HasValue);
+
+        RuleFor(x => x.TermsAndConditions)
+            .NotEmpty()
+            .When(x => x.TermsAndConditions != null);
     }
 }
 
@@ -102,5 +139,19 @@ internal class SetSponsorOfferPromoCodeCommandValidator : AbstractValidator<SetS
         RuleFor(x => x.PromoCode)
             .NotEmpty()
             .WithMessage(SponsorErrors.PromoCodeRequired.Message);
+    }
+}
+
+internal class ActivateSponsorOfferCommandValidator : AbstractValidator<ActivateSponsorOfferCommand>
+{
+    public ActivateSponsorOfferCommandValidator()
+    {
+        RuleFor(x => x.SponsorId)
+            .NotEmpty()
+            .WithMessage(SponsorErrors.IdRequired.Message);
+
+        RuleFor(x => x.OfferId)
+            .NotEmpty()
+            .WithMessage(SponsorErrors.OfferIdRequired.Message);
     }
 }

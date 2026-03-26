@@ -67,12 +67,9 @@ internal class SetReviewStatusCommandValidator : AbstractValidator<SetReviewStat
         RuleFor(x => x.Status)
             .IsInEnum();
         
-        RuleFor(x => x)
-            .Must(x => {
-                if (x.Status == ReviewStatus.Rejected)
-                    return !string.IsNullOrWhiteSpace(x.RejectionReason);
-                return true;
-            })
+        RuleFor(x => x.RejectionReason)
+            .NotEmpty()
+            .When(x => x.Status == ReviewStatus.Rejected)
             .WithMessage(ReviewErrors.RejectionReasonRequired.Message);
     }
 }

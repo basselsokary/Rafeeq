@@ -14,8 +14,7 @@ public record UpdateSponsorCommand(
     GeoLocation Location,
     Address Address,
     DateTime StartDate,
-    DateTime EndDate
-) : ICommand;
+    DateTime EndDate) : ICommand;
 
 internal class UpdateSponsorCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<UpdateSponsorCommand>

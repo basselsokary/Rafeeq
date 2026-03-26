@@ -8,8 +8,7 @@ namespace Application.Commands.ContentReports;
 public record ReportContentCommand(
     Guid ReportedEntityId,
     ReportReason Reason,
-    string Description
-) : ICommand;
+    string Description) : ICommand;
 
 internal class ReportContentCommandHandler(
     IUnitOfWork unitOfWork,
@@ -17,7 +16,6 @@ internal class ReportContentCommandHandler(
 {
     public async Task<Result> HandleAsync(ReportContentCommand command, CancellationToken cancellationToken)
     {
-
         var contentResult = ContentReport.Create(
             userContext.Id,
             command.ReportedEntityId,

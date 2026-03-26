@@ -1,7 +1,7 @@
 using Application.Commands.Sites.OpeningHours;
-using Application.Commands.Common.Validators;
 using Domain.Entities.SiteAggregate;
 using FluentValidation;
+using Application.Common.Validators;
 
 namespace Application.Commands.Sites.Validators;
 

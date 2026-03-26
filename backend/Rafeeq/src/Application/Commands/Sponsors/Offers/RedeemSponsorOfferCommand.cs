@@ -13,12 +13,11 @@ internal class RedeemSponsorOfferCommandHandler(
     public async Task<Result> HandleAsync(RedeemSponsorOfferCommand command, CancellationToken cancellationToken)
     {
 
-        var sponsor = await unitOfWork.Sponsors.GetWithOffers(command.SponsorId, cancellationToken);
+        var sponsor = await unitOfWork.Sponsors.GetWithOffersAsync(command.SponsorId, cancellationToken);
         if (sponsor == null)
             return SponsorErrors.NotFound(command.SponsorId);
 
         Result result = sponsor.RedeemOffer(command.OfferId);
-        
         if (result.Failed)
             return result;
 
