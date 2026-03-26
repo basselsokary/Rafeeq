@@ -21,8 +21,9 @@ public interface ISiteQueryService
         int radiusKm = 5,
         CancellationToken cancellationToken = default);
 
-    Task<PagedResult<AdminSiteListDto>> GetByStatusAsync(
+    Task<PagedResult<SiteListDto>> GetByStatusAsync(
         SiteStatus status,
+        SiteType type,
         PagingParameters paging,
         CancellationToken cancellationToken = default);
     
@@ -49,7 +50,7 @@ public interface ISiteQueryService
         PagingParameters paging,
         CancellationToken cancellationToken = default);
 
-    Task<List<DTOs.Sites.LocalizedContentDto>> GetLocalizedContentsAsync(
+    Task<List<LocalizedContentDto>> GetLocalizedContentsAsync(
         Guid siteId,
         CancellationToken cancellationToken = default);
 

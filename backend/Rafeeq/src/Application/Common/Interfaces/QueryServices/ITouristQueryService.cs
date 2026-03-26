@@ -1,17 +1,16 @@
-using Application.DTOs.Admins;
 using Application.DTOs.Common;
 using Application.DTOs.Tourists;
 using Domain.Enums;
 
 namespace Application.Common.Interfaces.QueryServices;
 
-public interface IUserQueryService
+public interface ITouristQueryService
 {
     Task<TouristProfileDto?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default);
     
-    Task<AdminUserDetailDto?> GetByIdForAdminAsync(
+    Task<TouristAdminDetailDto?> GetByIdForAdminAsync(
         Guid id,
         CancellationToken cancellationToken = default);
 
@@ -19,14 +18,13 @@ public interface IUserQueryService
         string email,
         CancellationToken cancellationToken = default);
     
-    Task<AdminUserDetailDto?> GetByEmailForAdminAsync(
+    Task<TouristAdminDetailDto?> GetByEmailForAdminAsync(
         string email,
         CancellationToken cancellationToken = default);
     
     Task<PagedResult<TouristListDto>> GetAllAsync(
         PagingParameters paging,
         string? searchTerm = null, // by name or email
-        UserRole? role = null,
         UserStatus status = UserStatus.Active,
         bool? emailVerified = null,
         CancellationToken cancellationToken = default);

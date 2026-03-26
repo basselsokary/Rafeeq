@@ -31,4 +31,9 @@ public class AuthenticationResult : Result
     {
         return new AuthenticationResult(false, error);
     }
+
+    public static AuthenticationResult Failure(object emailNotConfirmed)
+    {
+        throw new NotImplementedException();
+    }
 }

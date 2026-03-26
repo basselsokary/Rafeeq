@@ -11,7 +11,7 @@ public interface IIdentityService
         string email,
         string password,
         UserRole role = UserRole.Tourist);
-    Task<AuthenticationResult> LoginAsync(string email, string password, bool RememberMe = false);
+    Task<AuthenticationResult> LoginAsync(string email, string password);
     Task<AuthenticationResult> RefreshTokenAsync(string accessToken, string refreshToken);
     Task<Result> RevokeTokenAsync(string refreshToken);
     Task<Result> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword);
