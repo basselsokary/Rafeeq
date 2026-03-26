@@ -17,7 +17,6 @@ internal class GlobalExceptionHandler
         // Register known exception types and handlers.
         _exceptionHandlers = new()
         {
-            { typeof(Application.Common.Exceptions.ValidationException), HandleValidationException },
             { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException }
         };
     }
@@ -52,22 +51,6 @@ internal class GlobalExceptionHandler
         }
 
         return true;
-    }
-
-    private async Task HandleValidationException(HttpContext httpContext, Exception ex)
-    {
-        var exception = (Application.Common.Exceptions.ValidationException)ex;
-
-        httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-
-        await httpContext.Response.WriteAsJsonAsync(
-            new ValidationProblemDetails(exception.Errors)
-            {
-                Status = StatusCodes.Status400BadRequest,
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                Title = "Validation Error",
-                Detail = exception.Message
-            });
     }
 
     private async Task HandleUnauthorizedAccessException(HttpContext httpContext, Exception ex)

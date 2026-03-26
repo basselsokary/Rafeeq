@@ -1,4 +1,6 @@
-﻿using API.Infrustructure;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using API.Infrustructure;
 using Microsoft.OpenApi.Models;
 
 namespace API;
@@ -13,6 +15,12 @@ public static class DependencyInjection
         services.AddSwaggerGen();
 
         services.AddControllers();
+        services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters
+                    .Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: false));
+            });
 
         services.AddEndpointsApiExplorer();
 
