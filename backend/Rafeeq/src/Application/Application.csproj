@@ -23,12 +23,14 @@
     <Folder Include="Commands\Trips\" />
     <Folder Include="Commands\Users\Admins\" />
     <Folder Include="Commands\Users\Moderators\" />
+    <Folder Include="Commands\Users\Moderators\Validators\" />
+    <Folder Include="Commands\Users\Tourists\Favorites\" />
+    <Folder Include="Common\Interfaces\Services\" />
+    <Folder Include="DTOs\Email\" />
     <Folder Include="EventHandlers\Attractions\" />
     <Folder Include="EventHandlers\ContentReports\" />
     <Folder Include="EventHandlers\Reviews\" />
     <Folder Include="EventHandlers\Sites\" />
-    <Folder Include="Queries\Sites\LocalizedContents\" />
-    <Folder Include="Queries\Sponsors\Offers\" />
     <Folder Include="Queries\Sponsors\Validators" />
   </ItemGroup>
 

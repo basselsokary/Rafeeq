@@ -1,6 +1,21 @@
 ﻿namespace Application.Common.Interfaces.Email;
 
-public interface IEmailSender
+public interface IEmailService
 {
-    Task SendEmailAsync(string email, string subject, string body);
+    Task SendPasswordResetEmailAsync(
+        string email, 
+        string resetToken, 
+        string userName,
+        CancellationToken cancellationToken = default);
+
+    Task SendEmailVerificationAsync(
+        string email, 
+        string verificationToken, 
+        string userName,
+        CancellationToken cancellationToken = default);
+
+    Task SendWelcomeEmailAsync(
+        string email, 
+        string userName,
+        CancellationToken cancellationToken = default);
 }
