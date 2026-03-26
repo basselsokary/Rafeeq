@@ -10,8 +10,6 @@ public static class DomainConstants
         public const int MaxNearestMetroStationLength = 128;
         public const int MaxNearestBusStopLength = 128;
         public const int MaxPhoneLength = 32;
-        public const int MinRatingValue = 1;
-        public const int MaxRatingValue = 5;
     }
 
     public static class Attraction
@@ -36,7 +34,7 @@ public static class DomainConstants
 
     public static class ContentReport
     {
-        public const int HighPriority = 4;
+        public const int HighPriority = 5;
         public const int MaxDescriptionLength = 2048;
     }
 
@@ -58,6 +56,8 @@ public static class DomainConstants
     public static class User
     {
         public const int MaxUserNameLength = 32;
+        public const int MaxFirstNameLength = 128;
+        public const int MaxLastNameLength = 128;
         public const int MaxFullNameLength = 128;
         public const int MaxEmailLength = 254; // // Maximum length of emails is 254
         public const int MaxPasswordLength = 64;

@@ -11,7 +11,7 @@ public interface IUnitOfWork : IDisposable
     IContentReportRepository ContentReports { get; }
     IReviewRepository Reviews { get; }
     ISponsorRepository Sponsors { get; }
-    IUserRepository Users { get; }
+    ITouristRepository Tourists { get; }
     // ITripRepository Trips { get; }
 
     // Transaction management

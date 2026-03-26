@@ -1,8 +1,8 @@
-using Domain.Entities.UserAggregate;
+using Domain.Entities.TouristAggregate;
 
 namespace Domain.Repositories;
 
-public interface IUserRepository : IBaseRepository<User>
+public interface ITouristRepository : IBaseRepository<Tourist>
 {
-    Task<User?> GetWithFavouritesAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<Tourist?> GetWithFavouritesAsync(Guid id, CancellationToken cancellationToken = default);
 }
