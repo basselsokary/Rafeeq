@@ -58,7 +58,7 @@ internal static class ValidationDecorator
                 return await innerHandler.HandleAsync(query, cancellationToken);
             }
 
-            return Result.Failure<TRespownse>(CreateValidationError(validationFailures));
+            return Result.Failure<TResponse>(CreateValidationError(validationFailures));
         }
     }
     
