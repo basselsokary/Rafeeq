@@ -11,10 +11,6 @@ internal class GetAllUsersQueryValidator : AbstractValidator<GetAllUsersQuery>
             .Must(searchTerm => searchTerm == null || !string.IsNullOrWhiteSpace(searchTerm))
             .WithMessage("Search term cannot be whitespace.");
 
-        RuleFor(x => x.Role)
-            .IsInEnum()
-            .When(x => x.Role.HasValue);
-
         RuleFor(x => x.Status)
             .IsInEnum();
 

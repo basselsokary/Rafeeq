@@ -8,7 +8,7 @@ namespace Application.Queries.Users.Tourists;
 public record GetProfileQuery : IQuery<TouristProfileDto>;
 
 internal class GetProfileQueryHandler(
-    IUserQueryService queryService,
+    ITouristQueryService queryService,
     IUserContext userContext) : IQueryHandler<GetProfileQuery, TouristProfileDto>
 {
     public async Task<Result<TouristProfileDto>> HandleAsync(GetProfileQuery query, CancellationToken cancellationToken)

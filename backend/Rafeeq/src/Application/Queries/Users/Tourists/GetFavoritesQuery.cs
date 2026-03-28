@@ -8,7 +8,7 @@ namespace Application.Queries.Users.Tourists;
 public record GetFavoritesQuery(PagingParameters Paging) : IQuery<PagedResult<FavoriteSiteDto>>;
 
 internal class GetFavoritesQueryHandler(
-    IUserQueryService queryService,
+    ITouristQueryService queryService,
     IUserContext userContext) : IQueryHandler<GetFavoritesQuery, PagedResult<FavoriteSiteDto>>
 {
     public async Task<Result<PagedResult<FavoriteSiteDto>>> HandleAsync(GetFavoritesQuery query, CancellationToken cancellationToken)

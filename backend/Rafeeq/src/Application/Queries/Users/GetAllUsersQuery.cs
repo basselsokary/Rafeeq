@@ -8,19 +8,17 @@ namespace Application.Queries.Users;
 public record GetAllUsersQuery(
     PagingParameters Paging,
     string? SearchTerm = null,
-    UserRole? Role = null,
     bool? EmailVerified = null,
     UserStatus Status = UserStatus.Active) : IQuery<PagedResult<TouristListDto>>;
 
 internal class GetAllUsersQueryHandler(
-    IUserQueryService queryService) : IQueryHandler<GetAllUsersQuery, PagedResult<TouristListDto>>
+    ITouristQueryService queryService) : IQueryHandler<GetAllUsersQuery, PagedResult<TouristListDto>>
 {
     public async Task<Result<PagedResult<TouristListDto>>> HandleAsync(GetAllUsersQuery query, CancellationToken cancellationToken)
     {
         var pagedResult = await queryService.GetAllAsync(
             query.Paging,
             query.SearchTerm,
-            query.Role,
             query.Status,
             query.EmailVerified,
             cancellationToken);

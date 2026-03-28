@@ -73,10 +73,10 @@ internal class GetSitesQueryValidator : AbstractValidator<GetSitesQuery>
 {
     public GetSitesQueryValidator()
     {
-        RuleFor(x => x.SearchTerm)
-            .Must(searchTerm => !string.IsNullOrWhiteSpace(searchTerm))
-            .When(searchTerm => searchTerm != null)
-            .WithMessage("Search term cannot be whitespace.");
+        // RuleFor(x => x.SearchTerm)
+        //     .Must(searchTerm => !string.IsNullOrWhiteSpace(searchTerm))
+        //     .When(searchTerm => searchTerm != null)
+        //     .WithMessage("Search term cannot be whitespace.");
 
         RuleFor(x => x.Filters)
             .SetValidator(new SiteFiltersValidator())
