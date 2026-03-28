@@ -6,7 +6,6 @@ using Application.DTOs.Common;
 using Application.DTOs.Reviews;
 using Application.Queries.Reviews;
 using Domain.Enums;
-using Domain.ValueObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +16,7 @@ namespace API.Controllers;
 public class ReviewsController : ApiBaseController
 {
 	[HttpGet("{id:guid}")]
-	public async Task<IActionResult> GetById(
+	public async Task<ActionResult<ReviewDetailDto>> GetById(
 		[FromRoute] Guid id,
 		[FromServices] IQueryHandler<GetReviewByIdQuery, ReviewDetailDto> queryHandler)
 	{
@@ -28,7 +27,7 @@ public class ReviewsController : ApiBaseController
 
 	[HttpGet("site/{siteId:guid}")]
 	[AllowAnonymous]
-	public async Task<IActionResult> GetBySiteId(
+	public async Task<ActionResult<PagedResult<ReviewListDto>>> GetBySiteId(
 		[FromRoute] Guid siteId,
 		[FromQuery] ReviewStatus? status,
 		[FromQuery] ReviewOrderBy? sortBy,
@@ -52,7 +51,7 @@ public class ReviewsController : ApiBaseController
 	}
 
 	[HttpGet("me")]
-	public async Task<IActionResult> GetMyReviews(
+	public async Task<ActionResult<PagedResult<TouristReviewDto>>> GetMyReviews(
 		[FromServices] IQueryHandler<GetReviewsByUserIdQuery, PagedResult<TouristReviewDto>> queryHandler,
 		[FromQuery] int page = 1,
 		[FromQuery] int pageSize = 20)

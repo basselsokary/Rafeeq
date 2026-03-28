@@ -15,7 +15,7 @@ namespace API.Controllers.Admins;
 public class AdminReviewsController : ApiBaseController
 {
     [HttpGet("status/{status}")]
-	public async Task<IActionResult> GetByStatus(
+	public async Task<ActionResult<PagedResult<ReviewListDto>>> GetByStatus(
 		[FromRoute] ReviewStatus status,
 		[FromServices] IQueryHandler<GetReviewsByStatusQuery, PagedResult<ReviewListDto>> queryHandler,
 		[FromQuery] int page = 1,

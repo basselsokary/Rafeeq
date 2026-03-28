@@ -6,11 +6,9 @@ using Application.Commands.Sites.Images;
 using Application.Commands.Sites.LocalizedContents;
 using Application.Commands.Sites.OpeningHours;
 using Application.Common.Interfaces.Messaging;
-using Application.DTOs.Common;
 using Application.DTOs.Sites;
 using Application.Queries.Sites;
 using Domain.Enums;
-using Domain.ValueObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +19,7 @@ namespace API.Controllers.Admins;
 public class AdminSitesController : ApiBaseController
 {
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(
+    public async Task<ActionResult<SiteAdminDetailDto>> GetById(
         [FromRoute] Guid id,
         [FromServices] IQueryHandler<GetSiteByIdForAdminQuery, SiteAdminDetailDto> queryHandler)
     {

@@ -15,7 +15,7 @@ namespace API.Controllers.Admins;
 public class AdminContentReportsController : ApiBaseController
 {
     [HttpGet]
-	public async Task<IActionResult> Get(
+	public async Task<ActionResult<PagedResult<ContentReportListDto>>> Get(
         [FromQuery] int? priority,
         [FromQuery] ReportStatus? status,
         [FromQuery] ReportReason? reason,
@@ -26,7 +26,7 @@ public class AdminContentReportsController : ApiBaseController
 		var paging = new PagingParameters(page, pageSize);
 
 		var query = new GetContentReportsByHighPriorityQuery(paging, priority, status, reason);
-		var result = await queryHandler.HandleAsync(query);
+        var result = await queryHandler.HandleAsync(query);
 
 		return HandleResult(result);
 	}

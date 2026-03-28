@@ -6,7 +6,7 @@ namespace API.Controllers.Base;
 [ApiController]
 public abstract class ApiBaseController : ControllerBase
 {
-    protected ActionResult HandleResult<T>(Result<T> result)
+    protected ActionResult<T> HandleResult<T>(Result<T> result)
     {
         if (result.Succeeded)
         {

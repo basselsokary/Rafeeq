@@ -17,7 +17,7 @@ namespace API.Controllers.Admins;
 public class AdminAttractionsController : ApiBaseController
 {
     [HttpGet("/{id:guid}")]
-	public async Task<IActionResult> GetById(
+	public async Task<ActionResult<AttractionAdminDetailDto>> GetById(
 		[FromRoute] Guid id,
 		[FromServices] IQueryHandler<GetAttractionByIdForAdminQuery, AttractionAdminDetailDto> queryHandler)
 	{

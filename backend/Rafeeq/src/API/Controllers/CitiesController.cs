@@ -11,7 +11,7 @@ namespace API.Controllers;
 public class CitiesController : ApiBaseController
 {
 	[HttpGet]
-	public async Task<IActionResult> GetAll(
+	public async Task<ActionResult<PagedResult<CityListDto>>> GetAll(
 		[FromServices] IQueryHandler<GetCitiesQuery, PagedResult<CityListDto>> queryHandler,
 		[FromQuery] int page = 1,
 		[FromQuery] int pageSize = 20)
@@ -25,7 +25,7 @@ public class CitiesController : ApiBaseController
 	}
 
 	[HttpGet("summaries")]
-	public async Task<IActionResult> GetSummaries(
+	public async Task<ActionResult<List<CitySummaryDto>>> GetSummaries(
 		[FromServices] IQueryHandler<GetCitySummariesQuery, List<CitySummaryDto>> queryHandler)
 	{
 		var result = await queryHandler.HandleAsync(new GetCitySummariesQuery());

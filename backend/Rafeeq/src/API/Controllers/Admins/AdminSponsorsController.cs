@@ -5,7 +5,6 @@ using Application.Commands.Sponsors.Images;
 using Application.Commands.Sponsors.Offers;
 using Application.Common.Interfaces.Messaging;
 using Domain.Enums;
-using Domain.ValueObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

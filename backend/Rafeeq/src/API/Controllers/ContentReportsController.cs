@@ -13,7 +13,7 @@ namespace API.Controllers;
 public class ContentReportsController : ApiBaseController
 {
 	[HttpGet("{id:guid}")]
-	public async Task<IActionResult> GetById(
+	public async Task<ActionResult<ContentReportDetailDto>> GetById(
 		[FromRoute] Guid id,
 		[FromServices] IQueryHandler<GetContentReportByIdQuery, ContentReportDetailDto> queryHandler)
 	{

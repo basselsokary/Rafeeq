@@ -15,11 +15,11 @@ namespace API.Controllers.Admins;
 public class AdminCitiesController : ApiBaseController
 {
     [HttpGet("{id:guid}")]
-	public async Task<IActionResult> GetById(
+	public async Task<ActionResult<CityAdminDetailDto>> GetById(
 		[FromRoute] Guid id,
 		[FromServices] IQueryHandler<GetCityByIdForAdminQuery, CityAdminDetailDto> queryHandler)
 	{
-		var result = await queryHandler.HandleAsync(new GetCityByIdForAdminQuery(id));
+        var result = await queryHandler.HandleAsync(new GetCityByIdForAdminQuery(id));
 
 		return HandleResult(result);
 	}

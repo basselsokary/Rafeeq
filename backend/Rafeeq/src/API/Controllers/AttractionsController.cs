@@ -12,7 +12,7 @@ namespace API.Controllers;
 public class AttractionsController : ApiBaseController
 {
 	[HttpGet("{id:guid}")]
-	public async Task<IActionResult> GetById(
+	public async Task<ActionResult<AttractionDetailDto>> GetById(
 		[FromRoute] Guid id,
 		[FromServices] IQueryHandler<GetAttractionByIdQuery, AttractionDetailDto> queryHandler)
 	{
@@ -22,7 +22,7 @@ public class AttractionsController : ApiBaseController
 	}
 
 	[HttpGet("site/{siteId:guid}")]
-	public async Task<IActionResult> GetAttractionsForSite(
+	public async Task<ActionResult<PagedResult<AttractionListDto>>> GetAttractionsForSite(
 		[FromRoute] Guid siteId,
 		[FromQuery] AttractionType type,
 		[FromServices] IQueryHandler<GetAttractionsByTypeQuery, PagedResult<AttractionListDto>> queryHandler,

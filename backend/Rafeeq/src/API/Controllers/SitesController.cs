@@ -16,7 +16,7 @@ public class SitesController : ApiBaseController
 {
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> GetAll(
+    public async Task<ActionResult<PagedResult<SiteListDto>>> GetAll(
         [FromQuery] string? searchTerm,
         [FromQuery] SiteType? type,
         [FromQuery] Guid? city,
@@ -38,7 +38,7 @@ public class SitesController : ApiBaseController
 
     [HttpGet("{id:guid}")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetById(
+    public async Task<ActionResult<SiteDetailDto>> GetById(
         [FromRoute] Guid id,
         [FromServices] IQueryHandler<GetSiteByIdQuery, SiteDetailDto> queryHandler)
     {
@@ -50,7 +50,7 @@ public class SitesController : ApiBaseController
 
     [HttpGet("featured")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetFeatured(
+    public async Task<ActionResult<List<SiteListDto>>> GetFeatured(
         [FromQuery] Guid? city,
         [FromServices] IQueryHandler<GetFeaturedSitesQuery, List<SiteListDto>> queryHandler)
     {
@@ -61,7 +61,7 @@ public class SitesController : ApiBaseController
     }
 
     [HttpGet("nearby")]
-    public async Task<IActionResult> GetNearby(
+    public async Task<ActionResult<List<SiteListDto>>> GetNearby(
         [FromQuery] double latitude,
         [FromQuery] double longitude,
         [FromQuery] int radiusKm,
@@ -85,7 +85,7 @@ public class SitesController : ApiBaseController
     }
 
     [HttpGet("within-bounds")]
-    public async Task<IActionResult> GetWithinBounds(
+    public async Task<ActionResult<List<SiteMapMarkerDto>>> GetWithinBounds(
         [FromQuery] double northLatitude,
         [FromQuery] double southLatitude,
         [FromQuery] double eastLongitude,
@@ -106,7 +106,7 @@ public class SitesController : ApiBaseController
     }
 
 	[HttpGet("{id:guid}/localized-contents")]
-    public async Task<IActionResult> GetLocalizedContents(
+    public async Task<ActionResult<List<LocalizedContentDto>>> GetLocalizedContents(
         [FromRoute] Guid id,
         [FromServices] IQueryHandler<GetSiteLocalizedContentsQuery, List<LocalizedContentDto>> queryHandler)
     {

@@ -17,7 +17,7 @@ public class SponsorsController : ApiBaseController
 {
 	[HttpGet]
 	[AllowAnonymous]
-	public async Task<IActionResult> GetAll(
+	public async Task<ActionResult<PagedResult<SponsorListDto>>> GetAll(
 		[FromQuery] string? searchTerm,
 		[FromQuery] SponsorType? type,
 		[FromQuery] SponsorTier? tier,
@@ -37,7 +37,7 @@ public class SponsorsController : ApiBaseController
 
 	[HttpGet("{id:guid}")]
 	[AllowAnonymous]
-	public async Task<IActionResult> GetById(
+	public async Task<ActionResult<SponsorDetailDto>> GetById(
 		[FromRoute] Guid id,
 		[FromServices] IQueryHandler<GetSponsorByIdQuery, SponsorDetailDto> queryHandler)
 	{
@@ -47,7 +47,7 @@ public class SponsorsController : ApiBaseController
 	}
 
 	[HttpGet("nearby")]
-	public async Task<IActionResult> GetNearby(
+	public async Task<ActionResult<List<NearbySponsorDto>>> GetNearby(
 		[FromQuery] double latitude,
 		[FromQuery] double longitude,
 		[FromQuery] int radiusKm,
@@ -64,7 +64,7 @@ public class SponsorsController : ApiBaseController
 	}
 
 	[HttpGet("{id:guid}/offers")]
-	public async Task<IActionResult> GetOffersBySponsor(
+	public async Task<ActionResult<List<SponsorOfferDto>>> GetOffersBySponsor(
 		[FromRoute] Guid id,
 		[FromQuery] bool activeOnly,
 		[FromServices] IQueryHandler<GetSiteOffersQuery, List<SponsorOfferDto>> queryHandler)
@@ -75,7 +75,7 @@ public class SponsorsController : ApiBaseController
 	}
 
 	[HttpGet("offers")]
-	public async Task<IActionResult> GetAllOffers(
+	public async Task<ActionResult<PagedResult<SponsorOfferListDto>>> GetAllOffers(
 		[FromQuery] SponsorType? type,
 		[FromQuery] SponsorTier? tier,
 		[FromQuery] bool? sponsorActiveOnly,
@@ -94,7 +94,7 @@ public class SponsorsController : ApiBaseController
 	}
 
 	[HttpGet("offers/{offerId:guid}")]
-	public async Task<IActionResult> GetOfferById(
+	public async Task<ActionResult<SponsorOfferDto>> GetOfferById(
 		[FromRoute] Guid offerId,
 		[FromServices] IQueryHandler<GetSiteOfferByIdAsync, SponsorOfferDto> queryHandler)
 	{

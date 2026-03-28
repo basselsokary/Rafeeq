@@ -10,7 +10,7 @@ namespace API.Controllers;
 public class AuthController() : ApiBaseController
 {
     [HttpPost("login")]
-    public async Task<IActionResult> Login(
+    public async Task<ActionResult<LoginResponse>> Login(
         [FromBody] LoginCommand command,
         [FromServices] ICommandHandler<LoginCommand, LoginResponse> commandHandler)
     {
@@ -30,7 +30,7 @@ public class AuthController() : ApiBaseController
     }
 
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh(
+    public async Task<ActionResult<RefreshResponse>> Refresh(
         [FromBody] RefreshCommand command,
         [FromServices] ICommandHandler<RefreshCommand, RefreshResponse> commandHandler)
     {
