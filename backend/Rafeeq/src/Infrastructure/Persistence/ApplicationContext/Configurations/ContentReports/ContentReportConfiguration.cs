@@ -1,10 +1,10 @@
+using Domain.Entities.ContentReportAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Domain.Entities.ContentReportAggregate;
 
-namespace Infrastructure.Persistence.ApplicationContext.Configurations;
+namespace Infrastructure.Persistence.ApplicationContext.Configurations.ContentReports;
 
-public class ContentReportConfiguration : IEntityTypeConfiguration<ContentReport>
+public sealed class ContentReportConfiguration : IEntityTypeConfiguration<ContentReport>
 {
     public void Configure(EntityTypeBuilder<ContentReport> builder)
     {
@@ -28,24 +28,26 @@ public class ContentReportConfiguration : IEntityTypeConfiguration<ContentReport
             .HasMaxLength(50)
             .IsRequired();
 
-        builder.Property(cr => cr.ReviewedAt);
-
-        builder.Property(cr => cr.ReviewedBy);
+        builder.Property(cr => cr.ActionTaken)
+            .HasConversion<string>()
+            .HasMaxLength(50);
 
         builder.Property(cr => cr.ReviewNotes)
             .HasMaxLength(1000);
 
-        builder.Property(cr => cr.ActionTaken)
-            .HasMaxLength(500);
+        builder.Property(cr => cr.Priority)
+            .IsRequired();
+
+        builder.Property(cr => cr.ReportedAt)
+            .IsRequired();
 
         builder.Property(cr => cr.CreatedAt)
             .IsRequired();
 
         builder.Property(cr => cr.LastModifiedAt);
 
-        // Indexes
         builder.HasIndex(cr => cr.ReportedBy)
-            .HasDatabaseName("IX_ContentReports_ReporterId");
+            .HasDatabaseName("IX_ContentReports_ReportedBy");
 
         builder.HasIndex(cr => cr.ContentId)
             .HasDatabaseName("IX_ContentReports_ContentId");
@@ -53,10 +55,12 @@ public class ContentReportConfiguration : IEntityTypeConfiguration<ContentReport
         builder.HasIndex(cr => cr.Status)
             .HasDatabaseName("IX_ContentReports_Status");
 
-        builder.HasIndex(cr => cr.CreatedAt)
-            .HasDatabaseName("IX_ContentReports_CreatedAt");
+        builder.HasIndex(cr => cr.Priority)
+            .HasDatabaseName("IX_ContentReports_Priority");
 
-        // Ignore domain events
+        builder.HasIndex(cr => cr.ReportedAt)
+            .HasDatabaseName("IX_ContentReports_ReportedAt");
+
         builder.Ignore(cr => cr.DomainEvents);
     }
 }

@@ -1,13 +1,16 @@
+using Domain.Entities.SiteAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Domain.Entities.SiteAggregate;
 
-namespace Infrastructure.Persistence.ApplicationContext.Configurations;
+namespace Infrastructure.Persistence.ApplicationContext.Configurations.Sites;
 
-public class SiteConfiguration : IEntityTypeConfiguration<Site>
+public sealed class SiteConfiguration : IEntityTypeConfiguration<Site>
 {
     public void Configure(EntityTypeBuilder<Site> builder)
     {
+        builder.Property(s => s.CityId)
+            .IsRequired();
+
         builder.Property(s => s.Name)
             .HasMaxLength(200)
             .IsRequired();
@@ -17,8 +20,13 @@ public class SiteConfiguration : IEntityTypeConfiguration<Site>
             .IsRequired();
 
         builder.Property(s => s.ContactPhone)
-            .HasMaxLength(20)
-            .IsRequired();
+            .HasMaxLength(20);
+
+        builder.Property(s => s.WebsiteUrl)
+            .HasMaxLength(500);
+
+        builder.Property(s => s.MainImageUrl)
+            .HasMaxLength(500);
 
         builder.Property(s => s.Type)
             .HasConversion<string>()
@@ -36,10 +44,10 @@ public class SiteConfiguration : IEntityTypeConfiguration<Site>
         builder.Property(s => s.TotalReviews)
             .HasDefaultValue(0);
 
-        builder.Property(s => s.WebsiteUrl)
-            .HasMaxLength(500);
-
         builder.Property(s => s.IsFeatured)
+            .HasDefaultValue(false);
+
+        builder.Property(s => s.IsActive)
             .HasDefaultValue(false);
 
         builder.Property(s => s.CreatedAt)
@@ -47,7 +55,6 @@ public class SiteConfiguration : IEntityTypeConfiguration<Site>
 
         builder.Property(s => s.LastModifiedAt);
 
-        // Value Objects - Location
         builder.OwnsOne(s => s.Location, location =>
         {
             location.Property(l => l.Latitude)
@@ -61,7 +68,6 @@ public class SiteConfiguration : IEntityTypeConfiguration<Site>
                 .IsRequired();
         });
 
-        // Value Objects - Address
         builder.OwnsOne(s => s.Address, address =>
         {
             address.Property(a => a.Street)
@@ -83,7 +89,6 @@ public class SiteConfiguration : IEntityTypeConfiguration<Site>
                 .HasMaxLength(20);
         });
 
-        // Value Objects - EntryFee (Money)
         builder.OwnsOne(s => s.EntryFee, money =>
         {
             money.Property(m => m.Amount)
@@ -95,31 +100,59 @@ public class SiteConfiguration : IEntityTypeConfiguration<Site>
                 .HasMaxLength(3);
         });
 
-        // Relationships - Images (one-to-many)
+        builder.Navigation(s => s.EntryFee).IsRequired(false);
+
+        builder.OwnsMany(s => s.OpeningHours, openingHours =>
+        {
+            openingHours.ToTable("SiteOpeningHours");
+            openingHours.WithOwner().HasForeignKey("SiteId");
+
+            openingHours.Property<int>("Id");
+            openingHours.HasKey("Id");
+
+            openingHours.Property(oh => oh.DayOfWeek)
+                .HasConversion<string>()
+                .HasMaxLength(16)
+                .IsRequired();
+
+            openingHours.Property(oh => oh.IsClosed)
+                .IsRequired();
+
+            openingHours.OwnsOne(oh => oh.OpeningTime, timeRange =>
+            {
+                timeRange.Property(t => t.StartTime)
+                    .HasColumnName("StartTime")
+                    .IsRequired();
+
+                timeRange.Property(t => t.EndTime)
+                    .HasColumnName("EndTime")
+                    .IsRequired();
+            });
+        });
+
         builder.HasMany(s => s.Images)
             .WithOne()
             .HasForeignKey("SiteId")
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Relationships - OpeningHours (one-to-many)
-        builder.HasMany(s => s.OpeningHours)
-            .WithOne()
-            .HasForeignKey("SiteId")
-            .OnDelete(DeleteBehavior.Cascade);
-
-        // Relationships - LocalizedContents (one-to-many)
         builder.HasMany(s => s.LocalizedContents)
             .WithOne()
             .HasForeignKey("SiteId")
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Relationships - Facilities (one-to-many)
         builder.HasMany(s => s.Facilities)
             .WithOne()
             .HasForeignKey("SiteId")
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Indexes
+        builder.HasMany(s => s.NearestTransportations)
+            .WithOne()
+            .HasForeignKey("SiteId")
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasIndex(s => s.CityId)
+            .HasDatabaseName("IX_Sites_CityId");
+
         builder.HasIndex(s => s.Name)
             .HasDatabaseName("IX_Sites_Name");
 
@@ -129,16 +162,12 @@ public class SiteConfiguration : IEntityTypeConfiguration<Site>
         builder.HasIndex(s => s.Status)
             .HasDatabaseName("IX_Sites_Status");
 
-        builder.HasIndex(s => new { s.Location.Latitude, s.Location.Longitude })
-            .HasDatabaseName("IX_Sites_Location");
-
         builder.HasIndex(s => s.AverageRating)
             .HasDatabaseName("IX_Sites_AverageRating");
 
         builder.HasIndex(s => s.IsFeatured)
             .HasDatabaseName("IX_Sites_IsFeatured");
 
-        // Ignore domain events (not persisted)
         builder.Ignore(s => s.DomainEvents);
     }
 }

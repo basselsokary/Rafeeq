@@ -1,10 +1,10 @@
+using Domain.Entities.CityAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Domain.Entities.CityAggregate;
 
-namespace Infrastructure.Persistence.ApplicationContext.Configurations;
+namespace Infrastructure.Persistence.ApplicationContext.Configurations.Cities;
 
-public class CityConfiguration : IEntityTypeConfiguration<City>
+public sealed class CityConfiguration : IEntityTypeConfiguration<City>
 {
     public void Configure(EntityTypeBuilder<City> builder)
     {
@@ -13,17 +13,23 @@ public class CityConfiguration : IEntityTypeConfiguration<City>
             .IsRequired();
 
         builder.Property(c => c.Description)
-            .HasMaxLength(2000);
+            .HasMaxLength(2000)
+            .IsRequired();
 
         builder.Property(c => c.ImageUrl)
             .HasMaxLength(500);
+
+        builder.Property(c => c.TotalSites)
+            .HasDefaultValue(0);
+
+        builder.Property(c => c.DisplayOrder)
+            .HasDefaultValue(0);
 
         builder.Property(c => c.CreatedAt)
             .IsRequired();
 
         builder.Property(c => c.LastModifiedAt);
 
-        // Value Objects - Location (city center)
         builder.OwnsOne(c => c.CenterLocation, location =>
         {
             location.Property(l => l.Latitude)
@@ -37,11 +43,17 @@ public class CityConfiguration : IEntityTypeConfiguration<City>
                 .IsRequired();
         });
 
-        // Indexes
+        builder.HasMany(c => c.LocalizedContents)
+            .WithOne()
+            .HasForeignKey("CityId")
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.HasIndex(c => c.Name)
             .HasDatabaseName("IX_Cities_Name");
 
-        // Ignore domain events
+        builder.HasIndex(c => c.DisplayOrder)
+            .HasDatabaseName("IX_Cities_DisplayOrder");
+
         builder.Ignore(c => c.DomainEvents);
     }
 }
