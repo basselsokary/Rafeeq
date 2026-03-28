@@ -1,4 +1,5 @@
 using Domain.Entities.SiteAggregate;
+using Domain.ValueObjects;
 using FluentValidation;
 
 namespace Application.Commands.Sites.Validators;
@@ -19,11 +20,13 @@ internal class CreateSiteCommandValidator : AbstractValidator<CreateSiteCommand>
             .NotEmpty()
             .WithMessage(SiteErrors.DescriptionRequired.Message);
 
-        RuleFor(x => x.Location)
-            .NotNull();
-            
-        RuleFor(x => x.Address)
-            .NotNull();
+        RuleFor(x => x.Latitude)
+            .InclusiveBetween(-GeoLocation.BoundLatitude, GeoLocation.BoundLatitude)
+            .WithMessage(GeoLocationErrors.InvalidLatitude(GeoLocation.BoundLatitude).Message);
+
+        RuleFor(x => x.Longitude)
+            .InclusiveBetween(-GeoLocation.BoundLongitude, GeoLocation.BoundLongitude)
+            .WithMessage(GeoLocationErrors.InvalidLongitude(GeoLocation.BoundLongitude).Message);
 
         RuleFor(x => x.Type)
             .IsInEnum();
@@ -56,14 +59,16 @@ internal class UpdateSiteCommandValidator : AbstractValidator<UpdateSiteCommand>
             .NotEmpty()
             .WithMessage(SiteErrors.DescriptionRequired.Message);
 
-        RuleFor(x => x.Location)
-            .NotNull();
-            
-        RuleFor(x => x.Address)
-            .NotNull();
-
         RuleFor(x => x.Type)
             .IsInEnum();
+
+        RuleFor(x => x.Latitude)
+            .InclusiveBetween(-GeoLocation.BoundLatitude, GeoLocation.BoundLatitude)
+            .WithMessage(GeoLocationErrors.InvalidLatitude(GeoLocation.BoundLatitude).Message);
+
+        RuleFor(x => x.Longitude)
+            .InclusiveBetween(-GeoLocation.BoundLongitude, GeoLocation.BoundLongitude)
+            .WithMessage(GeoLocationErrors.InvalidLongitude(GeoLocation.BoundLongitude).Message);
     }
 }
 

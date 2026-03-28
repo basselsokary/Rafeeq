@@ -21,7 +21,6 @@ internal class SetReviewStatusCommandHandler(
         var result = command.Status switch
         {
             ReviewStatus.Approved => review.Approve(),
-            ReviewStatus.Flagged => review.Flag(),
             ReviewStatus.Rejected => review.Reject(command.RejectionReason),
             _ => Result.Failure(ReviewErrors.InvalidStatus(command.Status))
         };

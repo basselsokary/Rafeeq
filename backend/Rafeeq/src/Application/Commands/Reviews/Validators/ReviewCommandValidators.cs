@@ -13,7 +13,7 @@ internal class CreateReviewCommandValidator : AbstractValidator<CreateReviewComm
             .WithMessage(ReviewErrors.SiteIdRequired.Message);
         
         RuleFor(x => x.Rating)
-            .NotNull();
+            .GreaterThan(0);
         
         RuleFor(x => x.Title)
             .NotEmpty()
@@ -44,7 +44,7 @@ internal class UpdateReviewCommandValidator : AbstractValidator<UpdateReviewComm
             .WithMessage(ReviewErrors.IdRequired.Message);
         
         RuleFor(x => x.Rating)
-            .NotNull();
+            .GreaterThan(0);
         
         RuleFor(x => x.Title)
             .NotEmpty()

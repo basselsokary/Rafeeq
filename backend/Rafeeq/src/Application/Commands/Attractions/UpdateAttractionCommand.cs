@@ -11,7 +11,8 @@ public record UpdateAttractionCommand(
     string Description,
     AttractionType Type,
     HistoricalPeriod HistoricalPeriod,
-    GeoLocation? ExactLocation,
+    double? Latitude,
+    double? Longitude,
     string? LocationDescription) : ICommand;
 
 internal class UpdateAttractionCommandHandler(
@@ -24,8 +25,11 @@ internal class UpdateAttractionCommandHandler(
         var attraction = await _unitOfWork.Attractions.GetByIdAsync(command.Id, cancellationToken);
         if (attraction == null)
             return AttractionErrors.NotFound(command.Id);
+        
+        Result result = UpdateAttractionLocation(command, attraction);
+        if (result.Failed)
+            return result;
 
-        attraction.SetLocation(command.ExactLocation, command.LocationDescription);
         var attractionResult = attraction.UpdateBasicInfo(
             command.Name,
             command.Description,
@@ -36,6 +40,20 @@ internal class UpdateAttractionCommandHandler(
             return attractionResult;
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
+    }
+
+    private static Result UpdateAttractionLocation(UpdateAttractionCommand command, Attraction attraction)
+    {
+        if (command.Latitude.HasValue && command.Longitude.HasValue)
+        {
+            var locationResult = GeoLocation.Create(command.Latitude.Value, command.Longitude.Value);
+            if (locationResult.Failed)
+                return locationResult;
+
+            attraction.SetLocation(locationResult.Value, command.LocationDescription);
+        }
 
         return Result.Success();
     }

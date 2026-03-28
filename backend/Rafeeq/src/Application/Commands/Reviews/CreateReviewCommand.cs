@@ -8,7 +8,7 @@ namespace Application.Commands.Reviews;
 
 public record CreateReviewCommand(
     Guid SiteId,
-    Rating Rating,
+    int Rating,
     string Title,
     string Content) : ICommand;
 
@@ -26,14 +26,17 @@ internal class CreateReviewCommandHandler(
             userContext.Id,
             command.SiteId,
             cancellationToken);
-            
         if (HasUserReviewedSite)
             return ReviewErrors.UserAlreadyReviewdSite;
+
+        var ratingResult = Rating.Create(command.Rating);
+        if (ratingResult.Failed)
+            return ratingResult;
         
         var reviewResult = Review.Create(
             userContext.Id,
             command.SiteId,
-            command.Rating,
+            ratingResult.Value,
             command.Title,
             command.Content);
 

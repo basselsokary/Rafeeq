@@ -9,9 +9,10 @@ public record UpdateSponsorOfferCommand(
     Guid OfferId,
     string Title,
     string Description,
-    Money? DiscountAmount,
+    decimal? DiscountAmount,
     int? DiscountPercentage,
-    DateRange ValidityPeriod,
+    DateTime StartDate,
+    DateTime EndDate,
     string? TermsAndConditions,
     int? MaxRedemptions) : ICommand;
 
@@ -20,6 +21,18 @@ internal class UpdateSponsorOfferCommandHandler(
 {
     public async Task<Result> HandleAsync(UpdateSponsorOfferCommand command, CancellationToken cancellationToken)
     {
+        Result<Money>? moneyResult = null;
+		if (command.DiscountAmount.HasValue)
+		{
+			moneyResult = Money.Create(command.DiscountAmount.Value);
+			if (moneyResult.Failed)
+				return moneyResult;
+		}
+
+		var dateRangeResult = DateRange.Create(command.StartDate, command.EndDate);
+		if (dateRangeResult.Failed)
+			return dateRangeResult;
+        
         var sponsor = await unitOfWork.Sponsors.GetWithOffersAsync(command.SponsorId, cancellationToken);
         if (sponsor == null)
             return SponsorErrors.NotFound(command.SponsorId);
@@ -34,8 +47,9 @@ internal class UpdateSponsorOfferCommandHandler(
             command.OfferId,
             command.Title,
             command.Description,
-            command.DiscountAmount,
+            moneyResult?.Value,
             command.DiscountPercentage,
+            dateRangeResult.Value,
             command.TermsAndConditions);
         
         if (result.Failed)

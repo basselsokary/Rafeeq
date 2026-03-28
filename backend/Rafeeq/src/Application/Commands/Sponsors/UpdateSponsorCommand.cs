@@ -11,8 +11,12 @@ public record UpdateSponsorCommand(
     string Description,
     SponsorType Type,
     SponsorTier Tier,
-    GeoLocation Location,
-    Address Address,
+    double Latitude,
+    double Longitude,
+    string Street,
+    string City,
+    string? Region,
+    string? PostalCode,
     DateTime StartDate,
     DateTime EndDate) : ICommand;
 
@@ -36,8 +40,16 @@ internal class UpdateSponsorCommandHandler(
 
     private static Result ApplyChanges(UpdateSponsorCommand command, Sponsor sponsor)
     {
+        var locationResult = GeoLocation.Create(command.Latitude, command.Longitude);
+        if (locationResult.Failed)
+            return locationResult;
+
+        var addressResult = Address.Create(command.Street, command.City, command.Region, command.PostalCode);
+        if (addressResult.Failed)
+            return addressResult;
+
         sponsor.UpdateTier(command.Tier);
-        sponsor.UpdateLocation(command.Location, command.Address);
+        sponsor.UpdateLocation(locationResult.Value, addressResult.Value);
         Result result = sponsor.UpdateBasicInfo(command.Title, command.Description, command.Type);
         if (result.Failed)
             return result;

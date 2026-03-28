@@ -8,7 +8,8 @@ public record UpdateCityCommand(
     Guid Id,
     string Name,
     string Description,
-    GeoLocation CenterLocation,
+    double CenterLatitude,
+    double CenterLongitude,
     int DisplayOrder,
     string? ImageUrl) : ICommand;
 
@@ -32,7 +33,12 @@ internal class UpdateCityCommandHandler(
 
     private static Result ApplyChanges(UpdateCityCommand command, City city)
     {
-        city.SetCenterLocation(command.CenterLocation);
+        var locationResult = GeoLocation.Create(command.CenterLatitude, command.CenterLongitude);
+        if (locationResult.Failed)
+            return locationResult;
+        
+        city.SetCenterLocation(locationResult.Value);
+        
         var cityResult = city.UpdateBasicInfo(command.Name, command.Description);
         if (cityResult.Failed)
             return cityResult;

@@ -24,19 +24,11 @@ internal class AddSponsorOfferCommandValidator : AbstractValidator<AddSponsorOff
         RuleFor(x => x)
             .Must(x => x.DiscountAmount != null || x.DiscountPercentage != null)
             .WithMessage(SponsorErrors.DiscountRequired.Message);
-        
-        RuleFor(x => x.DiscountAmount)
-            .SetValidator(new MoneyValidator()!)
-            .When(x => x.DiscountAmount is not null);
 
         RuleFor(x => x.DiscountPercentage)
             .InclusiveBetween(0, 100)
             .When(x => x.DiscountPercentage.HasValue)
             .WithMessage(SponsorErrors.DiscountPercentageInvalid.Message);
-
-        RuleFor(x => x.ValidityPeriod)
-            .NotNull()
-            .SetValidator(new DateRangeValidator());
 
         RuleFor(x => x.MaxRedemptions)
             .GreaterThan(0)
@@ -87,18 +79,10 @@ internal class UpdateSponsorOfferCommandValidator : AbstractValidator<UpdateSpon
             .Must(x => x.DiscountAmount != null || x.DiscountPercentage != null)
             .WithMessage(SponsorErrors.DiscountRequired.Message);
 
-        RuleFor(x => x.DiscountAmount)
-            .SetValidator(new MoneyValidator()!)
-            .When(x => x.DiscountAmount is not null);
-
         RuleFor(x => x.DiscountPercentage)
             .InclusiveBetween(0, 100)
             .When(x => x.DiscountPercentage.HasValue)
             .WithMessage(SponsorErrors.DiscountPercentageInvalid.Message);
-        
-        RuleFor(x => x.ValidityPeriod)
-            .NotNull()
-            .SetValidator(new DateRangeValidator());
 
         RuleFor(x => x.MaxRedemptions)
             .GreaterThan(0)

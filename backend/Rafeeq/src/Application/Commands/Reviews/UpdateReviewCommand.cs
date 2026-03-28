@@ -6,7 +6,7 @@ namespace Application.Commands.Reviews;
 
 public record UpdateReviewCommand(
     Guid Id,
-    Rating Rating,
+    int Rating,
     string Title,
     string Content) : ICommand;
 
@@ -19,7 +19,11 @@ internal class UpdateReviewCommandHandler(
         if (review == null)
             return ReviewErrors.NotFound(command.Id);
 
-        var result = review.Update(command.Rating, command.Title, command.Content);
+        var ratingResult = Rating.Create(command.Rating);
+        if (ratingResult.Failed)
+            return ratingResult;
+
+        var result = review.Update(ratingResult.Value, command.Title, command.Content);
         if (result.Failed)
             return result;
 

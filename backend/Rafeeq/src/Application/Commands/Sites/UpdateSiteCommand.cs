@@ -10,9 +10,13 @@ public record UpdateSiteCommand(
     string Name,
     string Description,
     SiteType Type,
-    GeoLocation Location,
-    Address Address,
-    Money? Fee) : ICommand;
+    double Latitude,
+    double Longitude,
+    string Street,
+    string City,
+    string? Region,
+    string? PostalCode,
+    decimal? Fee) : ICommand;
 
 internal class UpdateSiteCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<UpdateSiteCommand>
@@ -34,12 +38,28 @@ internal class UpdateSiteCommandHandler(
 
     private static Result ApplyChanges(UpdateSiteCommand command, Site site)
     {
-        site.UpdateLocation(command.Location, command.Address);
+        var locationResult = GeoLocation.Create(command.Latitude, command.Longitude);
+        if (locationResult.Failed)
+            return locationResult;
+        
+        var addressResult = Address.Create(command.Street, command.City, command.Region, command.PostalCode);
+        if (addressResult.Failed)
+            return addressResult;
+
+        site.UpdateLocation(locationResult.Value, addressResult.Value);
 
         if (command.Fee == null)
+        {   
             site.RemoveEntryFee();
+        }
         else
-            site.SetEntryFee(command.Fee);
+        {
+            var moneyResult = Money.Create(command.Fee.Value);
+            if (moneyResult.Failed)
+                return moneyResult;
+            
+            site.SetEntryFee(moneyResult.Value);
+        }
 
         var siteResult = site.UpdateBasicInfo(command.Name, command.Description, command.Type);
         if (siteResult.Failed)

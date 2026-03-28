@@ -1,4 +1,5 @@
 using Domain.Entities.CityAggregate;
+using Domain.ValueObjects;
 using FluentValidation;
 using static Domain.Common.Constants.DomainConstants.City;
 
@@ -19,6 +20,14 @@ internal class CreateCityCommandValidator : AbstractValidator<CreateCityCommand>
             .WithMessage(CityErrors.DescriptionRequired.Message)
             .MaximumLength(MaxDescriptionLength)
             .WithMessage(CityErrors.ExceededDescriptionLength.Message);
+
+        RuleFor(x => x.CenterLatitude)
+            .InclusiveBetween(-GeoLocation.BoundLatitude, GeoLocation.BoundLatitude)
+            .WithMessage(GeoLocationErrors.InvalidLatitude(GeoLocation.BoundLatitude).Message);
+
+        RuleFor(x => x.CenterLongitude)
+            .InclusiveBetween(-GeoLocation.BoundLongitude, GeoLocation.BoundLongitude)
+            .WithMessage(GeoLocationErrors.InvalidLongitude(GeoLocation.BoundLongitude).Message);
     }
 }
 
@@ -51,6 +60,14 @@ internal class UpdateCityCommandValidator : AbstractValidator<UpdateCityCommand>
             .WithMessage(CityErrors.DescriptionRequired.Message)
             .MaximumLength(MaxDescriptionLength)
             .WithMessage(CityErrors.ExceededDescriptionLength.Message);
+
+        RuleFor(x => x.CenterLatitude)
+            .InclusiveBetween(-GeoLocation.BoundLatitude, GeoLocation.BoundLatitude)
+            .WithMessage(GeoLocationErrors.InvalidLatitude(GeoLocation.BoundLatitude).Message);
+
+        RuleFor(x => x.CenterLongitude)
+            .InclusiveBetween(-GeoLocation.BoundLongitude, GeoLocation.BoundLongitude)
+            .WithMessage(GeoLocationErrors.InvalidLongitude(GeoLocation.BoundLongitude).Message);
 
         RuleFor(x => x.DisplayOrder)
             .GreaterThanOrEqualTo(0)

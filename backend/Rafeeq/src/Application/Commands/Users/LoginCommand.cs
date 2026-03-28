@@ -5,8 +5,7 @@ namespace Application.Commands.Users;
 
 public record LoginCommand(
     string Email,
-    string Password,
-    bool RememberMe = false) : ICommand<LoginResponse>;
+    string Password) : ICommand<LoginResponse>;
 
 public class LoginCommandHandler(
     IIdentityService identityService) : ICommandHandler<LoginCommand, LoginResponse>
@@ -15,8 +14,7 @@ public class LoginCommandHandler(
     {
         var authenticationResult = await identityService.LoginAsync(
             command.Email,
-            command.Password,
-            command.RememberMe);
+            command.Password);
 
         if (authenticationResult.Failed)
             return authenticationResult.To<LoginResponse>();

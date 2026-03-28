@@ -1,4 +1,5 @@
 using Domain.Entities.AttractionAggregate;
+using Domain.ValueObjects;
 using FluentValidation;
 using static Domain.Common.Constants.DomainConstants.Attraction;
 
@@ -61,10 +62,30 @@ internal class UpdateAttractionCommandValidator : AbstractValidator<UpdateAttrac
             .MaximumLength(MaxDescriptionLength)
             .WithMessage(AttractionErrors.ExceededDescriptionLength.Message);
         
+        RuleFor(x => x.Latitude)
+            .InclusiveBetween(-GeoLocation.BoundLatitude, GeoLocation.BoundLatitude)
+            .When(x => x.Latitude.HasValue)
+            .WithMessage(GeoLocationErrors.InvalidLatitude(GeoLocation.BoundLatitude).Message);
+
+        RuleFor(x => x.Longitude)
+            .InclusiveBetween(-GeoLocation.BoundLongitude, GeoLocation.BoundLongitude)
+            .When(x => x.Longitude.HasValue)
+            .WithMessage(GeoLocationErrors.InvalidLongitude(GeoLocation.BoundLongitude).Message);
+        
         RuleFor(x => x.Type)
             .IsInEnum();
 
         RuleFor(x => x.HistoricalPeriod)
             .IsInEnum();
+    }
+}
+
+internal class MarkAttractionAsFeaturedCommandValidator : AbstractValidator<MarkAttractionAsFeaturedCommand>
+{
+    public MarkAttractionAsFeaturedCommandValidator()
+    {
+        RuleFor(x => x.Id)
+            .NotEmpty()
+            .WithMessage(AttractionErrors.IdRequired.Message);
     }
 }

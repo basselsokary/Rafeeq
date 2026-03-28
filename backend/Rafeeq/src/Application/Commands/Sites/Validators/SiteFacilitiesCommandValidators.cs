@@ -24,9 +24,6 @@ internal class AddSiteFacilitiesDtoCommandValidator : AbstractValidator<AddSiteF
 {
     public AddSiteFacilitiesDtoCommandValidator()
     {
-        RuleFor(x => x.Id)
-            .NotEmpty();
-
         RuleFor(x => x.FacilityName)
             .NotEmpty()
             .WithMessage(SiteErrors.NameRequired.Message);

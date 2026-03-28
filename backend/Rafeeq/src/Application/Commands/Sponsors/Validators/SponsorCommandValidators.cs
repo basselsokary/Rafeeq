@@ -1,4 +1,5 @@
 using Domain.Entities.SponsorAggregate;
+using Domain.ValueObjects;
 using FluentValidation;
 
 namespace Application.Commands.Sponsors.Validators;
@@ -15,11 +16,13 @@ internal class CreateSponsorCommandValidator : AbstractValidator<CreateSponsorCo
             .NotEmpty()
             .WithMessage(SponsorErrors.DescriptionRequired.Message);
 
-        RuleFor(x => x.Location)
-            .NotNull();
-            
-        RuleFor(x => x.Address)
-            .NotNull();
+        RuleFor(x => x.Latitude)
+            .InclusiveBetween(-GeoLocation.BoundLatitude, GeoLocation.BoundLatitude)
+            .WithMessage(GeoLocationErrors.InvalidLatitude(GeoLocation.BoundLatitude).Message);
+
+        RuleFor(x => x.Longitude)
+            .InclusiveBetween(-GeoLocation.BoundLongitude, GeoLocation.BoundLongitude)
+            .WithMessage(GeoLocationErrors.InvalidLongitude(GeoLocation.BoundLongitude).Message);
 
         RuleFor(x => x.Type)
             .IsInEnum();
@@ -55,11 +58,13 @@ internal class UpdateSponsorCommandValidator : AbstractValidator<UpdateSponsorCo
             .NotEmpty()
             .WithMessage(SponsorErrors.DescriptionRequired.Message);
 
-        RuleFor(x => x.Location)
-            .NotNull();
-            
-        RuleFor(x => x.Address)
-            .NotNull();
+        RuleFor(x => x.Latitude)
+            .InclusiveBetween(-GeoLocation.BoundLatitude, GeoLocation.BoundLatitude)
+            .WithMessage(GeoLocationErrors.InvalidLatitude(GeoLocation.BoundLatitude).Message);
+
+        RuleFor(x => x.Longitude)
+            .InclusiveBetween(-GeoLocation.BoundLongitude, GeoLocation.BoundLongitude)
+            .WithMessage(GeoLocationErrors.InvalidLongitude(GeoLocation.BoundLongitude).Message);
 
         RuleFor(x => x.Type)
             .IsInEnum();
@@ -86,12 +91,6 @@ internal class SetSponsorContactInfoCommandValidator : AbstractValidator<SetSpon
         RuleFor(x => x.Id)
             .NotEmpty()
             .WithMessage(SponsorErrors.IdRequired.Message);
-        
-        RuleFor(x => x.Phone)
-            .NotNull();
-        
-        RuleFor(x => x.Email)
-            .NotNull();
 
         RuleFor(x => x.WebsiteUrl)
             .NotEmpty()

@@ -1,7 +1,7 @@
 using Domain.Common.Interfaces;
 using Domain.Entities.SiteAggregate;
 
-namespace Application.Commands.Sites;
+namespace Application.Commands.Sites.LocalizedContents;
 
 public record UpdateSiteLocalizedContentCommand(
     Guid Id,

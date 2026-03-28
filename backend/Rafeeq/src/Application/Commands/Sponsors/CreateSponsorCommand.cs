@@ -10,8 +10,12 @@ public record CreateSponsorCommand(
     string Description,
     SponsorType Type,
     SponsorTier Tier,
-    GeoLocation Location,
-    Address Address,
+    double Latitude,
+    double Longitude,
+    string Street,
+    string City,
+    string? Region,
+    string? PostalCode,
     DateTime StartDate,
     DateTime EndDate) : ICommand;
 
@@ -20,13 +24,21 @@ internal class CreateSponsorCommandHandler(
 {
     public async Task<Result> HandleAsync(CreateSponsorCommand command, CancellationToken cancellationToken)
     {
+        var locationResult = GeoLocation.Create(command.Latitude, command.Longitude);
+        if (locationResult.Failed)
+            return locationResult;
+
+        var addressResult = Address.Create(command.Street, command.City, command.Region, command.PostalCode);
+        if (addressResult.Failed)
+            return addressResult;
+
         Result<Sponsor> result = Sponsor.Create(
             command.Title,
             command.Description,
             command.Type,
             command.Tier,
-            command.Location,
-            command.Address,
+            locationResult.Value,
+            addressResult.Value,
             command.StartDate,
             command.EndDate);
         

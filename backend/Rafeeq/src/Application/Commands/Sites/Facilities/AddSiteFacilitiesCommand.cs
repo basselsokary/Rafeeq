@@ -8,7 +8,6 @@ public record AddSiteFacilitiesCommand(
     List<AddSiteFacilitiesDtoCommand> Facilities) : ICommand;
 
 public record AddSiteFacilitiesDtoCommand(
-    Guid Id,
     string FacilityName,
     string FacilityDescription) : ICommand;
 

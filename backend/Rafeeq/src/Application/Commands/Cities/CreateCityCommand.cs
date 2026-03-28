@@ -7,7 +7,8 @@ namespace Application.Commands.Cities;
 public record CreateCityCommand(
     string Name,
     string Description,
-    GeoLocation CenterLocation) : ICommand;
+    double CenterLatitude,
+    double CenterLongitude) : ICommand;
 
 internal class CreateCityCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<CreateCityCommand>
@@ -16,7 +17,11 @@ internal class CreateCityCommandHandler(
 
     public async Task<Result> HandleAsync(CreateCityCommand command, CancellationToken cancellationToken)
     {
-        var cityResult = City.Create(command.Name, command.Description, command.CenterLocation);
+        var locationResult = GeoLocation.Create(command.CenterLatitude, command.CenterLongitude);
+        if (locationResult.Failed)
+            return locationResult;
+
+        var cityResult = City.Create(command.Name, command.Description, locationResult.Value);
         if (cityResult.Failed)
             return cityResult;
 
