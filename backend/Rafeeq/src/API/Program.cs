@@ -5,7 +5,7 @@ namespace API;
 
 public class Program
 {
-    public static async Task Main(string[] args)
+    public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +15,11 @@ public class Program
             .AddInfrastructure(builder.Configuration);
 
         var app = builder.Build();
+
+        Task.Run(async () =>
+        {
+            await app.Services.EnsureStaticDataAsync(builder.Configuration);
+        });
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
