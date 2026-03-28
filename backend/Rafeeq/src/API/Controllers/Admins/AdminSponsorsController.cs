@@ -1,4 +1,5 @@
 using API.Controllers.Base;
+using API.RequestDTOs;
 using Application.Commands.Sponsors;
 using Application.Commands.Sponsors.Images;
 using Application.Commands.Sponsors.Offers;
@@ -14,23 +15,47 @@ namespace API.Controllers.Admins;
 [Authorize(Roles = nameof(UserRole.Admin))]
 public class AdminSponsorsController : ApiBaseController
 {
+	public record CreateSponsorRequest(
+		string Title,
+		string Description,
+		SponsorType Type,
+		SponsorTier Tier,
+		LocationRequest Location,
+		AddressRequest Address,
+		DateTime StartDate,
+		DateTime EndDate);
+
 	[HttpPost]
 	public async Task<IActionResult> Create(
-		[FromBody] CreateSponsorCommand command,
+		[FromBody] CreateSponsorRequest request,
 		[FromServices] ICommandHandler<CreateSponsorCommand> commandHandler)
 	{
+		var command = new CreateSponsorCommand(
+			request.Title,
+			request.Description,
+			request.Type,
+			request.Tier,
+			request.Location.Latitude,
+			request.Location.Longitude,
+			request.Address.Street,
+			request.Address.City,
+			request.Address.Region,
+			request.Address.PostalCode,
+			request.StartDate,
+			request.EndDate);
+
 		var result = await commandHandler.HandleAsync(command);
 
 		return HandleResult(result);
 	}
-
+	
 	public record UpdateSponsorRequest(
 		string Title,
 		string Description,
 		SponsorType Type,
 		SponsorTier Tier,
-		GeoLocation Location,
-		Address Address,
+		LocationRequest Location,
+		AddressRequest Address,
 		DateTime StartDate,
 		DateTime EndDate);
 
@@ -46,8 +71,12 @@ public class AdminSponsorsController : ApiBaseController
 			request.Description,
 			request.Type,
 			request.Tier,
-			request.Location,
-			request.Address,
+			request.Location.Latitude,
+			request.Location.Longitude,
+			request.Address.Street,
+			request.Address.City,
+			request.Address.Region,
+			request.Address.PostalCode,
 			request.StartDate,
 			request.EndDate);
 
@@ -66,15 +95,15 @@ public class AdminSponsorsController : ApiBaseController
 		return HandleResult(result);
 	}
 
-	public record SetSponsorActivationRequest(bool Active);
+	public record ActivateSponsorRequest(bool Activate);
 
 	[HttpPatch("{id:guid}/activation")]
 	public async Task<IActionResult> SetActivation(
 		[FromRoute] Guid id,
-		[FromBody] SetSponsorActivationRequest request,
+		[FromBody] ActivateSponsorRequest request,
 		[FromServices] ICommandHandler<ActivateSponsorCommand> commandHandler)
 	{
-		var result = await commandHandler.HandleAsync(new ActivateSponsorCommand(id, request.Active));
+		var result = await commandHandler.HandleAsync(new ActivateSponsorCommand(id, request.Activate));
 
 		return HandleResult(result);
 	}
@@ -90,15 +119,7 @@ public class AdminSponsorsController : ApiBaseController
 		[FromBody] SetSponsorContactInfoRequest request,
 		[FromServices] ICommandHandler<SetSponsorContactInfoCommand> commandHandler)
 	{
-		var phoneResult = PhoneNumber.Create(request.Phone);
-		if (phoneResult.Failed)
-			return BadRequest(phoneResult.Error.Message);
-
-		var emailResult = Email.Create(request.Email);
-		if (emailResult.Failed)
-			return BadRequest(emailResult.Error.Message);
-
-		var command = new SetSponsorContactInfoCommand(id, phoneResult.Value, emailResult.Value, request.WebsiteUrl);
+		var command = new SetSponsorContactInfoCommand(id, request.Phone, request.Email, request.WebsiteUrl);
 		var result = await commandHandler.HandleAsync(command);
 
 		return HandleResult(result);

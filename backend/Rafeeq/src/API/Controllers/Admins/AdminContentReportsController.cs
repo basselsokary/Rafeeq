@@ -19,9 +19,9 @@ public class AdminContentReportsController : ApiBaseController
         [FromQuery] int? priority,
         [FromQuery] ReportStatus? status,
         [FromQuery] ReportReason? reason,
-        [FromQuery] int page,
-        [FromQuery] int pageSize,
-        [FromServices] IQueryHandler<GetContentReportsByHighPriorityQuery, PagedResult<ContentReportListDto>> queryHandler)
+		[FromServices] IQueryHandler<GetContentReportsByHighPriorityQuery, PagedResult<ContentReportListDto>> queryHandler,
+		[FromQuery] int page = 1,
+		[FromQuery] int pageSize = 20)
 	{
 		var paging = new PagingParameters(page, pageSize);
 
@@ -54,7 +54,7 @@ public class AdminContentReportsController : ApiBaseController
 	public record ResolveContentReportRequest(
 		string? Reason,
 		ModerationAction? Action,
-		string? Notes);
+		string? Notes = null);
 
 	[HttpPut("{id:guid}/resolve")]
 	public async Task<IActionResult> Resolve(

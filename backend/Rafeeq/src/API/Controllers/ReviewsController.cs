@@ -33,9 +33,9 @@ public class ReviewsController : ApiBaseController
 		[FromQuery] ReviewStatus? status,
 		[FromQuery] ReviewOrderBy? sortBy,
 		[FromQuery] int? rating,
-		[FromQuery] int page,
-		[FromQuery] int pageSize,
-		[FromServices] IQueryHandler<GetReviewsBySiteIdQuery, PagedResult<ReviewListDto>> queryHandler)
+		[FromServices] IQueryHandler<GetReviewsBySiteIdQuery, PagedResult<ReviewListDto>> queryHandler,
+		[FromQuery] int page = 1,
+		[FromQuery] int pageSize = 20)
 	{
 		var paging = new PagingParameters(page, pageSize);
 
@@ -53,9 +53,9 @@ public class ReviewsController : ApiBaseController
 
 	[HttpGet("me")]
 	public async Task<IActionResult> GetMyReviews(
-		[FromQuery] int page,
-		[FromQuery] int pageSize,
-		[FromServices] IQueryHandler<GetReviewsByUserIdQuery, PagedResult<TouristReviewDto>> queryHandler)
+		[FromServices] IQueryHandler<GetReviewsByUserIdQuery, PagedResult<TouristReviewDto>> queryHandler,
+		[FromQuery] int page = 1,
+		[FromQuery] int pageSize = 20)
 	{
 		var paging = new PagingParameters(page, pageSize);
 
@@ -75,7 +75,7 @@ public class ReviewsController : ApiBaseController
 	}
 
 	public record UpdateReviewRequest(
-		Rating Rating,
+		int Rating,
 		string Title,
 		string Content);
 

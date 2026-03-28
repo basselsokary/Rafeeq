@@ -25,9 +25,9 @@ public class AttractionsController : ApiBaseController
 	public async Task<IActionResult> GetAttractionsForSite(
 		[FromRoute] Guid siteId,
 		[FromQuery] AttractionType type,
-		[FromQuery] int pageNumber,
-		[FromQuery] int page,
-		[FromServices] IQueryHandler<GetAttractionsByTypeQuery, PagedResult<AttractionListDto>> queryHandler)
+		[FromServices] IQueryHandler<GetAttractionsByTypeQuery, PagedResult<AttractionListDto>> queryHandler,
+		[FromQuery] int page = 1,
+		[FromQuery] int pageNumber = 20)
 	{
 		var paging = new PagingParameters(pageNumber, page);
 

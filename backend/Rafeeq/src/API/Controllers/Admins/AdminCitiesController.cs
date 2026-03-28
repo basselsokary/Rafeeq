@@ -1,10 +1,10 @@
 using API.Controllers.Base;
+using API.RequestDTOs;
 using Application.Commands.Cities;
 using Application.Common.Interfaces.Messaging;
 using Application.DTOs.Cities;
 using Application.Queries.Cities;
 using Domain.Enums;
-using Domain.ValueObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,12 +23,12 @@ public class AdminCitiesController : ApiBaseController
 
 		return HandleResult(result);
 	}
-
-    [HttpPost]
+    
+	[HttpPost]
 	public async Task<IActionResult> Create(
 		[FromBody] CreateCityCommand command,
 		[FromServices] ICommandHandler<CreateCityCommand> commandHandler)
-	{
+	{		
 		var result = await commandHandler.HandleAsync(command);
 
 		return HandleResult(result);
@@ -37,7 +37,7 @@ public class AdminCitiesController : ApiBaseController
 	public record UpdateCityRequest(
 		string Name,
 		string Description,
-		GeoLocation CenterLocation,
+    	LocationRequest CenterLocation,
 		int DisplayOrder,
 		string? ImageUrl);
 
@@ -51,7 +51,8 @@ public class AdminCitiesController : ApiBaseController
 			id,
 			request.Name,
 			request.Description,
-			request.CenterLocation,
+			request.CenterLocation.Latitude,
+			request.CenterLocation.Longitude,
 			request.DisplayOrder,
 			request.ImageUrl);
 

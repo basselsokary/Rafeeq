@@ -1,6 +1,7 @@
 ﻿using API.Controllers.Base;
 using Application.Commands.Users;
 using Application.Common.Interfaces.Messaging;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -65,6 +66,17 @@ public class AuthController() : ApiBaseController
     {
         var result = await commandHandler.HandleAsync(new ConfirmEmailCommand(token));
     
+        return HandleResult(result);
+    }
+
+    [HttpPost("change-password")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword(
+        [FromBody] ChangePasswordCommand command,
+        [FromServices] ICommandHandler<ChangePasswordCommand> commandHandler)
+    {
+        var result = await commandHandler.HandleAsync(command);
+
         return HandleResult(result);
     }
 }

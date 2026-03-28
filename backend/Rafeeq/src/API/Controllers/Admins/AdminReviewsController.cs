@@ -17,9 +17,9 @@ public class AdminReviewsController : ApiBaseController
     [HttpGet("status/{status}")]
 	public async Task<IActionResult> GetByStatus(
 		[FromRoute] ReviewStatus status,
-		[FromQuery] int page,
-		[FromQuery] int pageSize,
-		[FromServices] IQueryHandler<GetReviewsByStatusQuery, PagedResult<ReviewListDto>> queryHandler)
+		[FromServices] IQueryHandler<GetReviewsByStatusQuery, PagedResult<ReviewListDto>> queryHandler,
+		[FromQuery] int page = 1,
+		[FromQuery] int pageSize = 20)
 	{
 		var paging = new PagingParameters(page, pageSize);
 
@@ -31,7 +31,7 @@ public class AdminReviewsController : ApiBaseController
     
     public record SetReviewStatusRequest(
 		ReviewStatus Status,
-		string RejectionReason = "");
+		string? RejectionReason = null);
 
 	[HttpPatch("{id:guid}/status")]
 	public async Task<IActionResult> SetStatus(
@@ -39,7 +39,7 @@ public class AdminReviewsController : ApiBaseController
 		[FromBody] SetReviewStatusRequest request,
 		[FromServices] ICommandHandler<SetReviewStatusCommand> commandHandler)
 	{
-		var command = new SetReviewStatusCommand(id, request.Status, request.RejectionReason);
+		var command = new SetReviewStatusCommand(id, request.Status, request.RejectionReason ?? string.Empty);
 		var result = await commandHandler.HandleAsync(command);
 
 		return HandleResult(result);

@@ -22,9 +22,9 @@ public class SponsorsController : ApiBaseController
 		[FromQuery] SponsorType? type,
 		[FromQuery] SponsorTier? tier,
 		[FromQuery] bool? activeOnly,
-		[FromQuery] int page,
-		[FromQuery] int pageSize,
-		[FromServices] IQueryHandler<GetSponsorsQuery, PagedResult<SponsorListDto>> queryHandler)
+		[FromServices] IQueryHandler<GetSponsorsQuery, PagedResult<SponsorListDto>> queryHandler,
+		[FromQuery] int page = 1,
+		[FromQuery] int pageSize = 20)
 	{
 		var filters = new SponsorFilters(type, tier, activeOnly);
 		var paging = new PagingParameters(page, pageSize);
@@ -80,9 +80,9 @@ public class SponsorsController : ApiBaseController
 		[FromQuery] SponsorTier? tier,
 		[FromQuery] bool? sponsorActiveOnly,
 		[FromQuery] bool activeOnly,
-		[FromQuery] int page,
-		[FromQuery] int pageSize,
-		[FromServices] IQueryHandler<GetAllSiteOffersAsync, PagedResult<SponsorOfferListDto>> queryHandler)
+		[FromServices] IQueryHandler<GetAllSiteOffersAsync, PagedResult<SponsorOfferListDto>> queryHandler,
+		[FromQuery] int page = 1,
+		[FromQuery] int pageSize = 20)
 	{
 		var filters = new SponsorFilters(type, tier, sponsorActiveOnly);
 		var paging = new PagingParameters(page, pageSize);

@@ -1,10 +1,12 @@
 using API.Controllers.Base;
+using API.RequestDTOs;
 using Application.Commands.Sites;
 using Application.Commands.Sites.Facilities;
 using Application.Commands.Sites.Images;
 using Application.Commands.Sites.LocalizedContents;
 using Application.Commands.Sites.OpeningHours;
 using Application.Common.Interfaces.Messaging;
+using Application.DTOs.Common;
 using Application.DTOs.Sites;
 using Application.Queries.Sites;
 using Domain.Enums;
@@ -28,11 +30,31 @@ public class AdminSitesController : ApiBaseController
         return HandleResult(result);
     }
 
+    public record CreateSiteRequest(
+        Guid CityId,
+        string Name,
+        string Description,
+        SiteType Type,
+        LocationRequest Location,
+        AddressRequest Address);
+
     [HttpPost]
     public async Task<IActionResult> Create(
-        [FromBody] CreateSiteCommand command,
+        [FromBody] CreateSiteRequest request,
         [FromServices] ICommandHandler<CreateSiteCommand> commandHandler)
     {
+        var command = new CreateSiteCommand(
+            request.CityId,
+            request.Name,
+            request.Description,
+            request.Type,
+            request.Location.Latitude,
+            request.Location.Longitude,
+            request.Address.Street,
+            request.Address.City,
+            request.Address.Region,
+            request.Address.PostalCode);
+
         var result = await commandHandler.HandleAsync(command);
 
         return HandleResult(result);
@@ -42,9 +64,9 @@ public class AdminSitesController : ApiBaseController
         string Name,
         string Description,
         SiteType Type,
-        GeoLocation Location,
-        Address Address,
-        Money? Fee);
+        LocationRequest Location,
+        AddressRequest Address,
+        decimal? Fee);
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(
@@ -57,8 +79,12 @@ public class AdminSitesController : ApiBaseController
             request.Name,
             request.Description,
             request.Type,
-            request.Location,
-            request.Address,
+            request.Location.Latitude,
+            request.Location.Longitude,
+            request.Address.Street,
+            request.Address.City,
+            request.Address.Region,
+            request.Address.PostalCode,
             request.Fee);
 
         var result = await commandHandler.HandleAsync(command);
@@ -77,7 +103,7 @@ public class AdminSitesController : ApiBaseController
         return HandleResult(result);
     }
 
-     public record ActivateSiteRequest(bool Activate);
+    public record ActivateSiteRequest(bool Activate);
 
     [HttpPut("{id:guid}/activate")]
     public async Task<IActionResult> Activate(
@@ -106,14 +132,13 @@ public class AdminSitesController : ApiBaseController
 
         return HandleResult(result);
     }
-
-    public record SetSiteStatusRequest(
-        SiteStatus Status);
     
+    public record SetStatusRequest(SiteStatus Status);
+
     [HttpPost("{id:guid}/status")]
     public async Task<IActionResult> SetStatus(
         [FromRoute] Guid id,
-        [FromBody] SetSiteStatusRequest request,
+        [FromBody] SetStatusRequest request,
         [FromServices] ICommandHandler<SetSiteStatusCommand> commandHandler)
     {
         var command = new SetSiteStatusCommand(id, request.Status);
@@ -121,6 +146,19 @@ public class AdminSitesController : ApiBaseController
 
         return HandleResult(result);
     }
+
+    public record MarkSiteAsFeaturedRequest(bool IsFeatured);
+
+	[HttpPut("{id:guid}/featured")]
+	public async Task<IActionResult> MarkAsFeatured(
+		[FromRoute] Guid id,
+		[FromBody] MarkSiteAsFeaturedRequest request,
+		[FromServices] ICommandHandler<MarkSiteAsFeaturedCommand> commandHandler)
+	{
+		var result = await commandHandler.HandleAsync(new MarkSiteAsFeaturedCommand(id, request.IsFeatured));
+
+		return HandleResult(result);
+	}
 
     [HttpPost("{id:guid}/localized-contents")]
     public async Task<IActionResult> AddLocalizedContents(

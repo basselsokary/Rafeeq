@@ -47,17 +47,35 @@ public abstract class ApiBaseController : ControllerBase
         return error.Type switch
         {
             ErrorType.NotFound => StatusCodes.Status404NotFound,
-            ErrorType.Validation => StatusCodes.Status422UnprocessableEntity,
+            ErrorType.Validation => StatusCodes.Status400BadRequest,
+            ErrorType.Failure => StatusCodes.Status400BadRequest,
             ErrorType.Conflict => StatusCodes.Status409Conflict,
             ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
             ErrorType.Forbidden => StatusCodes.Status403Forbidden,
-            ErrorType.Failure => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError
         };
     }
 
     private ProblemDetails CreateProblem(Error error, int statusCode)
     {
+        if (error is ValidationError validationError)
+        {
+            var errors = validationError.Errors
+                .GroupBy(e => e.Code)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(e => e.Message).ToArray()
+                );
+
+            return new ValidationProblemDetails(errors)
+            {
+                Title = error.Code,
+                Detail = error.Message,
+                Status = statusCode,
+                Instance = HttpContext.Request.Path
+            };
+        }
+
         return new ProblemDetails
         {
             Title = error.Code,

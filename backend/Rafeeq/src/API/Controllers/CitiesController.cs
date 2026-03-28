@@ -12,9 +12,9 @@ public class CitiesController : ApiBaseController
 {
 	[HttpGet]
 	public async Task<IActionResult> GetAll(
-		[FromQuery] int page,
-		[FromQuery] int pageSize,
-		[FromServices] IQueryHandler<GetCitiesQuery, PagedResult<CityListDto>> queryHandler)
+		[FromServices] IQueryHandler<GetCitiesQuery, PagedResult<CityListDto>> queryHandler,
+		[FromQuery] int page = 1,
+		[FromQuery] int pageSize = 20)
 	{
 		var paging = new PagingParameters(page, pageSize);
 

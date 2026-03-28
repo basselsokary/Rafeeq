@@ -23,9 +23,9 @@ public class SitesController : ApiBaseController
         [FromQuery] bool? isFree,
         [FromQuery] int? minRating,
         [FromQuery] int? maxRating,
-        [FromQuery] int page,
-        [FromQuery] int pageSize,
-        [FromServices] IQueryHandler<GetSitesQuery, PagedResult<SiteListDto>> queryHandler)
+        [FromServices] IQueryHandler<GetSitesQuery, PagedResult<SiteListDto>> queryHandler,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20)
     {
         var filters = new SiteFilters(type, city, isFree, minRating, maxRating);
         var paging = new PagingParameters(page, pageSize);

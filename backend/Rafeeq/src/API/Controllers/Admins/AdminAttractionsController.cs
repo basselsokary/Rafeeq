@@ -1,4 +1,5 @@
 using API.Controllers.Base;
+using API.RequestDTOs;
 using Application.Commands.Attractions;
 using Application.Commands.Attractions.Images;
 using Application.Commands.Attractions.LocalizedContents;
@@ -6,7 +7,6 @@ using Application.Common.Interfaces.Messaging;
 using Application.DTOs.Attractions;
 using Application.Queries.Attractions;
 using Domain.Enums;
-using Domain.ValueObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +40,7 @@ public class AdminAttractionsController : ApiBaseController
 		string Description,
 		AttractionType Type,
 		HistoricalPeriod HistoricalPeriod,
-		GeoLocation? ExactLocation,
+		LocationRequest ExactLocation,
 		string? LocationDescription);
 
 	[HttpPut("{id:guid}")]
@@ -55,7 +55,8 @@ public class AdminAttractionsController : ApiBaseController
 			request.Description,
 			request.Type,
 			request.HistoricalPeriod,
-			request.ExactLocation,
+			request.ExactLocation.Latitude,
+			request.ExactLocation.Longitude,
 			request.LocationDescription);
 
 		var result = await commandHandler.HandleAsync(command);
@@ -69,6 +70,19 @@ public class AdminAttractionsController : ApiBaseController
 		[FromServices] ICommandHandler<DeleteAttractionCommand> commandHandler)
 	{
 		var result = await commandHandler.HandleAsync(new DeleteAttractionCommand(id));
+
+		return HandleResult(result);
+	}
+
+	public record MarkAttractionAsFeaturedRequest(bool IsFeatured);
+
+	[HttpPut("{id:guid}/featured")]
+	public async Task<IActionResult> MarkAsFeatured(
+		[FromRoute] Guid id,
+		[FromBody] MarkAttractionAsFeaturedRequest request,
+		[FromServices] ICommandHandler<MarkAttractionAsFeaturedCommand> commandHandler)
+	{
+		var result = await commandHandler.HandleAsync(new MarkAttractionAsFeaturedCommand(id, request.IsFeatured));
 
 		return HandleResult(result);
 	}
