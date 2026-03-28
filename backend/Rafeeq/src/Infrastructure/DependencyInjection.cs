@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.Services;
+using System.Security.Claims;
 
 namespace Infrastructure;
 
@@ -65,18 +66,27 @@ public static class DependencyInjection
 
     private static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfiguration configuration)
     {
+        bool useStaticData = configuration.GetValue<bool>("StaticData:UseStaticData");
+
         services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
         {
-            options.UseSqlServer(
-                configuration.GetConnectionString("DefaultConnection"),
-                b =>
-                {
-                    b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
-                    b.EnableRetryOnFailure(
-                        maxRetryCount: 3,
-                        maxRetryDelay: TimeSpan.FromSeconds(5),
-                        errorNumbersToAdd: null);
-                });
+            if (useStaticData)
+            {
+                options.UseInMemoryDatabase("RafeeqStaticData");
+            }
+            else
+            {
+                options.UseSqlServer(
+                    configuration.GetConnectionString("DefaultConnection"),
+                    b =>
+                    {
+                        b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+                        b.EnableRetryOnFailure(
+                            maxRetryCount: 3,
+                            maxRetryDelay: TimeSpan.FromSeconds(5),
+                            errorNumbersToAdd: null);
+                    });
+            }
 
             options.EnableSensitiveDataLogging(false);
             options.EnableDetailedErrors(false);
@@ -151,9 +161,12 @@ public static class DependencyInjection
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
 
-        // Add JWT Authentication
-        var jwtSecret = configuration["JwtSettings:SecretKey"]
-            ?? throw new InvalidOperationException("JWT Secret not configured");
+        services.Configure<JwtSettings>(configuration.GetSection(nameof(JwtSettings)));
+
+        var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>()!;
+        
+        services.Configure<DataProtectionTokenProviderOptions>(options =>
+            options.TokenLifespan = TimeSpan.FromDays(jwtSettings.AccessTokenExpirationInMinutes));
 
         services.AddAuthentication(options =>
         {
@@ -164,17 +177,18 @@ public static class DependencyInjection
         .AddJwtBearer(options =>
         {
             options.SaveToken = true;
-            options.RequireHttpsMetadata = true;
+            options.RequireHttpsMetadata = false;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = configuration["JwtSettings:Issuer"],
-                ValidAudience = configuration["JwtSettings:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
-                ClockSkew = TimeSpan.Zero
+                ValidIssuer = jwtSettings.Issuer,
+                ValidAudience = jwtSettings.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+                // ClockSkew = TimeSpan.Zero,
+                NameClaimType = ClaimTypes.NameIdentifier // Important for UserIdentifier
             };
         });
 
