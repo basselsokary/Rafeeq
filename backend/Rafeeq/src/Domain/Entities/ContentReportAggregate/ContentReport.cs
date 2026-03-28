@@ -9,7 +9,7 @@ namespace Domain.Entities.ContentReportAggregate;
 public class ContentReport : BaseAuditableEntity, IAggregateRoot
 {
     public Guid ReportedBy { get; private set; }
-    public Guid ReportedEntityId { get; private set; }
+    public Guid ContentId { get; private set; }
     // public string ReportedEntityType { get; private set; }
 
     public ReportReason Reason { get; private set; }
@@ -26,12 +26,12 @@ public class ContentReport : BaseAuditableEntity, IAggregateRoot
     private ContentReport() { }
     private ContentReport(
         Guid reportedBy,
-        Guid reportedEntityId,
+        Guid contentId,
         ReportReason reason,
         string description)
     {
         ReportedBy = reportedBy;
-        ReportedEntityId = reportedEntityId;
+        ContentId = contentId;
         Reason = reason;
         Description = description;
         

@@ -8,6 +8,7 @@ public class DateRange : ValueObject
     public DateTime StartDate { get; }
     public DateTime EndDate { get; }
 
+    private DateRange() { }
     private DateRange(DateTime startDate, DateTime endDate)
     {
         StartDate = startDate;

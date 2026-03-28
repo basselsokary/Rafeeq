@@ -10,8 +10,9 @@ public sealed class Email : ValueObject
     private static readonly Regex EmailRegex = new(
         @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$", RegexOptions.IgnoreCase);
 
-    public string Value { get; }
+    public string Value { get; } = null!;
 
+    private Email() { }
     private Email(string value)
     {
         Value = value;

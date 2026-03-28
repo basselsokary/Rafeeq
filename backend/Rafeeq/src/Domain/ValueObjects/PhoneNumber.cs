@@ -9,8 +9,9 @@ public sealed class PhoneNumber : ValueObject
     // +201234567890 | 01234567890 | 12345
     private static readonly Regex PhoneRegex = new(@"^((\+201|01)[0-9]\d{8}|\d{5})$");
 
-    public string Value { get; }
+    public string Value { get; } = null!;
 
+    private PhoneNumber() { }
     private PhoneNumber(string value)
     {
         Value = value;

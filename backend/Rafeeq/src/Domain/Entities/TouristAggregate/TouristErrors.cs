@@ -27,33 +27,6 @@ public class TouristErrors
     
     public static Error SiteAlreadyFavorite => 
         Error.Conflict("SITE_ALREADY_FAVORITE", "Site is already in favorites.");
-    
-    public static Error DiscountRequired => 
-        Error.Validation("USER_DISCOUNT_REQUIRED", "Either discount amount or percentage must be provided.");
-
-    public static Error InvalidCredentials =>
-        Error.Failure("INVALID_CREDENTAILS", "Email or password is wrong.");
-
-    public static Error EmailAlreadyInUse =>
-        Error.Conflict("EMAIL_ALREADY_IN_USE", "User with this email already exists.");
-
-    public static Error InActiveUser =>
-        Error.Failure("IN_ACTIVE_USER", "Account is deactivated.");
-
-    public static Error LockedAccount =>
-        Error.Failure("LOCKED_ACCOUNT", "Account is locked out.");
-
-    public static Error InvalidToken =>
-        Error.Failure("INVALID_TOKEN", "Invalid access token.");
-    
-    public static Error InvalidRefreshToken =>
-        Error.Failure("INVALID_REFRESH_TOKEN", "Invalid or expired refresh token.");
-    
-    public static Error InvalidClaims =>
-        Error.Failure("INVALID_CLAIMS", "Invalid token claims.");
-
-    public static Error SomethingWentWrong() =>
-        Error.Failure("SOMETHING_WENT_WRONG", "Something went wrong.");
 
     public static Error RequiredUserId
         => Error.Validation("USER_ID_REQUIRED", "User ID is required.");

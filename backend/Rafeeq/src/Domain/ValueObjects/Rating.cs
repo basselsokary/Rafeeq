@@ -8,6 +8,7 @@ public class Rating : ValueObject
 {
     public int Value { get; }
 
+    private Rating() { }
     private Rating(int value)
     {
         Value = value;

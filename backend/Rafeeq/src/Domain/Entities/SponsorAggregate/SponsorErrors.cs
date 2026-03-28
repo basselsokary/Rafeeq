@@ -71,4 +71,8 @@ public class SponsorErrors
     public static Error InvalidAverageRating =>
         Error.Validation(
             "SPONSOR_INVALID_AVERAGE_RATING", $"Average rating must be between 0 and {DomainConstants.Review.MaxRatingValue}.");
+
+    public static Error NewEndDateMustBeLater =>
+        Error.Validation(
+            "SPONSOR_INVALID_NEW_DATE", "New end date must be later than current end date.");
 }

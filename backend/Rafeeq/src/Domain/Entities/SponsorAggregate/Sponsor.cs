@@ -208,15 +208,20 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         string description,
         Money? discount,
         int? discountPercentage,
+        DateRange validityPeriod,
         string? termsAndConditions)
     {
         var offer = _offers.FirstOrDefault(o => o.Id == offerId);
         if (offer == null)
             return SponsorErrors.OfferNotFound(offerId);
 
-        var offerResult = offer.Update(title, description, discount, discountPercentage, termsAndConditions);
-        if (offerResult.Failed)
-            return offerResult;
+        var result = offer.Update(title, description, discount, discountPercentage, termsAndConditions);
+        if (result.Failed)
+            return result;
+
+        result = offer.ExtendValidity(validityPeriod.EndDate);
+        if (result.Failed)
+            return result;
 
         MarkAsUpdated();
 

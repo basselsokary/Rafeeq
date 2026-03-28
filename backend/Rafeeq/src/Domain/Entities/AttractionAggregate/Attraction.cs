@@ -15,9 +15,12 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
     public string? MainImageUrl { get; private set; }
     public AttractionType Type { get; private set; }
     public HistoricalPeriod HistoricalPeriod { get; private set; }
+    
     public GeoLocation? Location { get; private set; } // Specific GPS if available
     public string? LocationDescription { get; private set; } // e.g., "North side of main hall"
     
+    public bool IsFeatured { get; private set; }
+
     private readonly List<AttractionImage> _images = [];
     public IReadOnlyCollection<AttractionImage> Images => _images.AsReadOnly();
     
@@ -91,6 +94,15 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
             LocationDescription = locationDescription?.Trim();
             MarkAsUpdated();
         }
+    }
+
+    public void SetAsFeatured(bool isFeatured)
+    {
+        if (IsFeatured == isFeatured)
+            return;
+        
+        IsFeatured = isFeatured;
+        MarkAsUpdated();
     }
 
     public Result AddImage(string imageUrl, bool isMain, int displayOrder, string? caption = null)

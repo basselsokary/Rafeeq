@@ -103,6 +103,24 @@ public class Offer : BaseAuditableEntity
         return Result.Success();
     }
 
+    public Result ExtendValidity(DateTime newEndDate)
+    {
+        if (!IsActive)
+            return SponsorErrors.InactiveOffer;
+
+        if (newEndDate <= ValidityPeriod.EndDate)
+            return SponsorErrors.NewEndDateMustBeLater;
+
+        var result = DateRange.Create(ValidityPeriod.StartDate, newEndDate);
+        if (result.Failed)
+            return result;
+
+        ValidityPeriod = result.Value;
+        MarkAsUpdated();
+
+        return Result.Success();
+    }
+
     internal Result Redeem()
     {
         if (!IsActive)
@@ -142,10 +160,19 @@ public class Offer : BaseAuditableEntity
         return Result.Success();
     }
 
-    public Result Activate()
+    public Result Activate(DateRange? validityPeriod = null)
     {
-        if (!IsValid())
+        if (!IsValid(validityPeriod?.EndDate))
             return SponsorErrors.InactiveOffer;
+        
+        if (validityPeriod != null)
+        {
+             var result = DateRange.Create(validityPeriod.StartDate, validityPeriod.EndDate);
+             if (result.Failed)
+                 return result;
+
+             ValidityPeriod = result.Value;
+        }
 
         IsActive = true;
         MarkAsUpdated();
@@ -159,9 +186,9 @@ public class Offer : BaseAuditableEntity
         MarkAsUpdated();
     }
 
-    public bool IsValid()
+    public bool IsValid(DateTime? referenceDate = null)
     {
-        var now = DateTime.UtcNow;
+        var now = referenceDate ?? DateTime.UtcNow;
         return ValidityPeriod.IsWithinRange(now);
     }
 
