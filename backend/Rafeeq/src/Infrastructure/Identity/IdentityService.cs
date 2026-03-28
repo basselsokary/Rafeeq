@@ -79,7 +79,7 @@ internal class IdentityService(
 
         var roles = await userManager.GetRolesAsync(user);
         var accessToken = jwtTokenGenerator.GenerateAccessToken(user, roles);
-        var refreshToken = JwtTokenGenerator.GenerateRefreshToken();
+        var refreshToken = jwtTokenGenerator.GenerateRefreshToken();
 
         // Save refresh token
         Result saveTokenResult = await SaveRefreshTokenAsync(user.Id, refreshToken);
@@ -124,7 +124,7 @@ internal class IdentityService(
 
         var roles = await userManager.GetRolesAsync(user);
         var newAccessToken = jwtTokenGenerator.GenerateAccessToken(user, roles);
-        var newRefreshToken = JwtTokenGenerator.GenerateRefreshToken();
+        var newRefreshToken = jwtTokenGenerator.GenerateRefreshToken();
 
         await appContext.SaveChangesAsync();
 
@@ -227,7 +227,7 @@ internal class IdentityService(
         var refreshTokenResult = RefreshToken.Create(
             token,
             userId,
-            DateTime.UtcNow.AddDays(7)
+            DateTime.UtcNow.AddDays(jwtTokenGenerator.GetRefreshTokenExpiryInDays)
         );
 
         if (refreshTokenResult.Failed)
