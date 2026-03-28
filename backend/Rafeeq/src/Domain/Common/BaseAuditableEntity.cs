@@ -5,7 +5,7 @@ public class BaseAuditableEntity : BaseEntity
     public DateTime CreatedAt { get; protected set; } = DateTime.UtcNow;
     // public string? CreatedBy { get; protected set; }
 
-    public DateTime LastModified { get; protected set; } = DateTime.UtcNow;
+    public DateTime LastModifiedAt { get; protected set; } = DateTime.UtcNow;
     // public string? LastModifiedBy { get; protected set; }
 
     protected BaseAuditableEntity() : base()
@@ -18,6 +18,6 @@ public class BaseAuditableEntity : BaseEntity
 
     protected void MarkAsUpdated()
     {
-        LastModified = DateTime.UtcNow;
+        LastModifiedAt = DateTime.UtcNow;
     }
 }

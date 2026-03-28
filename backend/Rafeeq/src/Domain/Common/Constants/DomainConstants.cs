@@ -67,6 +67,6 @@ public static class DomainConstants
 
     public static class RefreshToken
     {
-        public const int MaxRefreshTokenLength = 64;
+        public const int MaxRefreshTokenLength = 128;
     }
 }
