@@ -1,26 +1,11 @@
+using Application.DTOs.Common;
+
 namespace Application.DTOs.Attractions;
 
-/// <summary>
-/// Lightweight DTO for site list views (mobile list, search results)
-/// </summary>
 public record AttractionListDto(
     Guid Id,
     string Name,
     string ShortDescription,
     string Type,
-    string Status,
-    double Latitude,
-    double Longitude,
-    string City,
-    string? PrimaryImageUrl,
-    double AverageRating,
-    int TotalReviews,
-    decimal? EntryFeeAmount,
-    string? EntryFeeCurrency,
-    bool IsFree,
-    int EstimatedDurationMinutes,
-    string Accessibility,
-    bool IsFeatured,
-    bool IsPopular,
-    double? DistanceKm,
-    bool? IsCurrentlyOpen);
+    LocationDto? Location,
+    string? PrimaryImageUrl);

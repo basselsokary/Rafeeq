@@ -1,9 +1,9 @@
 namespace Application.DTOs.Reviews;
 
 /// <summary>
-/// User review DTO (reviews by specific user)
+/// Tourist review DTO (reviews by specific user)
 /// </summary>
-public record UserReviewDto(
+public record TouristReviewDto(
     Guid Id,
     Guid SiteId,
     string SiteName,

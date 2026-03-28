@@ -1,15 +1,16 @@
-namespace Application.DTOs.Users;
+namespace Application.DTOs.Tourists;
 
 /// <summary>
-/// Favorite site DTO
+/// Visited Site DTO
 /// </summary>
-public record FavoriteSiteDto(
+public record VisitedSiteDto(
     Guid Id,
     Guid SiteId,
     string SiteName,
     string SiteType,
     string? SiteImageUrl,
     string City,
-    double AverageRating,
+    DateTime VisitDate,
+    int DurationMinutes,
     string? Notes,
-    DateTime AddedAt);
+    bool HasReviewed);

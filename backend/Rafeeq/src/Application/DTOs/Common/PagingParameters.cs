@@ -1,8 +1,5 @@
 namespace Application.DTOs.Common;
 
-/// <summary>
-/// Paging parameters
-/// </summary>
 public record PagingParameters(
     int PageNumber = 1,
     int PageSize = 20)

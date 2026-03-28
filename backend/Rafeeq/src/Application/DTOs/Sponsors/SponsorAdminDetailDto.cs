@@ -2,7 +2,7 @@ using Application.DTOs.Common;
 
 namespace Application.DTOs.Sponsors;
 
-public record SponsorDetailDto(
+public record SponsorAdminDetailDto(
     Guid Id,
     string Name,
     string Description,
@@ -15,12 +15,16 @@ public record SponsorDetailDto(
     string? Website,
     double AverageRating,
     int TotalReviews,
-    List<ImageDto> Images,
-    List<SponsorOfferDto> ActiveOffers,
     DateTime ContractStartDate,
     DateTime ContractEndDate,
     bool IsContractValid,
     bool IsActive,
     int TotalClicks,
     int TotalRedemptions,
-    double? DistanceKm);
+    double? DistanceKm,
+    DateTime CreatedAt,
+    Guid CreatedBy,
+    string CreatedByName,
+    DateTime? LastModifiedAt,
+    Guid? LastModifiedBy,
+    string? LastModifiedByName);

@@ -5,11 +5,10 @@ namespace Application.DTOs.Sponsors;
 /// </summary>
 public record SponsorListDto(
     Guid Id,
-    string Name,
+    string Title,
     string ShortDescription,
     string Type,
     string Tier,
-    string City,
     double Latitude,
     double Longitude,
     string? PrimaryImageUrl,

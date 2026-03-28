@@ -3,7 +3,7 @@ using Domain.Enums;
 
 namespace Application.DTOs.Attractions;
 
-public record AttractionDetailDto(
+public record AttractionAdminDetailDto(
     Guid Id,
     string Name,
     string Description,
@@ -11,4 +11,6 @@ public record AttractionDetailDto(
     LocationDto? Location,
     HistoricalPeriod HistoricalPeriod,
     string? LocationDescription,
-    List<ImageDto> Images);
+    List<ImageDto> Images,
+    DateTime CreatedAt,
+    DateTime? UpdatedAt);

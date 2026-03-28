@@ -1,10 +1,10 @@
-namespace Application.DTOs.Users;
+namespace Application.DTOs.Tourists;
 
 /// <summary>
-/// User statistics DTO
+/// Tourist statistics DTO
 /// </summary>
-public record UserStatisticsDto(
-    Guid UserId,
+public record TouristStatisticsDto(
+    Guid TouristId,
     int TotalTrips,
     int CompletedTrips,
     int PlannedTrips,

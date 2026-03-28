@@ -1,9 +1,9 @@
-namespace Application.DTOs.Users;
+namespace Application.DTOs.Tourists;
 
 /// <summary>
 /// Lightweight user DTO for lists
 /// </summary>
-public record UserListDto(
+public record TouristListDto(
     Guid Id,
     string FullName,
     string Email,
