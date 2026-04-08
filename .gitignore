@@ -5,8 +5,13 @@ Thumbs.db
 # IDEs
 .vscode/
 .idea/
+dataset/
 *.user
 
 # Secrets
 .env
 .env.*
+
+# Others
+docs/notes.txt
+.temp/

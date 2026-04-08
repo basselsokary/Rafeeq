@@ -6,4 +6,32 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.1" />
+    <PackageReference Include="Scrutor" Version="7.0.0" />
+    <PackageReference Include="Serilog" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\Trips\Validators\" />
+    <Folder Include="Commands\Trips\" />
+    <Folder Include="Commands\Users\Admins\" />
+    <Folder Include="Commands\Users\Moderators\" />
+    <Folder Include="Commands\Users\Moderators\Validators\" />
+    <Folder Include="Commands\Users\Tourists\Favorites\" />
+    <Folder Include="Common\Interfaces\Services\" />
+    <Folder Include="DTOs\Email\" />
+    <Folder Include="EventHandlers\Attractions\" />
+    <Folder Include="EventHandlers\ContentReports\" />
+    <Folder Include="EventHandlers\Reviews\" />
+    <Folder Include="EventHandlers\Sites\" />
+    <Folder Include="Queries\Sponsors\Validators" />
+  </ItemGroup>
+
 </Project>

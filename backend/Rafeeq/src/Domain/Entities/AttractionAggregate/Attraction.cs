@@ -1,0 +1,189 @@
+using Domain.Common;
+using Domain.Common.Interfaces;
+using Domain.Enums;
+using Domain.ValueObjects;
+using Shared.Models;
+
+namespace Domain.Entities.AttractionAggregate;
+
+public class Attraction : BaseAuditableEntity, IAggregateRoot
+{
+    public Guid SiteId { get; private set; }
+
+    public string Name { get; private set; } = null!;
+    public string Description { get; private set; } = null!;
+    public string? MainImageUrl { get; private set; }
+    public AttractionType Type { get; private set; }
+    public HistoricalPeriod HistoricalPeriod { get; private set; }
+    
+    public GeoLocation? Location { get; private set; } // Specific GPS if available
+    public string? LocationDescription { get; private set; } // e.g., "North side of main hall"
+    
+    public bool IsFeatured { get; private set; }
+
+    private readonly List<AttractionImage> _images = [];
+    public IReadOnlyCollection<AttractionImage> Images => _images.AsReadOnly();
+    
+    private readonly List<AttractionLocalizedContent> _localizedContents = [];
+    public IReadOnlyCollection<AttractionLocalizedContent> LocalizedContents => _localizedContents.AsReadOnly();
+
+    private Attraction() { }
+    private Attraction(
+        Guid siteId,
+        string name,
+        string description,
+        AttractionType type,
+        HistoricalPeriod historicalPeriod)
+    {
+        SiteId = siteId;
+        Name = name;
+        Description = description;
+        Type = type;
+        HistoricalPeriod = historicalPeriod;
+    }
+
+    public static Result<Attraction> Create(
+        Guid siteId,
+        string name,
+        string description,
+        AttractionType type,
+        HistoricalPeriod historicalPeriod = HistoricalPeriod.Unknown)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return AttractionErrors.NameRequired;
+
+        if (string.IsNullOrWhiteSpace(description))
+            return AttractionErrors.DescriptionRequired;
+
+        var attraction = new Attraction(
+            siteId,
+            name.Trim(),
+            description.Trim(),
+            type,
+            historicalPeriod);
+
+        return attraction;
+    }
+
+    public Result UpdateBasicInfo(
+        string name,
+        string description,
+        AttractionType type,
+        HistoricalPeriod historicalPeriod)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return AttractionErrors.NameRequired;
+
+        if (string.IsNullOrWhiteSpace(description))
+            return AttractionErrors.DescriptionRequired;
+
+        Name = name.Trim();
+        Description = description.Trim();
+        Type = type;
+        HistoricalPeriod = historicalPeriod;
+        MarkAsUpdated();
+
+        return Result.Success();
+    }
+
+    public void SetLocation(GeoLocation? exactLocation, string? locationDescription)
+    {
+        if (exactLocation != null || locationDescription != null)
+        {   
+            Location = exactLocation;
+            LocationDescription = locationDescription?.Trim();
+            MarkAsUpdated();
+        }
+    }
+
+    public void SetAsFeatured(bool isFeatured)
+    {
+        if (IsFeatured == isFeatured)
+            return;
+        
+        IsFeatured = isFeatured;
+        MarkAsUpdated();
+    }
+
+    public Result AddImage(string imageUrl, bool isMain, int displayOrder, string? caption = null)
+    {
+        var imageResult = AttractionImage.Create(imageUrl, isMain, displayOrder, caption);
+        if (imageResult.Failed)
+            return imageResult;
+
+        if (isMain)
+        {
+            foreach (var img in _images)
+                img.SetAsMain(false);
+
+            SetMainImage(imageUrl);
+        }
+
+        _images.Add(imageResult.Value);
+        MarkAsUpdated();
+
+        return Result.Success();
+    }
+
+    public Result RemoveImage(Guid imageId)
+    {
+        var image = _images.FirstOrDefault(i => i.Id == imageId);
+        if (image == null)
+            return AttractionErrors.ImageNotFound;
+
+        _images.Remove(image);
+        if (image.IsMain && _images.Count > 0)
+        {
+            var newMain = _images.First();
+            newMain.SetAsMain(true);
+            SetMainImage(newMain.ImageUrl);
+        }
+        else if (image.IsMain)
+        {
+            MainImageUrl = null;
+        }
+        
+        MarkAsUpdated();
+
+        return Result.Success();
+    }
+
+    public Result AddLocalizedContent(LanguageCode language, string name, string description)
+    {
+        var contentResult = AttractionLocalizedContent.Create(language, name, description);
+        if (contentResult.Failed)
+            return contentResult;
+        
+        var existing = _localizedContents.FirstOrDefault(lc => lc.Language == language);
+        if (existing != null)
+            _localizedContents.Remove(existing);
+
+        _localizedContents.Add(contentResult.Value);
+        MarkAsUpdated();
+
+        return Result.Success();
+    }
+
+    public Result UpdateLocalizedContent(Guid contentId, string name, string description)
+    {
+        var existing = _localizedContents.FirstOrDefault(lc => lc.Id == contentId);
+        if (existing == null)
+            return AttractionErrors.LocalizedContentNotFound;
+
+        Result result = existing.Update(name, description);
+        if (result.Failed)
+            return result;
+        
+        MarkAsUpdated();
+
+        return Result.Success();
+    }
+
+    private void SetMainImage(string imageUrl)
+    {
+        if (MainImageUrl != imageUrl)
+        {
+            MainImageUrl = imageUrl;
+        }
+    }
+}
