@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-model = load_model("C:/Users/Abdulla/Downloads/model.h5")
+model = load_model("../model/model.h5")
 print("✅ Model loaded successfully!")
 
 classes = [
