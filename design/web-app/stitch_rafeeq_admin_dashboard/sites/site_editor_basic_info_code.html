@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit Site: Pyramids of Giza | Rafeeq Site Editor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700&amp;family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"surface-bright": "#fff8f0", "on-secondary-container": "#78592b", "inverse-primary": "#efbd8a", "error-container": "#ffdad6", "surface-container": "#f3ede5", "on-secondary": "#ffffff", "on-tertiary-fixed-variant": "#524530", "on-primary-fixed": "#2c1700", "on-tertiary-fixed": "#241a08", "on-secondary-fixed-variant": "#5d4115", tertiary: "#6b5c46", "surface-tint": "#7c572d", "secondary-container": "#fed39a", "primary-fixed-dim": "#efbd8a", "on-secondary-fixed": "#291800", "tertiary-container": "#bdab91", "on-surface": "#1d1b17", "outline-variant": "#d4c4b7", "surface-container-high": "#ede7df", "on-background": "#1d1b17", "surface-dim": "#dfd9d1", "tertiary-fixed-dim": "#d7c4a8", primary: "#7c572d", "on-tertiary": "#ffffff", "surface-container-low": "#f9f3eb", "primary-fixed": "#ffdcbc", "on-surface-variant": "#50453b", "on-error-container": "#93000a", "secondary-fixed": "#ffddb2", secondary: "#78592a", "surface-variant": "#e7e2da", "inverse-surface": "#32302b", "on-primary": "#ffffff", "on-tertiary-container": "#4c3f2b", "on-primary-fixed-variant": "#614018", error: "#ba1a1a", "surface-container-lowest": "#ffffff", "on-error": "#ffffff", "inverse-on-surface": "#f6f0e8", "surface-container-highest": "#e7e2da", "on-primary-container": "#5b3a13", "tertiary-fixed": "#f4e0c3", "secondary-fixed-dim": "#e9c088", "primary-container": "#d4a574", background: "#fff8f0", outline: "#827569", surface: "#fff8f0"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, fontFamily: {headline: ["Epilogue"], body: ["Manrope"], label: ["Manrope"], display: "Epilogue"}}}};</script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .pyramid-accent { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 12px, 12px 0%); }
+        .glass-nav { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 flex justify-between items-center px-8 h-16 w-full shadow-blue-900/5 shadow-xl border-none">
+<div class="flex items-center gap-6">
+<button class="flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors active:scale-95 duration-150 ease-in-out font-inter text-sm font-medium tracking-tight">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+            Back to Sites
+        </button>
+<div class="h-6 w-px bg-outline-variant/30"></div>
+<div class="flex flex-col">
+<h1 class="text-lg font-bold tracking-tighter text-blue-900 dark:text-blue-100">Edit Site: Pyramids of Giza</h1>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-[10px] uppercase tracking-widest font-bold text-secondary">Active</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary border border-primary/30 rounded-lg hover:bg-primary/5 transition-all duration-300 active:scale-95">
+<span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span>
+            Preview
+        </button>
+</div>
+</header>
+<nav class="sticky top-16 z-40 bg-white border-b border-outline-variant/20 shadow-sm">
+<div class="max-w-[1200px] mx-auto px-8 flex items-center gap-8 h-12">
+<a class="text-primary border-b-2 border-primary h-full flex items-center font-bold text-sm tracking-tight transition-colors" href="#">
+            Basic Info
+        </a>
+<a class="text-slate-500 hover:text-primary h-full flex items-center font-medium text-sm tracking-tight transition-colors gap-1.5" href="#">
+            Localization 
+            <span class="px-2 py-0.5 rounded-full bg-surface-container-high text-[10px] font-bold text-on-surface-variant">3</span>
+</a>
+<a class="text-slate-500 hover:text-primary h-full flex items-center font-medium text-sm tracking-tight transition-colors gap-1.5" href="#">
+            Images &amp; Media 
+            <span class="px-2 py-0.5 rounded-full bg-surface-container-high text-[10px] font-bold text-on-surface-variant">8</span>
+</a>
+<a class="text-slate-500 hover:text-primary h-full flex items-center font-medium text-sm tracking-tight transition-colors" href="#">
+            Opening Hours
+        </a>
+<a class="text-slate-500 hover:text-primary h-full flex items-center font-medium text-sm tracking-tight transition-colors" href="#">
+            Transportation
+        </a>
+<a class="text-slate-500 hover:text-primary h-full flex items-center font-medium text-sm tracking-tight transition-colors" href="#">
+            Facilities
+        </a>
+</div>
+</nav>
+<main class="max-w-[1200px] mx-auto px-8 py-8">
+<div class="space-y-10">
+<!-- Section: Basic Information -->
+<section class="space-y-8">
+<div class="flex items-end justify-between">
+<div>
+<span class="text-[10px] font-bold tracking-[0.1em] text-outline uppercase mb-2 block">Core Identity</span>
+<h2 class="text-3xl font-extrabold tracking-tight text-primary">Basic Info</h2>
+</div>
+</div>
+<!-- Grid Layout for Inputs -->
+<div class="grid grid-cols-2 gap-6">
+<div class="col-span-1 space-y-2">
+<label class="text-xs font-bold text-on-surface-variant tracking-wide uppercase">City &amp; Region</label>
+<div class="relative group">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline group-focus-within:text-primary transition-colors" data-icon="location_city">location_city</span>
+<select class="w-full pl-12 pr-4 py-3 bg-surface-container-lowest rounded-lg border border-outline-variant/30 focus:border-primary focus:ring-4 focus:ring-primary-fixed outline-none appearance-none transition-all">
+<option>Giza (Giza Governorate)</option>
+<option>Cairo</option>
+<option>Luxor</option>
+</select>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="col-span-1 space-y-2">
+<label class="text-xs font-bold text-on-surface-variant tracking-wide uppercase">Site Category</label>
+<div class="flex items-center gap-3 p-3 bg-primary/5 border-2 border-primary/20 rounded-lg h-[52px]">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-white shrink-0">
+<span class="material-symbols-outlined text-lg" data-icon="account_balance">account_balance</span>
+</div>
+<div>
+<p class="text-sm font-bold text-primary leading-tight">Historical</p>
+<p class="text-[10px] text-primary/60 font-medium">Selected Archeological Site</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Map Section -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<label class="text-xs font-bold text-on-surface-variant tracking-wide uppercase">Location &amp; Geodata</label>
+<div class="flex gap-2">
+<button class="text-[11px] font-bold flex items-center gap-1 px-3 py-1.5 bg-surface-container-high rounded-full hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-xs" data-icon="my_location">my_location</span> Detect Location
+                        </button>
+</div>
+</div>
+<div class="relative rounded-xl overflow-hidden shadow-2xl shadow-blue-900/5 bg-surface-container-low group">
+<div class="w-full h-[400px] bg-slate-200 relative overflow-hidden">
+<img class="w-full h-full object-cover grayscale-[0.5] opacity-80" data-alt="detailed satellite topography map of the Giza Plateau showing the three Great Pyramids and the Sphinx in high resolution" data-location="Giza" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvsTRxFCRNoAqU5MeKReOfgNONbXV4xxJVDYHhwDGleB-rs11V7WBxJC5fXdZ_NTbY-gbrrMjDrZsXYlo9Od_c7vZ7XfwF6w-rpLLOL0QyAKkoKAW2zJmMHmfGqpYFrFjgYdzVyEqQEcrIkm5dnkAnz7BG2M8vc96lp_8jifNBQnaV8vi8FZdmZr7bsc2jyQ3MyBO318Fc-YA7_WbK5coNAzkdqRiFrVQXDrxLbafYYn_uaGzEsTRMuN_ayhP2hpLdhFIVd5jRnYaF"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="relative">
+<span class="material-symbols-outlined text-primary text-5xl animate-bounce" data-icon="location_on" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<div class="absolute bottom-[-10px] left-1/2 -translate-x-1/2 w-4 h-1.5 bg-black/20 rounded-[100%] blur-[2px]"></div>
+</div>
+</div>
+<div class="absolute top-4 left-4 right-4 max-w-md">
+<div class="bg-surface-container-lowest/90 backdrop-blur shadow-xl rounded-lg p-1.5 flex items-center border border-white/50">
+<span class="material-symbols-outlined ml-3 text-outline" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 w-full text-sm font-medium px-3" placeholder="Search coordinates or landmarks..." type="text" value="29.9792, 31.1342"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pricing & Designations -->
+<div class="grid grid-cols-2 gap-6">
+<div class="space-y-4">
+<label class="text-xs font-bold text-on-surface-variant tracking-wide uppercase">Access &amp; Pricing</label>
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/20 flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="payments" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+<div>
+<p class="text-sm font-bold">Paid Entry</p>
+<p class="text-xs text-on-surface-variant">Standard adult ticket</p>
+</div>
+</div>
+<div class="text-right">
+<input class="w-24 text-right font-bold text-lg text-primary bg-surface-container-low border-none rounded p-1 focus:ring-2 focus:ring-primary/20" type="text" value="200.00"/>
+<span class="text-[10px] font-bold block text-outline">EGP</span>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<label class="text-xs font-bold text-on-surface-variant tracking-wide uppercase">Site Designations</label>
+<div class="flex flex-col gap-3">
+<label class="flex items-center justify-between p-4 bg-tertiary-fixed/20 border-2 border-tertiary-fixed-dim/30 rounded-xl cursor-pointer group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold text-on-tertiary-fixed-variant">Featured Site</span>
+</div>
+<input checked="" class="rounded border-tertiary text-tertiary focus:ring-tertiary w-5 h-5" type="checkbox"/>
+</label>
+</div>
+</div>
+</div>
+<!-- Contact Info -->
+<div class="space-y-4">
+<label class="text-xs font-bold text-on-surface-variant tracking-wide uppercase">Contact &amp; Digital Presence</label>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-surface-container-lowest rounded-xl border border-outline-variant/15 flex items-center gap-4">
+<span class="material-symbols-outlined text-outline" data-icon="call">call</span>
+<div class="flex-1">
+<span class="text-[10px] text-outline font-bold block">PHONE</span>
+<input class="w-full bg-transparent border-none p-0 text-sm font-semibold focus:ring-0" type="text" value="+20 (0) 2 33856350"/>
+</div>
+</div>
+<div class="p-4 bg-surface-container-lowest rounded-xl border border-outline-variant/15 flex items-center gap-4">
+<span class="material-symbols-outlined text-outline" data-icon="public">public</span>
+<div class="flex-1">
+<span class="text-[10px] text-outline font-bold block">WEBSITE</span>
+<input class="w-full bg-transparent border-none p-0 text-sm font-semibold focus:ring-0" type="text" value="https://rafeeq.com/sites/pyramids-of-giza"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Primary Media Asset -->
+<div class="space-y-4">
+<label class="text-xs font-bold text-on-surface-variant tracking-wide uppercase">Primary Media Asset</label>
+<div class="relative group rounded-xl overflow-hidden aspect-[21/9] shadow-inner bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="majestic wide angle shot of the Great Pyramid of Giza against a clear azure sky with golden desert sand in foreground" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAPBl4KMUiLFaRouTGxnNOb4sndj4gTH6nUVI4-Ax-qDuv49JOqVnHvLZpT8obnyNu0osO90lIcgYdNdGj2546U3FpFsXNk2pRr19vXDU_Qqx7zD_NkymxF9Ww6aCIuL--snDMad5dqhEJH7Q2ms8zEAEmYTbE7szzUkmykDZKZACI1X0GZlNbo00JDzfph0SwX1SlzwINf3R2C8L-Q2Zt9Z0fbocEtPnZerqTtv-LIPXifscc-1IQ2HyqCD7cf592zWAUHq5S0kYK"/>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+<button class="bg-white text-primary px-6 py-2.5 rounded-full font-bold text-sm shadow-xl flex items-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span> Change Cover
+                        </button>
+</div>
+<div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded text-[10px] font-bold text-primary shadow-sm border border-white">
+                        COVER_IMAGE_01.JPG • 4.2MB
+                    </div>
+</div>
+</div>
+</section>
+<!-- Merged Content from Sidebar -->
+<hr class="border-outline-variant/10"/>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Site Preview & Stats (Refactored from card) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant/10 overflow-hidden">
+<div class="p-6 space-y-4">
+<h4 class="text-sm font-extrabold text-primary flex items-center gap-2 uppercase tracking-widest">
+<span class="material-symbols-outlined text-lg" data-icon="query_stats">query_stats</span> Site Snapshot
+                    </h4>
+<div class="grid grid-cols-3 gap-4 py-4 border-y border-outline-variant/10">
+<div class="text-center">
+<span class="text-sm font-bold text-primary block">15.2K</span>
+<span class="text-[10px] font-bold text-outline uppercase tracking-tighter">Views</span>
+</div>
+<div class="text-center border-x border-outline-variant/10">
+<span class="text-sm font-bold text-primary block">12</span>
+<span class="text-[10px] font-bold text-outline uppercase tracking-tighter">Points</span>
+</div>
+<div class="text-center">
+<span class="text-sm font-bold text-primary block">3</span>
+<span class="text-[10px] font-bold text-outline uppercase tracking-tighter">Langs</span>
+</div>
+</div>
+<button class="w-full py-3 bg-primary text-white font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-sm" data-icon="launch">launch</span> View Live Public Page
+                    </button>
+</div>
+</div>
+<!-- SEO & Visibility -->
+<div class="p-6 bg-white rounded-xl shadow-lg border border-outline-variant/10 space-y-5">
+<h4 class="text-sm font-extrabold text-primary flex items-center gap-2 uppercase tracking-widest">
+<span class="material-symbols-outlined text-lg" data-icon="troubleshoot">troubleshoot</span> SEO &amp; Visibility
+                </h4>
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold text-on-surface-variant tracking-wide uppercase">URL Slug</label>
+<div class="flex items-center bg-surface-container-lowest border border-outline-variant/30 rounded-lg overflow-hidden group focus-within:ring-2 focus-within:ring-primary/20">
+<span class="px-3 text-xs font-medium text-outline bg-surface-container-high h-10 flex items-center">rafeeq.com/sites/</span>
+<input class="flex-1 border-none focus:ring-0 text-xs font-bold py-2 h-10" type="text" value="pyramids-of-giza"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold text-on-surface-variant tracking-wide uppercase">Meta Description</label>
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg p-3 text-xs font-medium focus:ring-primary/20 focus:border-primary min-h-[80px]" placeholder="Enter SEO description...">Explore the last standing ancient wonder of the world. The Giza Plateau features the Great Pyramids and the mysterious Sphinx.</textarea>
+</div>
+</div>
+</div>
+<!-- Audit Trail -->
+<div class="p-6 bg-white rounded-xl shadow-lg border border-outline-variant/10 space-y-4">
+<h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="history">history</span> Activity History
+            </h4>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center font-bold text-[10px] text-primary">AH</div>
+<div class="flex-1">
+<p class="text-xs font-bold">Ahmed <span class="font-medium text-outline">updated localization</span></p>
+<p class="text-[10px] text-outline">2 hours ago</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center font-bold text-[10px] text-secondary">SA</div>
+<div class="flex-1">
+<p class="text-xs font-bold">Sara <span class="font-medium text-outline">uploaded 4 new images</span></p>
+<p class="text-[10px] text-outline">Yesterday at 4:12 PM</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-[10px] text-outline">AD</div>
+<div class="flex-1">
+<p class="text-xs font-bold">Admin <span class="font-medium text-outline">created the site entry</span></p>
+<p class="text-[10px] text-outline">3 days ago</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Danger Zone -->
+<div class="p-8 border-2 border-dashed border-error-container bg-error-container/5 rounded-xl space-y-6">
+<div class="flex items-center justify-between">
+<div>
+<h4 class="text-sm font-black text-error uppercase tracking-[0.2em] flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="dangerous">dangerous</span> Danger Zone
+                    </h4>
+<p class="text-xs text-on-surface-variant mt-1">Actions here are potentially destructive and require authorization.</p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2.5 text-xs font-black uppercase text-error border border-error/20 rounded-lg hover:bg-error/10 transition-colors active:scale-95">Deactivate Site</button>
+<button class="px-6 py-2.5 text-xs font-black uppercase bg-error text-white rounded-lg shadow-lg shadow-error/20 active:scale-95 transition-all">Permanently Delete</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Sticky Save Bar -->
+<div class="fixed bottom-0 left-0 right-0 z-40 px-8 py-4 pointer-events-none">
+<div class="max-w-[1200px] mx-auto pointer-events-auto">
+<div class="bg-primary-container text-white p-4 rounded-xl shadow-2xl flex items-center justify-between border border-primary/30">
+<div class="flex items-center gap-4 pl-2">
+<div class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary-fixed animate-pulse" data-icon="cloud_sync">cloud_sync</span>
+</div>
+<div>
+<p class="font-bold text-sm">You have unsaved changes</p>
+<p class="text-[10px] text-primary-fixed opacity-70">Last saved 14 minutes ago</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-5 py-2 text-xs font-bold text-primary-fixed hover:bg-white/10 rounded-lg transition-colors">Discard</button>
+<div class="h-8 w-px bg-white/10"></div>
+<button class="px-6 py-2.5 bg-white text-primary text-xs font-black uppercase tracking-widest rounded-lg shadow-lg active:scale-95 transition-all">Save Draft</button>
+<button class="px-6 py-2.5 bg-secondary text-on-secondary text-xs font-black uppercase tracking-widest rounded-lg shadow-lg active:scale-95 transition-all">Save &amp; Publish</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Padding for sticky bar -->
+<div class="h-24"></div>
+</body></html>

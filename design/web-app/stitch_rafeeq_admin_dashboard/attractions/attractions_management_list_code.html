@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Attractions Management | Rafeeq Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700&amp;family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-secondary-fixed": "#291800", "surface-bright": "#fff8f0", primary: "#7c572d", secondary: "#78592a", "primary-container": "#d4a574", "on-primary-fixed": "#2c1700", "surface-variant": "#e7e2da", "on-primary-fixed-variant": "#614018", "on-error-container": "#93000a", outline: "#827569", "on-secondary-container": "#78592b", "on-primary-container": "#5b3a13", "inverse-surface": "#32302b", "primary-fixed": "#ffdcbc", "on-surface-variant": "#50453b", "surface-container-highest": "#e7e2da", "surface-dim": "#dfd9d1", "surface-container-high": "#ede7df", "on-error": "#ffffff", background: "#fff8f0", "on-tertiary": "#ffffff", "surface-container-lowest": "#ffffff", error: "#ba1a1a", "surface-container-low": "#f9f3eb", "on-tertiary-fixed": "#241a08", "on-secondary-fixed-variant": "#5d4115", "secondary-fixed": "#ffddb2", "secondary-fixed-dim": "#e9c088", tertiary: "#6b5c46", "inverse-primary": "#efbd8a", "on-surface": "#1d1b17", "on-primary": "#ffffff", "tertiary-fixed-dim": "#d7c4a8", "secondary-container": "#fed39a", "on-background": "#1d1b17", "tertiary-fixed": "#f4e0c3", "on-secondary": "#ffffff", "primary-fixed-dim": "#efbd8a", "outline-variant": "#d4c4b7", "inverse-on-surface": "#f6f0e8", "tertiary-container": "#bdab91", "surface-container": "#f3ede5", surface: "#fff8f0", "on-tertiary-container": "#4c3f2b", "surface-tint": "#7c572d", "on-tertiary-fixed-variant": "#524530", "error-container": "#ffdad6"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, fontFamily: {headline: ["Epilogue"], body: ["Manrope"], label: ["Manrope"], display: "Epilogue"}}}};</script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .pyramid-accent { clip-path: polygon(0 0, 85% 0, 100% 15%, 100% 100%, 0 100%); }
+        .glass-sidebar { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-surface selection:bg-primary-fixed">
+<!-- Top Navigation Bar -->
+<header class="flex justify-between items-center w-full px-8 py-3 bg-white/80 backdrop-blur-xl sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">Rafeeq Admin</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 transition-colors duration-200" href="#">Dashboard</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 transition-colors duration-200" href="#">Analytics</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 transition-colors duration-200" href="#">Support</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-blue-50/50 p-2 rounded-full transition-all">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-blue-50/50 p-2 rounded-full transition-all">settings</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="Administrator Profile" class="w-full h-full object-cover" data-alt="close-up portrait of a professional woman with a confident expression in a brightly lit modern office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXiGXFeBm6IhZkMrHiMIflfY9ypChnaRxuMmiKv4QC-DywtCOmCRmKAD6kgixpO_0b0S2eyDL412yKaJueDAFjtKOB87nqZkIvBy6OMCoayS11FuI2jLJNq12CZO-jiofDwRyvuWsJFqKGe-C5yy-N8DmLYRz3HHeoDe4sqqnEmhJ2T288tqfHag24ICGEouIGTkcstafLt6ztBQ9VMFmhU2EuYXWpObKfVGXlTX6yW6fH8LQuwXMpTXLHP_NMxn7YPTetPL17e3SP"/>
+</div>
+</div>
+</header>
+<div class="flex">
+<!-- Sidebar Navigation -->
+<aside class="h-screen w-64 fixed left-0 top-0 pt-20 bg-slate-50 dark:bg-slate-900 flex flex-col py-6 gap-2 glass-sidebar">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 bg-primary-container rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+</div>
+<div>
+<h3 class="font-bold text-on-surface text-sm">System Admin</h3>
+<p class="text-xs text-on-surface-variant">Root Control</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-slate-600 dark:text-slate-400 mx-2 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="bg-gradient-to-br from-blue-800 to-blue-600 text-white rounded-lg mx-2 px-4 py-3 shadow-blue-900/10 flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined">castle</span>
+<span class="text-sm font-medium">Sites Management</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 mx-2 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">Users &amp; Tourists</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 mx-2 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined">reviews</span>
+<span class="text-sm font-medium">Reviews &amp; Moderation</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 mx-2 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-sm font-medium">Trips &amp; Itineraries</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 mx-2 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined">sell</span>
+<span class="text-sm font-medium">Sponsors &amp; Offers</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 mx-2 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined">report_problem</span>
+<span class="text-sm font-medium">Emergency Reports</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 mx-2 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-sm font-medium">Analytics &amp; Reports</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 mx-2 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">System Settings</span>
+</a>
+</nav>
+<div class="px-2 mt-auto">
+<a class="text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="text-sm font-medium">Log Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 ml-64 p-8 min-h-screen">
+<!-- Breadcrumbs & Header -->
+<div class="mb-8">
+<a class="flex items-center text-primary gap-2 text-sm font-medium mb-4 group" href="#">
+<span class="material-symbols-outlined text-lg transition-transform group-hover:-translate-x-1">arrow_back</span>
+                    Back to Giza Pyramids Complex
+                </a>
+<div class="flex justify-between items-end">
+<div>
+<h1 class="text-3xl font-bold text-primary tracking-tight mb-1">Attractions in Giza Pyramids Complex</h1>
+<p class="text-on-surface-variant flex items-center gap-2">
+<span class="font-medium">12 attractions</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="text-secondary font-medium">8 Featured</span>
+</p>
+</div>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined">add</span>
+                        Add Attraction
+                    </button>
+</div>
+</div>
+<!-- Site Context Card (Bento Style) -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
+<div class="lg:col-span-8 bg-primary-fixed rounded-xl overflow-hidden flex relative group">
+<div class="w-1/3 relative h-full">
+<img alt="Aerial view of Giza Pyramids" class="absolute inset-0 w-full h-full object-cover" data-alt="dramatic aerial view of the Giza pyramid complex at sunrise with deep orange shadows and soft desert haze" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBckipnfki71aqHE87BEMmASeVyjWmjCKz1Stn9V3EHo8D2ELV4xEKhVw2B0yhpCQgvT0fpnyuV3xlRf-E4R5YiP306mm6E_eHeBqx1EKKo0QvuFzGqvlxZBkvSoPqBegUx1Q04YUe_NMLmkEL-Zn0tHtysc1em17iKQlCnePKzfmVuxGPypsf8JfXtPyKPZjjmDZBk-0lIjdPqTY-aVZVGc4FxGEC5uoQd2qih_LAwbk9PPyiCcM176SvQMGw2bB_7Xa3U7Jsppyw4"/>
+<div class="absolute inset-0 bg-gradient-to-r from-transparent to-primary-fixed"></div>
+</div>
+<div class="flex-1 p-8 flex flex-col justify-center">
+<div class="mb-4">
+<span class="text-[10px] tracking-widest text-primary font-bold uppercase block mb-1">World Heritage Site</span>
+<h2 class="text-2xl font-extrabold text-on-primary-fixed">Giza Pyramids Complex</h2>
+<p class="text-on-primary-fixed-variant flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                Giza, Cairo • 29.9792° N, 31.1342° E
+                            </p>
+</div>
+<div class="flex gap-8">
+<div>
+<p class="text-[10px] font-bold text-on-primary-fixed-variant uppercase">Most Popular</p>
+<p class="font-bold text-primary">Great Pyramid of Khufu</p>
+</div>
+<div>
+<p class="text-[10px] font-bold text-on-primary-fixed-variant uppercase">Avg. Rating</p>
+<p class="font-bold text-primary flex items-center gap-1">
+                                    4.9 <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</p>
+</div>
+</div>
+</div>
+<!-- Pyramid Accent Overlay -->
+<div class="absolute top-0 right-0 w-16 h-16 bg-secondary-fixed/30 pyramid-accent"></div>
+</div>
+<div class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-8 flex flex-col justify-between border border-outline-variant/15 shadow-sm">
+<h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Site Momentum</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<span class="text-sm font-medium text-on-surface">Capacity Utilization</span>
+<span class="text-sm font-bold text-secondary">88%</span>
+</div>
+<div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full w-[88%] bg-secondary shadow-[0_0_8px_rgba(0,107,95,0.3)]"></div>
+</div>
+<p class="text-xs text-on-surface-variant italic">High demand for upcoming equinox event.</p>
+</div>
+</div>
+</section>
+<!-- Filter Bar -->
+<section class="bg-surface-container-low rounded-xl p-4 mb-8 flex flex-wrap items-center gap-4 sticky top-[72px] z-40">
+<div class="flex-1 min-w-[300px] relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-lowest border-outline-variant/15 rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="Search attractions..." type="text"/>
+</div>
+<select class="bg-surface-container-lowest border-outline-variant/15 rounded-lg px-4 py-2 text-sm font-medium text-on-surface-variant outline-none">
+<option>All Types</option>
+<option>Pyramid</option>
+<option>Temple</option>
+<option>Tomb</option>
+</select>
+<select class="bg-surface-container-lowest border-outline-variant/15 rounded-lg px-4 py-2 text-sm font-medium text-on-surface-variant outline-none">
+<option>All Periods</option>
+<option>Old Kingdom</option>
+<option>Middle Kingdom</option>
+<option>New Kingdom</option>
+</select>
+<label class="flex items-center gap-2 cursor-pointer group">
+<div class="relative flex items-center justify-center h-5 w-5 bg-surface-container-lowest border border-outline-variant/30 rounded">
+<input class="peer absolute inset-0 opacity-0 cursor-pointer" type="checkbox"/>
+<div class="hidden peer-checked:block text-primary">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+</div>
+</div>
+<span class="text-sm font-medium text-on-surface-variant group-hover:text-primary transition-colors">Featured Only</span>
+</label>
+<div class="h-8 w-px bg-outline-variant/30 mx-2"></div>
+<div class="flex bg-surface-container-highest/50 p-1 rounded-lg">
+<button class="p-1.5 rounded-md bg-white shadow-sm text-primary">
+<span class="material-symbols-outlined text-lg">grid_view</span>
+</button>
+<button class="p-1.5 rounded-md text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined text-lg">list</span>
+</button>
+</div>
+</section>
+<!-- Main Grid Content -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Attraction Card 1 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all group border border-outline-variant/15 relative">
+<div class="relative h-56 overflow-hidden">
+<img alt="The Great Pyramid of Khufu" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="close-up of the ancient limestone blocks of the Great Pyramid of Khufu with the golden late afternoon sun highlighting the texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQBbruiNdoyrEcrTsvzJ_O4KXiR_TBECJe0xan-rONcg12S6stJ5Pp-acoaR-CTG3JDf2G_2OvFVnMNoYR_OqVyovBGNhxz53-COGAsTSu49ZyONz_rVGzeEq_8PXOe4GFN6zQqDUpW9o84trDmj08XyzYh_ylz8j4u61skY4M3bTmaiOqxTByK-wr7P5iGLGD22gXpLj3Z5IpjusWZ5tPcrk-znvWqnwN7b9SRWh59SRlG8g3dEaO9oJjnvlZS2Q5LOOFXWLaa30H"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-tertiary-fixed text-tertiary text-[10px] font-extrabold px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                                FEATURED
+                            </span>
+<span class="bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">language</span>
+                                8
+                            </span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex gap-2 mb-3">
+<span class="bg-tertiary-container/10 text-tertiary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Pyramid</span>
+<span class="bg-primary-container/10 text-primary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Old Kingdom</span>
+</div>
+<h3 class="text-xl font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">The Great Pyramid of Khufu</h3>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">The oldest and largest of the three pyramids in the Giza pyramid complex, and the only one of the Seven Wonders of the Ancient World still standing.</p>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/10">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">visibility</span>
+<span class="text-xs font-bold text-on-surface-variant">42k</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">photo_camera</span>
+<span class="text-xs font-bold text-on-surface-variant">1.2k</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 hover:text-primary rounded-lg transition-all">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 hover:text-primary rounded-lg transition-all">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<div class="absolute top-0 right-0 w-10 h-10 bg-tertiary-fixed/20 pyramid-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</article>
+<!-- Attraction Card 2 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all group border border-outline-variant/15 relative">
+<div class="relative h-56 overflow-hidden">
+<img alt="Great Sphinx of Giza" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="the Great Sphinx of Giza profile against a clear blue sky with sand dunes in the background in soft focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbI2IAu_idyii51PxMbX07JE2kxioRZKNzZbxOZGD5xJuRNPk9NnwO3m4HUHCPXeG_jvJvlwZU5HxA8AFsw8TkNOcGXQ7mawavpJo6HOQynBTb6USr-vThwSoPN94lTMLqdilmu40kNx9tGdryN5-orSz1ZsK1dXS1xKXJYxs6yHjnFCnfWWaZ_qiPbT1oGnGMt2Z5dvrcnL7NSpD8YKLVKrQLY8SbVrST-K4eLa3hJ2I5HLu0PlDTpiS3Q4em5zSEXWngKWxErECb"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-tertiary-fixed text-tertiary text-[10px] font-extrabold px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                                FEATURED
+                            </span>
+<span class="bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">language</span>
+                                5
+                            </span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex gap-2 mb-3">
+<span class="bg-secondary-container/10 text-secondary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Statue</span>
+<span class="bg-primary-container/10 text-primary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Old Kingdom</span>
+</div>
+<h3 class="text-xl font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">The Great Sphinx</h3>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">A limestone statue of a reclining sphinx, a mythical creature with the body of a lion and the head of a human.</p>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/10">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">visibility</span>
+<span class="text-xs font-bold text-on-surface-variant">38k</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">photo_camera</span>
+<span class="text-xs font-bold text-on-surface-variant">2.4k</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 hover:text-primary rounded-lg transition-all">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 hover:text-primary rounded-lg transition-all">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<div class="absolute top-0 right-0 w-10 h-10 bg-tertiary-fixed/20 pyramid-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</article>
+<!-- Attraction Card 3 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all group border border-outline-variant/15 relative">
+<div class="relative h-56 overflow-hidden">
+<img alt="Pyramid of Khafre" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="the Pyramid of Khafre showing the remaining casing stones at its peak under a bright midday sun" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBycGvvvzjRyCYLEcsu576UNdqkrWuSRvWXFRONC-ZL4vZdRiJgnkPncAqDYRUUPscGqSzh1nuArkcoi_7qkt5ZMUnPMSs68gENkMfd5g2J4MmuSfLcmAIco0F0TbccRkr43VqgkomNvG18VC6CsixYwcCjnW3GznbnjPTo6mzx3OvMdFQ8xBEGeyM7aTne6On8aZRx-k_T9dvDeggGnIgKtw6TO1EJdPwSt-ijT1VWgPGhNaqjweFplcHGYeu-aNZhu04trUoH5MLj"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-tertiary-fixed text-tertiary text-[10px] font-extrabold px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                                FEATURED
+                            </span>
+<span class="bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">language</span>
+                                4
+                            </span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex gap-2 mb-3">
+<span class="bg-tertiary-container/10 text-tertiary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Pyramid</span>
+<span class="bg-primary-container/10 text-primary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Old Kingdom</span>
+</div>
+<h3 class="text-xl font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Pyramid of Khafre</h3>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">The second-tallest and second-largest of the Ancient Egyptian Pyramids of Giza and the tomb of the Fourth-Dynasty pharaoh Khafre.</p>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/10">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">visibility</span>
+<span class="text-xs font-bold text-on-surface-variant">25k</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">photo_camera</span>
+<span class="text-xs font-bold text-on-surface-variant">890</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 hover:text-primary rounded-lg transition-all">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 hover:text-primary rounded-lg transition-all">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<div class="absolute top-0 right-0 w-10 h-10 bg-tertiary-fixed/20 pyramid-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</article>
+<!-- Attraction Card 4 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all group border border-outline-variant/15 relative">
+<div class="relative h-56 overflow-hidden">
+<img alt="Pyramid of Menkaure" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="the smaller Pyramid of Menkaure with its distinct granite base blocks under a soft evening sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkojPWYwWmIYWwkiwlrkzqo8YuBn3FB1ATH1I5hXvguAW_DDIzEc5_JvFsJfV9dwIxVIIxo-sZLrcFc2NSKBEtWh2iADI8XGgSuFtPyBaZ5Lmr4cdkJJ4DL8_SAAmXXL4CfQmmmii3NF-wSsmagdtxRFOrhi2KjDGV0lv8Qzqge4l5DMAP8iPgv0W73oeDFDJcSD_lvuJdTL8MGXk7BuXRf6JXmU7JO-pa5GByakpHnYVOTk5-3Dz8iPdop5XzI3SOt-4D7J80OxW3"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">language</span>
+                                3
+                            </span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex gap-2 mb-3">
+<span class="bg-tertiary-container/10 text-tertiary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Pyramid</span>
+<span class="bg-primary-container/10 text-primary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Old Kingdom</span>
+</div>
+<h3 class="text-xl font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Pyramid of Menkaure</h3>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">The smallest of the three main pyramids at Giza, built to serve as the tomb of the Fourth Dynasty Egyptian Pharaoh Menkaure.</p>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/10">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">visibility</span>
+<span class="text-xs font-bold text-on-surface-variant">12k</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">photo_camera</span>
+<span class="text-xs font-bold text-on-surface-variant">450</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 hover:text-primary rounded-lg transition-all">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 hover:text-primary rounded-lg transition-all">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<div class="absolute top-0 right-0 w-10 h-10 bg-tertiary-fixed/20 pyramid-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</article>
+<!-- Attraction Card 5 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all group border border-outline-variant/15 relative">
+<div class="relative h-56 overflow-hidden">
+<img alt="Valley Temple" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="interior view of the Valley Temple of Khafre with its massive monolithic granite pillars and pristine architectural lines" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDa5JFPdfUqzCxJTXs3GYfhGAp1YFMgTPVWshBeTWjeco_OzXLQBNiOXnJD72nl4w5nPyivDUHMScV9znvuF6KC9TFt7FivZ_Cwhb9nXh7INU4WeQ9sCYXOmk3WkwnTUvE02HnQ7Y2MDCMP5tZV3oSmj2Ib90HSemAQZvyGmGPhSAWAkx2Yu0MSa99dVSAPdKpITodkVvpYTEp7D7_M0qxFLyU70-Zc6eW1J9r8sQIrLrlxT4g1wXkRYYoh8mZdjMuieXNmVJgi51nO"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-tertiary-fixed text-tertiary text-[10px] font-extrabold px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                                FEATURED
+                            </span>
+<span class="bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">language</span>
+                                6
+                            </span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex gap-2 mb-3">
+<span class="bg-secondary-container/10 text-secondary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Temple</span>
+<span class="bg-primary-container/10 text-primary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Old Kingdom</span>
+</div>
+<h3 class="text-xl font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Valley Temple of Khafre</h3>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">Built out of megalithic blocks sheathed with polished red granite, this temple was used for the purification of the king's mummy.</p>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/10">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">visibility</span>
+<span class="text-xs font-bold text-on-surface-variant">18k</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">photo_camera</span>
+<span class="text-xs font-bold text-on-surface-variant">620</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 hover:text-primary rounded-lg transition-all">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 hover:text-primary rounded-lg transition-all">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<div class="absolute top-0 right-0 w-10 h-10 bg-tertiary-fixed/20 pyramid-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</article>
+<!-- Add New Card Placeholder -->
+<button class="border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center min-h-[400px] group hover:border-primary/40 hover:bg-primary/5 transition-all">
+<div class="h-16 w-16 rounded-full bg-surface-container-high flex items-center justify-center text-outline group-hover:bg-primary group-hover:text-white transition-all mb-4">
+<span class="material-symbols-outlined text-3xl">add_circle</span>
+</div>
+<p class="font-bold text-on-surface-variant group-hover:text-primary">New Attraction</p>
+<p class="text-xs text-outline mt-1">Add to Giza Complex</p>
+</button>
+</div>
+<!-- Bottom Pagination Tonal Shift -->
+<div class="mt-12 flex justify-between items-center py-6 px-4 bg-surface-container-low rounded-xl">
+<p class="text-sm text-on-surface-variant">Showing 1-5 of 12 attractions</p>
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-surface-container-lowest border border-outline-variant/15 rounded-lg text-sm font-medium text-outline cursor-not-allowed">Previous</button>
+<button class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium shadow-md shadow-primary/10">1</button>
+<button class="px-4 py-2 bg-surface-container-lowest border border-outline-variant/15 rounded-lg text-sm font-medium text-on-surface-variant hover:border-primary/40 transition-colors">2</button>
+<button class="px-4 py-2 bg-surface-container-lowest border border-outline-variant/15 rounded-lg text-sm font-medium text-on-surface-variant hover:border-primary/40 transition-colors">Next</button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

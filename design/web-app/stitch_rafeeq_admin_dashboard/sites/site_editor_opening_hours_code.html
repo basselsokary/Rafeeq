@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700&amp;family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pyramid-accent {
+            clip-path: polygon(100% 0, 100% 100%, 0 100%, 100% 0);
+            width: 12px;
+            height: 12px;
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-tertiary-container": "#4c3f2b", "on-surface": "#1d1b17", "on-primary-container": "#5b3a13", "surface-dim": "#dfd9d1", "surface-container-low": "#f9f3eb", "on-tertiary-fixed": "#241a08", "surface-variant": "#e7e2da", "on-primary-fixed": "#2c1700", "primary-fixed": "#ffdcbc", "on-secondary-container": "#78592b", "error-container": "#ffdad6", "surface-container-highest": "#e7e2da", "on-secondary-fixed": "#291800", "inverse-primary": "#efbd8a", "surface-container-lowest": "#ffffff", "primary-fixed-dim": "#efbd8a", "on-surface-variant": "#50453b", tertiary: "#6b5c46", "surface-tint": "#7c572d", "on-secondary": "#ffffff", "surface-container-high": "#ede7df", "on-primary-fixed-variant": "#614018", primary: "#7c572d", "tertiary-container": "#bdab91", "tertiary-fixed": "#f4e0c3", "secondary-fixed": "#ffddb2", "inverse-on-surface": "#f6f0e8", "inverse-surface": "#32302b", surface: "#fff8f0", "on-tertiary": "#ffffff", "on-error": "#ffffff", "on-background": "#1d1b17", "outline-variant": "#d4c4b7", "surface-bright": "#fff8f0", "on-error-container": "#93000a", "secondary-container": "#fed39a", "surface-container": "#f3ede5", "secondary-fixed-dim": "#e9c088", background: "#fff8f0", "on-primary": "#ffffff", outline: "#827569", error: "#ba1a1a", "tertiary-fixed-dim": "#d7c4a8", "primary-container": "#d4a574", "on-tertiary-fixed-variant": "#524530", "on-secondary-fixed-variant": "#5d4115", secondary: "#78592a"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, fontFamily: {headline: ["Epilogue"], body: ["Manrope"], label: ["Manrope"], display: "Epilogue"}}}};</script>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- Updated TopNavBar based on SCREEN_32 -->
+<header class="bg-surface/80 backdrop-blur-md sticky top-0 z-50 flex justify-between items-center px-8 h-16 w-full shadow-blue-900/5 shadow-xl border-none">
+<div class="flex items-center gap-6">
+<button class="flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors active:scale-95 duration-150 ease-in-out font-inter text-sm font-medium tracking-tight">
+<span class="material-symbols-outlined">arrow_back</span>
+            Back to Sites
+        </button>
+<div class="h-6 w-px bg-outline-variant/30"></div>
+<div class="flex flex-col">
+<h1 class="text-lg font-bold tracking-tighter text-blue-900">Edit Site: Pyramids of Giza</h1>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-[10px] uppercase tracking-widest font-bold text-secondary">Active</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary border border-primary/30 rounded-lg hover:bg-primary/5 transition-all duration-300 active:scale-95">
+<span class="material-symbols-outlined text-lg">visibility</span>
+            Preview
+        </button>
+</div>
+</header>
+<!-- Updated Tab Navigation based on SCREEN_32 -->
+<nav class="sticky top-16 z-40 bg-white border-b border-outline-variant/20 shadow-sm">
+<div class="max-w-[1200px] mx-auto px-8 flex items-center gap-8 h-12">
+<a class="text-slate-500 hover:text-primary h-full flex items-center font-medium text-sm tracking-tight transition-colors" href="#">
+            Basic Info
+        </a>
+<a class="text-slate-500 hover:text-primary h-full flex items-center font-medium text-sm tracking-tight transition-colors gap-1.5" href="#">
+            Localization 
+            <span class="px-2 py-0.5 rounded-full bg-surface-container-high text-[10px] font-bold text-on-surface-variant">3</span>
+</a>
+<a class="text-slate-500 hover:text-primary h-full flex items-center font-medium text-sm tracking-tight transition-colors gap-1.5" href="#">
+            Images &amp; Media 
+            <span class="px-2 py-0.5 rounded-full bg-surface-container-high text-[10px] font-bold text-on-surface-variant">8</span>
+</a>
+<a class="text-primary border-b-2 border-primary h-full flex items-center font-bold text-sm tracking-tight transition-colors" href="#">
+            Opening Hours
+        </a>
+<a class="text-slate-500 hover:text-primary h-full flex items-center font-medium text-sm tracking-tight transition-colors" href="#">
+            Transportation
+        </a>
+<a class="text-slate-500 hover:text-primary h-full flex items-center font-medium text-sm tracking-tight transition-colors" href="#">
+            Facilities
+        </a>
+</div>
+</nav>
+<main class="max-w-[1200px] mx-auto px-8 py-8 mb-24">
+<!-- Sub-Header Info (Simplified single-column content starts here) -->
+<div class="mb-12">
+<div class="flex items-center gap-3 mb-1">
+<h2 class="text-2xl font-bold tracking-tight text-primary">Opening Hours</h2>
+</div>
+<p class="text-on-surface-variant text-sm">Update the operational schedule and holiday closures for this landmark.</p>
+</div>
+<div class="space-y-12">
+<!-- Weekly Schedule Section -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xl font-bold text-on-surface">Weekly Schedule</h3>
+<div class="flex gap-2">
+<button class="text-xs font-bold uppercase tracking-widest text-primary hover:bg-primary/5 px-3 py-1.5 rounded-lg transition-all">Copy to All Days</button>
+<button class="text-xs font-bold uppercase tracking-widest text-primary hover:bg-primary/5 px-3 py-1.5 rounded-lg transition-all">Set Weekend Hours</button>
+</div>
+</div>
+<div class="space-y-4">
+<!-- Monday (Open) -->
+<div class="bg-surface-container-lowest rounded-xl p-6 relative group overflow-hidden border border-outline-variant/15">
+<div class="absolute top-0 right-0 pyramid-accent bg-secondary-fixed opacity-40"></div>
+<div class="flex items-center justify-between mb-6">
+<span class="text-lg font-bold">Monday</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Opens at</label>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border-outline-variant/30 rounded-lg py-3 px-4 text-sm focus:ring-primary focus:border-primary">
+<option>09:00 AM</option>
+<option>10:00 AM</option>
+</select>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Closes at</label>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border-outline-variant/30 rounded-lg py-3 px-4 text-sm focus:ring-primary focus:border-primary">
+<option>05:00 PM</option>
+<option>06:00 PM</option>
+</select>
+</div>
+</div>
+</div>
+<button class="mt-6 flex items-center gap-2 text-primary text-xs font-bold hover:underline">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+                        Add Additional Hours
+                    </button>
+</div>
+<!-- Friday (Closed) -->
+<div class="bg-surface-container-low/50 rounded-xl p-6 relative group overflow-hidden border border-outline-variant/15">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="text-lg font-bold text-on-surface-variant">Friday</span>
+<span class="bg-error-container text-on-error-container text-[10px] font-bold px-2 py-0.5 rounded-full tracking-wider uppercase">Closed</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<!-- Remaining Days -->
+<div class="grid grid-cols-1 gap-4 opacity-75">
+<div class="bg-surface-container-lowest rounded-xl p-4 border border-outline-variant/15 flex items-center justify-between">
+<span class="font-bold">Saturday - Sunday</span>
+<span class="text-sm text-on-surface-variant italic">Same as Monday schedule</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Special Closures Section -->
+<section class="pt-10 border-t border-outline-variant/10">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xl font-bold text-on-surface">Special Closures</h3>
+<button class="flex items-center gap-2 bg-primary/5 text-primary px-4 py-2 rounded-xl text-sm font-bold hover:bg-primary/10 transition-all">
+<span class="material-symbols-outlined text-lg">add</span>
+                    Add Special Closure
+                </button>
+</div>
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/15 divide-y divide-outline-variant/10">
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center gap-6">
+<div class="bg-tertiary-fixed text-on-tertiary-fixed w-12 h-12 rounded-xl flex flex-col items-center justify-center">
+<span class="text-[10px] font-black uppercase">May</span>
+<span class="text-lg font-bold leading-tight">01</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Public Holiday</p>
+<p class="text-xs text-on-surface-variant">Labour Day - Site closed all day</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Preview and History in single column layout -->
+<hr class="border-outline-variant/10"/>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-xl shadow-blue-900/5 border border-outline-variant/15">
+<div class="p-1">
+<img alt="Pyramids of Giza" class="w-full aspect-video object-cover rounded-lg" data-alt="wide cinematic shot of the Pyramids of Giza at sunset with golden orange sky and sharp geometric silhouettes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZKfiyPkBn2NR-7_t0iUOcGR0972PPc0DHGSxJfIqt2LvdeiH4Zz3rLR-OOcX3W2b1IWby7Cry3YJX2ZfmW_VhtZRY7ogHCzsJ_zx6UlgU-J_K5JM98rIeFoidVYTtC413us2sxnaSyYNL9iGPqHV8vd_-JLl8poqfo4B6o7OIru3QbmVkr6_-mDJORrg3tGnhJDT6sCVIKhEUVzZuSksBt_1ZGOnvPKZUtfOupEM1EE15Lj9De6mEIbQPs83D58CeZilx0T7s6S0x"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-lg font-bold text-primary">Pyramids of Giza</h3>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold">4.9</span>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                        Giza, Egypt
+                    </p>
+<div class="bg-secondary/5 rounded-lg p-3 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-xs font-bold text-secondary uppercase tracking-widest">Open Now</span>
+</div>
+<span class="text-xs font-medium text-on-surface-variant">Until 05:00 PM</span>
+</div>
+</div>
+</div>
+<div class="p-6 bg-white rounded-xl shadow-lg border border-outline-variant/10 space-y-4">
+<h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">history</span> Activity History
+                </h4>
+<div class="space-y-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center font-bold text-[10px] text-primary">AH</div>
+<div class="flex-1">
+<p class="text-xs font-bold">Ahmed M. <span class="font-medium text-outline">updated alt text</span></p>
+<p class="text-[10px] text-outline">2 hours ago</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center font-bold text-[10px] text-secondary">SA</div>
+<div class="flex-1">
+<p class="text-xs font-bold">New asset uploaded: <span class="text-primary font-mono text-xs">sphinx_view.jpg</span></p>
+<p class="text-[10px] text-outline">Yesterday</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-2 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors border-t border-outline-variant/10 pt-4">View All Logs</button>
+</div>
+</div>
+<!-- Danger Zone (Bottom as per requested simplified layout) -->
+<div class="p-8 border-2 border-dashed border-error-container bg-error-container/5 rounded-xl space-y-6">
+<div class="flex items-center justify-between">
+<div>
+<h4 class="text-sm font-black text-error uppercase tracking-[0.2em] flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">dangerous</span> Danger Zone
+                    </h4>
+<p class="text-xs text-on-surface-variant mt-1">Actions here are potentially destructive and require authorization.</p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2.5 text-xs font-black uppercase text-error border border-error/20 rounded-lg hover:bg-error/10 transition-colors active:scale-95">Deactivate Site</button>
+<button class="px-6 py-2.5 text-xs font-black uppercase bg-error text-white rounded-lg shadow-lg shadow-error/20 active:scale-95 transition-all">Delete Site</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Save Bar -->
+<footer class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-outline-variant/20 z-40">
+<div class="max-w-[1200px] mx-auto px-8 h-20 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
+<span class="material-symbols-outlined">info</span>
+</div>
+<p class="text-sm font-semibold">You have unsaved changes</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-6 py-2.5 rounded-xl text-sm font-semibold text-on-surface-variant hover:text-on-surface transition-colors">Discard</button>
+<div class="h-6 w-px bg-outline-variant/30 mx-2"></div>
+<button class="px-6 py-2.5 rounded-xl text-sm font-semibold bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-all">Save Draft</button>
+<button class="px-8 py-2.5 rounded-xl text-sm font-bold bg-primary text-white shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">Save &amp; Publish</button>
+</div>
+</div>
+</footer>
+</body></html>
