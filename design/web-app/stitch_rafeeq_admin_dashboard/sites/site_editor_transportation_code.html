@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700&amp;family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {outline: "#827569", "on-tertiary-fixed": "#241a08", "on-primary-fixed": "#2c1700", "surface-dim": "#dfd9d1", "surface-container-high": "#ede7df", "inverse-on-surface": "#f6f0e8", "secondary-fixed-dim": "#e9c088", "tertiary-fixed": "#f4e0c3", "tertiary-container": "#bdab91", "surface-container-lowest": "#ffffff", "inverse-surface": "#32302b", error: "#ba1a1a", background: "#fff8f0", "surface-container-highest": "#e7e2da", "primary-container": "#d4a574", "surface-container": "#f3ede5", "inverse-primary": "#efbd8a", "on-secondary-fixed-variant": "#5d4115", "on-surface": "#1d1b17", "primary-fixed": "#ffdcbc", "on-secondary-container": "#78592b", "on-secondary": "#ffffff", surface: "#fff8f0", "error-container": "#ffdad6", "surface-bright": "#fff8f0", "outline-variant": "#d4c4b7", "on-primary": "#ffffff", "on-primary-fixed-variant": "#614018", "on-surface-variant": "#50453b", "tertiary-fixed-dim": "#d7c4a8", secondary: "#78592a", primary: "#7c572d", "on-background": "#1d1b17", "on-primary-container": "#5b3a13", "surface-container-low": "#f9f3eb", "surface-variant": "#e7e2da", "primary-fixed-dim": "#efbd8a", "on-secondary-fixed": "#291800", "on-error": "#ffffff", "secondary-container": "#fed39a", "on-tertiary-fixed-variant": "#524530", "surface-tint": "#7c572d", "secondary-fixed": "#ffddb2", "on-tertiary-container": "#4c3f2b", "on-error-container": "#93000a", tertiary: "#6b5c46", "on-tertiary": "#ffffff"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, fontFamily: {headline: ["Epilogue"], body: ["Manrope"], label: ["Manrope"], display: "Epilogue"}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .pyramid-accent {
+            clip-path: polygon(100% 0, 100% 100%, 0 100%, 100% 0);
+            width: 12px;
+            height: 12px;
+        }
+        .glass-nav {
+            background: rgba(247, 249, 252, 0.8);
+            backdrop-filter: blur(20px);
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fc; color: #191c1e; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen pb-24">
+<!-- TopNavBar -->
+<header class="fixed top-0 z-50 w-full glass-nav shadow-sm px-8 flex justify-between items-center h-16">
+<div class="flex items-center gap-6">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors text-sm font-medium">
+<span class="material-symbols-outlined text-lg">arrow_back</span>
+            Back to Sites
+        </button>
+<div class="h-6 w-px bg-outline-variant/30"></div>
+<div class="flex items-center gap-3">
+<h1 class="text-lg font-bold text-on-surface tracking-tight">Edit Site: Pyramids of Giza</h1>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Active</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary border border-primary/30 rounded-lg hover:bg-primary/5 transition-all">
+<span class="material-symbols-outlined text-lg">visibility</span>
+<span>Preview</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-fixed overflow-hidden">
+<img alt="User profile" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRsU2aKIlAXACkM3ByoH4QQYnShDxsXWrQOGqzuqXdEZhQxcJ858gZex77J2g67FaD3YFy2m73rHVR4DUreunLPirxpQd7wgemueAVqPPnxVpB37ndzsFwuEXEJN6-vVCEK3axyaiGjhNF44xqvXXN8txlkUde94qWYzgsK4mMpqctXYvyt8CKRIZ6pn6TJad5sN_7-viu3jhAYDj8sGEOK-XRS9SgPLZQRAq2DBjklsJceZ4G-QtLbW8YKu2VE7uHnXstax1rtQSM"/>
+</div>
+</div>
+</header>
+<!-- Sub Navigation -->
+<nav class="fixed top-16 z-40 w-full bg-white border-b border-outline-variant/20 flex justify-center gap-8 h-12 items-center text-sm font-medium">
+<a class="text-slate-500 hover:text-primary transition-colors h-full flex items-center" href="#">Basic Info</a>
+<a class="text-slate-500 hover:text-primary transition-colors h-full flex items-center gap-1.5" href="#">
+        Localization <span class="px-2 py-0.5 rounded-full bg-surface-container-high text-[10px] font-bold text-on-surface-variant">3</span>
+</a>
+<a class="text-slate-500 hover:text-primary transition-colors h-full flex items-center gap-1.5" href="#">
+        Images &amp; Media <span class="px-2 py-0.5 rounded-full bg-surface-container-high text-[10px] font-bold text-on-surface-variant">8</span>
+</a>
+<a class="text-slate-500 hover:text-primary transition-colors h-full flex items-center" href="#">Opening Hours</a>
+<a class="text-primary border-b-2 border-primary h-full flex items-center font-bold" href="#">Transportation</a>
+<a class="text-slate-500 hover:text-primary transition-colors h-full flex items-center" href="#">Facilities</a>
+</nav>
+<main class="pt-32 max-w-4xl mx-auto px-6 mb-12">
+<div class="space-y-8">
+<!-- Header Section -->
+<div class="flex justify-between items-center">
+<div>
+<h2 class="text-2xl font-bold text-primary tracking-tight">Transportation Hub</h2>
+<p class="text-on-surface-variant text-sm mt-1">Manage nearby transit points for the Giza Plateau.</p>
+</div>
+<button class="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-xl font-semibold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Add Nearest Transportation</span>
+</button>
+</div>
+<!-- Transportation Cards List -->
+<div class="space-y-4">
+<!-- Card 1: Expanded View -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border-l-4 border-primary relative overflow-hidden">
+<div class="absolute top-0 right-0 pyramid-accent bg-secondary-fixed opacity-40"></div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="h-12 w-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">directions_bus</span>
+</div>
+<div>
+<h3 class="font-bold text-lg">Giza Plateau North Gate</h3>
+<div class="flex items-center gap-3 mt-1">
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Bus Stop</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-sm text-on-surface-variant">0.4 km away</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-secondary">Operational</span>
+<div class="w-10 h-5 bg-secondary rounded-full flex items-center justify-end px-1 cursor-pointer">
+<div class="w-3.5 h-3.5 bg-white rounded-full"></div>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">edit</span></button>
+<button class="text-on-surface-variant hover:text-error"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+<!-- Expanded Section -->
+<div class="mt-4 pt-4 border-t border-surface-container grid grid-cols-2 gap-6">
+<div class="space-y-4">
+<div class="rounded-lg overflow-hidden h-32 w-full bg-surface-container relative">
+<img class="w-full h-full object-cover" data-alt="minimalist top-down map interface showing a pinpoint over a sandy desert area with stylized blue transit lines" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQWPlP3GI0Pi5AP842LZoSsnSrWev7yHgrKG0fIAoPIhdpEXNwJtUZvevYIGLJmr70PW17lEgzqhUYI8z4zNf5VypwvFeuD_tCrYJQPYlpokCowFbpTyrM8rlh0PfRdXQYgPwKyYNeKiXpfiXXLu8h0PetCyzEuSM7NbJE-bX8nOQQtW9P_5aPiceJc9y73lfQ4f0PoxoVA9AYIvsewqqWNvUETaadOLv40WpJ9fhI0_Ytbrj_54Kl06Ed4plREGkATeDiBpjUOmk5"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+<div class="flex items-center gap-2 text-xs font-medium text-on-surface-variant bg-surface-container-low p-2 rounded-lg">
+<span class="material-symbols-outlined text-sm">explore</span>
+<span>29.9792° N, 31.1342° E</span>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1 block">Localized Names</label>
+<div class="space-y-1">
+<p class="text-sm"><span class="text-xs text-outline font-medium w-6 inline-block">EN</span> Giza Plateau North Gate</p>
+<p class="text-sm"><span class="text-xs text-outline font-medium w-6 inline-block">AR</span> بوابة هضبة الجيزة الشمالية</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-4 h-4 rounded border-2 border-primary bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[12px] font-bold">check</span>
+</div>
+<span class="text-sm font-medium">Wheelchair Accessible</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: Metro -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all relative overflow-hidden group">
+<div class="p-5 flex justify-between items-center">
+<div class="flex gap-4">
+<div class="h-12 w-12 rounded-full bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-2xl">subway</span>
+</div>
+<div>
+<h3 class="font-bold">Giza Station</h3>
+<div class="flex items-center gap-3 mt-1">
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Metro Station</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-sm text-on-surface-variant">2.1 km away</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-secondary">Operational</span>
+<div class="w-10 h-5 bg-secondary rounded-full flex items-center justify-end px-1 cursor-pointer">
+<div class="w-3.5 h-3.5 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3: Taxi Stand -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all relative overflow-hidden group">
+<div class="p-5 flex justify-between items-center">
+<div class="flex gap-4">
+<div class="h-12 w-12 rounded-full bg-surface-container flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-2xl">local_taxi</span>
+</div>
+<div>
+<h3 class="font-bold">Pyramid Entrance Stand</h3>
+<div class="flex items-center gap-3 mt-1">
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Taxi Stand</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-sm text-on-surface-variant">0.1 km away</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-secondary">Operational</span>
+<div class="w-10 h-5 bg-secondary rounded-full flex items-center justify-end px-1 cursor-pointer">
+<div class="w-3.5 h-3.5 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Merged Bottom Sections -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Site Preview Card -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm relative overflow-hidden h-fit">
+<div class="absolute top-0 right-0 pyramid-accent bg-primary opacity-20"></div>
+<div class="flex gap-4">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="majestic pyramids of giza against a clear azure sky during late afternoon golden light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlG9owK4R56at-gw3avC_yHrvdFa6QUbELyu0hrWN-bXoPzcbSG66lUS8Hbx9g5N8z6ZSZgsdQKBUclVf5VT2KY2Hra6kU_453mys3NXiUHIDU9ff1b_xZGSdQPyb-dIf8vIcYbWyojZsNEnHNdwotLGDBQ5kV1banMVQRVEX_I2y4gjX5B9b6j4z9Z3WYQMy6uDrYejmEaIoSvrg110hNOBc-gVCKoJ6oMg1JLWQF_LJJk0scNjn22uu49nwZW6Dvot0DzqaRJ1A2"/>
+</div>
+<div class="flex flex-col justify-between">
+<div>
+<h2 class="font-bold text-lg text-primary leading-tight">Pyramids of Giza</h2>
+<p class="text-xs text-on-surface-variant">Giza Governorate, Egypt</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold">4.9</span>
+</div>
+<span class="bg-secondary/10 text-secondary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Open Now</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Activity History -->
+<div class="bg-surface-container-low rounded-xl p-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-xs uppercase tracking-widest text-on-surface-variant">Activity History</h3>
+<span class="material-symbols-outlined text-primary text-sm">history</span>
+</div>
+<div class="space-y-4">
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="portrait of a young egyptian professional male smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEIQC4oB2VmufnoqU1jMIRM6HbbEqCKNUjvXGSCsMDyr0sfla0-S4MhPRFD6bjjSD_ktG-M6chGz5dP3YGtwF5t3gk83XTm19HanXBXFgxZ_w1smRiBJoZW5Y6u3KQBUo0Yx9wsAuwZmZ7pEC9MHnmCbIy1L0MUL6OWAWcWB-Y9gqckac6qwBqsmLmhzK-v-4o2bs-RRgHiqQ_BOYW2X0nqy-3jAV3XgbL-OThZDjSrFl5cVYLxuj8wvbDL5D20bYeWp-6qK6KAozW"/>
+</div>
+<div>
+<p class="text-xs"><span class="font-bold">Ahmed M.</span> updated transport status</p>
+<p class="text-[10px] text-outline mt-0.5">2 hours ago</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center text-[10px] font-bold">SY</div>
+<div>
+<p class="text-xs"><span class="font-bold">Sara Y.</span> added localized Arabic names</p>
+<p class="text-[10px] text-outline mt-0.5">Yesterday, 4:12 PM</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="professional woman curator with neutral expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUmAn94Wr5d9UqFvi9E9myr540fH4DbK2c_xD2qGCG2I-FvzBJTyjRmBhEGUHK6c5fITGAR_7Kzq4LxWxqOApRTjGfnLonvVHtGkrE7m3Vt_PnpWrnNOON3m0OoW_9iWBmQartK_h-IlPffFuR5VcEhxApFwveOEjem8Vl_9nq2hDPD2hngiczNNUKJ_SSghwGXHlcKP0feTVbs8pgFWPnXGCWJjmX8pCTpYM15xaSADOoZDb_oEA0eo-6Tvx1ghSOJpc22rKYHU83"/>
+</div>
+<div>
+<p class="text-xs"><span class="font-bold">Mariam K.</span> verified wheelchair access</p>
+<p class="text-[10px] text-outline mt-0.5">Oct 24, 11:30 AM</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Danger Zone (Full width below) -->
+<div class="md:col-span-2 bg-error-container/20 rounded-xl p-6 border border-error/10">
+<h3 class="font-bold text-xs uppercase tracking-widest text-error mb-4">Danger Zone</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<button class="w-full text-left px-4 py-3 rounded-lg bg-surface-container-lowest text-on-surface-variant text-xs font-bold border border-outline-variant/30 hover:bg-surface-container-high transition-colors">Deactivate Location</button>
+<button class="w-full text-left px-4 py-3 rounded-lg bg-error text-white text-xs font-bold hover:bg-red-700 transition-colors shadow-sm">Delete Site Permanently</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Fixed Bottom Bar -->
+<footer class="fixed bottom-0 left-0 w-full z-[60] glass-nav border-t border-slate-100/50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] px-8 py-4 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></div>
+<p class="text-sm font-medium text-on-surface-variant">You have unsaved changes</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-6 py-2 text-sm font-bold text-on-surface-variant hover:bg-surface-container transition-colors rounded-xl">Discard</button>
+<button class="px-6 py-2 text-sm font-bold text-primary border border-primary/20 hover:bg-primary/5 transition-colors rounded-xl">Save Draft</button>
+<button class="px-8 py-2.5 text-sm font-bold text-white bg-primary shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform active:scale-95 rounded-xl">Save &amp; Publish</button>
+</div>
+</footer>
+</body></html>

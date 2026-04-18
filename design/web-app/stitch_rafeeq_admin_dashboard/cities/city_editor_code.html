@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit City: Cairo | Rafeeq Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700&amp;family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {tertiary: "#6b5c46", "inverse-primary": "#efbd8a", "on-surface": "#1d1b17", "on-primary": "#ffffff", "tertiary-fixed-dim": "#d7c4a8", "secondary-container": "#fed39a", "on-background": "#1d1b17", "tertiary-fixed": "#f4e0c3", "on-secondary": "#ffffff", "surface-container-low": "#f9f3eb", "on-tertiary-fixed": "#241a08", "on-secondary-fixed-variant": "#5d4115", "secondary-fixed": "#ffddb2", "secondary-fixed-dim": "#e9c088", "surface-tint": "#7c572d", "on-tertiary-fixed-variant": "#524530", "error-container": "#ffdad6", "primary-fixed-dim": "#efbd8a", "outline-variant": "#d4c4b7", "inverse-on-surface": "#f6f0e8", "tertiary-container": "#bdab91", "surface-container": "#f3ede5", surface: "#fff8f0", "on-tertiary-container": "#4c3f2b", "on-primary-fixed-variant": "#614018", "on-error-container": "#93000a", outline: "#827569", "on-secondary-container": "#78592b", "on-primary-container": "#5b3a13", "on-secondary-fixed": "#291800", "surface-bright": "#fff8f0", primary: "#7c572d", secondary: "#78592a", "primary-container": "#d4a574", "on-primary-fixed": "#2c1700", "surface-variant": "#e7e2da", "surface-dim": "#dfd9d1", "surface-container-high": "#ede7df", "on-error": "#ffffff", background: "#fff8f0", "on-tertiary": "#ffffff", "surface-container-lowest": "#ffffff", error: "#ba1a1a", "inverse-surface": "#32302b", "primary-fixed": "#ffdcbc", "on-surface-variant": "#50453b", "surface-container-highest": "#e7e2da"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, fontFamily: {headline: ["Epilogue"], body: ["Manrope"], label: ["Manrope"], display: "Epilogue"}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pyramid-accent {
+            clip-path: polygon(100% 0, 100% 100%, 0 100%, 100% 0);
+            width: 4px;
+            height: 4px;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-slate-50/80 backdrop-blur-xl flex flex-col p-6 z-50 shadow-[40px_0_40px_0_rgba(30,64,175,0.06)]">
+<div class="mb-10">
+<h1 class="text-2xl font-bold tracking-tighter text-blue-900">Rafeeq</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-slate-400 font-bold mt-1">City Management</p>
+</div>
+<nav class="space-y-1 flex-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-blue-800 transition-all duration-200 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-blue-100/50 text-blue-900 font-bold rounded-lg transition-all duration-200 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">location_city</span>
+<span class="text-sm font-medium">Cities</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-blue-800 transition-all duration-200 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+<span class="text-sm font-medium">Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-blue-800 transition-all duration-200 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">Travelers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-blue-800 transition-all duration-200 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-slate-200/50">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-blue-800 transition-all duration-200 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-white/80 backdrop-blur-md flex justify-between items-center px-10 py-4 transition-colors duration-200">
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="bg-surface-container-low border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 w-64" placeholder="Search destinations..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<a class="text-sm font-medium uppercase tracking-wider text-slate-500 hover:text-blue-700" href="#">Overview</a>
+<a class="text-sm font-medium uppercase tracking-wider text-slate-500 hover:text-blue-700" href="#">History</a>
+<a class="text-sm font-medium uppercase tracking-wider text-slate-500 hover:text-blue-700" href="#">Export</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-500 hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-slate-500 hover:text-primary transition-colors">help_outline</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-slate-200 shadow-sm">
+<img alt="Admin Avatar" data-alt="professional male portrait avatar in a soft-lit modern studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9Rucxu2enQnzlFIo4tf8K5r5aObgE43SddHssHJ2lRnOGnmpMHcL5gbVDf60_sDs7lktwJT6jyQ9Xp-tIGZAvNTXleJjC7AfMwVwncj4-Qgmb_lSQWBTZeCN2BWNgHn7xBHqTTXuUhxn8czgH1kl50YSW9WKTpUSkgdmZOIB5T4IitUDJdnzDQfXzF-UgdvuRmEqdC5y7O3BSPsJifPTAQG7kNL8R_aKpPwuZRKPXMJv0xhEJeiBIAtgMG7AuX-ZIVyd5TxusC7tD"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="pt-24 pb-20 px-10 max-w-6xl mx-auto">
+<!-- Breadcrumb & Header -->
+<nav class="flex items-center gap-2 text-xs font-semibold tracking-widest text-slate-400 uppercase mb-4">
+<a class="hover:text-primary" href="#">Dashboard</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<a class="hover:text-primary" href="#">Cities</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-on-surface-variant">Cairo</span>
+</nav>
+<div class="flex justify-between items-end mb-10">
+<div>
+<h2 class="text-4xl font-extrabold tracking-tight text-primary">Edit City: Cairo</h2>
+<p class="text-on-surface-variant mt-2 font-medium">Manage geographic data and multilingual content for the Egyptian capital.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2.5 rounded-xl border border-outline text-primary font-bold text-sm hover:bg-surface-container-low transition-all">Preview</button>
+<button class="px-8 py-2.5 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white font-bold text-sm shadow-lg shadow-blue-900/10 active:scale-95 transition-all">Save Changes</button>
+</div>
+</div>
+<!-- Grid Layout -->
+<div class="space-y-8">
+<!-- Section: Basic Info & Map -->
+<section class="bg-surface-container-low rounded-xl p-8 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<div class="pyramid-accent bg-secondary-fixed"></div>
+</div>
+<div class="grid grid-cols-12 gap-8">
+<div class="col-span-7">
+<h3 class="text-sm font-bold uppercase tracking-widest text-primary mb-6">Geographic Configuration</h3>
+<div class="aspect-[16/9] bg-white rounded-xl overflow-hidden shadow-inner relative" data-location="Cairo, Egypt" style="">
+<img alt="Cairo Map" class="w-full h-full object-cover grayscale-[0.2]" data-alt="high resolution satellite view map of Cairo Egypt highlighting the Nile river and urban infrastructure" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoDDA2fiHY_1e9Tr5e3uRD0IAyPfwn4r4KFtElcgr0fC6INIqnRYUdvinGi0A3DArgB9qh4dEulqkUmQ5EA6pLyNW0cBHzl13ZF_JPk0GeZMn3b7bjKdKj27Fh0O2bwy4BqEEzlxTV5iipIrdzMDcuprNJJb-C02RILrNr-sGiUvRQ67o-tIKJjlL1oBAr9Azu8TbVZzah_D_NS83xXvHAKiMRQLsUU5-Ik7Cvc7xq6hI99b9VsTZP2j0Hdqnyf2pzMcLvvTOWOGiF"/>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<span class="material-symbols-outlined text-error text-5xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur p-2 rounded-lg shadow-xl flex gap-2">
+<button class="p-2 hover:bg-slate-100 rounded material-symbols-outlined text-on-surface">add</button>
+<button class="p-2 hover:bg-slate-100 rounded material-symbols-outlined text-on-surface">remove</button>
+</div>
+</div>
+</div>
+<div class="col-span-5 flex flex-col justify-between">
+<div class="space-y-6">
+<div>
+<label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Center Coordinates</label>
+<div class="grid grid-cols-2 gap-4">
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline-variant/15 rounded-lg px-4 py-3 text-sm font-mono focus:ring-primary focus:border-primary" type="text" value="30.0444° N"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400">LAT</span>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline-variant/15 rounded-lg px-4 py-3 text-sm font-mono focus:ring-primary focus:border-primary" type="text" value="31.2357° E"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400">LNG</span>
+</div>
+</div>
+<button class="mt-3 flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-tight hover:underline">
+<span class="material-symbols-outlined text-base">my_location</span>
+                                        Detect My Location
+                                    </button>
+</div>
+<div>
+<label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Display Order</label>
+<input class="w-24 bg-surface-container-lowest border border-outline-variant/15 rounded-lg px-4 py-3 text-sm focus:ring-primary" type="number" value="1"/>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200">
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase">Total Sites</p>
+<p class="text-xl font-bold text-primary">124</p>
+</div>
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase">Created By</p>
+<p class="text-xs font-bold text-on-surface mt-1">Admin_Ahmed</p>
+</div>
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase">Updated</p>
+<p class="text-xs font-bold text-on-surface mt-1">2h ago</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Media & Branding -->
+<section class="grid grid-cols-12 gap-8">
+<div class="col-span-12 bg-surface-container-lowest border border-outline-variant/15 rounded-xl p-8 shadow-sm">
+<h3 class="text-sm font-bold uppercase tracking-widest text-primary mb-6">Visual Identity</h3>
+<div class="flex gap-8 items-start">
+<div class="w-2/3">
+<label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Hero Landscape Header</label>
+<div class="relative group cursor-pointer border-2 border-dashed border-outline-variant/30 rounded-2xl overflow-hidden hover:border-primary/40 transition-colors">
+<img alt="Cairo Header" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500" data-alt="cinematic wide angle view of the Great Pyramids of Giza at sunset with golden warm lighting and deep blue shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh58mijPwLRVHQ7V7RO_MzLaPUAFtlqNvMF4AT7vE6LkGf0dopnkLLtL7-X-5uZaBbh8D3eHcFF49pzd781K10rkHWUOYQFgoclw1VRTZfngP9NMxdcFVM2mNdjppBkLfemtw2y_PBmH-W2Kab6mxMcM811yWdpAm4mvLdP0_K_F97ZL1fs_IO6hJbowRNceKurF8TXXKpEnoJm3YXZgs8HyXIDac3WuuDmdzueZcuHpyn466NdtwxJaHDf10wCVV4JSf_fGmq9f9Q"/>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+<div class="bg-white px-6 py-2 rounded-full shadow-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">upload</span>
+<span class="text-sm font-bold text-primary">Replace Image</span>
+</div>
+</div>
+</div>
+</div>
+<div class="w-1/3 space-y-4">
+<div class="p-4 bg-surface rounded-xl border border-outline-variant/15">
+<p class="text-xs font-bold text-slate-500 uppercase mb-2">Image Requirements</p>
+<ul class="text-xs space-y-2 text-on-surface-variant">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-sm">check_circle</span> Min. 1920 x 1080px</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-sm">check_circle</span> Max file size 5MB</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-sm">check_circle</span> Aspect ratio 16:9</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Localization (Editorial Tabs) -->
+<section class="bg-surface-container-lowest border border-outline-variant/15 rounded-xl overflow-hidden shadow-sm">
+<div class="p-8 border-b border-surface-container-high flex justify-between items-center">
+<div>
+<h3 class="text-sm font-bold uppercase tracking-widest text-primary">Multilingual Localization</h3>
+<div class="mt-4 flex items-center gap-4">
+<div class="w-48 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[37.5%]"></div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">3 of 8 languages completed</span>
+</div>
+</div>
+<button class="text-primary font-bold text-xs uppercase flex items-center gap-1 hover:bg-primary/5 px-3 py-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg">add</span> Add Language
+                        </button>
+</div>
+<div class="flex">
+<!-- Language Tabs -->
+<div class="w-64 bg-surface-container-low/50 border-r border-surface-container-high">
+<div class="p-2 space-y-1">
+<button class="w-full flex items-center justify-between px-4 py-3 bg-white shadow-sm rounded-lg text-primary font-bold text-sm">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                        English
+                                    </span>
+</button>
+<button class="w-full flex items-center justify-between px-4 py-3 hover:bg-white/50 rounded-lg text-slate-600 font-medium text-sm transition-all">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-lg">warning</span>
+                                        Arabic
+                                    </span>
+</button>
+<button class="w-full flex items-center justify-between px-4 py-3 hover:bg-white/50 rounded-lg text-slate-400 font-medium text-sm transition-all">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg">translate</span>
+                                        French
+                                    </span>
+</button>
+<button class="w-full flex items-center justify-between px-4 py-3 hover:bg-white/50 rounded-lg text-slate-400 font-medium text-sm transition-all opacity-50">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg">lock</span>
+                                        German
+                                    </span>
+</button>
+</div>
+</div>
+<!-- Editor Canvas -->
+<div class="flex-1 p-8 space-y-8">
+<div>
+<label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">City Name (English)</label>
+<input class="w-full bg-surface-container-low/30 border-none rounded-xl px-6 py-4 text-2xl font-bold text-primary focus:ring-2 focus:ring-primary/20" type="text" value="Cairo"/>
+</div>
+<div>
+<label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Detailed Description</label>
+<div class="border border-outline-variant/15 rounded-xl overflow-hidden">
+<div class="bg-surface-container-low px-4 py-2 flex gap-4 border-b border-outline-variant/15">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">format_bold</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">format_italic</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">format_list_bulleted</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">link</button>
+<div class="w-px h-6 bg-outline-variant/30 mx-2"></div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">history_edu</button>
+</div>
+<div class="p-6 min-h-[300px] text-on-surface-variant leading-relaxed">
+<p class="mb-4">Cairo, Egypt's sprawling capital, is set on the Nile River. At its heart is Tahrir Square and the vast Egyptian Museum, a trove of antiquities including royal mummies and gilded King Tutankhamun artifacts.</p>
+<p class="mb-4 font-semibold text-on-surface">The City of a Thousand Minarets</p>
+<p class="mb-4">Nearby, Giza is the site of the iconic pyramids and Great Sphinx, dating to the 26th century BC. In Gezira Island’s leafy Zamalek district, the Cairo Tower provides panoramic city views. The historic Old Cairo is a labyrinth of alleyways, churches, and bustling bazaars like Khan el-Khalili.</p>
+<p>Ideal for cultural tourism, Cairo serves as the primary gateway for all international travelers entering Egypt.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Danger Zone -->
+<section class="bg-error-container/10 border border-error/20 rounded-xl p-8 flex items-center justify-between">
+<div class="flex items-center gap-6">
+<div class="bg-error/10 p-3 rounded-full text-error">
+<span class="material-symbols-outlined text-3xl">delete_forever</span>
+</div>
+<div>
+<h4 class="text-error font-bold">Delete City</h4>
+<p class="text-xs text-on-error-container/70 mt-1 max-w-md">Deleting "Cairo" will permanently remove all associated metadata and relationships. This action is irreversible and requires administrative approval.</p>
+</div>
+</div>
+<button class="px-6 py-2.5 rounded-xl border border-error/30 text-error font-bold text-sm hover:bg-error hover:text-white transition-all">Remove Permanently</button>
+</section>
+</div>
+</div>
+<!-- Footer Overlay Motif -->
+<div class="fixed bottom-0 right-0 p-10 opacity-[0.03] pointer-events-none select-none">
+<svg class="text-primary fill-current" height="200" viewbox="0 0 100 100" width="200">
+<path d="M50 10L90 80H10L50 10Z"></path>
+<path d="M50 25L80 75H20L50 25Z" opacity="0.5"></path>
+</svg>
+</div>
+</main>
+</body></html>
