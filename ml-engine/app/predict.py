@@ -9,32 +9,50 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-model = load_model("../model/model.h5")
+model = load_model("D:\\I will prepare my paper to be the best in this world\\Gp\\Rafeeq\\ml-engine\\model\\model.h5")
 print("✅ Model loaded successfully!")
 
-classes = [
-    "Akhenaten",
-    "AmenhotepIII",
-    "Bent pyramid for senefru",
-    "Colossoi of Memnon",
-    "Goddess Isis",
-    "Hatshepsut face",
-    "Khafre Pyramid",
-    "King Thutmose III",
-    "Mask of Tutankhamun",
-    "Nefertiti",
-    "Pyramid_of_Djoser",
-    "Ramesses II",
-    "Ramessum",
-    "Statue of King Zoser",
-    "Statue of Tutankhamun with Ankhese", 
-    "Temple_of_Hatshepsut",
-    "Temple_of_Isis_in_Philae",
-    "Temple_of_Kom_Ombo",
-    "The Great Temple of Ramesses II",
-    "menkaure pyramid",
-    "sphinx"
-]
+classes = ['Amenhotep III and Queen Tiye',
+            'Amun and Mut',
+            'Anubis Shrine',
+            'Bust of the Roman Emperor Augustus',
+            'Bust of the Roman Emperor Hadrian',
+            'Bust of the god Serapis',
+            'God Ptah, King Ramesses II and Goddess Sekhmet',
+            'Goddess Isis',
+            'Gold Funerary Mask of King Psusennes I',
+            'Golden Throne of King Tutankhamun',
+            'Guardian Statues of Tutankhamun',
+            'Hanging Obelisk of Ramesses II',
+            'Head of Queen Hatshepsut',
+            'Head of the Pharaoh Akhenaten',
+            'Innermost Coffin of King Tutankhamun',
+            'Khafre Enthroned',
+            'King Djoser',
+            'King Khufu Solar Boat',
+            'King Ptolemy XII Auletes',
+            'King Ramesses II',
+            'King Ramesses III between the gods Horus and Seth',
+            'Kneeling Statue of Queen Hatshepsut',
+            'Mask of Tutankhamun',
+            'Menkaure Triad',
+            'Meryre and Iniuia',
+            'Middle Coffin of King Tutankhamun',
+            'Mosaic of Queen Berenice II',
+            'Narmer Palette',
+            'Other',
+            'Outer Coffin of King Tutankhamun',
+            'Pharaoh Akhenaten',
+            'Prince Rahotep and his wife Nofret',
+            'Queen Hatshepsut obelisk',
+            'Ramesses II as a child protected by the god Hauron',
+            'Roman Emperor Marcus Aurelius',
+            'Roman Emperor Septimius Severus',
+            'Seated Scribe',
+            'Silver coffin of King Psusennes I',
+            'Sphinx of Queen Hatshepsut',
+            'Sphinx of Ramses II and Merenptah',
+            'The sacred Apis Bull']
 
 def prepare_image(image):
     prepared_image = Image.open(io.BytesIO(image)).convert('RGB')
@@ -63,7 +81,7 @@ async def predict(file: UploadFile = File(...)):
     return {
         "predicted_class": int(predicted_index),
         "label": label_name,
-        "confidence": f"{confidence:.2f}%"
+        "confidence": confidence
     }
 
 app.add_middleware(
