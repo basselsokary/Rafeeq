@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-model = load_model("D:\\I will prepare my paper to be the best in this world\\Gp\\Rafeeq\\ml-engine\\model\\model.h5")
+model = load_model("D:\\I will prepare my paper to be the best in this world\\Gp\\Rafeeq\\ml-engine\\model\\model_From_Scratch.h5")
 print("✅ Model loaded successfully!")
 
 classes = ['Amenhotep III and Queen Tiye',
