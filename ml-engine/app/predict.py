@@ -5,9 +5,13 @@ import numpy as np
 import io
 import uvicorn
 import os
+import cv2
+from ultralytics import YOLO
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+yolo_model = YOLO("yolov8n.pt")
 
 model = load_model("D:\\I will prepare my paper to be the best in this world\\Gp\\Rafeeq\\ml-engine\\model\\model_From_Scratch.h5")
 print("✅ Model loaded successfully!")
@@ -69,20 +73,83 @@ def prepare_image(image):
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     data = await file.read()
-    prepared_image = prepare_image(data)  
     
+    original_save_path = f"original_{file.filename}"
+    with open(original_save_path, "wb") as f:
+        f.write(data)4
+    
+    # nparr = np.frombuffer(data, np.uint8)
+    # img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    
+    # h, w = img.shape[:2]
+    
+    # crop_h = int(h * 0.10) 
+    # crop_w = int(w * 0.10) 
+    
+    # img = img[crop_h : h - crop_h, crop_w : w - crop_w]
+    
+    # img_height, img_width = img.shape[:2]
+    # total_image_area = img_height * img_width
+    
+    # results = yolo_model(img, verbose=False)
+    
+    # target_image = img 
+    
+    # if len(results[0].boxes) > 0:
+    #     max_area = 0
+    #     best_box = None
+        
+    #     for box in results[0].boxes:
+    #         x1, y1, x2, y2 = map(int, box.xyxy[0])
+    #         area = (x2 - x1) * (y2 - y1) 
+            
+    #         if area > max_area:
+    #             max_area = area
+    #             best_box = box
+                
+    #     if max_area > (total_image_area * 0.25):
+    #         x1, y1, x2, y2 = map(int, best_box.xyxy[0])
+    #         target_image = np.ascontiguousarray(img[y1:y2, x1:x2])
+    #         cv2.imwrite(f"debug_crop_success_{np.random.randint(1000)}.jpg", target_image)
+    #     else:
+    #         print("YOLO Box was too small (likely background noise). Using full image instead.")
+    #         cv2.imwrite(f"debug_crop_fallback_{np.random.randint(1000)}.jpg", target_image)
+        
+    # is_success, buffer = cv2.imencode(".jpg", target_image)
+    # cropped_data = buffer.tobytes()
+    
+    nparr = np.frombuffer(data, np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    
+    h, w = img.shape[:2]
+    
+    crop_w = int(w * 0.25) 
+    
+    img = img[:, crop_w : w - crop_w]
+    
+    is_success, buffer = cv2.imencode(".jpg", img)
+    prepared_data = buffer.tobytes()
+    
+
+    prepared_image = prepare_image(prepared_data)
+        
     prediction = model.predict(prepared_image)
     predicted_index = np.argmax(prediction, axis=1)[0]
     
     label_name = classes[predicted_index]
-    
     confidence = float(np.max(prediction) * 100)
     
-    return {
-        "predicted_class": int(predicted_index),
-        "label": label_name,
-        "confidence": confidence
-    }
+    if confidence > 90:
+        return {
+            "predicted_class": int(predicted_index),
+            "label": label_name,
+            "confidence": confidence
+        }
+    else:
+        return {
+            "label": "Unknown",
+            "confidence": confidence
+        }
 
 app.add_middleware(
     CORSMiddleware,

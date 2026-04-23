@@ -1,0 +1,47 @@
+header .navbar {
+    z-index: 1000;
+    box-shadow: 1px 3px 15px rgba(0, 0, 0, 0.15);
+}
+
+header .logo img {
+    max-width: inherit;
+    max-height: 70px;
+    width: auto;
+    
+}
+
+header .nav-link {
+    padding: 0 1rem !important;
+    font-size: 1.125rem;
+    font-weight: 500;
+    transition: all 15ms ease-in-out;
+}
+
+header .button {
+    width: fit-content;
+}
+
+@media (max-width: 992px) {
+    header .nav-link {
+        padding: 1rem !important;
+    }
+
+    header .navbar-toggler {
+        border: none;
+    }
+
+    header .navbar-toggler:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    header .navbar-toggler-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    header .button .nav-link {
+        padding: 6px 18px !important;
+    }
+
+}
