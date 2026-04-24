@@ -49,7 +49,7 @@ const Dashboard = () => {
   return (
     <>
       <Layout>
-        <div style={{ paddingBottom: '50px', minHeight: '100vh', backgroundColor: '#fff8f0' }}>
+        <div className='custom_body'>
           <Container className='pt-4'>
             <Row className='g-4 mt-2'>
               {Object.keys(cardsData).map((key) => (
@@ -60,19 +60,19 @@ const Dashboard = () => {
             </Row>
             <Row className='g-4 mt-4 pt-3'>
               <Col xl={6} lg={6} md={12} sm={12} xs={12}>
-                <MapContainer center={EgyptPosition} zoom={6}
+                <MapContainer center={EgyptPosition} zoom={6} className='border- shadow-sm'
                   zoomControl={false}
                   style={{ height: '500px', width: '100%', backgroundColor: 'transparent' }}>
                   <TileLayer
-                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png"
+                    url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
                   />
-                  <GeoJSON data={egyptGeoJson} style={{
+                  {/* <GeoJSON data={egyptGeoJson} style={{
                     fillColor: "#eab308",
                     weight: 2,
                     opacity: 1,
                     color: "#ca8a04",
                     fillOpacity: 1
-                  }} />
+                  }} /> */}
                   {Governorates.map((gov) => (
                     <Marker key={gov.id} position={gov.position}  >
                       <Popup>
@@ -86,7 +86,7 @@ const Dashboard = () => {
                 </MapContainer>
               </Col>
               <Col xl={6} lg={6} md={12} sm={12} xs={12}>
-                <Card className='border-0 rounded-4 shadow-sm p-3'>
+                <Card className='border- rounded-4 shadow-sm p-3'>
                   <h6 className='fw-bold mb-4'>Top 10 Rated Sites</h6>
                   {topSites.map((site, index) => (
                     <div key={index} className='mb-4'>

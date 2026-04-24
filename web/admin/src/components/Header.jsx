@@ -1,8 +1,9 @@
-import React from 'react'
-import { Container, Nav, Navbar } from 'react-bootstrap'
+import {useContext} from 'react'
+import { Container, Nav, Navbar,Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import '../styles/Header.css'
-import logo from '../assets/logo.png'
+import logo from '../assets/logoo.png'
+import { ThemeContext } from './Theme'
 
 const links = {
     sites : '/sites',
@@ -12,14 +13,20 @@ const links = {
 }
 
 const Header = () => {
+
+    const {dark,toggleTheme} = useContext(ThemeContext);
+
     return (
         <header className='sticky-top'>
-            <Navbar collapseOnSelect expand='lg' className='w-100' style={{ backgroundColor:'#F5EFE7'}}>
+            <Navbar collapseOnSelect expand='lg' className='w-100' style= {dark ? { backgroundColor: '#333' } : { backgroundColor: '#F5EFE7' }}>
                 <Container>
                     <Navbar.Brand className='d-flex align-items-center'>
                         <Link to='/' className='logo'>
                             <img src={logo} alt="logo" className='img-fluid' />
                         </Link>
+                    {/* <Button onClick={toggleTheme}>
+                        {dark ? "☀️" : "🌙"}
+                    </Button> */}
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls='responsive-navbar-nav'/>
                     <Navbar.Collapse id='responsive-navbar-nav'>
