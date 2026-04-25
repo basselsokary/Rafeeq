@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../../layouts/Layout'
 import { Card, Container, Row, Col } from 'react-bootstrap'
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet'
 import egyptGeoJson from '../../assets/egypt.json'
 import CustomCard from '../../components/CustomCard'
+import { getCities } from '../../api/citiesApi'
 
 const cardsData = {
   "Total Users": {
@@ -46,6 +47,30 @@ const topSites = [
 ]
 
 const Dashboard = () => {
+
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+          const fetchCities = async () => {
+              try {
+                  const citiesData = await getCities();
+                  if (Array.isArray(citiesData)) {
+                      setCities(citiesData);
+                  }
+                  else if (citiesData && typeof citiesData === 'object' && citiesData.id) {
+                      setCities([citiesData]);
+                  }
+                  else {
+                      setCities([]);
+                  }
+              } catch (error) {
+                  console.error("Error fetching cities:", error);
+                  setCities([]); 
+              }
+          };
+          fetchCities();
+      }, []);
+
   return (
     <>
       <Layout>

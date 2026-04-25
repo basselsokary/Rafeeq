@@ -12,7 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/cities" element={<CitiesList />} />
-        <Route path="/cityEditor" element={<CitiesEditor />} />
+        <Route path="/cityEditor/:id?" element={<CitiesEditor />} />
       </Routes>
     </ThemeProvider>
   )

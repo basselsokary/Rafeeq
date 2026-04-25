@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.15.2",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "leaflet": "^1.9.4",
@@ -22,7 +23,7 @@
     "react-leaflet": "^5.0.0",
     "react-quilljs": "^2.0.5",
     "react-router": "^7.14.1",
-    "react-router-dom": "^7.14.1"
+    "react-router-dom": "^7.14.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

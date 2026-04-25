@@ -1,11 +1,35 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../../layouts/Layout'
 import { Container, Button, Row, Col, Form } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import CityCard from '../../components/CityCard'
-import image from "../../assets/download.png"
+// import image from "../../assets/download.png"
+import { getCities } from '../../api/citiesApi'
 
 const CitiesList = () => {
+    const [cities, setCities] = useState([]);
+
+    useEffect(() => {
+        const fetchCities = async () => {
+            try {
+                const response = await getCities();
+                if (response && Array.isArray(response.data)) {
+                    setCities(response.data);
+                }
+                else if (Array.isArray(response)) {
+                    setCities(response);
+                }
+                else {
+                    setCities([]);
+                }
+            } catch (error) {
+                console.error("Error fetching cities:", error);
+                setCities([]);
+            }
+        };
+        fetchCities();
+    }, []);
+
     return (
         <>
             <Layout>
@@ -54,30 +78,27 @@ const CitiesList = () => {
                             </Col>
                         </Row>
                         <Row className='mt-4 pt-3'>
-                            <Col xl={3} lg={4} md={6} sm={6} xs={6} className='mb-4'>
-                                <CityCard image={null} location={{ lat: 30.0444, lng: 31.2357 }} name="Cairo" sitesNum={30} />
-                            </Col>
-                            <Col xl={3} lg={4} md={6} sm={6} xs={6} className='mb-4'>
-                                <CityCard image={image} location={{ lat: 30.0444, lng: 31.2357 }} name="Cairo" sitesNum={30} />
-                            </Col>
-                            <Col xl={3} lg={4} md={6} sm={6} xs={6} className='mb-4'>
-                                <CityCard image={image} location={{ lat: 30.0444, lng: 31.2357 }} name="Cairo" sitesNum={30} />
-                            </Col>
-                            <Col xl={3} lg={4} md={6} sm={6} xs={6} className='mb-4'>
-                                <CityCard image={image} location={{ lat: 30.0444, lng: 31.2357 }} name="Cairo" sitesNum={30} />
-                            </Col>
-                            <Col xl={3} lg={4} md={6} sm={6} xs={6} className='mb-4'>
-                                <CityCard image={image} location={{ lat: 30.0444, lng: 31.2357 }} name="Cairo" sitesNum={30} />
-                            </Col>
-                            <Col xl={3} lg={4} md={6} sm={6} xs={6} className='mb-4'>
-                                <CityCard image={image} location={{ lat: 30.0444, lng: 31.2357 }} name="Cairo" sitesNum={30} />
-                            </Col>
-                            <Col xl={3} lg={4} md={6} sm={6} xs={6} className='mb-4'>
-                                <CityCard image={image} location={{ lat: 30.0444, lng: 31.2357 }} name="Cairo" sitesNum={30} />
-                            </Col>
-                            <Col xl={3} lg={4} md={6} sm={6} xs={6} className='mb-4'>
-                                <CityCard image={image} location={{ lat: 30.0444, lng: 31.2357 }} name="Cairo" sitesNum={30} />
-                            </Col>
+                            {cities.length === 0 ? (
+                                <Col className='d-flex flex-column justify-content-center align-items-center gap-3 py-5 w-100'>
+                                    <i className="bi bi-search text-secondary" style={{ fontSize: '3rem' }}></i>
+                                    <h3 className='fw-bold text-muted'>No cities found</h3>
+                                </Col>
+                            ) : (
+                                cities.map(city => (
+                                    <Col key={city.id} xl={3} lg={4} md={6} sm={6} xs={12} className='mb-4'>
+                                        <CityCard
+                                            id={city.id}
+                                            image={city.imageUrl}
+                                            location={{
+                                                lat: city.centerLocation?.latitude ,
+                                                lng: city.centerLocation?.longitude 
+                                            }}
+                                            name={city.name}
+                                            sitesNum={city.totalSites}
+                                        />
+                                    </Col>
+                                ))
+                            )}
                         </Row>
                     </Container>
                 </div>

@@ -1,6 +1,7 @@
-import { Card,Button } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-function CityCard({ image, location, name, sitesNum }) {
+function CityCard({ id, image, location, name, sitesNum }) {
     return (
         <Card className="rounded-4 shadow-sm overflow-hidden">
             <div className="position-relative">
@@ -17,7 +18,8 @@ function CityCard({ image, location, name, sitesNum }) {
                 {/* <Card.Img variant="top" src={image} style={{ height: '200px', objectFit: 'cover' }} /> */}
                 <div className="position-absolute bottom-0 start-0 p-3 w-100 text-white"
                     style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)' }}>
-                    <span className="m-0"><i className="bi bi-geo-alt-fill" /> {location.lat.toFixed(4)}, {location.lng.toFixed(4)}</span>
+                    <span className="m-0"><i className="bi bi-geo-alt-fill" /> {location?.lat != null ? location.lat.toFixed(4) : "0.0000"}
+                        ,{location?.lng != null ? location.lng.toFixed(4) : "0.0000"}</span>
                 </div>
             </div>
             <Card.Body>
@@ -37,6 +39,8 @@ function CityCard({ image, location, name, sitesNum }) {
                         View Sites
                     </Button>
                     <Button
+                        as={Link}
+                        to={`/cityEditor/${id}`}
                         variant="light"
                         className="border-0 d-flex align-items-center justify-content-center"
                         style={{
