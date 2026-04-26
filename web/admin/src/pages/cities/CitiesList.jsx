@@ -39,7 +39,11 @@ const CitiesList = () => {
                             <Col className='d-flex justify-content-between align-items-center flex-wrap gap-3'>
                                 <div className='d-flex justify-content-center align-items-center gap-3'>
                                     <h1 className='fw-bold mb-0' style={{ color: "#251975", fontSize: '2.5rem' }}>Cities Management </h1>
-                                    <span className='fw-bold rounded-pill px-3 py-1' style={{ color: "#251975", backgroundColor: '#dcd0ff', fontsize: '0.9rem', display: 'inline-block' }}>27 Cities</span>
+                                    {cities.length > 0 && (
+                                        <span className='fw-bold rounded-pill px-3 py-1' style={{ color: "#251975", backgroundColor: '#dcd0ff', fontsize: '0.9rem', display: 'inline-block' }}>
+                                            {cities.length} Cities
+                                        </span>
+                                    )}
                                 </div>
                                 <Button as={Link} to='/cityEditor' className="rounded-3 px-4 py-2 fw-bold d-flex align-items-center gap-2 shadow-sm"
                                     style={{ background: 'linear-gradient(45deg,#7C572D,#D4A574)', border: 'none', height: 'fit-content' }}>
