@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useContext } from 'react'
 import { useForm } from "react-hook-form";
 import Layout from '../../layouts/Layout'
 import { Container, Row, Button, Col, Form, ListGroup } from 'react-bootstrap'
@@ -7,6 +7,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import CustomCard from '../../components/CustomCard'
 import { useQuill } from 'react-quilljs';
 import { addCity, updateCity, deleteCity, getCity, updateLocalizedContent } from '../../api/citiesApi';
+import { ThemeContext } from '../../components/Theme'
 
 function ChangeView({ center }) {
     const map = useMap();
@@ -33,6 +34,8 @@ const CitiesEditor = () => {
     const [selectedLang, setSelectedLang] = useState("en");
     const [posterPreview, setPosterPreview] = useState(null);
     const [cityNameTitle, setCityNameTitle] = useState("");
+
+    const { dark, toggleTheme } = useContext(ThemeContext);
 
     const { quill, quillRef } = useQuill({
         modules: {
@@ -208,7 +211,7 @@ const CitiesEditor = () => {
     return (
         <>
             <Layout>
-                <div className='custom_body'>
+                <div className={`custom_body ${dark ? 'dark-mode' : ''}`}>
                     <Container className='pt-4'>
                         <Row className='mt-2'>
                             <Col className='d-flex justify-content-between align-items-center flex-wrap gap-3'>

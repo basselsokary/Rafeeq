@@ -8,15 +8,17 @@ import io
 import uvicorn
 import pickle
 import time
+import os
+
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-model = load_model("D:\\I will prepare my paper to be the best in this world\\Gp\\Rafeeq\\ml-engine\\model\\model_From_Scratch.h5")
-print("✅ Model loaded successfully!")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(BASE_DIR, "..", "model", "model_From_Scratch.h5")
+model = load_model(model_path)
 
 feature_extractor = MobileNetV2(weights='imagenet', include_top=False, pooling='avg')
-print("✅ Feature Extractor loaded successfully!")
 
 classes = ['Amenhotep III and Queen Tiye','Amun and Mut','Anubis Shrine',
             'Bust of the Roman Emperor Augustus','Bust of the Roman Emperor Hadrian','Bust of the god Serapis',
@@ -33,12 +35,11 @@ classes = ['Amenhotep III and Queen Tiye','Amun and Mut','Anubis Shrine',
             'Seated Scribe','Silver coffin of King Psusennes I','Sphinx of Queen Hatshepsut',
             'Sphinx of Ramses II and Merenptah','The sacred Apis Bull']
 
+pkl_path = os.path.join(BASE_DIR, "reference_embeddings.pkl")
 try:
-    with open("reference_embeddings.pkl", "rb") as f:
+    with open(pkl_path, "rb") as f:
         reference_embeddings = pickle.load(f)
-    print("✅ Reference Embeddings loaded successfully!")
 except FileNotFoundError:
-    print("⚠️ Warning: reference_embeddings.pkl not found. Similarity check will fail.")
     reference_embeddings = {}
 
 def prepare_image(image):
@@ -104,7 +105,7 @@ async def predict(file: UploadFile = File(...)):
                 }
 
     end = time.perf_counter()
-    print(f"⏱️ Total request time: {(end - start)*1000:.2f} ms")
+    print(f"Total request time: {(end - start)*1000:.2f} ms")
 
     return response_data
     

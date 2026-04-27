@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Layout from '../../layouts/Layout'
 import { Card, Container, Row, Col } from 'react-bootstrap'
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet'
 import egyptGeoJson from '../../assets/egypt.json'
 import CustomCard from '../../components/CustomCard'
 import { getCities } from '../../api/citiesApi'
+import { ThemeContext } from '../../components/Theme'
 
 const cardsData = {
   "Total Users": {
@@ -48,33 +49,35 @@ const topSites = [
 
 const Dashboard = () => {
 
+  const { dark, toggleTheme } = useContext(ThemeContext);
+
   const [cities, setCities] = useState([]);
 
   useEffect(() => {
-          const fetchCities = async () => {
-              try {
-                  const citiesData = await getCities();
-                  if (Array.isArray(citiesData)) {
-                      setCities(citiesData);
-                  }
-                  else if (citiesData && typeof citiesData === 'object' && citiesData.id) {
-                      setCities([citiesData]);
-                  }
-                  else {
-                      setCities([]);
-                  }
-              } catch (error) {
-                  console.error("Error fetching cities:", error);
-                  setCities([]); 
-              }
-          };
-          fetchCities();
-      }, []);
+    const fetchCities = async () => {
+      try {
+        const citiesData = await getCities();
+        if (Array.isArray(citiesData)) {
+          setCities(citiesData);
+        }
+        else if (citiesData && typeof citiesData === 'object' && citiesData.id) {
+          setCities([citiesData]);
+        }
+        else {
+          setCities([]);
+        }
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+        setCities([]);
+      }
+    };
+    fetchCities();
+  }, []);
 
   return (
     <>
       <Layout>
-        <div className='custom_body'>
+        <div className={`custom_body ${dark ? 'dark-mode' : ''}`}>
           <Container className='pt-4'>
             <Row className='g-4 mt-2'>
               {Object.keys(cardsData).map((key) => (

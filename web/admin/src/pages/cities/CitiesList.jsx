@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useContext } from 'react'
 import Layout from '../../layouts/Layout'
 import { Container, Button, Row, Col, Form } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import CityCard from '../../components/CityCard'
 // import image from "../../assets/download.png"
 import { getCities } from '../../api/citiesApi'
+import { ThemeContext } from '../../components/Theme'
 
 const CitiesList = () => {
     const [cities, setCities] = useState([]);
+    const {dark,toggleTheme} = useContext(ThemeContext);
 
     useEffect(() => {
         const fetchCities = async () => {
@@ -33,7 +35,7 @@ const CitiesList = () => {
     return (
         <>
             <Layout>
-                <div className='custom_body'>
+                <div className={`custom_body ${dark ? 'dark-mode' : ''}`}>
                     <Container className='pt-4'>
                         <Row className='mt-2'>
                             <Col className='d-flex justify-content-between align-items-center flex-wrap gap-3'>
