@@ -9,3 +9,7 @@
   background-color: #333;
 
 }
+
+.transition {
+    transition: all 0.4s ease-in-out;
+}
