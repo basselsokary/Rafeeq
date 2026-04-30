@@ -67,7 +67,7 @@ public static class EmailTemplates
             ");
     }
 
-    public static EmailResponse Welcome(string userName)
+    public static EmailResponse WelcomeTourist(string userName)
     {
         return new EmailResponse(
             Subject: "Welcome to Rafeeq!",
@@ -86,6 +86,90 @@ public static class EmailTemplates
                 Thank you for joining Rafeeq, your personal guide to Egypt's amazing attractions!
                 
                 Start exploring historical sites, plan your trips, and discover hidden gems.
+                
+                Best regards,
+                The Rafeeq Team
+            ");
+    }
+    
+    public static EmailResponse WelcomeModerator(string firstName, string email, string tempPassword)
+    {
+        return new EmailResponse(
+            Subject: "Welcome to Rafeeq Moderator Team!",
+            HtmlBody: $@"
+                <h2>Welcome to Rafeeq!</h2>
+                <p>Hello {firstName},</p>
+                <p>You have been promoted to a moderator on Rafeeq!</p>
+                <p>As a moderator, you will help maintain the quality and integrity of our community.</p>
+                <p>Best regards,<br/>The Rafeeq Team</p>
+            ",
+            TextBody: $@"
+                Your login credentials:
+                Email: {email}
+                Temporary Password: {tempPassword}
+
+                IMPORTANT: You must change your password on first login.
+
+                Login here: https://admin.rafeeq.com/login
+
+                If you did not expect this email, please contact: admin@rafeeq.com
+
+                Best regards,
+                Rafeeq Admin Team
+            ");
+    }
+
+    public static EmailResponse TripReminder(string userName, string tripName, DateTime tripDate)
+    {
+        return new EmailResponse(
+            Subject: $"Reminder: Upcoming Trip - {tripName}",
+            HtmlBody: $@"
+                <h2>Trip Reminder</h2>
+                <p>Hello {userName},</p>
+                <p>This is a friendly reminder about your upcoming trip:</p>
+                <ul>
+                    <li><strong>Trip Name:</strong> {tripName}</li>
+                    <li><strong>Date:</strong> {tripDate:MMMM dd, yyyy}</li>
+                </ul>
+                <p>We hope you have a fantastic time exploring Egypt's wonders!</p>
+                <p>Best regards,<br/>The Rafeeq Team</p>
+            ",
+            TextBody: $@"
+                Trip Reminder
+                
+                Hello {userName},
+                
+                This is a friendly reminder about your upcoming trip:
+                
+                Trip Name: {tripName}
+                Date: {tripDate:MMMM dd, yyyy}
+                
+                We hope you have a fantastic time exploring Egypt's wonders!
+                
+                Best regards,
+                The Rafeeq Team
+            ");
+    }
+
+    public static EmailResponse ReviewResponse(string userName, string attractionName)
+    {
+        return new EmailResponse(
+            Subject: "Review Response",
+            HtmlBody: $@"
+                <h2>Review Response</h2>
+                <p>Hello {userName},</p>
+                <p>Your review for {attractionName} has been received and is under review.</p>
+                <p>Thank you for your feedback!</p>
+                <p>Best regards,<br/>The Rafeeq Team</p>
+            ",
+            TextBody: $@"
+                Review Response
+                
+                Hello {userName},
+                
+                Your review for {attractionName} has been received and is under review.
+                
+                Thank you for your feedback!
                 
                 Best regards,
                 The Rafeeq Team
