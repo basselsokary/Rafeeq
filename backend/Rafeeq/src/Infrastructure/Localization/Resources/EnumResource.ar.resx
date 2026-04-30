@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <!-- AttractionType -->
+  <data name="AttractionType_Other" xml:space="preserve"><value>أخرى</value></data>
+  <data name="AttractionType_Pyramid" xml:space="preserve"><value>هرم</value></data>
+  <data name="AttractionType_Temple" xml:space="preserve"><value>معبد</value></data>
+  <data name="AttractionType_Tomb" xml:space="preserve"><value>مقبرة</value></data>
+  <data name="AttractionType_Statue" xml:space="preserve"><value>تمثال</value></data>
+  <data name="AttractionType_Monument" xml:space="preserve"><value>نصب تذكاري</value></data>
+  <data name="AttractionType_Mosque" xml:space="preserve"><value>مسجد</value></data>
+  <data name="AttractionType_Church" xml:space="preserve"><value>كنيسة</value></data>
+  <data name="AttractionType_Synagogue" xml:space="preserve"><value>معبد يهودي</value></data>
+  <data name="AttractionType_MuseumHall" xml:space="preserve"><value>قاعة متحف</value></data>
+  <data name="AttractionType_Exhibition" xml:space="preserve"><value>معرض</value></data>
+  <data name="AttractionType_Palace" xml:space="preserve"><value>قصر</value></data>
+  <data name="AttractionType_Fortress" xml:space="preserve"><value>قلعة</value></data>
+  <data name="AttractionType_Gate" xml:space="preserve"><value>بوابة</value></data>
+  <data name="AttractionType_Obelisk" xml:space="preserve"><value>مسلة</value></data>
+  <data name="AttractionType_Column" xml:space="preserve"><value>عمود</value></data>
+  <data name="AttractionType_Ruins" xml:space="preserve"><value>أطلال</value></data>
+  <data name="AttractionType_Garden" xml:space="preserve"><value>حديقة</value></data>
+  <data name="AttractionType_Courtyard" xml:space="preserve"><value>فناء</value></data>
+  <data name="AttractionType_Cave" xml:space="preserve"><value>كهف</value></data>
+  <data name="AttractionType_RockCutStructure" xml:space="preserve"><value>منشأة منحوتة في الصخر</value></data>
+  <data name="AttractionType_ArchaeologicalStructure" xml:space="preserve"><value>منشأة أثرية</value></data>
+  <data name="AttractionType_HistoricBuilding" xml:space="preserve"><value>مبنى تاريخي</value></data>
+  <data name="AttractionType_ViewingPoint" xml:space="preserve"><value>نقطة مشاهدة</value></data>
+  <data name="AttractionType_CulturalExhibit" xml:space="preserve"><value>معروض ثقافي</value></data>
+
+  <!-- HistoricalPeriod -->
+  <data name="HistoricalPeriod_Unknown" xml:space="preserve"><value>غير معروف</value></data>
+  <data name="HistoricalPeriod_PreDynastic" xml:space="preserve"><value>ما قبل الأسرات</value></data>
+  <data name="HistoricalPeriod_EarlyDynastic" xml:space="preserve"><value>العصر العتيق</value></data>
+  <data name="HistoricalPeriod_OldKingdom" xml:space="preserve"><value>الدولة القديمة</value></data>
+  <data name="HistoricalPeriod_MiddleKingdom" xml:space="preserve"><value>الدولة الوسطى</value></data>
+  <data name="HistoricalPeriod_NewKingdom" xml:space="preserve"><value>الدولة الحديثة</value></data>
+  <data name="HistoricalPeriod_LatePeriod" xml:space="preserve"><value>العصر المتأخر</value></data>
+  <data name="HistoricalPeriod_PtolemaicPeriod" xml:space="preserve"><value>العصر البطلمي</value></data>
+  <data name="HistoricalPeriod_RomanPeriod" xml:space="preserve"><value>العصر الروماني</value></data>
+  <data name="HistoricalPeriod_ByzantinePeriod" xml:space="preserve"><value>العصر البيزنطي</value></data>
+  <data name="HistoricalPeriod_IslamicPeriod" xml:space="preserve"><value>العصر الإسلامي</value></data>
+  <data name="HistoricalPeriod_ModernPeriod" xml:space="preserve"><value>العصر الحديث</value></data>
+
+  <!-- LanguageCode -->
+  <data name="LanguageCode_Arabic" xml:space="preserve"><value>العربية</value></data>
+  <data name="LanguageCode_English" xml:space="preserve"><value>الإنجليزية</value></data>
+  <data name="LanguageCode_French" xml:space="preserve"><value>الفرنسية</value></data>
+  <data name="LanguageCode_German" xml:space="preserve"><value>الألمانية</value></data>
+  <data name="LanguageCode_Russian" xml:space="preserve"><value>الروسية</value></data>
+  <data name="LanguageCode_Spanish" xml:space="preserve"><value>الإسبانية</value></data>
+
+  <!-- ModerationAction -->
+  <data name="ModerationAction_NoAction" xml:space="preserve"><value>بدون إجراء</value></data>
+  <data name="ModerationAction_ContentRemoved" xml:space="preserve"><value>تمت إزالة المحتوى</value></data>
+  <data name="ModerationAction_UserWarned" xml:space="preserve"><value>تم تحذير المستخدم</value></data>
+  <data name="ModerationAction_UserSuspended" xml:space="preserve"><value>تم إيقاف المستخدم</value></data>
+  <data name="ModerationAction_UserBanned" xml:space="preserve"><value>تم حظر المستخدم</value></data>
+  <data name="ModerationAction_ContentEdited" xml:space="preserve"><value>تم تعديل المحتوى</value></data>
+
+  <!-- ReportReason -->
+  <data name="ReportReason_Spam" xml:space="preserve"><value>رسائل مزعجة</value></data>
+  <data name="ReportReason_HarmfulContent" xml:space="preserve"><value>محتوى ضار</value></data>
+  <data name="ReportReason_Harassment" xml:space="preserve"><value>تحرش</value></data>
+  <data name="ReportReason_Inappropriate" xml:space="preserve"><value>محتوى غير لائق</value></data>
+  <data name="ReportReason_HateSpeech" xml:space="preserve"><value>خطاب كراهية</value></data>
+  <data name="ReportReason_Violence" xml:space="preserve"><value>عنف</value></data>
+  <data name="ReportReason_Misinformation" xml:space="preserve"><value>معلومات مضللة</value></data>
+  <data name="ReportReason_Copyright" xml:space="preserve"><value>حقوق النشر</value></data>
+  <data name="ReportReason_ChildSafety" xml:space="preserve"><value>سلامة الأطفال</value></data>
+  <data name="ReportReason_Other" xml:space="preserve"><value>أخرى</value></data>
+
+  <!-- ReportStatus -->
+  <data name="ReportStatus_Pending" xml:space="preserve"><value>قيد الانتظار</value></data>
+  <data name="ReportStatus_UnderReview" xml:space="preserve"><value>قيد المراجعة</value></data>
+  <data name="ReportStatus_Resolved" xml:space="preserve"><value>تم الحل</value></data>
+  <data name="ReportStatus_Dismissed" xml:space="preserve"><value>تم الرفض</value></data>
+
+  <!-- ReviewOrderBy -->
+  <data name="ReviewOrderBy_Helpful" xml:space="preserve"><value>الأكثر فائدة</value></data>
+  <data name="ReviewOrderBy_Recent" xml:space="preserve"><value>الأحدث</value></data>
+  <data name="ReviewOrderBy_Rating" xml:space="preserve"><value>التقييم</value></data>
+
+  <!-- ReviewStatus -->
+  <data name="ReviewStatus_Pending" xml:space="preserve"><value>قيد الانتظار</value></data>
+  <data name="ReviewStatus_Approved" xml:space="preserve"><value>مقبول</value></data>
+  <data name="ReviewStatus_Rejected" xml:space="preserve"><value>مرفوض</value></data>
+  <data name="ReviewStatus_Flagged" xml:space="preserve"><value>تم الإبلاغ عنه</value></data>
+
+  <!-- SiteStatus -->
+  <data name="SiteStatus_Active" xml:space="preserve"><value>نشط</value></data>
+  <data name="SiteStatus_UnderMaintenance" xml:space="preserve"><value>تحت الصيانة</value></data>
+  <data name="SiteStatus_TemporarilyClosed" xml:space="preserve"><value>مغلق مؤقتا</value></data>
+  <data name="SiteStatus_PermanentlyClosed" xml:space="preserve"><value>مغلق نهائيا</value></data>
+
+  <!-- SiteType -->
+  <data name="SiteType_Other" xml:space="preserve"><value>أخرى</value></data>
+  <data name="SiteType_Historical" xml:space="preserve"><value>تاريخي</value></data>
+  <data name="SiteType_Museum" xml:space="preserve"><value>متحف</value></data>
+  <data name="SiteType_Religious" xml:space="preserve"><value>ديني</value></data>
+  <data name="SiteType_Archaeological" xml:space="preserve"><value>أثري</value></data>
+  <data name="SiteType_Cultural" xml:space="preserve"><value>ثقافي</value></data>
+  <data name="SiteType_Natural" xml:space="preserve"><value>طبيعي</value></data>
+  <data name="SiteType_Entertainment" xml:space="preserve"><value>ترفيهي</value></data>
+  <data name="SiteType_Aquarium" xml:space="preserve"><value>حوض أسماك</value></data>
+  <data name="SiteType_Beach" xml:space="preserve"><value>شاطئ</value></data>
+  <data name="SiteType_BotanicalGarden" xml:space="preserve"><value>حديقة نباتية</value></data>
+  <data name="SiteType_Castle" xml:space="preserve"><value>قلعة</value></data>
+  <data name="SiteType_Cave" xml:space="preserve"><value>كهف</value></data>
+  <data name="SiteType_Desert" xml:space="preserve"><value>صحراء</value></data>
+  <data name="SiteType_Fortress" xml:space="preserve"><value>حصن</value></data>
+  <data name="SiteType_Gallery" xml:space="preserve"><value>معرض</value></data>
+  <data name="SiteType_Island" xml:space="preserve"><value>جزيرة</value></data>
+  <data name="SiteType_Lake" xml:space="preserve"><value>بحيرة</value></data>
+  <data name="SiteType_Library" xml:space="preserve"><value>مكتبة</value></data>
+  <data name="SiteType_Monument" xml:space="preserve"><value>نصب تذكاري</value></data>
+  <data name="SiteType_Mountain" xml:space="preserve"><value>جبل</value></data>
+  <data name="SiteType_Palace" xml:space="preserve"><value>قصر</value></data>
+  <data name="SiteType_Temple" xml:space="preserve"><value>معبد</value></data>
+  <data name="SiteType_Park" xml:space="preserve"><value>حديقة</value></data>
+  <data name="SiteType_River" xml:space="preserve"><value>نهر</value></data>
+  <data name="SiteType_Stadium" xml:space="preserve"><value>ملعب</value></data>
+  <data name="SiteType_Theater" xml:space="preserve"><value>مسرح</value></data>
+  <data name="SiteType_Volcano" xml:space="preserve"><value>بركان</value></data>
+  <data name="SiteType_Waterfall" xml:space="preserve"><value>شلال</value></data>
+  <data name="SiteType_Zoo" xml:space="preserve"><value>حديقة حيوان</value></data>
+
+  <!-- SponsorTier -->
+  <data name="SponsorTier_Bronze" xml:space="preserve"><value>برونزي</value></data>
+  <data name="SponsorTier_Silver" xml:space="preserve"><value>فضي</value></data>
+  <data name="SponsorTier_Gold" xml:space="preserve"><value>ذهبي</value></data>
+  <data name="SponsorTier_Platinum" xml:space="preserve"><value>بلاتيني</value></data>
+
+  <!-- SponsorType -->
+  <data name="SponsorType_Restaurant" xml:space="preserve"><value>مطعم</value></data>
+  <data name="SponsorType_Hotel" xml:space="preserve"><value>فندق</value></data>
+  <data name="SponsorType_Shop" xml:space="preserve"><value>متجر</value></data>
+  <data name="SponsorType_Service" xml:space="preserve"><value>خدمة</value></data>
+  <data name="SponsorType_Tour" xml:space="preserve"><value>جولة</value></data>
+  <data name="SponsorType_Transportation" xml:space="preserve"><value>مواصلات</value></data>
+
+  <!-- TransportationType -->
+  <data name="TransportationType_Bus" xml:space="preserve"><value>حافلة</value></data>
+  <data name="TransportationType_BicycleRental" xml:space="preserve"><value>تأجير دراجات</value></data>
+  <data name="TransportationType_CarRental" xml:space="preserve"><value>تأجير سيارات</value></data>
+  <data name="TransportationType_Ferry" xml:space="preserve"><value>عبارة</value></data>
+  <data name="TransportationType_Metro" xml:space="preserve"><value>مترو</value></data>
+  <data name="TransportationType_Taxi" xml:space="preserve"><value>تاكسي</value></data>
+  <data name="TransportationType_Train" xml:space="preserve"><value>قطار</value></data>
+  <data name="TransportationType_Tram" xml:space="preserve"><value>ترام</value></data>
+
+  <!-- TripStatus -->
+  <data name="TripStatus_Draft" xml:space="preserve"><value>مسودة</value></data>
+  <data name="TripStatus_Planned" xml:space="preserve"><value>مخططة</value></data>
+  <data name="TripStatus_InProgress" xml:space="preserve"><value>قيد التنفيذ</value></data>
+  <data name="TripStatus_Completed" xml:space="preserve"><value>مكتملة</value></data>
+  <data name="TripStatus_Cancelled" xml:space="preserve"><value>ملغاة</value></data>
+
+  <!-- UserRole -->
+  <data name="UserRole_Tourist" xml:space="preserve"><value>سائح</value></data>
+  <data name="UserRole_Admin" xml:space="preserve"><value>مدير النظام</value></data>
+  <data name="UserRole_Moderator" xml:space="preserve"><value>مشرف</value></data>
+
+  <!-- UserStatus -->
+  <data name="UserStatus_Active" xml:space="preserve"><value>نشط</value></data>
+  <data name="UserStatus_Inactive" xml:space="preserve"><value>غير نشط</value></data>
+  <data name="UserStatus_Suspended" xml:space="preserve"><value>موقوف</value></data>
+  <data name="UserStatus_Banned" xml:space="preserve"><value>محظور</value></data>
+  <data name="UserStatus_Deleted" xml:space="preserve"><value>محذوف</value></data>
+
+  <!-- WeekDay -->
+  <data name="WeekDay_Saturday" xml:space="preserve"><value>السبت</value></data>
+  <data name="WeekDay_Sunday" xml:space="preserve"><value>الأحد</value></data>
+  <data name="WeekDay_Monday" xml:space="preserve"><value>الاثنين</value></data>
+  <data name="WeekDay_Tuesday" xml:space="preserve"><value>الثلاثاء</value></data>
+  <data name="WeekDay_Wednesday" xml:space="preserve"><value>الأربعاء</value></data>
+  <data name="WeekDay_Thursday" xml:space="preserve"><value>الخميس</value></data>
+  <data name="WeekDay_Friday" xml:space="preserve"><value>الجمعة</value></data>
+
+  <!-- ErrorType -->
+  <data name="ErrorType_None" xml:space="preserve"><value>لا يوجد</value></data>
+  <data name="ErrorType_Failure" xml:space="preserve"><value>فشل</value></data>
+  <data name="ErrorType_NotFound" xml:space="preserve"><value>غير موجود</value></data>
+  <data name="ErrorType_Validation" xml:space="preserve"><value>تحقق</value></data>
+  <data name="ErrorType_Conflict" xml:space="preserve"><value>تعارض</value></data>
+  <data name="ErrorType_Unauthorized" xml:space="preserve"><value>غير مصرح</value></data>
+  <data name="ErrorType_Forbidden" xml:space="preserve"><value>ممنوع</value></data>
+
+  <!-- FacilityType -->
+  <data name="FacilityType_ATM" xml:space="preserve"><value>جهاز صراف آلي</value></data>
+  <data name="FacilityType_AudioGuide" xml:space="preserve"><value>دليل صوتي</value></data>
+  <data name="FacilityType_BabyChanging" xml:space="preserve"><value>غرفة تغيير أطفال</value></data>
+  <data name="FacilityType_BicycleRental" xml:space="preserve"><value>تأجير دراجات</value></data>
+  <data name="FacilityType_CafeteriaOrRestaurant" xml:space="preserve"><value>كافتيريا أو مطعم</value></data>
+  <data name="FacilityType_Elevator" xml:space="preserve"><value>مصعد</value></data>
+  <data name="FacilityType_FirstAid" xml:space="preserve"><value>إسعافات أولية</value></data>
+  <data name="FacilityType_GiftShop" xml:space="preserve"><value>متجر هدايا</value></data>
+  <data name="FacilityType_GuidedTours" xml:space="preserve"><value>جولات إرشادية</value></data>
+  <data name="FacilityType_InformationCenter" xml:space="preserve"><value>مركز معلومات</value></data>
+  <data name="FacilityType_Lockers" xml:space="preserve"><value>خزائن</value></data>
+  <data name="FacilityType_Parking" xml:space="preserve"><value>موقف سيارات</value></data>
+  <data name="FacilityType_PetFriendly" xml:space="preserve"><value>مناسب للحيوانات الأليفة</value></data>
+  <data name="FacilityType_PhotographyAllowed" xml:space="preserve"><value>مسموح بالتصوير</value></data>
+  <data name="FacilityType_PrayerRoom" xml:space="preserve"><value>غرفة صلاة</value></data>
+  <data name="FacilityType_Restroom" xml:space="preserve"><value>دورة مياه</value></data>
+  <data name="FacilityType_SignLanguageTours" xml:space="preserve"><value>جولات بلغة الإشارة</value></data>
+  <data name="FacilityType_StrollerAccess" xml:space="preserve"><value>مناسب لعربات الأطفال</value></data>
+  <data name="FacilityType_WheelchairAccess" xml:space="preserve"><value>مناسب للكراسي المتحركة</value></data>
+  <data name="FacilityType_WiFi" xml:space="preserve"><value>واي فاي</value></data>
+
+</root>

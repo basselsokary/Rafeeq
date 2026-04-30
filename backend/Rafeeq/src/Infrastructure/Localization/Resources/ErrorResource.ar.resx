@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader> -->
+
+  <!-- Validation -->
+  <data name="VALIDATION_GENERAL" xml:space="preserve"><value>حدث خطأ أو أكثر أثناء التحقق من صحة البيانات.</value></data>
+  <data name="VALIDATION_VALUE_REQUIRED" xml:space="preserve"><value>القيمة مطلوبة.</value></data>
+  <data name="VALIDATION_COLLECTION_REQUIRED" xml:space="preserve"><value>مطلوب عنصر واحد على الأقل.</value></data>
+  <data name="VALIDATION_INVALID_ENUM_VALUE" xml:space="preserve"><value>قيمة {0} غير صالحة.</value></data>
+  <data name="VALIDATION_NUMBER_GREATER_THAN_ZERO_REQUIRED" xml:space="preserve"><value>يجب أن تكون القيمة أكبر من صفر.</value></data>
+  <data name="VALIDATION_MAXIMUM_LENGTH_EXCEEDED" xml:space="preserve"><value>القيمة تتجاوز الحد الأقصى المسموح.</value></data>
+  <data name="VALIDATION_MINIMUM_LENGTH_NOT_MET" xml:space="preserve"><value>القيمة لا تحقق الحد الأدنى المطلوب للطول.</value></data>
+  <data name="VALIDATION_RANGE_INVALID" xml:space="preserve"><value>النطاق المقدم غير صالح.</value></data>
+  <data name="VALIDATION_WHITESPACE_NOT_ALLOWED" xml:space="preserve"><value>القيم المكونة من مسافات فقط غير مسموح بها.</value></data>
+  
+  <!-- Value Objects -->
+  <data name="OPENING_HOURS_ALREADY_EXIST" xml:space="preserve"><value>ساعات العمل الخاصة بـ {0} موجودة بالفعل.</value></data>
+  <data name="OPENING_HOURS_NOT_FOUND" xml:space="preserve"><value>ساعات العمل الخاصة بـ {0} غير موجودة.</value></data>
+  <data name="ADDRESS_STREET_REQUIRED" xml:space="preserve"><value>الشارع مطلوب.</value></data>
+  <data name="ADDRESS_CITY_REQUIRED" xml:space="preserve"><value>المدينة مطلوبة.</value></data>
+  <data name="ADDRESS_STREET_LENGTH_EXCEEDED" xml:space="preserve"><value>الشارع يتجاوز الحد الأقصى المسموح.</value></data>
+  <data name="ADDRESS_CITY_LENGTH_EXCEEDED" xml:space="preserve"><value>المدينة تتجاوز الحد الأقصى المسموح.</value></data>
+  <data name="ADDRESS_REGION_LENGTH_EXCEEDED" xml:space="preserve"><value>المنطقة تتجاوز الحد الأقصى المسموح.</value></data>
+  <data name="ADDRESS_POSTAL_CODE_LENGTH_EXCEEDED" xml:space="preserve"><value>رمز البريد يتجاوز الحد الأقصى المسموح.</value></data>
+  <data name="DATE_RANGE_INVALID" xml:space="preserve"><value>يجب أن يكون تاريخ البداية قبل تاريخ النهاية.</value></data>
+  <data name="EMAIL_REQUIRED" xml:space="preserve"><value>البريد الإلكتروني مطلوب.</value></data>
+  <data name="EMAIL_TOO_LONG" xml:space="preserve"><value>البريد الإلكتروني طويل جدا.</value></data>
+  <data name="EMAIL_INVALID_FORMAT" xml:space="preserve"><value>'{0}' ليس بريدا إلكترونيا صالحا.</value></data>
+  <data name="GEOLOCATION_INVALID_LATITUDE" xml:space="preserve"><value>يجب أن يكون خط العرض بين -90 و 90. القيمة المستلمة: {0}.</value></data>
+  <data name="GEOLOCATION_INVALID_LONGITUDE" xml:space="preserve"><value>يجب أن يكون خط الطول بين -180 و 180. القيمة المستلمة: {0}.</value></data>
+  <data name="MONEY_NEGATIVE_AMOUNT" xml:space="preserve"><value>لا يمكن أن يكون المبلغ سالبا.</value></data>
+  <data name="MONEY_CURRENCY_REQUIRED" xml:space="preserve"><value>العملة مطلوبة.</value></data>
+  <data name="MONEY_INVALID_CURRENCY_FORMAT" xml:space="preserve"><value>يجب أن تكون العملة بصيغة ISO من 3 أحرف.</value></data>
+  <data name="MONEY_CURRENCY_MISMATCH" xml:space="preserve"><value>لا يمكن إجراء العملية على عملات مختلفة.</value></data>
+  <data name="MONEY_DIVISION_BY_ZERO" xml:space="preserve"><value>لا يمكن القسمة على صفر.</value></data>
+  <data name="PHONE_NUMBER_REQUIRED" xml:space="preserve"><value>رقم الهاتف مطلوب.</value></data>
+  <data name="PHONENUMBER_INVALID_FORMAT" xml:space="preserve"><value>'{0}' ليس رقم هاتف صالحا.</value></data>
+  <data name="RATING_OUT_OF_RANGE" xml:space="preserve"><value>يجب أن يكون التقييم بين {0} و {1}، ويجب أن تكون القيمة العظمى أكبر من أو تساوي الصغرى.</value></data>
+  <data name="RATING_POSITIVE_REQUIRED" xml:space="preserve"><value>يجب أن يكون التقييم عددًا صحيحًا موجبًا.</value></data>
+  <data name="TIME_RANGE_INVALID" xml:space="preserve"><value>يجب أن يكون وقت البداية قبل وقت النهاية.</value></data>
+
+  <!-- Attraction -->
+  <data name="ATTRACTION_ID_REQUIRED" xml:space="preserve"><value>معرف المعلم مطلوب.</value></data>
+  <data name="ATTRACTION_SITE_ID_REQUIRED" xml:space="preserve"><value>معرف الموقع مطلوب.</value></data>
+  <data name="ATTRACTION_CONTENT_ID_REQUIRED" xml:space="preserve"><value>معرف المحتوى مطلوب.</value></data>
+  <data name="ATTRACTION_NOT_FOUND" xml:space="preserve"><value>المعلم ذو المعرف {0} غير موجود.</value></data>
+  <data name="ATTRACTION_NAME_REQUIRED" xml:space="preserve"><value>اسم المعلم لا يمكن أن يكون فارغا.</value></data>
+  <data name="ATTRACTION_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>طول اسم المعلم لا يمكن أن يتجاوز {0}.</value></data>
+  <data name="ATTRACTION_DESCRIPTION_REQUIRED" xml:space="preserve"><value>وصف المعلم لا يمكن أن يكون فارغا.</value></data>
+  <data name="ATTRACTION_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>طول وصف المعلم لا يمكن أن يتجاوز {0}.</value></data>
+  <data name="ATTRACTION_IMAGE_CAPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>طول صورة المعلم لا يمكن أن تتجاوز {0}.</value></data>
+  <data name="ATTRACTION_IMAGE_URL_REQUIRED" xml:space="preserve"><value>رابط صورة المعلم مطلوب.</value></data>
+  <data name="ATTRACTION_IMAGE_NOT_FOUND" xml:space="preserve"><value>صورة المعلم غير موجودة.</value></data>
+  <data name="ATTRACTION_IMAGE_CAPTION_REQUIRED" xml:space="preserve"><value>وصف صورة المعلم مطلوب.</value></data>
+  <data name="ATTRACTION_CAPTION_REQUIRED" xml:space="preserve"><value>وصف صورة المعلم مطلوب.</value></data>
+  <data name="ATTRACTION_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>ترتيب عرض المعلم لا يمكن أن يكون سالبا.</value></data>
+  <data name="ATTRACTION_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>المحتوى المترجم للمعلم غير موجود.</value></data>
+  <data name="ATTRACTION_LOCATION_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>طول وصف موقع المعلم لا يمكن أن يتجاوز {0}.</value></data>
+  
+  <!-- City -->
+  <data name="CITY_ID_REQUIRED" xml:space="preserve"><value>معرف المدينة مطلوب.</value></data>
+  <data name="CITY_NOT_FOUND" xml:space="preserve"><value>المدينة ذات المعرف {0} غير موجودة.</value></data>
+  <data name="CITY_NAME_REQUIRED" xml:space="preserve"><value>اسم المدينة لا يمكن أن يكون فارغا.</value></data>
+  <data name="CITY_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>طول اسم المدينة لا يمكن أن يتجاوز {0}.</value></data>
+  <data name="CITY_DESCRIPTION_REQUIRED" xml:space="preserve"><value>وصف المدينة لا يمكن أن يكون فارغا.</value></data>
+  <data name="CITY_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>طول وصف المدينة لا يمكن أن يتجاوز {0}.</value></data>
+  <data name="CITY_IMAGE_URL_REQUIRED" xml:space="preserve"><value>رابط صورة المدينة مطلوب.</value></data>
+  <data name="CITY_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>ترتيب عرض المدينة لا يمكن أن يكون سالبا.</value></data>
+  <data name="CITY_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>المحتوى المترجم للمدينة غير موجود.</value></data>
+
+  <!-- Content Report -->
+  <data name="REPORT_ID_REQUIRED" xml:space="preserve"><value>معرف البلاغ مطلوب.</value></data>
+  <data name="REPORTED_ENTITY_ID_REQUIRED" xml:space="preserve"><value>معرف العنصر المُبلّغ عنه مطلوب.</value></data>
+  <data name="REPORT_NOT_FOUND" xml:space="preserve"><value>بلاغ المحتوى ذو المعرف {0} غير موجود.</value></data>
+  <data name="REPORT_DESCRIPTION_REQUIRED" xml:space="preserve"><value>وصف البلاغ لا يمكن أن يكون فارغا.</value></data>
+  <data name="REPORT_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>طول وصف البلاغ لا يمكن أن يتجاوز {0}.</value></data>
+  <data name="REPORT_REASON_REQUIRED" xml:space="preserve"><value>سبب البلاغ لا يمكن أن يكون فارغا.</value></data>
+  <data name="REPORT_REASON_LENGTH_EXCEEDED" xml:space="preserve"><value>طول سبب البلاغ لا يمكن أن يتجاوز {0}.</value></data>
+  <data name="REPORT_CANNOT_BE_RESOLVED" xml:space="preserve"><value>يجب توفير السبب أو الإجراء فقط، وليس كليهما معا.</value></data>
+  <data name="REPORT_CANNOT_BE_REVIEWED" xml:space="preserve"><value>يمكن مراجعة البلاغات المعلقة أو قيد المراجعة فقط.</value></data>
+  <data name="REPORT_CANNOT_BE_MARKED_UNDER_REVIEW" xml:space="preserve"><value>يمكن وضع البلاغات المعلقة فقط في حالة قيد المراجعة.</value></data>
+  <data name="REPORT_CANNOT_BE_DISMISSED" xml:space="preserve"><value>سبب الرفض مطلوب.</value></data>
+
+  <!-- Review -->
+  <data name="REVIEW_NOT_FOUND" xml:space="preserve"><value>المراجعة ذات المعرف {0} غير موجودة.</value></data>
+  <data name="REVIEW_INVALID_STATUS" xml:space="preserve"><value>حالة المراجعة {0} غير صالحة.</value></data>
+  <data name="REVIEW_ID_REQUIRED" xml:space="preserve"><value>معرف المراجعة مطلوب.</value></data>
+  <data name="REVIEW_SITE_ID_REQUIRED" xml:space="preserve"><value>معرف الموقع مطلوب.</value></data>
+  <data name="REVIEW_USER_ID_REQUIRED" xml:space="preserve"><value>معرف المستخدم مطلوب.</value></data>
+  <data name="REVIEW_TITLE_REQUIRED" xml:space="preserve"><value>عنوان المراجعة لا يمكن أن يكون فارغا.</value></data>
+  <data name="REVIEW_TITLE_EXCEEDED_LENGTH" xml:space="preserve"><value>عنوان المراجعة يتجاوز الطول المسموح به.</value></data>
+  <data name="REVIEW_CONTENT_REQUIRED" xml:space="preserve"><value>محتوى المراجعة لا يمكن أن يكون فارغا.</value></data>
+  <data name="REVIEW_CONTENT_EXCEEDED_LENGTH" xml:space="preserve"><value>محتوى المراجعة يتجاوز الطول المسموح به.</value></data>
+  <data name="REVIEW_IMAGE_URL_REQUIRED" xml:space="preserve"><value>رابط صورة المراجعة مطلوب.</value></data>
+  <data name="REVIEW_IMAGE_NOT_FOUND" xml:space="preserve"><value>صورة المراجعة غير موجودة.</value></data>
+  <data name="REVIEW_REJECTION_REASON_REQUIRED" xml:space="preserve"><value>سبب الرفض مطلوب.</value></data>
+  <data name="REVIEW_USER_ALREADY_REVIEWED_SITE" xml:space="preserve"><value>قام المستخدم بمراجعة هذا الموقع مسبقا.</value></data>
+  <data name="REVIEW_UNAUTHORIZED" xml:space="preserve"><value>غير مصرح لك بتنفيذ هذا الإجراء.</value></data>
+
+  <!-- Site -->
+  <data name="SITE_NOT_FOUND" xml:space="preserve"><value>الموقع ذو المعرف {0} غير موجود.</value></data>
+  <data name="SITE_ID_REQUIRED" xml:space="preserve"><value>معرف الموقع مطلوب.</value></data>
+  <data name="SITE_CITY_ID_REQUIRED" xml:space="preserve"><value>معرف المدينة مطلوب.</value></data>
+  <data name="SITE_NAME_REQUIRED" xml:space="preserve"><value>اسم الموقع لا يمكن أن يكون فارغا.</value></data>
+  <data name="SITE_NAME_EXCEEDED_LENGTH" xml:space="preserve"><value>اسم الموقع لا يمكن أن يكون أطول من {0} حروف.</value></data>
+  <data name="SITE_DESCRIPTION_REQUIRED" xml:space="preserve"><value>وصف الموقع لا يمكن أن يكون فارغا.</value></data>
+  <data name="SITE_DESCRIPTION_EXCEEDED_LENGTH" xml:space="preserve"><value>وصف الموقع لا يمكن أن يكون أطول من {0} حروف.</value></data>
+  <data name="SITE_CONTACT_PHONE_REQUIRED" xml:space="preserve"><value>رقم تواصل الموقع لا يمكن أن يكون فارغا.</value></data>
+  <data name="SITE_IMAGE_ID_REQUIRED" xml:space="preserve"><value>معرف صورة الموقع مطلوب.</value></data>
+  <data name="SITE_IMAGE_URL_REQUIRED" xml:space="preserve"><value>رابط صورة الموقع مطلوب.</value></data>
+  <data name="SITE_IMAGE_NOT_FOUND" xml:space="preserve"><value>صورة الموقع غير موجودة.</value></data>
+  <data name="SITE_CAPTION_REQUIRED" xml:space="preserve"><value>وصف صورة الموقع مطلوب.</value></data>
+  <data name="SITE_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>ترتيب عرض الموقع لا يمكن أن يكون سالبا.</value></data>
+  <data name="SITE_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>المحتوى المترجم للموقع غير موجود.</value></data>
+  <data name="SITE_FACILITY_ID_REQUIRED" xml:space="preserve"><value>معرف مرفق الموقع مطلوب.</value></data>
+  <data name="SITE_FACILITY_NOT_FOUND" xml:space="preserve"><value>مرفق الموقع غير موجود.</value></data>
+  <data name="SITE_NEAREST_TRANSPORTATION_NOT_FOUND" xml:space="preserve"><value>أقرب وسيلة نقل للموقع غير موجودة.</value></data>
+  <data name="SITE_NEAREST_TRANSPORTATION_DUPLICATE_LOCATION" xml:space="preserve"><value>يوجد بالفعل وسيلة نقل قريبة بنفس الموقع لهذا الموقع.</value></data>
+  <data name="SITE_LOCALIZED_ID_REQUIRED" xml:space="preserve"><value>معرف الترجمة المحلية للموقع مطلوب.</value></data>
+  <data name="SITE_INVALID_FACILITY_TYPE" xml:space="preserve"><value>واحد أو أكثر من أنواع المرافق المدخلة غير صالح.</value></data>
+  <data name="SITE_FACILITY_ALREADY_EXISTS" xml:space="preserve"><value>يوجد مرفق بالاسم نفسه لهذا الموقع بالفعل.</value></data>
+  <data name="SITE_IMAGE_EXCEEDED_LENGTH" xml:space="preserve"><value>رابط صورة الموقع لا يمكن أن يتجاوز الحد الأقصى للطول.</value></data>
+  <data name="FACILITY_DESCRIPTION_REQUIRED" xml:space="preserve"><value>وصف المرفق لا يمكن أن يكون فارغا.</value></data>
+  <data name="FACILITY_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>المحتوى المترجم للمرفق غير موجود.</value></data>
+  <data name="NEAREST_TRANSPORTATION_NAME_REQUIRED" xml:space="preserve"><value>اسم أقرب وسيلة نقل لا يمكن أن يكون فارغا.</value></data>
+  <data name="NEAREST_TRANSPORTATION_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>المحتوى المترجم لأقرب وسيلة نقل غير موجود.</value></data>
+  
+  <!-- Sponsor -->
+  <data name="SPONSOR_NOT_FOUND" xml:space="preserve"><value>الراعي ذو المعرف {0} غير موجود.</value></data>
+  <data name="SPONSOR_ID_REQUIRED" xml:space="preserve"><value>معرف الراعي مطلوب.</value></data>
+  <data name="SPONSOR_OFFER_ID_REQUIRED" xml:space="preserve"><value>معرف عرض الراعي مطلوب.</value></data>
+  <data name="SPONSOR_OFFER_NOT_FOUND" xml:space="preserve"><value>العرض ذو المعرف {0} غير موجود.</value></data>
+  <data name="SPONSOR_TITLE_REQUIRED" xml:space="preserve"><value>عنوان الراعي لا يمكن أن يكون فارغا.</value></data>
+  <data name="SPONSOR_DESCRIPTION_REQUIRED" xml:space="preserve"><value>وصف الراعي مطلوب.</value></data>
+  <data name="SPONSOR_PROMO_CODE_REQUIRED" xml:space="preserve"><value>رمز الخصم لا يمكن أن يكون فارغا.</value></data>
+  <data name="SPONSOR_DISCOUNT_REQUIRED" xml:space="preserve"><value>يجب توفير مبلغ الخصم أو نسبة الخصم.</value></data>
+  <data name="SPONSOR_DISCOUNT_PCT_INVALID" xml:space="preserve"><value>يجب أن تكون نسبة الخصم بين 0 و 100.</value></data>
+  <data name="SPONSOR_OFFER_INACTIVE" xml:space="preserve"><value>لا يمكن استرداد عرض غير نشط.</value></data>
+  <data name="SPONSOR_OFFER_EXPIRED" xml:space="preserve"><value>لا يمكن استرداد عرض منتهي الصلاحية.</value></data>
+  <data name="SPONSOR_EXPIRED_CONTRACT" xml:space="preserve"><value>لا يمكن تفعيل راعٍ بعقد منتهي.</value></data>
+  <data name="SPONSOR_OFFER_MAX_REDEMPTIONS_REACHED" xml:space="preserve"><value>تم الوصول إلى الحد الأقصى لعدد مرات الاسترداد لهذا العرض.</value></data>
+  <data name="SPONSOR_NEGATIVE_REDEMPTIONS" xml:space="preserve"><value>عدد مرات الاسترداد لا يمكن أن يكون سالبا.</value></data>
+  <data name="SPONSOR_IMAGE_ID_REQUIRED" xml:space="preserve"><value>معرف صورة الراعي مطلوب.</value></data>
+  <data name="SPONSOR_IMG_URL_REQUIRED" xml:space="preserve"><value>رابط صورة الراعي لا يمكن أن يكون فارغا.</value></data>
+  <data name="SPONSOR_IMG_NOT_FOUND" xml:space="preserve"><value>صورة الراعي غير موجودة.</value></data>
+  <data name="SPONSOR_CAPTION_REQUIRED" xml:space="preserve"><value>وصف صورة الراعي مطلوب.</value></data>
+  <data name="SPONSOR_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>ترتيب عرض الراعي لا يمكن أن يكون سالبا.</value></data>
+  <data name="SPONSOR_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>المحتوى المترجم للراعي غير موجود.</value></data>
+  <data name="SPONSOR_INVALID_DATE" xml:space="preserve"><value>يجب أن يكون تاريخ بداية العقد قبل تاريخ النهاية.</value></data>
+  <data name="SPONSOR_INVALID_EXTEND_DATE" xml:space="preserve"><value>يجب أن يكون تاريخ النهاية الجديد بعد التاريخ الحالي.</value></data>
+  <data name="SPONSOR_INVALID_AVERAGE_RATING" xml:space="preserve"><value>يجب أن يكون متوسط التقييم بين 0 و {0}.</value></data>
+  <data name="SPONSOR_INVALID_NEW_DATE" xml:space="preserve"><value>يجب أن يكون تاريخ النهاية الجديد لاحقا للتاريخ الحالي.</value></data>
+  <data name="SPONSOR_EXCEEDED_TITLE_LENGTH" xml:space="preserve"><value>عنوان الراعي لا يمكن أن يتجاوز {0} حرفا.</value></data>
+  <data name="SPONSOR_EXCEEDED_DESCRIPTION_LENGTH" xml:space="preserve"><value>وصف الراعي لا يمكن أن يتجاوز {0} حرفا.</value></data>
+  <data name="SPONSOR_EXCEEDED_IMAGE_LENGTH" xml:space="preserve"><value>طول صورة الراعي يتجاوز الحد الأقصى المسموح.</value></data>
+  <data name="SPONSOR_CONTENT_ID_REQUIRED" xml:space="preserve"><value>معرف المحتوى مطلوب.</value></data>
+
+  <!-- Tourist and User -->
+  <data name="USER_UNAUTHORIZED" xml:space="preserve"><value>المستخدم ذو المعرف '{0}' غير مصرح له.</value></data>
+  <data name="USER_NOT_FOUND" xml:space="preserve"><value>المستخدم غير موجود.</value></data>
+  <data name="USER_FIRST_NAME_REQUIRED" xml:space="preserve"><value>الاسم الأول للمستخدم لا يمكن أن يكون فارغا.</value></data>
+  <data name="USER_FIRST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>الاسم الأول للمستخدم يتجاوز الحد الأقصى المسموح.</value></data>
+  <data name="USER_LAST_NAME_REQUIRED" xml:space="preserve"><value>الاسم الأخير للمستخدم لا يمكن أن يكون فارغا.</value></data>
+  <data name="USER_LAST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>الاسم الأخير للمستخدم يتجاوز الحد الأقصى المسموح.</value></data>
+  <data name="USER_NATIONALITY_REQUIRED" xml:space="preserve"><value>جنسية المستخدم لا يمكن أن تكون فارغة.</value></data>
+  <data name="USER_USERNAME_REQUIRED" xml:space="preserve"><value>اسم المستخدم مطلوب.</value></data>
+  <data name="USER_USERNAME_LENGTH_EXCEEDED" xml:space="preserve"><value>اسم المستخدم يتجاوز الحد الأقصى المسموح.</value></data>
+  <data name="USER_PASSWORD_REQUIRED" xml:space="preserve"><value>كلمة المرور مطلوبة.</value></data>
+  <data name="USER_PASSWORD_TOO_SHORT" xml:space="preserve"><value>كلمة المرور أقصر من الحد الأدنى المطلوب.</value></data>
+  <data name="USER_PASSWORD_TOO_LONG" xml:space="preserve"><value>كلمة المرور تتجاوز الحد الأقصى المسموح.</value></data>
+  <data name="USER_PREFERRED_LANGUAGE_INVALID" xml:space="preserve"><value>اللغة المفضلة غير صالحة.</value></data>
+  <data name="USER_FULL_NAME_REQUIRED" xml:space="preserve"><value>الاسم الكامل مطلوب.</value></data>
+  <data name="USER_ROLE_INVALID" xml:space="preserve"><value>الدور المحدد غير صالح.</value></data>
+  <data name="TOURIST_NOT_FOUND" xml:space="preserve"><value>المستخدم ذو المعرف '{0}' غير موجود.</value></data>
+  <data name="TOURIST_FIRST_NAME_REQUIRED" xml:space="preserve"><value>الاسم الأول للمستخدم لا يمكن أن يكون فارغا.</value></data>
+  <data name="TOURIST_FIRST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>الاسم الأول للمستخدم يتجاوز الحد الأقصى المسموح.</value></data>
+  <data name="TOURIST_LAST_NAME_REQUIRED" xml:space="preserve"><value>الاسم الأخير للمستخدم لا يمكن أن يكون فارغا.</value></data>
+  <data name="TOURIST_LAST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>الاسم الأخير للمستخدم يتجاوز الحد الأقصى المسموح.</value></data>
+  <data name="TOURIST_NATIONALITY_REQUIRED" xml:space="preserve"><value>جنسية المستخدم لا يمكن أن تكون فارغة.</value></data>
+  <data name="TOURIST_PREFERRED_LANGUAGE_INVALID" xml:space="preserve"><value>اللغة المفضلة غير صالحة.</value></data>
+  <data name="TOURIST_SITE_ALREADY_FAVORITE" xml:space="preserve"><value>الموقع موجود بالفعل في المفضلة.</value></data>
+  <data name="USER_ID_REQUIRED" xml:space="preserve"><value>معرف المستخدم مطلوب.</value></data>
+  <data name="SITE_ALREADY_FAVORITE" xml:space="preserve"><value>الموقع موجود بالفعل في المفضلة.</value></data>
+  <data name="FAVOURITE_NOT_FOUND" xml:space="preserve"><value>المفضلة ذات المعرف '{0}' غير موجودة.</value></data>
+  <data name="FAVOURITE_SITE_ID_REQUIRED" xml:space="preserve"><value>معرف الموقع مطلوب.</value></data>
+
+  <!-- Identity -->
+  <data name="FULL_NAME_REQUIRED" xml:space="preserve"><value>الاسم الكامل مطلوب.</value></data>
+  <data name="USERNAME_REQUIRED" xml:space="preserve"><value>اسم المستخدم مطلوب.</value></data>
+  <data name="REFRESH_TOKEN_REQUIRED" xml:space="preserve"><value>يلزم رمز تحديث صالح لتحديث رمز الوصول.</value></data>
+  <data name="REFRESH_TOKEN_EXPIRATION_INVALID" xml:space="preserve"><value>رمز التحديث المقدم منتهي الصلاحية.</value></data>
+  <data name="INVALID_CREDENTAILS" xml:space="preserve"><value>البريد الإلكتروني أو كلمة المرور غير صحيحة.</value></data>
+  <data name="EMAIL_ALREADY_IN_USE" xml:space="preserve"><value>يوجد مستخدم بهذا البريد الإلكتروني بالفعل.</value></data>
+  <data name="USERNAME_ALREADY_IN_USE" xml:space="preserve"><value>يوجد مستخدم بهذا الاسم بالفعل.</value></data>
+  <data name="IN_ACTIVE_USER" xml:space="preserve"><value>الحساب غير مفعل.</value></data>
+  <data name="LOCKED_ACCOUNT" xml:space="preserve"><value>تم قفل الحساب.</value></data>
+  <data name="INVALID_TOKEN" xml:space="preserve"><value>رمز الوصول غير صالح.</value></data>
+  <data name="INVALID_REFRESH_TOKEN" xml:space="preserve"><value>رمز التحديث غير صالح أو منتهي الصلاحية.</value></data>
+  <data name="INVALID_CLAIMS" xml:space="preserve"><value>مطالبات الرمز غير صالحة.</value></data>
+  <data name="EMAIL_NOT_CONFIRMED" xml:space="preserve"><value>عنوان البريد الإلكتروني غير مؤكد.</value></data>
+  
+</root>
