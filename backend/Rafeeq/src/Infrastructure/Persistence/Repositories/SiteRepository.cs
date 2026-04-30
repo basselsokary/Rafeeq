@@ -5,40 +5,50 @@ using Infrastructure.Persistence.ApplicationContext;
 
 namespace Infrastructure.Persistence.Repositories;
 
-internal class SiteRepository(ApplicationDbContext context)
+internal sealed class SiteRepository(ApplicationDbContext context)
     : BaseRepository<Site>(context), ISiteRepository
 {
+    public async Task<NearestTransportation?> GetNearestTransportationByIdAsync(Guid tranportationId, CancellationToken cancellationToken = default)
+    {
+        return await DbContext.NearestTransportations
+            .Include(nt => nt.LocalizedContents)
+            .FirstOrDefaultAsync(nt => nt.Id == tranportationId, cancellationToken);
+    }
+
     public async Task<Site?> GetWithFacilitiesAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbSet
+        return await DbSet
             .Include(s => s.Facilities)
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
     }
 
     public async Task<Site?> GetWithImagesAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbSet
+        return await DbSet
+            .AsSplitQuery()
             .Include(s => s.Images)
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
     }
 
     public async Task<Site?> GetWithLocalizedContentsAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbSet
+        return await DbSet
+            .AsSplitQuery()
             .Include(s => s.LocalizedContents)
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
     }
 
     public async Task<Site?> GetWithNearestTransportationAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbSet
+        return await DbSet
+            .AsSplitQuery()
             .Include(s => s.NearestTransportations)
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
     }
 
     public async Task<Site?> GetWithOpeningHoursAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbSet
+        return await DbSet
             .Include(s => s.OpeningHours)
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
     }

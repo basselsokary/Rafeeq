@@ -9,47 +9,47 @@ namespace Infrastructure.Persistence.Repositories;
 internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
     where TEntity : BaseEntity, IAggregateRoot
 {
-    protected readonly ApplicationDbContext _context;
-    protected readonly DbSet<TEntity> _dbSet;
+    protected readonly ApplicationDbContext DbContext;
+    protected readonly DbSet<TEntity> DbSet;
 
     protected BaseRepository(ApplicationDbContext context)
     {
-        _context = context;
-        _dbSet = context.Set<TEntity>();
+        DbContext = context;
+        DbSet = context.Set<TEntity>();
     }
 
     public virtual async Task<TEntity?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default)
     {
-        return await _dbSet.FindAsync([id], cancellationToken);
+        return await DbSet.FindAsync([id], cancellationToken);
     }
 
     public virtual async Task<IEnumerable<TEntity>> GetAllAsync(
         CancellationToken cancellationToken = default)
     {
-        return await _dbSet.ToListAsync(cancellationToken);
+        return await DbSet.ToListAsync(cancellationToken);
     }
 
     public virtual async Task AddAsync(
         TEntity entity,
         CancellationToken cancellationToken = default)
     {
-        await _dbSet.AddAsync(entity, cancellationToken);
+        await DbSet.AddAsync(entity, cancellationToken);
     }
 
     public virtual async Task AddRangeAsync(
         IEnumerable<TEntity> entities,
         CancellationToken cancellationToken = default)
     {
-        await _dbSet.AddRangeAsync(entities, cancellationToken);
+        await DbSet.AddRangeAsync(entities, cancellationToken);
     }
 
     public virtual Task UpdateAsync(
         TEntity entity,
         CancellationToken cancellationToken = default)
     {
-        _dbSet.Update(entity);
+        DbSet.Update(entity);
         return Task.CompletedTask;
     }
 
@@ -57,7 +57,7 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
         TEntity entity,
         CancellationToken cancellationToken = default)
     {
-        _dbSet.Remove(entity);
+        DbSet.Remove(entity);
         return Task.CompletedTask;
     }
 
@@ -65,6 +65,6 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
         Guid id,
         CancellationToken cancellationToken = default)
     {
-        return await _dbSet.AnyAsync(e => e.Id.Equals(id), cancellationToken);
+        return await DbSet.AnyAsync(e => e.Id.Equals(id), cancellationToken);
     }
 }

@@ -5,11 +5,11 @@ using Infrastructure.Persistence.ApplicationContext;
 
 namespace Infrastructure.Persistence.Repositories;
 
-internal class ReviewRepository(ApplicationDbContext context)
+internal sealed class ReviewRepository(ApplicationDbContext context)
     : BaseRepository<Review>(context), IReviewRepository
 {
     public Task<bool> HasUserReviewedSiteAsync(Guid userId, Guid siteId, CancellationToken cancellationToken = default)
-        => _dbSet
+        => DbSet
             .AnyAsync(
             r => r.TouristId == userId && r.SiteId == siteId,
             cancellationToken);
