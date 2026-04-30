@@ -1,29 +1,30 @@
 using Domain.Common;
+using Domain.Enums;
 
 namespace Domain.ValueObjects;
 
 public class OpeningHour : ValueObject
 {
-    public DayOfWeek DayOfWeek { get; }
+    public WeekDay Day { get; }
     public TimeRange OpeningTime { get; } = null!;
     public bool IsClosed { get; }
 
     private OpeningHour() { }
-    private OpeningHour(DayOfWeek dayOfWeek, TimeRange openingTime, bool isClosed)
+    private OpeningHour(WeekDay day, TimeRange openingTime, bool isClosed)
     {
-        DayOfWeek = dayOfWeek;
+        Day = day;
         OpeningTime = openingTime;
         IsClosed = isClosed;
     }
 
-    public static OpeningHour Create(DayOfWeek dayOfWeek, TimeRange openingTime, bool isClosed)
+    public static OpeningHour Create(WeekDay day, TimeRange openingTime, bool isClosed)
     {
-        return new(dayOfWeek, openingTime, isClosed);
+        return new(day, openingTime, isClosed);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
-        yield return DayOfWeek;
+        yield return Day;
         yield return OpeningTime;
         yield return IsClosed;
     }

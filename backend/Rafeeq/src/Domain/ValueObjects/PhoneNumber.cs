@@ -1,11 +1,13 @@
 using Domain.Common;
-using Shared.Models;
+using Shared;
 using System.Text.RegularExpressions;
 
 namespace Domain.ValueObjects;
 
 public sealed class PhoneNumber : ValueObject
 {
+    public const int MaxPhoneNumberLength = 20;
+    
     // +201234567890 | 01234567890 | 12345
     private static readonly Regex PhoneRegex = new(@"^((\+201|01)[0-9]\d{8}|\d{5})$");
 
@@ -56,5 +58,5 @@ public sealed class PhoneNumber : ValueObject
         return Value;
     }
 
-    public static implicit operator string(PhoneNumber phoneNumber) => phoneNumber.Value;
+    public static implicit operator string(PhoneNumber? phoneNumber) => phoneNumber?.Value ?? string.Empty;
 }

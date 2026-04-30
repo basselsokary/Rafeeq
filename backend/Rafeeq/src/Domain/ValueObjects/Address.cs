@@ -1,62 +1,35 @@
 ﻿using Domain.Common;
-using Shared.Models;
+using Shared;
 
 namespace Domain.ValueObjects;
 
 public class Address : ValueObject
 {
-    public string Street { get; } = null!;
-    public string City { get; } = null!;
-    public string? Region { get; }
-    public string? PostalCode { get; }
+    public string Value { get; } = null!;
     
     private Address() { }
-    private Address(string street, string city, string? region, string? postalCode)
+    private Address(string value)
     {
-        Street = street;
-        City = city;
-        Region = region;
-        PostalCode = postalCode;
+        Value = value;
     }
 
-    public static Result<Address> Create(
-        string street,
-        string city,
-        string? region,
-        string? postalCode = null)
+    public static Result<Address> Create(string value)
     {
-        if (string.IsNullOrWhiteSpace(street))
-            return AddressErrors.EmptyStreet;
+        if (string.IsNullOrWhiteSpace(value))
+            return AddressErrors.EmptyAddress;
 
-        if (string.IsNullOrWhiteSpace(city))
-            return AddressErrors.EmptyCity;
-
-        return new Address(street.Trim(), city.Trim(), region?.Trim(), postalCode?.Trim());
-    }
-
-    public string GetFullAddress()
-    {
-        var parts = new List<string> { Street, City };
-        
-        if (!string.IsNullOrWhiteSpace(Region))
-            parts.Add(Region);
-        
-        if (!string.IsNullOrWhiteSpace(PostalCode))
-            parts.Add(PostalCode);
-
-        return string.Join(", ", parts);
+        return new Address(value.Trim());
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
-        yield return Street;
-        yield return City;
-        yield return Region ?? string.Empty;
-        yield return PostalCode ?? string.Empty;
+        yield return Value;
     }
 
     public override string ToString()
     {
-        return GetFullAddress();
+        return Value;
     }
+
+    public static implicit operator string(Address? address) => address?.Value ?? string.Empty;
 }

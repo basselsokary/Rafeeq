@@ -1,12 +1,13 @@
 using Domain.Common;
-using Domain.Common.Constants;
-using Shared.Models;
+using Shared;
 using System.Text.RegularExpressions;
 
 namespace Domain.ValueObjects;
 
 public sealed class Email : ValueObject
 {
+    public const int MaxEmailLength = 254; // Maximum length of emails is 254
+
     private static readonly Regex EmailRegex = new(
         @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$", RegexOptions.IgnoreCase);
 
@@ -24,7 +25,7 @@ public sealed class Email : ValueObject
             return EmailErrors.Empty;
 
         var normalizedEmail = value.Trim().ToLowerInvariant();
-        if (normalizedEmail.Length > DomainConstants.User.MaxEmailLength)
+        if (normalizedEmail.Length > MaxEmailLength)
             return EmailErrors.TooLong;
 
         if (!EmailRegex.IsMatch(normalizedEmail))
@@ -43,5 +44,5 @@ public sealed class Email : ValueObject
         return Value;
     }
 
-    public static implicit operator string(Email email) => email.Value;
+    public static implicit operator string(Email? email) => email?.Value ?? string.Empty;
 }

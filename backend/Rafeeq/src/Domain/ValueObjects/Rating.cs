@@ -1,11 +1,13 @@
 using Domain.Common;
-using Shared.Models;
-using static Domain.Common.Constants.DomainConstants.Review;
+using Shared;
 
 namespace Domain.ValueObjects;
 
 public class Rating : ValueObject
 {
+    public const int Min = 1;
+    public const int Max = 5;
+
     public int Value { get; }
 
     private Rating() { }
@@ -16,8 +18,8 @@ public class Rating : ValueObject
 
     public static Result<Rating> Create(int value)
     {
-        if (value < MinRatingValue || value > MaxRatingValue)
-            return RatingErrors.OutOfRange(MinRatingValue, MaxRatingValue);
+        if (value < Min || value > Max)
+            return RatingErrors.OutOfRange(Min, Max);
 
         return new Rating(value);
     }
@@ -29,7 +31,7 @@ public class Rating : ValueObject
 
     public override string ToString()
     {
-        return $"{Value}/5";
+        return $"{Value}/{Max}";
     }
 
     public static implicit operator int(Rating rating) => rating.Value;
