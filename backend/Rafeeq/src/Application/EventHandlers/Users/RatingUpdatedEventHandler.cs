@@ -1,22 +1,21 @@
 using Domain.Common.Interfaces;
 using Domain.Entities.TouristAggregate;
-using Domain.Events;
 using Microsoft.Extensions.Logging;
 
-namespace Application.EventHandlers.Reviews;
+namespace Application.EventHandlers.Users;
 
-internal class ReviewUpdatedEventHandler(
+internal class RatingUpdatedEventHandler(
     IUnitOfWork unitOfWork,
-    ILogger<ReviewUpdatedEventHandler> logger) : IDomainEventHandler<ReviewUpdatedEvent>
+    ILogger<RatingUpdatedEventHandler> logger) : IDomainEventHandler<RatingUpdatedEvent>
 {
-    public async Task HandleAsync(ReviewUpdatedEvent domainEvent, CancellationToken cancellationToken = default)
+    public async Task HandleAsync(RatingUpdatedEvent domainEvent, CancellationToken cancellationToken = default)
     {
         var site = await unitOfWork.Sites.GetByIdAsync(domainEvent.SiteId, cancellationToken);
         if (site == null)
         {
             logger.LogWarning(
-                "Site with ID {SiteId} not found for ReviewUpdatedEvent with Review ID {ReviewId}",
-                domainEvent.SiteId, domainEvent.ReviewId);
+                "Site with ID {SiteId} not found for RatingUpdatedEvent with VisitedSite ID {VisitedSiteId}",
+                domainEvent.SiteId, domainEvent.VisitedSiteId);
 
             return;
         }

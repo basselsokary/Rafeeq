@@ -14,8 +14,8 @@ internal class ReviewDeletedEventHandler(
         if (site == null)
         {
             logger.LogWarning(
-                "Site {SiteId} not found while processing ReviewDeletedEvent",
-                domainEvent);
+                "Site with ID {SiteId} not found for ReviewDeletedEvent with Review ID {ReviewId}",
+                domainEvent.SiteId, domainEvent.ReviewId);
 
             return;
         }

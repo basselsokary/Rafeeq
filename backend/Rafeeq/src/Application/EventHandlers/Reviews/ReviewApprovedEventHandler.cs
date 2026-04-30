@@ -14,8 +14,8 @@ internal class ReviewApprovedEventHandler(
         if (site == null)
         {
             logger.LogWarning(
-                "Site {SiteId} not found while processing ReviewApprovedEvent",
-                domainEvent);
+                "Site with ID {SiteId} not found for ReviewApprovedEvent with Review ID {ReviewId} and User ID {UserId}",
+                domainEvent.SiteId, domainEvent.ReviewId, domainEvent.UserId);
 
             return;
         }
