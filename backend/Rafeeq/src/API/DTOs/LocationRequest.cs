@@ -1,4 +1,4 @@
-namespace API.RequestDTOs;
+namespace API.DTOs;
 
 public record LocationRequest(
     double Latitude,
