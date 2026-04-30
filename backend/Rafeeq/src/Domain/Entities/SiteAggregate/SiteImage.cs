@@ -1,54 +1,53 @@
 using Domain.Common;
-using Shared.Models;
+using Domain.ValueObjects;
+using Shared;
 
 namespace Domain.Entities.SiteAggregate;
 
 public class SiteImage : BaseAuditableEntity
 {
-    public string ImageUrl { get; private set; } = null!;
+    public StorageKey StorageKey { get; init; } = null!;
+    public string ImageUrl { get; init; } = null!;
     public string? Caption { get; private set; }
     public bool IsMain { get; private set; }
     public int DisplayOrder { get; private set; }
     
     private SiteImage() { }
-    private SiteImage(string imageUrl, bool isMain, int displayOrder, string? caption)
+    private SiteImage(StorageKey storageKey, string imageUrl, bool isMain, int displayOrder, string? caption)
     {
+        StorageKey = storageKey;
+
         ImageUrl = imageUrl;
         IsMain = isMain;
-        DisplayOrder = displayOrder;
         Caption = caption;
+        DisplayOrder = displayOrder;
     }
 
-    internal static Result<SiteImage> Create(string imageUrl, bool isMain, int displayOrder, string? caption)
+    internal static Result<SiteImage> Create(StorageKey storageKey, string imageUrl, bool isMain, int displayOrder, string? caption)
     {
+        if (string.IsNullOrWhiteSpace(storageKey))
+            return ImageErrors.StorageKeyRequired;
+
         if (string.IsNullOrWhiteSpace(imageUrl))
-            return SiteErrors.ImageUrlRequired;
+            return ImageErrors.ImageUrlRequired;
         
         if (displayOrder < 0)
-            return SiteErrors.NegativeDisplayOrder;
+            return ImageErrors.NegativeDisplayOrder;
 
-        return new SiteImage(imageUrl, isMain, displayOrder, caption?.Trim());
+        return new SiteImage(storageKey, imageUrl, isMain, displayOrder, caption?.Trim());
     }
 
     internal void SetAsMain(bool isMain)
     {
         IsMain = isMain;
-        MarkAsUpdated();
-    }
-
-    internal void UpdateCaption(string? caption)
-    {
-        Caption = caption?.Trim();
-        MarkAsUpdated();
     }
 
     internal Result SetDisplayOrder(int order)
     {
         if (order < 0)
-            return SiteErrors.NegativeDisplayOrder;
+            return ImageErrors.NegativeDisplayOrder;
 
         DisplayOrder = order;
-        MarkAsUpdated();
 
         return Result.Success();
     }

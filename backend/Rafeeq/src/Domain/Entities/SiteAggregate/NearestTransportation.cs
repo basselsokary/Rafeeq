@@ -1,92 +1,118 @@
 using Domain.Common;
 using Domain.Enums;
 using Domain.ValueObjects;
-using Shared.Models;
+using Shared;
 
 namespace Domain.Entities.SiteAggregate;
 
 public class NearestTransportation : BaseAuditableEntity
 {
-    public string Name { get; private set; } = null!;
-    public TransportType Type { get; private set; }
-    public GeoLocation Location { get; private set; } = null!;
-    public Address? Address { get; private set; }
-    public string? Description { get; private set; }
+    public Guid SiteId { get; private set; }
     
+    public TransportationType Type { get; private set; }
+    public GeoLocation Location { get; private set; } = null!;
+
+    public double DistanceKm { get; private set; }
     public bool IsOperational { get; private set; }
     public bool HasAccessibility { get; private set; }
     public TimeRange? OperatingHours { get; private set; }
 
+    private readonly List<NearestTransportationLocalizedContent> _localizedContents = [];
+    public IReadOnlyCollection<NearestTransportationLocalizedContent> LocalizedContents => _localizedContents.AsReadOnly();
+
     private NearestTransportation() { }
     private NearestTransportation(
-        string name,
-        TransportType type,
+        TransportationType type,
         GeoLocation location,
-        Address? address,
-        string? description)
+        double distanceKm)
     {
-        Name = name;
         Type = type;
         Location = location;
-        Address = address;
-        Description = description;
+        DistanceKm = distanceKm;
 
         IsOperational = false;
         HasAccessibility = false;
     }
 
-    public static Result<NearestTransportation> Create(
-        string name,
-        TransportType type,
+    internal static Result<NearestTransportation> Create(
+        TransportationType type,
         GeoLocation location,
-        Address? address,
-        string? description)
+        double distanceKm)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            return SiteErrors.NameRequired;
-
-        return new NearestTransportation(
-            name.Trim(),
+        var transportation = new NearestTransportation(
             type,
             location,
-            address,
-            description?.Trim());
+            distanceKm);
+
+        return Result.Success(transportation);
     }
 
-    public Result UpdateDetails(string name, string? description)
+    public void UpdateLocation(GeoLocation location, double distanceKm)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            return SiteErrors.NameRequired;
-
-        Name = name.Trim();
-        Description = description?.Trim();
-
-        MarkAsUpdated();
-
-        return Result.Success();
-    }
-
-    public void UpdateAddress(Address address)
-    {
-        Address = address;
-        MarkAsUpdated();
+        Location = location;
+        DistanceKm = distanceKm;
     }
 
     public void SetOperatingHours(TimeRange operatingHours)
     {
+        if (operatingHours == OperatingHours)
+            return;
+    
         OperatingHours = operatingHours;
-        MarkAsUpdated();
     }
 
     public void SetAccessibility(bool hasAccessibility)
     {
+        if (hasAccessibility == HasAccessibility)
+            return;
+
         HasAccessibility = hasAccessibility;
-        MarkAsUpdated();
     }
 
     public void SetOperationalStatus(bool isOperational)
     {
+        if (isOperational == IsOperational)
+            return;
+
         IsOperational = isOperational;
-        MarkAsUpdated();
+    }
+
+    public Result AddLocalizedContent(
+        LanguageCode language,
+        string name,
+        string? description,
+        Address? address)
+    {
+        var contentResult = NearestTransportationLocalizedContent.Create(language, name, description, address);
+        if (contentResult.Failed)
+            return contentResult;
+
+        var existing = _localizedContents.FirstOrDefault(lc => lc.Language == language);
+        if (existing != null)
+            _localizedContents.Remove(existing);
+
+        _localizedContents.Add(contentResult.Value);
+
+        return Result.Success();
+    }
+
+    public Result UpdateLocalizedContent(
+        Guid contentId,
+        string name,
+        string? description,
+        Address? address)
+    {
+        var existing = _localizedContents.FirstOrDefault(lc => lc.Id == contentId);
+        if (existing == null)
+            return SiteErrors.LocalizedContentNotFound;
+
+        Result result = existing.Update(name, description);
+        if (result.Failed)
+            return result;
+
+        if (address != null)
+            existing.UpdateAddress(address);
+        
+        return Result.Success();
     }
 }
