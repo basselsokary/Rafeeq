@@ -1,8 +1,9 @@
 ﻿using System.Diagnostics;
+using Application.Services;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
 
-namespace Application.Decorators;
+namespace Application.Behaviours;
 
 internal static class LoggingDecorator
 {
@@ -52,6 +53,12 @@ internal static class LoggingDecorator
                 logger,
                 () => innerHandler.HandleAsync(query, cancellationToken));
         }
+    }
+
+    internal sealed class ScannerServiceDecorator(
+        ScannerService innerService,
+        ILogger<ScannerService> logger)
+    {
     }
 
     private static async Task<Result> ExecuteWithLoggingAsync(
