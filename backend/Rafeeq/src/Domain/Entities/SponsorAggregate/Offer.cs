@@ -1,109 +1,86 @@
 using Domain.Common;
 using Domain.ValueObjects;
-using Shared.Models;
+using Domain.Enums;
+using Shared;
 
 namespace Domain.Entities.SponsorAggregate;
 
 public class Offer : BaseAuditableEntity
 {
     public Sponsor Sponsor { get; set; } = null!;
-
-    public string Title { get; private set; } = null!;
-    public string Description { get; private set; } = null!;
+    public Guid SponsorId { get; set; }
+    
     public Money? DiscountAmount { get; private set; }
     public int? DiscountPercentage { get; private set; }
-    
+
     public DateRange ValidityPeriod { get; private set; } = null!;
-    public string? TermsAndConditions { get; private set; }
     public bool IsActive { get; private set; }
-    
+
     public int RedemptionCount { get; private set; }
     public int? MaxRedemptions { get; private set; }
     public string? PromoCode { get; private set; }
 
+    private readonly List<OfferLocalizedContent> _localizedContents = [];
+    public IReadOnlyCollection<OfferLocalizedContent> LocalizedContents => _localizedContents.AsReadOnly();
+
     private Offer() { }
     private Offer(
-        string title,
-        string description,
         Money? discountAmount,
         int? discountPercentage,
         DateRange validityPeriod,
-        string? termsAndConditions,
-        int? maxRedemptions)
+        int? maxRedemptions,
+        string? promoCode)
     {
-        Title = title;
-        Description = description;
         DiscountAmount = discountAmount;
         DiscountPercentage = discountPercentage;
         ValidityPeriod = validityPeriod;
-        TermsAndConditions = termsAndConditions;
         MaxRedemptions = maxRedemptions;
-        
+        PromoCode = promoCode;
+
         IsActive = false;
         RedemptionCount = 0;
     }
 
     internal static Result<Offer> Create(
-        string title,
-        string description,
         Money? discountAmount,
         int? discountPercentage,
         DateRange validityPeriod,
-        string? termsAndConditions = null,
-        int? maxRedemptions = null)
+        int? maxRedemptions = null,
+        string? promoCode = null)
     {
-        if (string.IsNullOrWhiteSpace(title))
-            return SponsorErrors.TitleRequired;
-
-        if (string.IsNullOrWhiteSpace(description))
-            return SponsorErrors.DescriptionRequired;
-            
-        if (discountAmount == null && discountPercentage == null)
-            return SponsorErrors.DiscountRequired;
-
-        if (discountPercentage.HasValue && (discountPercentage.Value < 0 || discountPercentage.Value > 100))
-            return SponsorErrors.DiscountPercentageInvalid;
-            
-        return new Offer(
-            title.Trim(),
-            description.Trim(),
-            discountAmount,
-            discountPercentage,
-            validityPeriod,
-            termsAndConditions?.Trim(),
-            maxRedemptions);
-    }
-
-    internal Result Update(
-        string title,
-        string description,
-        Money? discountAmount,
-        int? discountPercentage,
-        string? termsAndConditions)
-    {
-        if (string.IsNullOrWhiteSpace(title))
-            return SponsorErrors.TitleRequired;
-
-        if (string.IsNullOrWhiteSpace(description))
-            return SponsorErrors.DescriptionRequired;
-            
         if (discountAmount == null && discountPercentage == null)
             return SponsorErrors.DiscountRequired;
 
         if (discountPercentage.HasValue && (discountPercentage.Value < 0 || discountPercentage.Value > 100))
             return SponsorErrors.DiscountPercentageInvalid;
         
-        Title = title.Trim();
-        Description = description.Trim();
-        DiscountAmount = discountAmount;
-        DiscountPercentage = discountPercentage;
-        TermsAndConditions = termsAndConditions?.Trim();
-        MarkAsUpdated();
+        var offer = new Offer(
+            discountAmount,
+            discountPercentage,
+            validityPeriod,
+            maxRedemptions,
+            promoCode);
 
-        return Result.Success();
+        return offer;
     }
 
-    public Result ExtendValidity(DateTime newEndDate)
+    internal Result<Offer> Update(
+        Money? discountAmount,
+        int? discountPercentage)
+    {
+        if (discountAmount == null && discountPercentage == null)
+            return SponsorErrors.DiscountRequired;
+
+        if (discountPercentage.HasValue && (discountPercentage.Value < 0 || discountPercentage.Value > 100))
+            return SponsorErrors.DiscountPercentageInvalid;
+
+        DiscountAmount = discountAmount;
+        DiscountPercentage = discountPercentage;
+
+        return Result.Success(this);
+    }
+
+    public Result<Offer> ExtendValidity(DateTime newEndDate)
     {
         if (!IsActive)
             return SponsorErrors.InactiveOffer;
@@ -113,12 +90,11 @@ public class Offer : BaseAuditableEntity
 
         var result = DateRange.Create(ValidityPeriod.StartDate, newEndDate);
         if (result.Failed)
-            return result;
+            return result.To<Offer>();
 
         ValidityPeriod = result.Value;
-        MarkAsUpdated();
 
-        return Result.Success();
+        return Result.Success(this);
     }
 
     internal Result Redeem()
@@ -133,7 +109,6 @@ public class Offer : BaseAuditableEntity
             return SponsorErrors.MaximumRedemptionsReached;
 
         RedemptionCount++;
-        MarkAsUpdated();
 
         return Result.Success();
     }
@@ -144,7 +119,6 @@ public class Offer : BaseAuditableEntity
             return SponsorErrors.NegativeRedemptionsNumber;
 
         MaxRedemptions = maxRedemptions;
-        MarkAsUpdated();
 
         return Result.Success();
     }
@@ -155,7 +129,6 @@ public class Offer : BaseAuditableEntity
             return SponsorErrors.PromoCodeRequired;
 
         PromoCode = promoCode.Trim().ToUpperInvariant();
-        MarkAsUpdated();
 
         return Result.Success();
     }
@@ -164,18 +137,17 @@ public class Offer : BaseAuditableEntity
     {
         if (!IsValid(validityPeriod?.EndDate))
             return SponsorErrors.InactiveOffer;
-        
+
         if (validityPeriod != null)
         {
-             var result = DateRange.Create(validityPeriod.StartDate, validityPeriod.EndDate);
-             if (result.Failed)
-                 return result;
+            var result = DateRange.Create(validityPeriod.StartDate, validityPeriod.EndDate);
+            if (result.Failed)
+                return result;
 
-             ValidityPeriod = result.Value;
+            ValidityPeriod = result.Value;
         }
 
         IsActive = true;
-        MarkAsUpdated();
 
         return Result.Success();
     }
@@ -183,7 +155,34 @@ public class Offer : BaseAuditableEntity
     public void Deactivate()
     {
         IsActive = false;
-        MarkAsUpdated();
+    }
+
+    public Result<OfferLocalizedContent> AddLocalizedContent(LanguageCode language, string title, string description, string? termsAndConditions)
+    {
+        var contentResult = OfferLocalizedContent.Create(language, title, description, termsAndConditions);
+        if (contentResult.Failed)
+            return contentResult.To<OfferLocalizedContent>();
+
+        var existing = _localizedContents.FirstOrDefault(lc => lc.Language == language);
+        if (existing != null)
+            _localizedContents.Remove(existing);
+
+        _localizedContents.Add(contentResult.Value);
+
+        return Result.Success(contentResult.Value);
+    }
+
+    public Result<OfferLocalizedContent> UpdateLocalizedContent(Guid contentId, string title, string description, string? termsAndConditions)
+    {
+        var existing = _localizedContents.FirstOrDefault(lc => lc.Id == contentId);
+        if (existing == null)
+            return SponsorErrors.LocalizedContentNotFound;
+
+        Result result = existing.Update(title, description, termsAndConditions);
+        if (result.Failed)
+            return result.To<OfferLocalizedContent>();
+
+        return Result.Success(existing);
     }
 
     public bool IsValid(DateTime? referenceDate = null)
