@@ -9,27 +9,42 @@ using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Domain.Entities.TouristAggregate;
+using Infrastructure.Identity.Entities;
+using Domain.Entities.ArtifactAggregate;
 
 namespace Infrastructure.Persistence.ApplicationContext;
 
-internal class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+internal class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
-    public ApplicationDbContext(
-        DbContextOptions<ApplicationDbContext> options) 
-        : base(options)
-    {
-    }
-
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<AdminUser> AdminsUsers { get; set; }
+    public DbSet<ModeratorUser> ModeratorUsers { get; set; }
+    public DbSet<TouristUser> TouristUsers { get; set; }
 
-    // DbSets for Aggregate Roots
     public DbSet<Site> Sites { get; set; }
+    public DbSet<SiteLocalizedContent> SiteLocalizedContents { get; set; }
+    public DbSet<NearestTransportation> NearestTransportations { get; set; }
+    
     public DbSet<Attraction> Attractions { get; set; }
-    public DbSet<Review> Reviews { get; set; }
-    public DbSet<ContentReport> ContentReports { get; set; }
+    public DbSet<AttractionLocalizedContent> AttractionLocalizedContents { get; set; }
+    
+    public DbSet<Artifact> Artifacts { get; set; }
+    public DbSet<ArtifactLocalizedContent> ArtifactLocalizedContents { get; set; }
+    
     public DbSet<City> Cities { get; set; }
+    public DbSet<CityLocalizedContent> CityLocalizedContents { get; set; }
+
+    public DbSet<Review> Reviews { get; set; }
+    
+    public DbSet<ContentReport> ContentReports { get; set; }
+    
     public DbSet<Sponsor> Sponsors { get; set; }
+    public DbSet<SponsorLocalizedContent> SponsorLocalizedContents { get; set; }
+    public DbSet<Offer> Offers { get; set; }
+    
     public DbSet<Tourist> Tourists { get; set; }
+    public DbSet<VisitedSite> VisitedSites { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
