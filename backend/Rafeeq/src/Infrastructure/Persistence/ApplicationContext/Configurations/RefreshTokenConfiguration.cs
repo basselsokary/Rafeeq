@@ -1,17 +1,18 @@
+using Domain.Common.Constants;
 using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.ApplicationContext.Configurations;
 
-public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
+internal sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
 {
     public void Configure(EntityTypeBuilder<RefreshToken> builder)
     {
         builder.HasKey(rt => rt.Id);
 
         builder.Property(rt => rt.Token)
-            .HasMaxLength(500)
+            .HasMaxLength(DomainConstants.RefreshToken.MaxRefreshTokenLength)
             .IsRequired();
 
         builder.Property(rt => rt.UserId)

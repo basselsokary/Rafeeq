@@ -1,80 +1,64 @@
+using System.Text.Json;
 using Domain.Entities.AttractionAggregate;
+using Domain.Entities.SiteAggregate;
+using Domain.Enums;
+using Infrastructure.Persistence.ApplicationContext.Configurations.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using static Domain.Common.Constants.DomainConstants.Image;
 
 namespace Infrastructure.Persistence.ApplicationContext.Configurations.Attractions;
 
-public sealed class AttractionConfiguration : IEntityTypeConfiguration<Attraction>
+internal sealed class AttractionConfiguration : IEntityTypeConfiguration<Attraction>
 {
     public void Configure(EntityTypeBuilder<Attraction> builder)
     {
-        builder.Property(a => a.Name)
-            .HasMaxLength(200)
-            .IsRequired();
-
-        builder.Property(a => a.Description)
-            .HasMaxLength(2000)
-            .IsRequired();
-
         builder.Property(a => a.MainImageUrl)
-            .HasMaxLength(500);
+            .HasMaxLength(MaxImageUrlLength);
 
-        builder.Property(a => a.LocationDescription)
-            .HasMaxLength(2000);
-
-        builder.Property(a => a.Type)
-            .HasConversion<string>()
-            .HasMaxLength(50)
-            .IsRequired();
-
-        builder.Property(a => a.HistoricalPeriod)
-            .HasConversion<string>()
-            .HasMaxLength(50)
-            .IsRequired();
-
-        builder.Property(a => a.IsFeatured)
-            .HasDefaultValue(false);
-
-        builder.Property(a => a.CreatedAt)
-            .IsRequired();
-
-        builder.Property(a => a.LastModifiedAt);
-
-        builder.OwnsOne(a => a.Location, location =>
+        builder.OwnsOne(a => a.Location, location => 
         {
-            location.Property(l => l.Latitude)
-                .HasColumnName("Latitude")
-                .HasPrecision(9, 6);
-
-            location.Property(l => l.Longitude)
-                .HasColumnName("Longitude")
-                .HasPrecision(9, 6);
+            location.Configure();
         });
 
-        builder.Navigation(a => a.Location).IsRequired(false);
+        builder.Property<List<HistoricalPeriod>>("_historicalPeriods")
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null!),
+                v => JsonSerializer.Deserialize<List<HistoricalPeriod>>(v, (JsonSerializerOptions)null!)!)
+            .HasColumnName("HistoricalPeriods")
+            .HasColumnType("nvarchar(1024)")
+            .Metadata.SetValueComparer(new ValueComparer<List<HistoricalPeriod>>(
+                (c1, c2) => c1!.OrderBy(x => x).SequenceEqual(c2!.OrderBy(x => x)),
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList()
+            ));
 
         builder.HasMany(a => a.Images)
             .WithOne()
             .HasForeignKey("AttractionId")
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(a => a.LocalizedContents)
             .WithOne()
             .HasForeignKey("AttractionId")
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex(a => a.Name)
-            .HasDatabaseName("IX_Attractions_Name");
+        builder.HasOne<Site>()
+            .WithMany()
+            .HasForeignKey(a => a.SiteId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(a => a.Type)
             .HasDatabaseName("IX_Attractions_Type");
 
-        builder.HasIndex(a => a.HistoricalPeriod)
-            .HasDatabaseName("IX_Attractions_HistoricalPeriod");
-
         builder.HasIndex(a => a.IsFeatured)
             .HasDatabaseName("IX_Attractions_IsFeatured");
 
-        builder.Ignore(a => a.DomainEvents);
+        builder.HasIndex(a => a.SiteId)
+            .HasDatabaseName("IX_Attractions_SiteId");
     }
 }

@@ -1,35 +1,31 @@
 using Domain.Entities.AttractionAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using static Domain.Common.Constants.DomainConstants.Attraction;
 
 namespace Infrastructure.Persistence.ApplicationContext.Configurations.Attractions;
 
-public sealed class AttractionLocalizedContentConfiguration : IEntityTypeConfiguration<AttractionLocalizedContent>
+internal sealed class AttractionLocalizedContentConfiguration : IEntityTypeConfiguration<AttractionLocalizedContent>
 {
     public void Configure(EntityTypeBuilder<AttractionLocalizedContent> builder)
     {
-        builder.Property(c => c.Language)
-            .HasConversion<string>()
-            .HasMaxLength(16)
-            .IsRequired();
-
         builder.Property(c => c.Name)
-            .HasMaxLength(200)
+            .HasMaxLength(MaxNameLength)
             .IsRequired();
 
         builder.Property(c => c.Description)
-            .HasMaxLength(2000)
+            .HasMaxLength(MaxDescriptionLength)
             .IsRequired();
-
-        builder.Property(c => c.CreatedAt)
-            .IsRequired();
-
-        builder.Property(c => c.LastModifiedAt);
+        
+        builder.Property(a => a.LocationDescription)
+            .HasMaxLength(MaxLocationDescriptionLength)
+            .IsRequired(false);
 
         builder.HasIndex("AttractionId", nameof(AttractionLocalizedContent.Language))
             .IsUnique()
             .HasDatabaseName("IX_AttractionLocalizedContents_AttractionId_Language");
-
-        builder.Ignore(c => c.DomainEvents);
+        
+        builder.HasIndex(a => a.Name)
+            .HasDatabaseName("IX_AttractionLocalizedContents_Name");
     }
 }

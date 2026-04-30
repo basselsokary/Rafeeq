@@ -1,160 +1,89 @@
 using Domain.Entities.SiteAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using static Domain.Common.Constants.DomainConstants.Site;
+using static Domain.Common.Constants.DomainConstants.Image;
+using Infrastructure.Persistence.ApplicationContext.Configurations.ValueObjects;
+using Domain.ValueObjects;
+using System.Text.Json;
+using Domain.Enums;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Infrastructure.Persistence.ApplicationContext.Configurations.Sites;
 
-public sealed class SiteConfiguration : IEntityTypeConfiguration<Site>
+internal sealed class SiteConfiguration : IEntityTypeConfiguration<Site>
 {
     public void Configure(EntityTypeBuilder<Site> builder)
     {
         builder.Property(s => s.CityId)
             .IsRequired();
 
-        builder.Property(s => s.Name)
-            .HasMaxLength(200)
-            .IsRequired();
-
-        builder.Property(s => s.Description)
-            .HasMaxLength(2000)
-            .IsRequired();
-
         builder.Property(s => s.ContactPhone)
-            .HasMaxLength(20);
+            .HasMaxLength(MaxContactPhoneLength)
+            .IsRequired(false);
 
         builder.Property(s => s.WebsiteUrl)
-            .HasMaxLength(500);
+            .HasMaxLength(MaxWebsiteUrlLength)
+            .IsRequired(false);
 
         builder.Property(s => s.MainImageUrl)
-            .HasMaxLength(500);
-
-        builder.Property(s => s.Type)
-            .HasConversion<string>()
-            .HasMaxLength(50)
-            .IsRequired();
-
-        builder.Property(s => s.Status)
-            .HasConversion<string>()
-            .HasMaxLength(50)
-            .IsRequired();
-
-        builder.Property(s => s.AverageRating)
-            .HasPrecision(3, 2);
-
-        builder.Property(s => s.TotalReviews)
-            .HasDefaultValue(0);
-
-        builder.Property(s => s.IsFeatured)
-            .HasDefaultValue(false);
-
-        builder.Property(s => s.IsActive)
-            .HasDefaultValue(false);
-
-        builder.Property(s => s.CreatedAt)
-            .IsRequired();
-
-        builder.Property(s => s.LastModifiedAt);
+            .HasMaxLength(MaxImageUrlLength)
+            .IsRequired(false);
 
         builder.OwnsOne(s => s.Location, location =>
         {
-            location.Property(l => l.Latitude)
-                .HasColumnName("Latitude")
-                .HasPrecision(9, 6)
-                .IsRequired();
+            location.Configure();
 
-            location.Property(l => l.Longitude)
-                .HasColumnName("Longitude")
-                .HasPrecision(9, 6)
-                .IsRequired();
+            location.HasIndex(l => new { l.Latitude, l.Longitude })
+                .HasDatabaseName("IX_Sites_Location_Latitude_Longitude");
         });
 
-        builder.OwnsOne(s => s.Address, address =>
+        builder.OwnsOne(s => s.EntryTicket, ticket =>
         {
-            address.Property(a => a.Street)
-                .HasColumnName("Street")
-                .HasMaxLength(200)
-                .IsRequired();
-
-            address.Property(a => a.City)
-                .HasColumnName("City")
-                .HasMaxLength(100)
-                .IsRequired();
-
-            address.Property(a => a.Region)
-                .HasColumnName("Region")
-                .HasMaxLength(100);
-
-            address.Property(a => a.PostalCode)
-                .HasColumnName("PostalCode")
-                .HasMaxLength(20);
+            ticket.Configure();
         });
-
-        builder.OwnsOne(s => s.EntryFee, money =>
-        {
-            money.Property(m => m.Amount)
-                .HasColumnName("EntryFeeAmount")
-                .HasPrecision(18, 2);
-
-            money.Property(m => m.Currency)
-                .HasColumnName("EntryFeeCurrency")
-                .HasMaxLength(3);
-        });
-
-        builder.Navigation(s => s.EntryFee).IsRequired(false);
 
         builder.OwnsMany(s => s.OpeningHours, openingHours =>
         {
-            openingHours.ToTable("SiteOpeningHours");
-            openingHours.WithOwner().HasForeignKey("SiteId");
+            openingHours.Configure("Site");
 
-            openingHours.Property<int>("Id");
-            openingHours.HasKey("Id");
-
-            openingHours.Property(oh => oh.DayOfWeek)
-                .HasConversion<string>()
-                .HasMaxLength(16)
-                .IsRequired();
-
-            openingHours.Property(oh => oh.IsClosed)
-                .IsRequired();
-
-            openingHours.OwnsOne(oh => oh.OpeningTime, timeRange =>
-            {
-                timeRange.Property(t => t.StartTime)
-                    .HasColumnName("StartTime")
-                    .IsRequired();
-
-                timeRange.Property(t => t.EndTime)
-                    .HasColumnName("EndTime")
-                    .IsRequired();
-            });
+            openingHours.HasIndex("SiteId", nameof(OpeningHour.Day))
+                .IsUnique()
+                .HasDatabaseName("IX_Sites_OpeningHours_SiteId_DayOfWeek");
         });
 
         builder.HasMany(s => s.Images)
             .WithOne()
             .HasForeignKey("SiteId")
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(s => s.LocalizedContents)
             .WithOne()
             .HasForeignKey("SiteId")
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(s => s.Facilities)
-            .WithOne()
-            .HasForeignKey("SiteId")
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.Property<List<FacilityType>>("_facilities")
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null!),
+                v => JsonSerializer.Deserialize<List<FacilityType>>(v, (JsonSerializerOptions)null!)!)
+            .HasColumnName("Facilities")
+            .HasColumnType("nvarchar(1024)")
+            .Metadata.SetValueComparer(new ValueComparer<List<FacilityType>>(
+                (c1, c2) => c1!.OrderBy(x => x).SequenceEqual(c2!.OrderBy(x => x)),
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList()
+            ));
 
         builder.HasMany(s => s.NearestTransportations)
             .WithOne()
-            .HasForeignKey("SiteId")
+            .HasForeignKey(nt => nt.SiteId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(s => s.CityId)
             .HasDatabaseName("IX_Sites_CityId");
-
-        builder.HasIndex(s => s.Name)
-            .HasDatabaseName("IX_Sites_Name");
 
         builder.HasIndex(s => s.Type)
             .HasDatabaseName("IX_Sites_Type");
@@ -167,7 +96,11 @@ public sealed class SiteConfiguration : IEntityTypeConfiguration<Site>
 
         builder.HasIndex(s => s.IsFeatured)
             .HasDatabaseName("IX_Sites_IsFeatured");
-
-        builder.Ignore(s => s.DomainEvents);
+        
+        builder.HasIndex(s => s.IsHiddenGem)
+            .HasDatabaseName("IX_Sites_IsHiddenGem");
+        
+        builder.HasIndex(s => s.IsPopular)
+            .HasDatabaseName("IX_Sites_IsPopular");
     }
 }

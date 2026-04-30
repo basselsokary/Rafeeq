@@ -1,6 +1,7 @@
 using Domain.Entities.ContentReportAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using static Domain.Common.Constants.DomainConstants.ContentReport;
 
 namespace Infrastructure.Persistence.ApplicationContext.Configurations.ContentReports;
 
@@ -14,37 +15,19 @@ public sealed class ContentReportConfiguration : IEntityTypeConfiguration<Conten
         builder.Property(cr => cr.ContentId)
             .IsRequired();
 
-        builder.Property(cr => cr.Reason)
-            .HasConversion<string>()
-            .HasMaxLength(50)
-            .IsRequired();
-
         builder.Property(cr => cr.Description)
-            .HasMaxLength(1000)
+            .HasMaxLength(MaxDescriptionLength)
             .IsRequired();
-
-        builder.Property(cr => cr.Status)
-            .HasConversion<string>()
-            .HasMaxLength(50)
-            .IsRequired();
-
-        builder.Property(cr => cr.ActionTaken)
-            .HasConversion<string>()
-            .HasMaxLength(50);
 
         builder.Property(cr => cr.ReviewNotes)
-            .HasMaxLength(1000);
-
-        builder.Property(cr => cr.Priority)
-            .IsRequired();
+            .IsRequired(false)
+            .HasMaxLength(MaxReviewNotesLength);
 
         builder.Property(cr => cr.ReportedAt)
             .IsRequired();
 
-        builder.Property(cr => cr.CreatedAt)
-            .IsRequired();
-
-        builder.Property(cr => cr.LastModifiedAt);
+        builder.Property(cr => cr.ActionTaken)
+            .IsRequired(false);
 
         builder.HasIndex(cr => cr.ReportedBy)
             .HasDatabaseName("IX_ContentReports_ReportedBy");
@@ -60,7 +43,5 @@ public sealed class ContentReportConfiguration : IEntityTypeConfiguration<Conten
 
         builder.HasIndex(cr => cr.ReportedAt)
             .HasDatabaseName("IX_ContentReports_ReportedAt");
-
-        builder.Ignore(cr => cr.DomainEvents);
     }
 }

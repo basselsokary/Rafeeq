@@ -1,49 +1,36 @@
 using Domain.Entities.TouristAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using static Domain.Common.Constants.DomainConstants.Tourist;
 
 namespace Infrastructure.Persistence.ApplicationContext.Configurations.Tourists;
 
-public sealed class TouristConfiguration : IEntityTypeConfiguration<Tourist>
+internal sealed class TouristConfiguration : IEntityTypeConfiguration<Tourist>
 {
     public void Configure(EntityTypeBuilder<Tourist> builder)
     {
         builder.Property(t => t.FirstName)
-            .HasMaxLength(100)
+            .HasMaxLength(MaxFirstNameLength)
             .IsRequired();
 
         builder.Property(t => t.LastName)
-            .HasMaxLength(100)
+            .HasMaxLength(MaxLastNameLength)
             .IsRequired();
 
         builder.Property(t => t.Nationality)
-            .HasMaxLength(100)
+            .HasMaxLength(MaxNationalityLength)
             .IsRequired();
-
-        builder.Property(t => t.Status)
-            .HasConversion<string>()
-            .HasMaxLength(50)
-            .IsRequired();
-
-        builder.Property(t => t.PreferredLanguage)
-            .HasConversion<string>()
-            .HasMaxLength(50)
-            .IsRequired();
-
-        builder.Property(t => t.TotalTrips)
-            .HasDefaultValue(0);
-
-        builder.Property(t => t.TotalReviews)
-            .HasDefaultValue(0);
-
-        builder.Property(t => t.CreatedAt)
-            .IsRequired();
-
-        builder.Property(t => t.LastModifiedAt);
 
         builder.HasMany(t => t.Favourites)
             .WithOne()
             .HasForeignKey("TouristId")
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(t => t.VisitedSites)
+            .WithOne()
+            .HasForeignKey(vs => vs.TouristId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(t => t.Status)
