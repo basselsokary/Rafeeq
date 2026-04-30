@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using API.Infrustructure;
+using API.Middlewares;
 using Microsoft.OpenApi.Models;
 
 namespace API;
@@ -9,27 +9,29 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
+        // global exception handling and problem details
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
 
         services.AddSwaggerGen();
 
-        services.AddControllers();
         services.AddControllers()
             .AddJsonOptions(options =>
             {
+                // By setting allowIntegerValues to false, we ensure that only valid
+                // string representations of enum values are accepted, improving the robustness of our API.
                 options.JsonSerializerOptions.Converters
                     .Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: false));
             });
 
         services.AddEndpointsApiExplorer();
 
-        // services.AddCors();
+        services.AddCors();
 
         services.Configure<RouteOptions>(options =>
         {
+            // Enforce lowercase URLs for consistency and SEO benefits.
             options.LowercaseUrls = true;
-            // options.LowercaseQueryStrings = true; // Optional
         });
 
         return services;
@@ -37,19 +39,36 @@ public static class DependencyInjection
 
     private static IServiceCollection AddSwaggerGen(this IServiceCollection services)
     {
-        services.AddSwaggerGen(static option =>
+        services.AddSwaggerGen(options =>
         {
-            option.SwaggerDoc("v1", new OpenApiInfo { Title = "Rafeeq API", Version = "v1" });
-            option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            options.SwaggerDoc("v1", new OpenApiInfo
             {
-                Name = "Authorization",
-                Description = "Please enter a valid token (e.g. => 'Authorization: Bearer <YourToken>')",
-                Type = SecuritySchemeType.Http,
-                In = ParameterLocation.Header,
-                BearerFormat = "JWT",
-                Scheme = "Bearer"
+                Title   = "Rafeeq API",
+                Version = "v1"
             });
-            option.AddSecurityRequirement(new OpenApiSecurityRequirement
+
+            // ─── Mobile: Bearer Token (standard) ──────────────────────────────
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name         = "Authorization",
+                Type         = SecuritySchemeType.Http,
+                Scheme       = "bearer",
+                BearerFormat = "JWT",
+                In           = ParameterLocation.Header,
+                Description  = "Mobile clients: paste your JWT access token here."
+            });
+
+            // ─── Web: Cookie Auth ──────────────────────────────────────────────
+            options.AddSecurityDefinition("CookieAuth", new OpenApiSecurityScheme
+            {
+                Name        = "access_token",
+                Type        = SecuritySchemeType.ApiKey,
+                In          = ParameterLocation.Cookie,
+                Description = "Web clients: obtained automatically after calling POST /api/web/auth/login."
+            });
+
+            // ─── Apply both schemes globally ──────────────────────────────────
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
                     new OpenApiSecurityScheme
@@ -57,7 +76,18 @@ public static class DependencyInjection
                         Reference = new OpenApiReference
                         {
                             Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
+                            Id   = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                },
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id   = "CookieAuth"
                         }
                     },
                     Array.Empty<string>()
@@ -72,17 +102,20 @@ public static class DependencyInjection
     {
         services.AddCors(options =>
         {
-            // options.AddPolicy("AllowAllOrigins", policy =>
-            // {
-            //     policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-            // });
-
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("http://127.0.0.1:5500") // Replace with your frontend origin
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials(); // Required for SignalR with authentication or cookies
+                // policy.AllowAnyOrigin()
+                //     // .AllowCredentials()
+                //     .AllowAnyHeader()
+                //     .AllowAnyMethod();
+                
+                policy.WithOrigins(
+                    "http://localhost:5173", // Frontend URL
+                    "http://localhost:5143"
+                )
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
             });
         });
 
