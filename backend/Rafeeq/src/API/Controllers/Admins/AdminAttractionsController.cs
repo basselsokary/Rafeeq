@@ -1,65 +1,78 @@
 using API.Controllers.Base;
-using API.RequestDTOs;
+using API.DTOs;
 using Application.Commands.Attractions;
 using Application.Commands.Attractions.Images;
 using Application.Commands.Attractions.LocalizedContents;
 using Application.Common.Interfaces.Messaging;
 using Application.DTOs.Attractions;
+using Application.DTOs.Common;
+using Application.Queries.Attractions.Images;
 using Application.Queries.Attractions;
+using Application.Queries.Attractions.LocalizedContents;
+using Domain.Common.Constants;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Admins;
 
-[Route("api/admin/attractions/")]
-[Authorize(Roles = nameof(UserRole.Admin))]
+[Route("api/admins/attractions/")]
+[Authorize(Roles = UserRoles.Admin)]
 public class AdminAttractionsController : ApiBaseController
 {
-    [HttpGet("/{id:guid}")]
+	#region Basic CRUD Operations
+    [HttpGet("{id:guid}")]
 	public async Task<ActionResult<AttractionAdminDetailDto>> GetById(
 		[FromRoute] Guid id,
-		[FromServices] IQueryHandler<GetAttractionByIdForAdminQuery, AttractionAdminDetailDto> queryHandler)
+		[FromServices] IQueryHandler<GetAttractionByIdForAdminQuery, AttractionAdminDetailDto> queryHandler,
+		CancellationToken cancellationToken = default)
 	{
-		var result = await queryHandler.HandleAsync(new GetAttractionByIdForAdminQuery(id));
+		var query = new GetAttractionByIdForAdminQuery(id);
+		var result = await queryHandler.HandleAsync(query, cancellationToken);
 		return HandleResult(result);
 	}
 
+	public sealed record CreateAttractionRequest(Guid SiteId, string Name, string Description, string? LocationDescription, AttractionType Type, bool IsFeatured, LocationRequest? Location, List<HistoricalPeriod> HistoricalPeriod);
+	
 	[HttpPost]
 	public async Task<IActionResult> Create(
-		[FromBody] CreateAttractionCommand command,
-		[FromServices] ICommandHandler<CreateAttractionCommand> commandHandler)
+		[FromBody] CreateAttractionRequest request,
+		[FromServices] ICommandHandler<CreateAttractionCommand> commandHandler,
+		CancellationToken cancellationToken = default)
 	{
-		var result = await commandHandler.HandleAsync(command);
+		var command = new CreateAttractionCommand(
+			request.SiteId,
+			request.Name,
+			request.Description,
+			request.LocationDescription,
+			request.Type,
+			request.IsFeatured,
+			request.Location?.Latitude,
+			request.Location?.Longitude,
+			request.HistoricalPeriod);
+			
+		var result = await commandHandler.HandleAsync(command, cancellationToken);
 
 		return HandleResult(result);
 	}
 
-	public record UpdateAttractionRequest(
-		string Name,
-		string Description,
-		AttractionType Type,
-		HistoricalPeriod HistoricalPeriod,
-		LocationRequest ExactLocation,
-		string? LocationDescription);
+	public sealed record UpdateAttractionRequest(AttractionType Type, List<HistoricalPeriod> HistoricalPeriod, LocationRequest ExactLocation);
 
 	[HttpPut("{id:guid}")]
 	public async Task<IActionResult> Update(
 		[FromRoute] Guid id,
 		[FromBody] UpdateAttractionRequest request,
-		[FromServices] ICommandHandler<UpdateAttractionCommand> commandHandler)
+		[FromServices] ICommandHandler<UpdateAttractionCommand> commandHandler,
+		CancellationToken cancellationToken = default)
 	{
 		var command = new UpdateAttractionCommand(
 			id,
-			request.Name,
-			request.Description,
 			request.Type,
 			request.HistoricalPeriod,
 			request.ExactLocation.Latitude,
-			request.ExactLocation.Longitude,
-			request.LocationDescription);
+			request.ExactLocation.Longitude);
 
-		var result = await commandHandler.HandleAsync(command);
+		var result = await commandHandler.HandleAsync(command, cancellationToken);
 
 		return HandleResult(result);
 	}
@@ -67,34 +80,89 @@ public class AdminAttractionsController : ApiBaseController
 	[HttpDelete("{id:guid}")]
 	public async Task<IActionResult> Delete(
 		[FromRoute] Guid id,
-		[FromServices] ICommandHandler<DeleteAttractionCommand> commandHandler)
+		[FromServices] ICommandHandler<DeleteAttractionCommand> commandHandler,
+		CancellationToken cancellationToken = default)
 	{
-		var result = await commandHandler.HandleAsync(new DeleteAttractionCommand(id));
+		var command = new DeleteAttractionCommand(id);
+		var result = await commandHandler.HandleAsync(command, cancellationToken);
+
+		return HandleResult(result);
+	}
+	#endregion
+
+	#region Images
+	[HttpGet("{id:guid}/images")]
+	public async Task<ActionResult<List<ImageDto>>> GetImages(
+		[FromRoute] Guid id,
+		[FromServices] IQueryHandler<GetAttractionImagesByIdQuery, List<ImageDto>> queryHandler,
+		CancellationToken cancellationToken = default)
+	{
+		var query = new GetAttractionImagesByIdQuery(id);
+		var result = await queryHandler.HandleAsync(query, cancellationToken);
 
 		return HandleResult(result);
 	}
 
-	public record MarkAttractionAsFeaturedRequest(bool IsFeatured);
+	[HttpGet("{id:guid}/images/{imageId:guid}")]
+	public async Task<ActionResult<ImageDto>> GetImageById(
+		[FromRoute] Guid id,
+		[FromRoute] Guid imageId,
+		[FromServices] IQueryHandler<GetAttractionImageByIdQuery, ImageDto> queryHandler,
+		CancellationToken cancellationToken = default)
+	{
+		var query = new GetAttractionImageByIdQuery(id, imageId);
+		var result = await queryHandler.HandleAsync(query, cancellationToken);
 
-	[HttpPut("{id:guid}/featured")]
+		return HandleResult(result);
+	}
+	#endregion
+
+	#region Partial Updates (PATCH)
+	public sealed record MarkAttractionAsFeaturedRequest(bool IsFeatured);
+
+	[HttpPatch("{id:guid}")]
 	public async Task<IActionResult> MarkAsFeatured(
 		[FromRoute] Guid id,
 		[FromBody] MarkAttractionAsFeaturedRequest request,
-		[FromServices] ICommandHandler<MarkAttractionAsFeaturedCommand> commandHandler)
+		[FromServices] ICommandHandler<MarkAttractionAsFeaturedCommand> commandHandler,
+		CancellationToken cancellationToken = default)
 	{
-		var result = await commandHandler.HandleAsync(new MarkAttractionAsFeaturedCommand(id, request.IsFeatured));
+		var command = new MarkAttractionAsFeaturedCommand(id, request.IsFeatured);
+		var result = await commandHandler.HandleAsync(command, cancellationToken);
 
 		return HandleResult(result);
 	}
+	#endregion
+
+	#region Images Management
+	public sealed record AddAttractionImagesRequest(List<AddAttractionImageItem> Images);
+    public sealed record AddAttractionImageItem(IFormFile Image, bool IsMain, int DisplayOrder, string? Caption);
 
 	[HttpPost("{id:guid}/images")]
 	public async Task<IActionResult> AddImages(
 		[FromRoute] Guid id,
-		[FromBody] List<AddAttractionImageDto> request,
-		[FromServices] ICommandHandler<AddAttractionImagesCommand> commandHandler)
+		[FromForm] AddAttractionImagesRequest request,
+		[FromServices] ICommandHandler<AddAttractionImagesCommand> commandHandler,
+		CancellationToken cancellationToken = default)
 	{
-		var command = new AddAttractionImagesCommand(id, request);
-		var result = await commandHandler.HandleAsync(command);
+		var images = new List<AddAttractionImageDto>();
+
+		foreach (var item in request.Images)
+		{
+			var imageStream = new MemoryStream();
+			await item.Image.CopyToAsync(imageStream, cancellationToken);
+			imageStream.Position = 0;
+
+			images.Add(new AddAttractionImageDto(
+				imageStream,
+				item.Image.FileName,
+				item.IsMain,
+				item.DisplayOrder,
+				item.Caption));
+		}
+
+		var command = new AddAttractionImagesCommand(id, images);
+		var result = await commandHandler.HandleAsync(command, cancellationToken);
 
 		return HandleResult(result);
 	}
@@ -103,44 +171,57 @@ public class AdminAttractionsController : ApiBaseController
 	public async Task<IActionResult> RemoveImages(
 		[FromRoute] Guid id,
 		[FromBody] List<Guid> imageIds,
-		[FromServices] ICommandHandler<RemoveAttractionImagesCommand> commandHandler)
+		[FromServices] ICommandHandler<RemoveAttractionImagesCommand> commandHandler,
+		CancellationToken cancellationToken = default)
 	{
-		var result = await commandHandler.HandleAsync(new RemoveAttractionImagesCommand(id, imageIds));
+		var command = new RemoveAttractionImagesCommand(id, imageIds);
+		var result = await commandHandler.HandleAsync(command, cancellationToken);
 
 		return HandleResult(result);
 	}
+	#endregion
 
-	public record AddAttractionLocalizedContentRequest(
-		LanguageCode Language,
-		string Name,
-		string Description);
+	#region Localized Contents
+	[HttpGet("{id:guid}/localized-contents")]
+	public async Task<ActionResult<List<AttractionLocalizedContentDto>>> GetLocalizedContents(
+		[FromRoute] Guid id,
+		[FromServices] IQueryHandler<GetAttractionLocalizedContentsQuery, List<AttractionLocalizedContentDto>> queryHandler,
+		CancellationToken cancellationToken = default)
+	{
+		var query = new GetAttractionLocalizedContentsQuery(id);
+		var result = await queryHandler.HandleAsync(query, cancellationToken);
+
+		return HandleResult(result);
+	}
 
 	[HttpPost("{id:guid}/localized-contents")]
 	public async Task<IActionResult> AddLocalizedContents(
 		[FromRoute] Guid id,
 		[FromBody] List<AddAttractionLocalizedContentsDtoCommand> request,
-		[FromServices] ICommandHandler<AddAttractionLocalizedContentsCommand> commandHandler)
+		[FromServices] ICommandHandler<AddAttractionLocalizedContentsCommand> commandHandler,
+		CancellationToken cancellationToken = default)
 	{
 		var command = new AddAttractionLocalizedContentsCommand(id, request);
-		var result = await commandHandler.HandleAsync(command);
+		var result = await commandHandler.HandleAsync(command, cancellationToken);
 
 		return HandleResult(result);
 	}
-
-	public record UpdateAttractionLocalizedContentRequest(
-		Guid ContentId,
-		string Name,
-		string Description);
 
 	[HttpPut("{id:guid}/localized-contents")]
-	public async Task<IActionResult> UpdateLocalizedContent(
+	public async Task<IActionResult> UpdateLocalizedContents(
 		[FromRoute] Guid id,
-		[FromBody] UpdateAttractionLocalizedContentRequest request,
-		[FromServices] ICommandHandler<UpdateAttractionLocalizedContentCommand> commandHandler)
+		[FromBody] List<UpdateAttractionLocalizedContentsDtoCommand> request,
+		[FromServices] ICommandHandler<UpdateAttractionLocalizedContentCommand> commandHandler,
+		CancellationToken cancellationToken = default)
 	{
-		var command = new UpdateAttractionLocalizedContentCommand(id, request.ContentId, request.Name, request.Description);
-		var result = await commandHandler.HandleAsync(command);
+		var command = new UpdateAttractionLocalizedContentCommand(id, request);
+		var result = await commandHandler.HandleAsync(command, cancellationToken);
 
 		return HandleResult(result);
 	}
+	#endregion
+
+	#region Dashboard
+	#endregion
+
 }
