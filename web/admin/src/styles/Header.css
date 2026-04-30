@@ -1,6 +1,11 @@
 header .navbar {
     z-index: 1000;
     box-shadow: 1px 3px 15px rgba(0, 0, 0, 0.15);
+    transition: all 0.4s ease-in-out;
+}
+
+.dark-navbar-shadow {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
 }
 
 header .logo img {
@@ -44,4 +49,13 @@ header .button {
         padding: 6px 18px !important;
     }
 
+}
+
+
+.dark-toggle .navbar-toggler-icon {
+    filter: invert(75%) sepia(90%) saturate(400%) hue-rotate(5deg);
+}
+
+.dark-toggle {
+    border-color: #ffc107 !important;
 }

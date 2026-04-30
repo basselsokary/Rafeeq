@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Layout from '../../layouts/Layout'
 import { Card, Container, Row, Col } from 'react-bootstrap'
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet'
 import egyptGeoJson from '../../assets/egypt.json'
 import CustomCard from '../../components/CustomCard'
+import { getCities } from '../../api/citiesApi'
+import { ThemeContext } from '../../components/Theme'
 
 const cardsData = {
   "Total Users": {
@@ -46,10 +48,36 @@ const topSites = [
 ]
 
 const Dashboard = () => {
+
+  const { dark, toggleTheme } = useContext(ThemeContext);
+
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const citiesData = await getCities();
+        if (Array.isArray(citiesData)) {
+          setCities(citiesData);
+        }
+        else if (citiesData && typeof citiesData === 'object' && citiesData.id) {
+          setCities([citiesData]);
+        }
+        else {
+          setCities([]);
+        }
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+        setCities([]);
+      }
+    };
+    fetchCities();
+  }, []);
+
   return (
     <>
       <Layout>
-        <div style={{ paddingBottom: '50px', minHeight: '100vh', backgroundColor: '#fff8f0' }}>
+        <div className={`custom_body ${dark ? 'dark-mode' : ''}`}>
           <Container className='pt-4'>
             <Row className='g-4 mt-2'>
               {Object.keys(cardsData).map((key) => (
@@ -60,19 +88,13 @@ const Dashboard = () => {
             </Row>
             <Row className='g-4 mt-4 pt-3'>
               <Col xl={6} lg={6} md={12} sm={12} xs={12}>
-                <MapContainer center={EgyptPosition} zoom={6}
+                <MapContainer center={EgyptPosition} zoom={6} className='border-0 shadow-sm'
                   zoomControl={false}
                   style={{ height: '500px', width: '100%', backgroundColor: 'transparent' }}>
                   <TileLayer
-                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png"
-                  />
-                  <GeoJSON data={egyptGeoJson} style={{
-                    fillColor: "#eab308",
-                    weight: 2,
-                    opacity: 1,
-                    color: "#ca8a04",
-                    fillOpacity: 1
-                  }} />
+                    key={dark ? 'map-dark' : 'map-light'}
+                    url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+                    className={`${dark ? 'map-dark-filter' : ''} transition`}/>
                   {Governorates.map((gov) => (
                     <Marker key={gov.id} position={gov.position}  >
                       <Popup>
@@ -86,18 +108,24 @@ const Dashboard = () => {
                 </MapContainer>
               </Col>
               <Col xl={6} lg={6} md={12} sm={12} xs={12}>
-                <Card className='border-0 rounded-4 shadow-sm p-3'>
-                  <h6 className='fw-bold mb-4'>Top 10 Rated Sites</h6>
+                <Card className={`${dark ? 'border-0' : ''} rounded-4 shadow-sm p-3 transition`} style={{ backgroundColor: dark ? '#2A2A2A' : '#F5EFE7' }}>
+                  <h6 className='fw-bold mb-4 transition' style={{ color: dark ? '#F5F5F5' : '#000' }}>
+                    Top 10 Rated Sites
+                  </h6>
                   {topSites.map((site, index) => (
                     <div key={index} className='mb-4'>
                       <div className='d-flex justify-content-between mb-2'>
-                        <small className='fw-bold' style={{ color: '#555' }}>{site.name}</small>
-                        <small className='fw-bold'>{site.rating}</small>
+                        <small className='fw-bold transition' style={{ color: dark ? '#A0A0A0' : '#555' }}>
+                          {site.name}
+                        </small>
+                        <small className='fw-bold transition' style={{ color: dark ? '#F5F5F5' : '#000' }}>
+                          {site.rating}
+                        </small>
                       </div>
-                      <div className='progress' style={{ height: '5px', backgroundColor: '#f0e5d8' }}>
-                        <div className='progress-bar' style={{
+                      <div className='progress transition' style={{ height: '5px', backgroundColor: dark ? 'rgba(212, 165, 116, 0.15)' : '#f0e5d8' }}>
+                        <div className='progress-bar transition' style={{
                           width: `${(site.rating / 5) * 100}%`,
-                          backgroundColor: '#8b6b4a',
+                          backgroundColor: dark ? '#D4A574' : '#8b6b4a',
                           borderRadius: '5px'
                         }}></div>
                       </div>
