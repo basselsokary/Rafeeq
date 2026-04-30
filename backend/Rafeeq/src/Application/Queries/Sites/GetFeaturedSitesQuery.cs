@@ -1,13 +1,15 @@
+using Application.Common.Interfaces.Localization;
 using Application.Common.Interfaces.QueryServices;
 using Application.DTOs.Sites;
 
 namespace Application.Queries.Sites;
 
-public record GetFeaturedSitesQuery(
+public sealed record GetFeaturedSitesQuery(
     Guid? City = null) : IQuery<List<SiteListDto>>;
 
-internal class GetFeaturedSitesQueryHandler(
-    ISiteQueryService queryService) : IQueryHandler<GetFeaturedSitesQuery, List<SiteListDto>>
+internal sealed class GetFeaturedSitesQueryHandler(
+    ISiteQueryService queryService,
+    IEnumLocalizer enumLocalizer) : IQueryHandler<GetFeaturedSitesQuery, List<SiteListDto>>
 {
     public async Task<Result<List<SiteListDto>>> HandleAsync(GetFeaturedSitesQuery query, CancellationToken cancellationToken)
     {
@@ -15,7 +17,13 @@ internal class GetFeaturedSitesQueryHandler(
             city: query.City,
             cancellationToken: cancellationToken);
 
-            return Result.Success(featuredSites);
+        var localizedData = featuredSites.Select(site => site with
+        {
+            StatusDisplay = enumLocalizer.Localize(site.Status),
+            TypeDisplay = enumLocalizer.Localize(site.Type)
+        }).ToList();
+
+        return Result.Success(localizedData);
     }
 }
 

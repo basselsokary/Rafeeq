@@ -11,7 +11,7 @@ public interface IContentReportQueryService
     
     Task<PagedResult<ContentReportListDto>> GetAsync(
         PagingParameters paging,
-        int? priority,
+        int? priority = null,
         ReportReason? reason = null,
         ReportStatus? status = null,
         CancellationToken cancellationToken = default);

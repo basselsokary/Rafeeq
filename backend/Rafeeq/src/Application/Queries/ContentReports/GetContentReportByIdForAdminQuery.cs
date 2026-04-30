@@ -4,9 +4,9 @@ using Domain.Entities.ContentReportAggregate;
 
 namespace Application.Queries.ContentReports;
 
-public record GetContentReportByIdForAdminQuery(Guid Id) : IQuery<ContentReportAdminDetailDto>;
+public sealed record GetContentReportByIdForAdminQuery(Guid Id) : IQuery<ContentReportAdminDetailDto>;
 
-internal class GetContentReportByIdForAdminQueryHandler(
+internal sealed class GetContentReportByIdForAdminQueryHandler(
     IContentReportQueryService queryService) : IQueryHandler<GetContentReportByIdForAdminQuery, ContentReportAdminDetailDto>
 {
     public async Task<Result<ContentReportAdminDetailDto>> HandleAsync(GetContentReportByIdForAdminQuery query, CancellationToken cancellationToken)

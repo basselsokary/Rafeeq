@@ -1,14 +1,14 @@
 using Application.Common.Interfaces.QueryServices;
-using Application.DTOs.Sites;
+using Application.DTOs.Admins;
 
 namespace Application.Queries.Sites.LocalizedContents;
 
-public record GetSiteLocalizedContentsQuery(Guid SiteId) : IQuery<List<LocalizedContentDto>>;
+public sealed record GetSiteLocalizedContentsQuery(Guid SiteId) : IQuery<List<AdminSiteLocalizedContentDto>>;
 
-internal class GetSiteLocalizedContentsQueryHandler(
-    ISiteQueryService queryService) : IQueryHandler<GetSiteLocalizedContentsQuery, List<LocalizedContentDto>>
+internal sealed class GetSiteLocalizedContentsQueryHandler(
+    ISiteQueryService queryService) : IQueryHandler<GetSiteLocalizedContentsQuery, List<AdminSiteLocalizedContentDto>>
 {
-    public async Task<Result<List<LocalizedContentDto>>> HandleAsync(GetSiteLocalizedContentsQuery query, CancellationToken cancellationToken)
+    public async Task<Result<List<AdminSiteLocalizedContentDto>>> HandleAsync(GetSiteLocalizedContentsQuery query, CancellationToken cancellationToken)
     {
         var localizedContentDtos = await queryService.GetLocalizedContentsAsync(query.SiteId, cancellationToken);
     

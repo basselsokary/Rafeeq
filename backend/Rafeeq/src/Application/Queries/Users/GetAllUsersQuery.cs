@@ -5,13 +5,13 @@ using Domain.Enums;
 
 namespace Application.Queries.Users;
 
-public record GetAllUsersQuery(
+public sealed record GetAllUsersQuery(
     PagingParameters Paging,
     string? SearchTerm = null,
     bool? EmailVerified = null,
     UserStatus Status = UserStatus.Active) : IQuery<PagedResult<TouristListDto>>;
 
-internal class GetAllUsersQueryHandler(
+internal sealed class GetAllUsersQueryHandler(
     ITouristQueryService queryService) : IQueryHandler<GetAllUsersQuery, PagedResult<TouristListDto>>
 {
     public async Task<Result<PagedResult<TouristListDto>>> HandleAsync(GetAllUsersQuery query, CancellationToken cancellationToken)
