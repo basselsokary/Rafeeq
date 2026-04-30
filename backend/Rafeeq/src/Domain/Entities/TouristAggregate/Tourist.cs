@@ -1,67 +1,70 @@
 using Domain.Common;
 using Domain.Enums;
 using Domain.Common.Interfaces;
-using Shared.Models;
+using Shared;
 
 namespace Domain.Entities.TouristAggregate;
 
-public class Tourist : BaseAuditableEntity, IAggregateRoot
+public class Tourist : BaseEntity, IAggregateRoot
 {
     public string FirstName { get; private set; } = null!;
     public string LastName { get; private set; } = null!;
-    public string Nationality { get; private set; } = null!;
+    public string? Nationality { get; private set; }
 
     public UserStatus Status { get; private set; }
-    public LanguageCode PreferredLanguage { get; private set; }
     
     public int TotalTrips { get; private set; }
     public int TotalReviews { get; private set; }
 
-    private readonly List<Favourite> _favourites = [];
-    public IReadOnlyCollection<Favourite> Favourites => _favourites.AsReadOnly();
+    public DateTime CreatedAt { get; protected set; }
+    public DateTime? LastModifiedAt { get; protected set; }
+
+    private readonly List<FavouriteSite> _favourites = [];
+    public IReadOnlyCollection<FavouriteSite> Favourites => _favourites.AsReadOnly();
+    
+    private readonly List<VisitedSite> _visitedSites = [];
+    public IReadOnlyCollection<VisitedSite> VisitedSites => _visitedSites.AsReadOnly();
 
     private Tourist() { }
     private Tourist(
         Guid id,
         string firstName,
         string lastName,
-        string nationality,
-        LanguageCode preferredLanguage) : base(id)
+        string? nationality = null) : base(id)
     {
         FirstName = firstName;
         LastName = lastName;
         Nationality = nationality;
-        PreferredLanguage = preferredLanguage;
 
         Status = UserStatus.Active;
         TotalTrips = 0;
         TotalReviews = 0;
+
+        CreatedAt = DateTime.UtcNow;
     }
 
     public static Result<Tourist> Create(
         Guid TouristId,
         string firstName,
         string lastName,
-        string nationality,
-        LanguageCode preferredLanguage = LanguageCode.English)
+        string email,
+        string? nationality = null)
     {
         if (string.IsNullOrWhiteSpace(firstName))
             return TouristErrors.FirstNameRequired;
 
         if (string.IsNullOrWhiteSpace(lastName))
             return TouristErrors.LastNameRequired;
-
-        if (string.IsNullOrWhiteSpace(nationality))
-            return TouristErrors.NationalityRequired;
-        
-        var Tourist = new Tourist(
+   
+        var tourist = new Tourist(
             TouristId,
             firstName.Trim(),
             lastName.Trim(),
-            nationality,
-            preferredLanguage);
+            nationality?.Trim());
+        
+        tourist.RaiseDomainEvent(new UserRegisteredEvent(email, $"{firstName}"));
 
-        return Tourist;
+        return tourist;
     }
 
     public string GetFullName() => $"{FirstName} {LastName}";
@@ -80,17 +83,10 @@ public class Tourist : BaseAuditableEntity, IAggregateRoot
         FirstName = firstName.Trim();
         LastName = lastName.Trim();
         Nationality = nationality.Trim();
-        MarkAsUpdated();
+
+        UpdateLastModified();
 
         return Result.Success();
-    }
-
-    public void SetPreferredLanguage(LanguageCode language)
-    {
-        if (PreferredLanguage == language) return;
-        
-        PreferredLanguage = language;
-        MarkAsUpdated();
     }
 
     public void UpdateStatus(UserStatus status)
@@ -98,33 +94,60 @@ public class Tourist : BaseAuditableEntity, IAggregateRoot
         if (Status == status) return;
 
         Status = status;
-        MarkAsUpdated();
+        UpdateLastModified();
         // RaiseDomainEvent(new TouristStatusChangedEvent(Id, status));
     }
 
-    public Result AddFavorite(Guid siteId)
+    public Result<VisitedSite> MarkSiteAsVisited(Guid siteId, int durationMinutes, DateTime? visitDate)
+    {
+        if (_visitedSites.Any(v => v.SiteId == siteId))
+            return TouristErrors.SiteAlreadyVisited;
+
+        var visitedSiteResult = VisitedSite.Create(siteId, durationMinutes, visitDate);
+        if (visitedSiteResult.Failed)
+            return visitedSiteResult;
+
+        _visitedSites.Add(visitedSiteResult.Value);
+        UpdateLastModified();
+
+        return Result.Success(visitedSiteResult.Value);
+    }
+
+    public Result RemoveVisitedSite(Guid siteId)
+    {
+        var visitedSite = _visitedSites.FirstOrDefault(v => v.SiteId == siteId);
+        if (visitedSite == null)
+            return TouristErrors.VisitedSiteNotFound;
+
+        _visitedSites.Remove(visitedSite);
+        UpdateLastModified();
+
+        return Result.Success();
+    }
+
+    public Result<FavouriteSite> AddFavorite(Guid siteId)
     {
         if (_favourites.Any(f => f.SiteId == siteId))
             return TouristErrors.SiteAlreadyFavorite;
 
-        var favoriteResult = Favourite.Create(siteId);
+        var favoriteResult = FavouriteSite.Create(siteId);
         if (favoriteResult.Failed)
             return favoriteResult;
 
         _favourites.Add(favoriteResult.Value);
-        MarkAsUpdated();
+        UpdateLastModified();
 
-        return Result.Success();
+        return Result.Success(favoriteResult.Value);
     }
 
     public Result RemoveFavorite(Guid siteId)
     {
         var favorite = _favourites.FirstOrDefault(f => f.SiteId == siteId);
         if (favorite == null)
-            return TouristErrors.FavouriteNotFound(siteId);
+            return TouristErrors.FavouriteNotFound;
 
         _favourites.Remove(favorite);
-        MarkAsUpdated();
+        UpdateLastModified();
 
         return Result.Success();
     }
@@ -132,17 +155,36 @@ public class Tourist : BaseAuditableEntity, IAggregateRoot
     public void IncrementTripCount()
     {
         TotalTrips++;
-        MarkAsUpdated();
+        UpdateLastModified();
     }
 
     public void IncrementReviewCount()
     {
         TotalReviews++;
-        MarkAsUpdated();
+        UpdateLastModified();
+    }
+
+    public void DecrementReviewCount()
+    {
+        if (TotalReviews > 0)
+        {
+            TotalReviews--;
+            UpdateLastModified();
+        }
     }
 
     public bool IsFavorite(Guid siteId)
     {
         return _favourites.Any(f => f.SiteId == siteId);
+    }
+
+    private void UpdateLastModified(DateTime? modifiedAt = null)
+    {
+        if (modifiedAt.HasValue)
+        {
+            LastModifiedAt = modifiedAt.Value;
+        }
+
+        LastModifiedAt = DateTime.UtcNow;
     }
 }

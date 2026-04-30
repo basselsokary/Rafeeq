@@ -1,6 +1,7 @@
 using Domain.Common;
-using Domain.Exceptions;
+using Domain.Entities.TouristAggregate;
 using Domain.ValueObjects;
+using Shared;
 
 namespace Domain.Entities.TripAggregate;
 
@@ -9,9 +10,11 @@ public class TripSite : BaseAuditableEntity
     public Guid SiteId { get; private set; }
     public DateTime VisitDate { get; private set; }
     public TimeRange? VisitTimeRange { get; private set; }
+    
     public int EstimatedDurationMinutes { get; private set; }
     public int DisplayOrder { get; private set; }
     public bool IsVisited { get; private set; }
+    
     public DateTime? ActualVisitTime { get; private set; }
     public int? ActualDurationMinutes { get; private set; }
     public string? Notes { get; private set; }
@@ -33,7 +36,7 @@ public class TripSite : BaseAuditableEntity
         IsVisited = false;
     }
 
-    internal static TripSite Create(
+    internal static Result<TripSite> Create(
         Guid siteId,
         DateTime visitDate,
         TimeRange? visitTimeRange,
@@ -41,10 +44,10 @@ public class TripSite : BaseAuditableEntity
         int displayOrder)
     {
         if (estimatedDurationMinutes <= 0)
-            throw new BusinessRuleValidationException("Estimated duration must be greater than zero.");
+            return TouristErrors.DurationInvalid;
 
         if (displayOrder < 0)
-            throw new BusinessRuleValidationException("Display order cannot be negative.");
+            return TouristErrors.DisplayOrderInvalid;
 
         return new TripSite(
             siteId,
@@ -54,45 +57,43 @@ public class TripSite : BaseAuditableEntity
             displayOrder);
     }
 
-    internal void UpdateDisplayOrder(int displayOrder)
+    internal Result UpdateDisplayOrder(int displayOrder)
     {
         if (displayOrder < 0)
-            throw new BusinessRuleValidationException("Display order cannot be negative.");
+            return TouristErrors.DisplayOrderInvalid;
 
         DisplayOrder = displayOrder;
-        MarkAsUpdated();
+        return Result.Success();
     }
 
-    internal void MarkAsVisited(int actualDurationMinutes)
+    internal Result MarkAsVisited(int actualDurationMinutes)
     {
         if (actualDurationMinutes <= 0)
-            throw new BusinessRuleValidationException("Actual duration must be greater than zero.");
+            return TouristErrors.DurationInvalid;
 
         IsVisited = true;
         ActualVisitTime = DateTime.UtcNow;
         ActualDurationMinutes = actualDurationMinutes;
-        MarkAsUpdated();
+        return Result.Success();
     }
 
     public void UpdateVisitSchedule(DateTime visitDate, TimeRange? visitTimeRange)
     {
         VisitDate = visitDate.Date;
         VisitTimeRange = visitTimeRange;
-        MarkAsUpdated();
     }
 
-    public void UpdateEstimatedDuration(int estimatedDurationMinutes)
+    public Result UpdateEstimatedDuration(int estimatedDurationMinutes)
     {
         if (estimatedDurationMinutes <= 0)
-            throw new BusinessRuleValidationException("Estimated duration must be greater than zero.");
+            return TouristErrors.DurationInvalid;
 
         EstimatedDurationMinutes = estimatedDurationMinutes;
-        MarkAsUpdated();
+        return Result.Success();
     }
 
     public void AddNotes(string notes)
     {
         Notes = notes?.Trim();
-        MarkAsUpdated();
     }
 }

@@ -2,9 +2,9 @@ namespace Domain.Enums;
 
 public enum UserStatus
 {
-    Active,
-    Inactive,
-    Suspended,
-    Banned,
-    Deleted
+    Active = 1,
+    Inactive = 2,
+    Suspended = 3,
+    Banned = 4,
+    Deleted = 5
 }

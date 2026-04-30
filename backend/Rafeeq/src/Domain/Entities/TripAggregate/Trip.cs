@@ -1,8 +1,8 @@
 using Domain.Common;
-using Domain.Exceptions;
 using Domain.Enums;
 using Domain.ValueObjects;
 using Domain.Common.Interfaces;
+using Shared;
 
 namespace Domain.Entities.TripAggregate;
 
@@ -15,67 +15,80 @@ public class Trip : BaseAuditableEntity, IAggregateRoot
     public DateRange DateRange { get; private set; } = null!;
     public TripStatus Status { get; private set; }
     public TransportationType PreferredTransportation { get; private set; }
+    
+    public Money? EstimatedBudget { get; private set; }
+    public Money? ActualCost { get; private set; }
+
     public int TotalSites => _sites.Count;
     public int EstimatedTotalDurationMinutes { get; private set; }
     public int ShareCount { get; private set; }
+    public bool IsPublic { get; private set; }
 
     private readonly List<TripSite> _sites = [];
     public IReadOnlyCollection<TripSite> Sites => _sites.AsReadOnly();
+
+    private readonly List<TripNote> _notes = [];
+    public IReadOnlyCollection<TripNote> Notes => _notes.AsReadOnly();
 
     private Trip() { }
     private Trip(
         Guid touristId,
         string name,
         DateRange dateRange,
-        TransportationType preferredTransportation)
+        TransportationType preferredTransportation,
+        Money? estimatedBudget)
     {
         TouristId = touristId;
         Name = name;
         DateRange = dateRange;
-        Status = TripStatus.Draft;
         PreferredTransportation = preferredTransportation;
+        EstimatedBudget = estimatedBudget;
+        
+        Status = TripStatus.Draft;
         EstimatedTotalDurationMinutes = 0;
         ShareCount = 0;
+        IsPublic = false;
     }
 
-    public static Trip Create(
+    public static Result<Trip> Create(
         Guid touristId,
         string name,
         DateRange dateRange,
-        TransportationType preferredTransportation = TransportationType.Walking)
+        TransportationType preferredTransportation,
+        Money? estimatedBudget = null)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new BusinessRuleValidationException("Trip name cannot be empty.");
+            return TripErrors.NameRequired;
 
         var trip = new Trip(
             touristId,
             name.Trim(),
             dateRange,
-            preferredTransportation);
+            preferredTransportation,
+            estimatedBudget);
 
         // trip.RaiseDomainEvent(new TripCreatedEvent(trip.Id, trip.TouristId, trip.Name));
 
         return trip;
     }
 
-    public void UpdateBasicInfo(string name, string? description, TransportationType preferredTransportation)
+    public Result UpdateBasicInfo(string name, string? description, TransportationType preferredTransportation)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new BusinessRuleValidationException("Trip name cannot be empty.");
+            return TripErrors.NameRequired;
 
         Name = name.Trim();
         Description = description?.Trim();
         PreferredTransportation = preferredTransportation;
-        MarkAsUpdated();
+        return Result.Success();
     }
 
     public void UpdateDateRange(DateRange dateRange)
     {
         DateRange = dateRange;
-        MarkAsUpdated();
     }
 
-    public void AddSite(
+    public Result AddSite(
         Guid siteId,
         DateTime visitDate,
         TimeRange? visitTimeRange,
@@ -83,13 +96,13 @@ public class Trip : BaseAuditableEntity, IAggregateRoot
         int displayOrder)
     {
         if (!DateRange.IsWithinRange(visitDate))
-            throw new BusinessRuleValidationException("Visit date must be within trip date range.");
+            return TripErrors.SiteVisitDateOutOfRange;
 
         if (_sites.Any(a => a.SiteId == siteId))
-            throw new BusinessRuleValidationException("Site is already in the trip.");
+            return TripErrors.SiteAlreadyAdded;
 
         if (estimatedDurationMinutes <= 0)
-            throw new BusinessRuleValidationException("Estimated duration must be greater than zero.");
+            return TripErrors.EstimatedDurationInvalid;
 
         var tripSite = TripSite.Create(
             siteId,
@@ -98,77 +111,126 @@ public class Trip : BaseAuditableEntity, IAggregateRoot
             estimatedDurationMinutes,
             displayOrder);
 
-        _sites.Add(tripSite);
+        if (tripSite.Failed)
+            return tripSite;
+
+        _sites.Add(tripSite.Value);
         RecalculateTotalDuration();
-        MarkAsUpdated();
+        return Result.Success();
     }
 
-    public void RemoveSite(Guid tripSiteId)
+    public Result RemoveSite(Guid tripSiteId)
     {
-        var site = _sites.FirstOrDefault(a => a.Id == tripSiteId)
-            ?? throw new EntityNotFoundException(nameof(TripSite), tripSiteId);
+        var site = _sites.FirstOrDefault(a => a.Id == tripSiteId);
+        if (site == null)
+            return TripErrors.SiteNotFound;
 
         _sites.Remove(site);
         RecalculateTotalDuration();
         ReorderSites();
-        MarkAsUpdated();
+        return Result.Success();
     }
 
-    public void UpdateSiteOrder(Guid tripSiteId, int newOrder)
+    public Result AddNote(string content, string? title = null)
     {
-        var site = _sites.FirstOrDefault(a => a.Id == tripSiteId)
-            ?? throw new EntityNotFoundException(nameof(TripSite), tripSiteId);
+        var noteResult = TripNote.Create(content, title);
+        if (noteResult.Failed)
+            return noteResult;
+    
+        _notes.Add(noteResult.Value);
+        return Result.Success();
+    }
+
+    public Result UpdateNote(Guid noteId, string content, string? title = null)
+    {
+        var note = _notes.FirstOrDefault(n => n.Id == noteId);
+        if (note == null)
+            return TripErrors.NoteNotFound;
+
+        note.Update(content, title);
+        return Result.Success();
+    }
+
+    public void RemoveNote(Guid noteId)
+    {
+        var note = _notes.FirstOrDefault(n => n.Id == noteId);
+        if (note == null)
+            return;
+
+        _notes.Remove(note);
+    }
+
+    public Result UpdateSiteOrder(Guid tripSiteId, int newOrder)
+    {
+        var site = _sites.FirstOrDefault(a => a.Id == tripSiteId);
+        if (site == null)
+            return TripErrors.SiteNotFound;
 
         site.UpdateDisplayOrder(newOrder);
         ReorderSites();
-        MarkAsUpdated();
+        return Result.Success();
     }
 
-    public void MarkSiteAsVisited(Guid tripSiteId, int actualDurationMinutes)
+    public Result MarkSiteAsVisited(Guid tripSiteId, int actualDurationMinutes)
     {
-        var site = _sites.FirstOrDefault(a => a.Id == tripSiteId)
-            ?? throw new EntityNotFoundException(nameof(TripSite), tripSiteId);
+        var site = _sites.FirstOrDefault(a => a.Id == tripSiteId);
+        if (site == null)
+            return TripErrors.SiteAlreadyMarkedAsVisited;
 
         site.MarkAsVisited(actualDurationMinutes);
         CheckIfTripCompleted();
-        MarkAsUpdated();
+        return Result.Success();
     }
 
-    public void StartTrip()
+    public Result StartTrip()
     {
         if (Status != TripStatus.Planned)
-            throw new InvalidOperationDomainException("Only planned trips can be started.");
+            return TripErrors.CannotBeStarted;
 
         if (DateRange.StartDate > DateTime.UtcNow.Date)
-            throw new InvalidOperationDomainException("Cannot start a trip before its start date.");
+            return TripErrors.CannotBeStarted;
 
         UpdateStatus(TripStatus.InProgress);
+        return Result.Success();
     }
 
-    public void CompleteTrip()
+    public Result CompleteTrip()
     {
         if (Status != TripStatus.InProgress)
-            throw new InvalidOperationDomainException("Only in-progress trips can be completed.");
+            return TripErrors.CannotBeCompleted;
 
         UpdateStatus(TripStatus.Completed);
+        return Result.Success();
     }
 
-    public void CancelTrip()
+    public Result CancelTrip()
     {
         if (Status == TripStatus.Completed)
-            throw new InvalidOperationDomainException("Cannot cancel a completed trip.");
+            return TripErrors.CannotBeCanceled;
 
         UpdateStatus(TripStatus.Cancelled);
+        return Result.Success();
     }
 
-    public void PublishTrip()
+    public Result PublishTrip()
     {
         if (Status == TripStatus.Draft)
-            throw new InvalidOperationDomainException("Cannot publish a draft trip.");
+            return TripErrors.CannotBePublished;
 
         UpdateStatus(TripStatus.Planned);
+        return Result.Success();
     }
 
+    public void SetVisibility(bool isPublic)
+    {
+        IsPublic = isPublic;
+    }
+
+    public void IncrementShareCount()
+    {
+        ShareCount++;
+    }
+    
     public int GetCompletionPercentage()
     {
         if (_sites.Count == 0) return 0;
@@ -181,7 +243,6 @@ public class Trip : BaseAuditableEntity, IAggregateRoot
         if (Status == newStatus) return;
 
         Status = newStatus;
-        MarkAsUpdated();
         // RaiseDomainEvent(new TripStatusChangedEvent(Id, newStatus));
     }
 
