@@ -5,6 +5,7 @@ using Application.DTOs.Common;
 using Application.DTOs.Sponsors;
 using Application.Queries.Sponsors;
 using Application.Queries.Sponsors.Offers;
+using Domain.Common.Constants;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [Route("api/[controller]")]
-[Authorize]
 public class SponsorsController : ApiBaseController
 {
 	[HttpGet]
-	[AllowAnonymous]
 	public async Task<ActionResult<PagedResult<SponsorListDto>>> GetAll(
 		[FromQuery] string? searchTerm,
 		[FromQuery] SponsorType? type,
@@ -24,29 +23,31 @@ public class SponsorsController : ApiBaseController
 		[FromQuery] bool? activeOnly,
 		[FromServices] IQueryHandler<GetSponsorsQuery, PagedResult<SponsorListDto>> queryHandler,
 		[FromQuery] int page = 1,
-		[FromQuery] int pageSize = 20)
+		[FromQuery] int pageSize = 20,
+		CancellationToken cancellationToken = default)
 	{
 		var filters = new SponsorFilters(type, tier, activeOnly);
 		var paging = new PagingParameters(page, pageSize);
 
 		var query = new GetSponsorsQuery(filters, paging, searchTerm);
-		var result = await queryHandler.HandleAsync(query);
+		var result = await queryHandler.HandleAsync(query, cancellationToken);
 
 		return HandleResult(result);
 	}
 
 	[HttpGet("{id:guid}")]
-	[AllowAnonymous]
 	public async Task<ActionResult<SponsorDetailDto>> GetById(
 		[FromRoute] Guid id,
-		[FromServices] IQueryHandler<GetSponsorByIdQuery, SponsorDetailDto> queryHandler)
+		[FromServices] IQueryHandler<GetSponsorByIdQuery, SponsorDetailDto> queryHandler,
+		CancellationToken cancellationToken = default)
 	{
-		var result = await queryHandler.HandleAsync(new GetSponsorByIdQuery(id));
+		var result = await queryHandler.HandleAsync(new GetSponsorByIdQuery(id), cancellationToken);
 
 		return HandleResult(result);
 	}
 
 	[HttpGet("nearby")]
+	[Authorize(Roles = UserRoles.Tourist)]
 	public async Task<ActionResult<List<NearbySponsorDto>>> GetNearby(
 		[FromQuery] double latitude,
 		[FromQuery] double longitude,
@@ -54,11 +55,12 @@ public class SponsorsController : ApiBaseController
 		[FromQuery] SponsorType? type,
 		[FromQuery] SponsorTier? tier,
 		[FromQuery] bool? activeOnly,
-		[FromServices] IQueryHandler<GetNearbySponsorsQuery, List<NearbySponsorDto>> queryHandler)
+		[FromServices] IQueryHandler<GetNearbySponsorsQuery, List<NearbySponsorDto>> queryHandler,
+		CancellationToken cancellationToken = default)
 	{
 		var filters = new SponsorFilters(type, tier, activeOnly);
 		var query = new GetNearbySponsorsQuery(latitude, longitude, filters, RadiusKm: radiusKm);
-		var result = await queryHandler.HandleAsync(query);
+		var result = await queryHandler.HandleAsync(query, cancellationToken);
 
 		return HandleResult(result);
 	}
@@ -67,9 +69,10 @@ public class SponsorsController : ApiBaseController
 	public async Task<ActionResult<List<SponsorOfferDto>>> GetOffersBySponsor(
 		[FromRoute] Guid id,
 		[FromQuery] bool activeOnly,
-		[FromServices] IQueryHandler<GetSiteOffersQuery, List<SponsorOfferDto>> queryHandler)
+		[FromServices] IQueryHandler<GetSponsorOffersByIdQuery, List<SponsorOfferDto>> queryHandler,
+		CancellationToken cancellationToken = default)
 	{
-		var result = await queryHandler.HandleAsync(new GetSiteOffersQuery(id, activeOnly));
+		var result = await queryHandler.HandleAsync(new GetSponsorOffersByIdQuery(id, activeOnly), cancellationToken);
 
 		return HandleResult(result);
 	}
@@ -80,15 +83,16 @@ public class SponsorsController : ApiBaseController
 		[FromQuery] SponsorTier? tier,
 		[FromQuery] bool? sponsorActiveOnly,
 		[FromQuery] bool activeOnly,
-		[FromServices] IQueryHandler<GetAllSiteOffersAsync, PagedResult<SponsorOfferListDto>> queryHandler,
+		[FromServices] IQueryHandler<GetAllSponsorsOffersQuery, PagedResult<SponsorOfferListDto>> queryHandler,
 		[FromQuery] int page = 1,
-		[FromQuery] int pageSize = 20)
+		[FromQuery] int pageSize = 20,
+		CancellationToken cancellationToken = default)
 	{
 		var filters = new SponsorFilters(type, tier, sponsorActiveOnly);
 		var paging = new PagingParameters(page, pageSize);
 
-		var query = new GetAllSiteOffersAsync(filters, paging, activeOnly);
-		var result = await queryHandler.HandleAsync(query);
+		var query = new GetAllSponsorsOffersQuery(filters, paging, activeOnly);
+		var result = await queryHandler.HandleAsync(query, cancellationToken);
 
 		return HandleResult(result);
 	}
@@ -96,20 +100,23 @@ public class SponsorsController : ApiBaseController
 	[HttpGet("offers/{offerId:guid}")]
 	public async Task<ActionResult<SponsorOfferDto>> GetOfferById(
 		[FromRoute] Guid offerId,
-		[FromServices] IQueryHandler<GetSiteOfferByIdAsync, SponsorOfferDto> queryHandler)
+		[FromServices] IQueryHandler<GetSponsorOfferByIdQuery, SponsorOfferDto> queryHandler,
+		CancellationToken cancellationToken = default)
 	{
-		var result = await queryHandler.HandleAsync(new GetSiteOfferByIdAsync(offerId));
+		var result = await queryHandler.HandleAsync(new GetSponsorOfferByIdQuery(offerId), cancellationToken);
 
 		return HandleResult(result);
 	}
 
 	[HttpPut("{id:guid}/offers/{offerId:guid}/redeem")]
+	[Authorize(Roles = UserRoles.Tourist)]
 	public async Task<IActionResult> RedeemOffer(
 		[FromRoute] Guid id,
 		[FromRoute] Guid offerId,
-		[FromServices] ICommandHandler<RedeemSponsorOfferCommand> commandHandler)
+		[FromServices] ICommandHandler<RedeemSponsorOfferCommand> commandHandler,
+		CancellationToken cancellationToken = default)
 	{
-		var result = await commandHandler.HandleAsync(new RedeemSponsorOfferCommand(id, offerId));
+		var result = await commandHandler.HandleAsync(new RedeemSponsorOfferCommand(id, offerId), cancellationToken);
 
 		return HandleResult(result);
 	}

@@ -14,24 +14,27 @@ public class AttractionsController : ApiBaseController
 	[HttpGet("{id:guid}")]
 	public async Task<ActionResult<AttractionDetailDto>> GetById(
 		[FromRoute] Guid id,
-		[FromServices] IQueryHandler<GetAttractionByIdQuery, AttractionDetailDto> queryHandler)
+		[FromServices] IQueryHandler<GetAttractionByIdQuery, AttractionDetailDto> queryHandler,
+		CancellationToken cancellationToken = default)
 	{
-		var result = await queryHandler.HandleAsync(new GetAttractionByIdQuery(id));
+		var result = await queryHandler.HandleAsync(new GetAttractionByIdQuery(id), cancellationToken);
 
 		return HandleResult(result);
 	}
 
 	[HttpGet("site/{siteId:guid}")]
-	public async Task<ActionResult<PagedResult<AttractionListDto>>> GetAttractionsForSite(
+	public async Task<ActionResult<PagedResult<AttractionListDto>>> GetAttractionsBySiteId(
 		[FromRoute] Guid siteId,
-		[FromQuery] AttractionType type,
-		[FromServices] IQueryHandler<GetAttractionsByTypeQuery, PagedResult<AttractionListDto>> queryHandler,
+		[FromQuery] AttractionType? type,
+		[FromServices] IQueryHandler<GetAttractionsBySiteIdQuery, PagedResult<AttractionListDto>> queryHandler,
 		[FromQuery] int page = 1,
-		[FromQuery] int pageNumber = 20)
+		[FromQuery] int pageSize = 20,
+		CancellationToken cancellationToken = default)
 	{
-		var paging = new PagingParameters(pageNumber, page);
+		var paging = new PagingParameters(page, pageSize);
+		var query = new GetAttractionsBySiteIdQuery(siteId, type, paging);
 
-		var result = await queryHandler.HandleAsync(new GetAttractionsByTypeQuery(siteId, type, paging));
+		var result = await queryHandler.HandleAsync(query, cancellationToken);
 
 		return HandleResult(result);
 	}
