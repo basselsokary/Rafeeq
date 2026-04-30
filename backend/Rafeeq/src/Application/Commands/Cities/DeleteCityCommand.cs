@@ -3,9 +3,9 @@ using Domain.Entities.CityAggregate;
 
 namespace Application.Commands.Cities;
 
-public record DeleteCityCommand(Guid Id) : ICommand;
+public sealed record DeleteCityCommand(Guid Id) : ICommand;
 
-internal class DeleteCityCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<DeleteCityCommand>
+internal sealed class DeleteCityCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<DeleteCityCommand>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 

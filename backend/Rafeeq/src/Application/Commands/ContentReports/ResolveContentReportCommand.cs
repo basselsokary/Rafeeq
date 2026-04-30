@@ -5,13 +5,12 @@ using Domain.Enums;
 
 namespace Application.Commands.ContentReports;
 
-public record ResolveContentReportCommand(
+public sealed record ResolveContentReportCommand(
     Guid Id,
-    string? Reason,
-    ModerationAction? Action,
-    string? Notes = null) : ICommand;
+    ModerationAction Action,
+    string Reason) : ICommand;
 
-internal class ResolveContentReportCommandHandler(
+internal sealed class ResolveContentReportCommandHandler(
     IUnitOfWork unitOfWork,
     IUserContext userContext) : ICommandHandler<ResolveContentReportCommand>
 {
@@ -24,20 +23,16 @@ internal class ResolveContentReportCommandHandler(
         if (content == null)
             return ContentReportErrors.NotFound(command.Id);
         
-        if (command.Reason != null)
+        if (command.Action == ModerationAction.NoAction)
         {
             var contentResult = content.Dismiss(_userContext.Id, command.Reason);
             if (contentResult.Failed)
                 return contentResult;
-        } else if (command.Action != null)
+        } else
         {
-            var contentResult = content.Solve(_userContext.Id, command.Action.Value, command.Notes);
+            var contentResult = content.Solve(_userContext.Id, command.Action, command.Reason);
             if (contentResult.Failed)
                 return contentResult;
-        }
-        else
-        {
-            return ContentReportErrors.CannotBeResolved;
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

@@ -2,17 +2,16 @@ using Application.Common.Interfaces.Authentication;
 
 namespace Application.Commands.Users;
 
-public record ConfirmEmailCommand(string Token) : ICommand;
+public sealed record ConfirmEmailCommand(string Token, string Email) : ICommand;
 
-public class ConfirmEmailCommandHandler(
-    IIdentityService identityService,
-    IUserContext userContext) : ICommandHandler<ConfirmEmailCommand>
+public sealed class ConfirmEmailCommandHandler(
+    IIdentityService identityService) : ICommandHandler<ConfirmEmailCommand>
 {
     public async Task<Result> HandleAsync(ConfirmEmailCommand command, CancellationToken cancellationToken)
     {
         var result = await identityService.ConfirmEmailAsync(
-            userContext.Id,
-            command.Token);
+            command.Token,
+            command.Email);
 
         if (result.Failed)
             return result;

@@ -1,14 +1,16 @@
+using Application.Common.Interfaces.Services;
 using Domain.Common.Interfaces;
 using Domain.Entities.SponsorAggregate;
 
 namespace Application.Commands.Sponsors.Images;
 
-public record RemoveSponsorImagesCommand(
+public sealed record RemoveSponsorImagesCommand(
     Guid Id,
     List<Guid> ImageIds) : ICommand;
 
-internal class RemoveSponsorImagesCommandHandler(
-    IUnitOfWork unitOfWork) : ICommandHandler<RemoveSponsorImagesCommand>
+internal sealed class RemoveSponsorImagesCommandHandler(
+    IUnitOfWork unitOfWork,
+    IFileStorageService storageService) : ICommandHandler<RemoveSponsorImagesCommand>
 {
     public async Task<Result> HandleAsync(RemoveSponsorImagesCommand command, CancellationToken cancellationToken)
     {
@@ -16,12 +18,21 @@ internal class RemoveSponsorImagesCommandHandler(
         if (sponsor == null)
             return SponsorErrors.NotFound(command.Id);
 
+        var storageKeysToDelete = sponsor.Images
+            .Where(img => command.ImageIds.Contains(img.Id))
+            .Select(img => img.StorageKey)
+            .ToList();
+
         foreach (var imageId in command.ImageIds)
         {
-            Result result = sponsor.RemoveImage(imageId);
-            if (result.Failed)
-                return result;
+            Result removeImageResult = sponsor.RemoveImage(imageId);
+            if (removeImageResult.Failed)
+                return removeImageResult;
         }
+
+        var result = await storageService.DeleteAsync(storageKeysToDelete, cancellationToken);
+        if (result.Failed)
+            return result;
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

@@ -3,9 +3,9 @@ using Domain.Entities.SiteAggregate;
 
 namespace Application.Commands.Sites;
 
-public record DeleteSiteCommand(Guid Id) : ICommand;
+public sealed record DeleteSiteCommand(Guid Id) : ICommand;
 
-internal class DeleteSiteCommandHandler(
+internal sealed class DeleteSiteCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<DeleteSiteCommand>
 {
     public async Task<Result> HandleAsync(DeleteSiteCommand command, CancellationToken cancellationToken)

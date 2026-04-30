@@ -2,9 +2,9 @@ using Application.Common.Interfaces.Authentication;
 
 namespace Application.Commands.Users;
 
-public record ChangePasswordCommand(string CurrentPassword, string NewPassword) : ICommand;
+public sealed record ChangePasswordCommand(string CurrentPassword, string NewPassword) : ICommand;
 
-public class ChangePasswordCommandHandler(
+public sealed class ChangePasswordCommandHandler(
     IIdentityService identityService,
     IUserContext userContext) : ICommandHandler<ChangePasswordCommand>
 {

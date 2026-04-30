@@ -3,11 +3,11 @@ using Domain.Entities.AttractionAggregate;
 
 namespace Application.Commands.Attractions;
 
-public record MarkAttractionAsFeaturedCommand(
+public sealed record MarkAttractionAsFeaturedCommand(
     Guid Id,
     bool IsFeatured) : ICommand;
 
-internal class MarkAttractionAsFeaturedCommandHandler(
+internal sealed class MarkAttractionAsFeaturedCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<MarkAttractionAsFeaturedCommand>
 {
     public async Task<Result> HandleAsync(MarkAttractionAsFeaturedCommand command, CancellationToken cancellationToken = default)

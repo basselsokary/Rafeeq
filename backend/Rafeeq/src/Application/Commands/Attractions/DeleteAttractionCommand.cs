@@ -3,9 +3,9 @@ using Domain.Entities.AttractionAggregate;
 
 namespace Application.Commands.Attractions;
 
-public record DeleteAttractionCommand(Guid Id) : ICommand;
+public sealed record DeleteAttractionCommand(Guid Id) : ICommand;
 
-internal class DeleteAttractionCommandHandler(
+internal sealed class DeleteAttractionCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<DeleteAttractionCommand>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;

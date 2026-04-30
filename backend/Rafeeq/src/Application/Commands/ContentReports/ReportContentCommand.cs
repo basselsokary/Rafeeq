@@ -5,12 +5,12 @@ using Domain.Enums;
 
 namespace Application.Commands.ContentReports;
 
-public record ReportContentCommand(
+public sealed record ReportContentCommand(
     Guid ReportedEntityId,
     ReportReason Reason,
     string Description) : ICommand;
 
-internal class ReportContentCommandHandler(
+internal sealed class ReportContentCommandHandler(
     IUnitOfWork unitOfWork,
     IUserContext userContext) : ICommandHandler<ReportContentCommand>
 {

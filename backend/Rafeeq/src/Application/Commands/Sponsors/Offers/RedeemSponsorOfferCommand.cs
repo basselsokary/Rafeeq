@@ -3,11 +3,11 @@ using Domain.Entities.SponsorAggregate;
 
 namespace Application.Commands.Sponsors.Offers;
 
-public record RedeemSponsorOfferCommand(
+public sealed record RedeemSponsorOfferCommand(
     Guid SponsorId,
     Guid OfferId) : ICommand;
 
-internal class RedeemSponsorOfferCommandHandler(
+internal sealed class RedeemSponsorOfferCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<RedeemSponsorOfferCommand>
 {
     public async Task<Result> HandleAsync(RedeemSponsorOfferCommand command, CancellationToken cancellationToken)

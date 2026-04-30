@@ -4,10 +4,10 @@ using Domain.Entities.TouristAggregate;
 
 namespace Application.Commands.Users.Tourists.Favorites;
 
-public record RemoveFavoriteCommand(
+public sealed record RemoveFavoriteCommand(
     Guid SiteId) : ICommand;
 
-internal class RemoveFavoriteCommandHandler(
+internal sealed class RemoveFavoriteCommandHandler(
     IUnitOfWork unitOfWork,
     IUserContext userContext) : ICommandHandler<RemoveFavoriteCommand>
 {

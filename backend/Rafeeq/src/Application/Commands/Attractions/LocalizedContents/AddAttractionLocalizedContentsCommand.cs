@@ -4,16 +4,17 @@ using Domain.Enums;
 
 namespace Application.Commands.Attractions.LocalizedContents;
 
-public record AddAttractionLocalizedContentsCommand(
+public sealed record AddAttractionLocalizedContentsCommand(
     Guid Id,
     List<AddAttractionLocalizedContentsDtoCommand> LocalizedContents) : ICommand;
 
-public record AddAttractionLocalizedContentsDtoCommand(
+public sealed record AddAttractionLocalizedContentsDtoCommand(
     LanguageCode Language,
     string Name,
-    string Description);
+    string Description,
+    string? LocationDescription);
 
-internal class AddAttractionLocalizedContentsCommandHandler(
+internal sealed class AddAttractionLocalizedContentsCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<AddAttractionLocalizedContentsCommand>
 {
     public async Task<Result> HandleAsync(AddAttractionLocalizedContentsCommand command, CancellationToken cancellationToken)
@@ -24,9 +25,11 @@ internal class AddAttractionLocalizedContentsCommandHandler(
 
         foreach (var content in command.LocalizedContents)
         {
-            Result result = attraction.AddLocalizedContent(content.Language, content.Name, content.Description);
+            var result = attraction.AddLocalizedContent(content.Language, content.Name, content.Description, content.LocationDescription);
             if (result.Failed)
-                return result;   
+                return result;
+                
+            await unitOfWork.AddAsync(result.Value, cancellationToken);
         }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);

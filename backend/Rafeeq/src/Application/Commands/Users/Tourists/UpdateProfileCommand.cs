@@ -1,17 +1,15 @@
 using Application.Common.Interfaces.Authentication;
 using Domain.Common.Interfaces;
 using Domain.Entities.TouristAggregate;
-using Domain.Enums;
 
 namespace Application.Commands.Users.Tourists;
 
-public record UpdateProfileCommand(
+public sealed record UpdateProfileCommand(
     string FirstName,
     string LastName,
-    string Nationality,
-    LanguageCode PreferredLanguage) : ICommand;
+    string Nationality) : ICommand;
 
-internal class UpdateProfileCommandHandler(
+internal sealed class UpdateProfileCommandHandler(
     IUnitOfWork unitOfWork,
     IUserContext userContext) : ICommandHandler<UpdateProfileCommand>
 {
@@ -21,7 +19,6 @@ internal class UpdateProfileCommandHandler(
         if (tourist == null)
             return TouristErrors.NotFound(userContext.Id);
 
-        tourist.SetPreferredLanguage(command.PreferredLanguage);
         var result = tourist.UpdateProfile(command.FirstName, command.LastName, command.Nationality);
         if (result.Failed)
             return result;

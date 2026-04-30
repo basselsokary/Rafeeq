@@ -1,15 +1,20 @@
 using Domain.Common.Interfaces;
 using Domain.Entities.AttractionAggregate;
+using Domain.Enums;
 
 namespace Application.Commands.Attractions.LocalizedContents;
 
-public record UpdateAttractionLocalizedContentCommand(
+public sealed record UpdateAttractionLocalizedContentCommand(
     Guid Id,
-    Guid ContentId,
-    string Name,
-    string Description) : ICommand;
+    List<UpdateAttractionLocalizedContentsDtoCommand> LocalizedContents) : ICommand;
 
-internal class UpdateAttractionLocalizedContentCommandHandler(
+public sealed record UpdateAttractionLocalizedContentsDtoCommand(
+    LanguageCode Language,
+    string Name,
+    string Description,
+    string? LocationDescription);
+
+internal sealed class UpdateAttractionLocalizedContentCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<UpdateAttractionLocalizedContentCommand>
 {
     public async Task<Result> HandleAsync(UpdateAttractionLocalizedContentCommand command, CancellationToken cancellationToken)
@@ -18,9 +23,12 @@ internal class UpdateAttractionLocalizedContentCommandHandler(
         if (attraction == null)
             return AttractionErrors.NotFound(command.Id);
 
-        Result result = attraction.UpdateLocalizedContent(command.ContentId, command.Name, command.Description);
-        if (result.Failed)
-            return result;
+        foreach (var content in command.LocalizedContents)
+        {
+            Result result = attraction.UpdateLocalizedContent(content.Language, content.Name, content.Description, content.LocationDescription);
+            if (result.Failed)
+                return result;
+        }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
