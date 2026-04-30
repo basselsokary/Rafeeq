@@ -1,7 +1,6 @@
 using Domain.Common;
 using Domain.Enums;
-using Domain.Exceptions;
-using Shared.Models;
+using Shared;
 
 namespace Domain.Entities.AttractionAggregate;
 
@@ -10,16 +9,19 @@ public class AttractionLocalizedContent : BaseAuditableEntity
     public LanguageCode Language { get; private set; }
     public string Name { get; private set; } = null!;
     public string Description { get; private set; } = null!;
+    public string? LocationDescription { get; private set; }
 
     private AttractionLocalizedContent() { }
-    private AttractionLocalizedContent(LanguageCode language, string name, string description)
+    private AttractionLocalizedContent(LanguageCode language, string name, string description, string? locationDescription)
     {
         Language = language;
         Name = name;
         Description = description;
+
+        LocationDescription = locationDescription;
     }
 
-    internal static Result<AttractionLocalizedContent> Create(LanguageCode language, string name, string description)
+    internal static Result<AttractionLocalizedContent> Create(LanguageCode language, string name, string description, string? locationDescription)
     {    
         if (string.IsNullOrWhiteSpace(name))
             return AttractionErrors.NameRequired;
@@ -27,10 +29,10 @@ public class AttractionLocalizedContent : BaseAuditableEntity
         if (string.IsNullOrWhiteSpace(description))
             return AttractionErrors.DescriptionRequired;
 
-        return new AttractionLocalizedContent(language, name.Trim(), description.Trim());
+        return new AttractionLocalizedContent(language, name.Trim(), description.Trim(), locationDescription?.Trim());
     }
 
-    internal Result Update(string name, string description)
+    internal Result Update(string name, string description, string? locationDescription)
     {
         if (string.IsNullOrWhiteSpace(name))
             return AttractionErrors.NameRequired;
@@ -40,7 +42,7 @@ public class AttractionLocalizedContent : BaseAuditableEntity
 
         Name = name.Trim();
         Description = description.Trim();
-        MarkAsUpdated();
+        LocationDescription = locationDescription?.Trim();
 
         return Result.Success();
     }

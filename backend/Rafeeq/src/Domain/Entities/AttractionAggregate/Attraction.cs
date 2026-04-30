@@ -2,7 +2,7 @@ using Domain.Common;
 using Domain.Common.Interfaces;
 using Domain.Enums;
 using Domain.ValueObjects;
-using Shared.Models;
+using Shared;
 
 namespace Domain.Entities.AttractionAggregate;
 
@@ -10,89 +10,78 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
 {
     public Guid SiteId { get; private set; }
 
-    public string Name { get; private set; } = null!;
-    public string Description { get; private set; } = null!;
-    public string? MainImageUrl { get; private set; }
     public AttractionType Type { get; private set; }
-    public HistoricalPeriod HistoricalPeriod { get; private set; }
-    
-    public GeoLocation? Location { get; private set; } // Specific GPS if available
-    public string? LocationDescription { get; private set; } // e.g., "North side of main hall"
-    
     public bool IsFeatured { get; private set; }
+
+    public GeoLocation? Location { get; private set; } // Specific GPS if available
+    public string? MainImageUrl { get; private set; }
+
+    private readonly List<HistoricalPeriod> _historicalPeriods = [];
+    public IReadOnlyCollection<HistoricalPeriod> HistoricalPeriods => _historicalPeriods.AsReadOnly();
 
     private readonly List<AttractionImage> _images = [];
     public IReadOnlyCollection<AttractionImage> Images => _images.AsReadOnly();
-    
+
     private readonly List<AttractionLocalizedContent> _localizedContents = [];
     public IReadOnlyCollection<AttractionLocalizedContent> LocalizedContents => _localizedContents.AsReadOnly();
 
     private Attraction() { }
     private Attraction(
         Guid siteId,
-        string name,
-        string description,
         AttractionType type,
-        HistoricalPeriod historicalPeriod)
+        List<HistoricalPeriod> historicalPeriod)
     {
         SiteId = siteId;
-        Name = name;
-        Description = description;
         Type = type;
-        HistoricalPeriod = historicalPeriod;
+        _historicalPeriods.AddRange(historicalPeriod);
     }
 
     public static Result<Attraction> Create(
         Guid siteId,
-        string name,
-        string description,
+        string Name,
+        string Description,
+        string? LocationDescription,
         AttractionType type,
-        HistoricalPeriod historicalPeriod = HistoricalPeriod.Unknown)
+        List<HistoricalPeriod> historicalPeriod)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            return AttractionErrors.NameRequired;
-
-        if (string.IsNullOrWhiteSpace(description))
-            return AttractionErrors.DescriptionRequired;
-
         var attraction = new Attraction(
             siteId,
-            name.Trim(),
-            description.Trim(),
             type,
             historicalPeriod);
+        
+        var result = attraction.AddLocalizedContent(LanguageCode.English, Name, Description, LocationDescription);
+        if (result.Failed)
+            return result.To<Attraction>();
 
         return attraction;
     }
 
     public Result UpdateBasicInfo(
-        string name,
-        string description,
         AttractionType type,
-        HistoricalPeriod historicalPeriod)
+        List<HistoricalPeriod> historicalPeriods)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            return AttractionErrors.NameRequired;
+        if (Type != type)
+            Type = type;
 
-        if (string.IsNullOrWhiteSpace(description))
-            return AttractionErrors.DescriptionRequired;
+        if (_historicalPeriods.Count == historicalPeriods.Count &&
+            !_historicalPeriods.Except(historicalPeriods).Any())
+        {
+            return Result.Success();
+        }
 
-        Name = name.Trim();
-        Description = description.Trim();
-        Type = type;
-        HistoricalPeriod = historicalPeriod;
-        MarkAsUpdated();
+        if (_historicalPeriods.Any(f => historicalPeriods.Contains(f)))
+            return AttractionErrors.HistoricalPeriodAlreadyExists;
+
+        _historicalPeriods.AddRange(historicalPeriods);
 
         return Result.Success();
     }
 
-    public void SetLocation(GeoLocation? exactLocation, string? locationDescription)
+    public void SetLocation(GeoLocation? exactLocation)
     {
-        if (exactLocation != null || locationDescription != null)
-        {   
+        if (exactLocation != null && exactLocation != Location)
+        {
             Location = exactLocation;
-            LocationDescription = locationDescription?.Trim();
-            MarkAsUpdated();
         }
     }
 
@@ -100,14 +89,29 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
     {
         if (IsFeatured == isFeatured)
             return;
-        
+
         IsFeatured = isFeatured;
-        MarkAsUpdated();
     }
 
-    public Result AddImage(string imageUrl, bool isMain, int displayOrder, string? caption = null)
+    public Result AddHistoricalPeriods(List<HistoricalPeriod> facilityTypes)
     {
-        var imageResult = AttractionImage.Create(imageUrl, isMain, displayOrder, caption);
+        if (_historicalPeriods.Any(f => facilityTypes.Contains(f)))
+            return AttractionErrors.HistoricalPeriodAlreadyExists;
+        
+        _historicalPeriods.Clear();
+        _historicalPeriods.AddRange(facilityTypes);
+
+        return Result.Success();
+    }
+    
+    public void RemoveHistoricalPeriods(List<HistoricalPeriod> facilityTypes)
+    {
+        _historicalPeriods.RemoveAll(f => facilityTypes.Contains(f));
+    }
+
+    public Result<AttractionImage> AddImage(string storageKey, string imageUrl, bool isMain, int displayOrder, string? caption = null)
+    {
+        var imageResult = AttractionImage.Create(storageKey, imageUrl, isMain, displayOrder, caption);
         if (imageResult.Failed)
             return imageResult;
 
@@ -117,12 +121,14 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
                 img.SetAsMain(false);
 
             SetMainImage(imageUrl);
+        } else if (MainImageUrl == null)
+        {
+            SetMainImage(imageUrl);
         }
 
         _images.Add(imageResult.Value);
-        MarkAsUpdated();
 
-        return Result.Success();
+        return Result.Success(imageResult.Value);
     }
 
     public Result RemoveImage(Guid imageId)
@@ -142,39 +148,34 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
         {
             MainImageUrl = null;
         }
-        
-        MarkAsUpdated();
 
         return Result.Success();
     }
 
-    public Result AddLocalizedContent(LanguageCode language, string name, string description)
+    public Result<AttractionLocalizedContent> AddLocalizedContent(LanguageCode language, string name, string description, string? locationDescription)
     {
-        var contentResult = AttractionLocalizedContent.Create(language, name, description);
+        var contentResult = AttractionLocalizedContent.Create(language, name, description, locationDescription);
         if (contentResult.Failed)
             return contentResult;
-        
+
         var existing = _localizedContents.FirstOrDefault(lc => lc.Language == language);
         if (existing != null)
             _localizedContents.Remove(existing);
 
         _localizedContents.Add(contentResult.Value);
-        MarkAsUpdated();
 
-        return Result.Success();
+        return Result.Success(contentResult.Value);
     }
 
-    public Result UpdateLocalizedContent(Guid contentId, string name, string description)
+    public Result UpdateLocalizedContent(LanguageCode language, string name, string description, string? locationDescription)
     {
-        var existing = _localizedContents.FirstOrDefault(lc => lc.Id == contentId);
+        var existing = _localizedContents.FirstOrDefault(lc => lc.Language == language);
         if (existing == null)
             return AttractionErrors.LocalizedContentNotFound;
 
-        Result result = existing.Update(name, description);
+        Result result = existing.Update(name, description, locationDescription);
         if (result.Failed)
             return result;
-        
-        MarkAsUpdated();
 
         return Result.Success();
     }

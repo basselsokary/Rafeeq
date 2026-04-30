@@ -2,40 +2,40 @@ namespace Domain.Enums;
 
 public enum AttractionType
 {
-    Other = 0,
+    Other = 1,
 
-    Pyramid = 1,
-    Temple = 2,
-    Tomb = 3,
-    Statue = 4,
-    Monument = 5,
+    Pyramid = 2,
+    Temple = 3,
+    Tomb = 4,
+    Statue = 5,
+    Monument = 6,
 
-    Mosque = 6,
-    Church = 7,
-    Synagogue = 8,
+    Mosque = 7,
+    Church = 8,
+    Synagogue = 9,
 
-    MuseumHall = 9,
-    Exhibition = 10,
+    MuseumHall = 10,
+    Exhibition = 11,
 
-    Palace = 11,
-    Fortress = 12,
-    Gate = 13,
+    Palace = 12,
+    Fortress = 13,
+    Gate = 14,
 
-    Obelisk = 14,
-    Column = 15,
-    Ruins = 16,
+    Obelisk = 15,
+    Column = 16,
+    Ruins = 17,
 
-    Garden = 17,
-    Courtyard = 18,
+    Garden = 18,
+    Courtyard = 19,
 
-    Cave = 19,
-    RockCutStructure = 20,
+    Cave = 20,
+    RockCutStructure = 21,
 
-    ArchaeologicalStructure = 21,
+    ArchaeologicalStructure = 22,
 
-    HistoricBuilding = 22,
+    HistoricBuilding = 23,
 
-    ViewingPoint = 23,
+    ViewingPoint = 24,
 
-    CulturalExhibit = 24
+    CulturalExhibit = 25
 }
