@@ -1,6 +1,4 @@
-using Shared.Models;
-
-namespace Shared.Extensions;
+namespace Shared;
 
 public static class ResultExtensions
 {
@@ -10,7 +8,8 @@ public static class ResultExtensions
     /// <typeparam name="T">The type of the value in the resulting Result&lt;T&gt;.</typeparam>
     /// <param name="result">The Result to convert.</param>
     /// <returns>A Result&lt;T&gt; with the same success status and error as the original Result, and a default value.</returns>
-    public static Result<T> To<T>(this Result result, T? data = default) => new(result.Succeeded, data, result.Error);
+    public static Result<T> To<T>(this Result result, T? data = default)
+        => new(result.Succeeded, data, result.Error);
     
     /// <summary>
     /// Ensures that the result value satisfies a given predicate condition.

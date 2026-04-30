@@ -1,4 +1,4 @@
-﻿namespace Shared.Models;
+﻿namespace Shared;
 
 public class Result
 {
@@ -23,6 +23,9 @@ public class Result
 
     public static Result Failure(Error error) => new(false, error);
     public static Result<T> Failure<T>(Error error) => new(false, default, error);
+    
+    public static Result Failure(string message) => new(false, Error.General(message));
+    public static Result<T> Failure<T>(string message) => new(false, default, Error.General(message));    
     
     public static implicit operator Result(Error error) => Failure(error);
 }

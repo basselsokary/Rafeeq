@@ -1,4 +1,4 @@
-﻿namespace Shared.Models;
+﻿namespace Shared;
 
 public enum ErrorType
 {
@@ -8,5 +8,6 @@ public enum ErrorType
     Validation,
     Conflict,
     Unauthorized,
-    Forbidden
+    Forbidden,
+    General
 }
