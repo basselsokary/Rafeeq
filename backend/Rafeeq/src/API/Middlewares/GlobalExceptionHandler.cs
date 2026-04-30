@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Infrustructure;
+namespace API.Middlewares;
 
-internal class GlobalExceptionHandler
-    : IExceptionHandler
+internal class GlobalExceptionHandler : IExceptionHandler
 {
     private readonly Dictionary<Type, Func<HttpContext, Exception, Task>> _exceptionHandlers;
     private readonly ILogger<GlobalExceptionHandler> _logger;
@@ -25,8 +24,6 @@ internal class GlobalExceptionHandler
         Exception exception,
         CancellationToken cancellationToken)
     {
-        _logger.LogError(exception, "Unhandled exception occurred");
-
         var exceptionType = exception.GetType();
 
         if (_exceptionHandlers.ContainsKey(exceptionType))
@@ -35,13 +32,15 @@ internal class GlobalExceptionHandler
         }
         else
         {
+            _logger.LogError(exception, "Unhandled exception for {Method} {Path} - {Message}",
+                httpContext.Request.Method, httpContext.Request.Path, exception.Message);
+            
             // Handle unexpected exception
             var problemDetails = new ProblemDetails
             {
                 Status = StatusCodes.Status500InternalServerError,
                 Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1",
-                Title = "Server failure",
-                Detail = exception.Message
+                Title = "Server failure"
             };
 
             httpContext.Response.StatusCode = problemDetails.Status.Value;
