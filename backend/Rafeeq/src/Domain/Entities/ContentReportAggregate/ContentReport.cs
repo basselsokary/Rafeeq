@@ -2,14 +2,14 @@ using Domain.Common;
 using Domain.Common.Constants;
 using Domain.Common.Interfaces;
 using Domain.Enums;
-using Shared.Models;
+using Shared;
 
 namespace Domain.Entities.ContentReportAggregate;
 
 public class ContentReport : BaseAuditableEntity, IAggregateRoot
 {
     public Guid ReportedBy { get; private set; }
-    public Guid ContentId { get; private set; }
+    public Guid ContentId { get; private set; } 
     // public string ReportedEntityType { get; private set; }
 
     public ReportReason Reason { get; private set; }
@@ -70,8 +70,6 @@ public class ContentReport : BaseAuditableEntity, IAggregateRoot
         ActionTaken = action;
         ReviewNotes = notes?.Trim();
         Status = ReportStatus.Resolved;
-        
-        MarkAsUpdated();
 
         // RaiseDomainEvent(new ContentReportResolvedEvent(Id, action));
 
@@ -85,8 +83,6 @@ public class ContentReport : BaseAuditableEntity, IAggregateRoot
 
         Status = ReportStatus.UnderReview;
         ReviewedBy = reviewerId;
-        
-        MarkAsUpdated();
 
         return Result.Success();
     }
@@ -101,15 +97,12 @@ public class ContentReport : BaseAuditableEntity, IAggregateRoot
         Status = ReportStatus.Dismissed;
         ReviewNotes = reason.Trim();
         
-        MarkAsUpdated();
-
         return Result.Success();
     }
 
     public void Escalate()
     {
         Priority = Math.Min(Priority + 1, 5);
-        MarkAsUpdated();
     }
 
     public bool IsHighPriority()
@@ -128,6 +121,7 @@ public class ContentReport : BaseAuditableEntity, IAggregateRoot
         {
             ReportReason.HateSpeech => 5,
             ReportReason.Violence => 5,
+            ReportReason.HarmfulContent => 5,
             ReportReason.ChildSafety => 5,
             ReportReason.Harassment => 4,
             ReportReason.Spam => 2,
