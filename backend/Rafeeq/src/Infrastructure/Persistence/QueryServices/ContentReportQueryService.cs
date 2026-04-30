@@ -1,21 +1,23 @@
 using Application.Common.Interfaces.QueryServices;
 using Application.DTOs.Common;
 using Application.DTOs.ContentReports;
+using Domain.Entities.ContentReportAggregate;
 using Domain.Enums;
 using Infrastructure.Persistence.ApplicationContext;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.QueryServices;
 
-internal class ContentReportQueryService(
+internal sealed class ContentReportQueryService(
     ApplicationDbContext context) : IContentReportQueryService
 {
+    private IQueryable<ContentReport> ContentReports => context.ContentReports.AsNoTracking();
+    
     public async Task<ContentReportDetailDto?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default)
     {
-        return await context.ContentReports
-            .AsNoTracking()
+        return await ContentReports
             .Where(x => x.Id == id)
             .Select(cr => new ContentReportDetailDto(
                 cr.Id,
@@ -34,12 +36,12 @@ internal class ContentReportQueryService(
 
     public async Task<PagedResult<ContentReportListDto>> GetAsync(
         PagingParameters paging,
-        int? priority,
+        int? priority = null,
         ReportReason? reason = null,
         ReportStatus? status = null,
         CancellationToken cancellationToken = default)
     {
-        var query = context.ContentReports.AsNoTracking().AsQueryable();
+        var query = ContentReports;
 
         if (priority.HasValue)
             query = query.Where(cr => cr.Priority == priority);
@@ -49,6 +51,8 @@ internal class ContentReportQueryService(
         
         if (status is not null)
             query = query.Where(cr => cr.Status == status);
+
+        query = query.OrderByDescending(cr => cr.Priority);
 
         var queryPaging = query
             .Select(cr => new ContentReportListDto(
@@ -76,8 +80,7 @@ internal class ContentReportQueryService(
 
     public async Task<ContentReportAdminDetailDto?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await context.ContentReports
-            .AsNoTracking()
+        return await ContentReports
             .Where(x => x.Id == id)
             .Select(cr => new ContentReportAdminDetailDto(
                 cr.Id,

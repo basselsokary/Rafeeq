@@ -5,14 +5,18 @@ using Application.DTOs.Common;
 using Application.DTOs.Tourists;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Infrastructure.Identity;
+using Infrastructure.Identity.Entities;
+using Domain.Entities.TouristAggregate;
 
 namespace Infrastructure.Persistence.QueryServices;
 
-internal class TouristQueryService(
+internal sealed class TouristQueryService(
     ApplicationDbContext context,
     UserManager<ApplicationUser> userManager) : ITouristQueryService
 {
+    private IQueryable<Tourist> Tourists => context.Tourists.AsNoTracking();
+    private IQueryable<TouristUser> Users => context.TouristUsers.AsNoTracking();
+
     public async Task<PagedResult<TouristListDto>> GetAllAsync(
         PagingParameters paging,
         string? searchTerm = null,
@@ -20,11 +24,10 @@ internal class TouristQueryService(
         bool? emailVerified = null,
         CancellationToken cancellationToken = default)
     {
-        var query = context.Tourists
-            .AsNoTracking()
+        var query = Tourists
             .Where(tourist => tourist.Status == status)
             .Join(
-                context.Users.AsNoTracking(),
+                Users,
                 tourist => tourist.Id,
                 user => user.Id,
                 (tourist, user) => new
@@ -44,16 +47,16 @@ internal class TouristQueryService(
             query = query.Where(x =>
                 EF.Functions.Like(x.tourist.FirstName, $"%{term}%") ||
                 EF.Functions.Like(x.tourist.LastName, $"%{term}%") ||
-                (x.user.Email != null && EF.Functions.Like(x.user.Email, $"%{term}%")));
+                EF.Functions.Like(x.user.Email, $"%{term}%"));
         }
 
         var queryPaging = query
             .OrderByDescending(x => x.tourist.CreatedAt)
             .Select(x => new TouristListDto(
                 x.tourist.Id,
+                x.user.UserName!,
                 x.tourist.FirstName + " " + x.tourist.LastName,
-                x.user.Email ?? string.Empty,
-                UserRole.Tourist.ToString(),
+                x.user.Email!,
                 x.tourist.TotalTrips,
                 x.tourist.TotalReviews));
 
@@ -74,10 +77,9 @@ internal class TouristQueryService(
     {
         var normalizedEmail = userManager.NormalizeEmail(email.Trim());
 
-        return await context.Tourists
-            .AsNoTracking()
+        return await Tourists
             .Join(
-                context.Users.AsNoTracking(),
+                Users,
                 tourist => tourist.Id,
                 user => user.Id,
                 (tourist, user) => new
@@ -88,16 +90,16 @@ internal class TouristQueryService(
             .Where(x => x.user.NormalizedEmail == normalizedEmail)
             .Select(x => new TouristProfileDto(
                 x.tourist.Id,
+                x.user.UserName!,
                 x.tourist.FirstName,
                 x.tourist.LastName,
                 x.tourist.FirstName + " " + x.tourist.LastName,
-                x.user.Email ?? string.Empty,
-                x.tourist.PreferredLanguage.ToString(),
+                x.user.Email!,
                 x.tourist.Nationality,
                 x.tourist.TotalTrips,
                 x.tourist.TotalReviews,
                 x.tourist.CreatedAt,
-                x.user.LastLoginAt ?? x.user.CreatedAt))
+                x.user.LastLoginAt))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -105,10 +107,9 @@ internal class TouristQueryService(
     {
         var normalizedEmail = userManager.NormalizeEmail(email.Trim());
 
-        return await context.Tourists
-            .AsNoTracking()
+        return await Tourists
             .Join(
-                context.Users.AsNoTracking(),
+                Users,
                 tourist => tourist.Id,
                 user => user.Id,
                 (tourist, user) => new
@@ -128,30 +129,25 @@ internal class TouristQueryService(
                 x.tourist.FirstName,
                 x.tourist.LastName,
                 x.tourist.FirstName + " " + x.tourist.LastName,
-                x.user.Email ?? string.Empty,
-                x.tourist.Status.ToString(),
-                x.tourist.PreferredLanguage.ToString(),
+                x.user.Email!,
+                x.tourist.Status,
                 x.tourist.Nationality,
                 x.user.EmailConfirmed,
-                x.user.EmailConfirmed ? x.user.CreatedAt : null,
-                // x.tourist.TotalTrips,
-                // x.tourist.TotalTrips,
                 x.tourist.TotalReviews,
                 x.TotalFavorites,
                 x.tourist.Status == UserStatus.Banned,
                 x.tourist.CreatedAt,
                 x.tourist.LastModifiedAt,
-                x.user.LastLoginAt ?? x.user.CreatedAt,
+                x.user.LastLoginAt,
                 x.user.AccessFailedCount))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<TouristProfileDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await context.Tourists
-            .AsNoTracking()
+        return await Tourists
             .Join(
-                context.Users.AsNoTracking(),
+                Users,
                 tourist => tourist.Id,
                 user => user.Id,
                 (tourist, user) => new
@@ -162,25 +158,24 @@ internal class TouristQueryService(
             .Where(x => x.tourist.Id == id)
             .Select(x => new TouristProfileDto(
                 x.tourist.Id,
+                x.user.UserName!,
                 x.tourist.FirstName,
                 x.tourist.LastName,
                 x.tourist.FirstName + " " + x.tourist.LastName,
-                x.user.Email ?? string.Empty,
-                x.tourist.PreferredLanguage.ToString(),
+                x.user.Email!,
                 x.tourist.Nationality,
                 x.tourist.TotalTrips,
                 x.tourist.TotalReviews,
                 x.tourist.CreatedAt,
-                x.user.LastLoginAt ?? x.user.CreatedAt))
+                x.user.LastLoginAt))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<TouristAdminDetailDto?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var model = await context.Tourists
-            .AsNoTracking()
+        var model = await Tourists
             .Join(
-                context.Users.AsNoTracking(),
+                Users,
                 tourist => tourist.Id,
                 user => user.Id,
                 (tourist, user) => new
@@ -207,37 +202,35 @@ internal class TouristQueryService(
             model.tourist.FirstName,
             model.tourist.LastName,
             model.tourist.FirstName + " " + model.tourist.LastName,
-            model.user.Email ?? string.Empty,
-            model.tourist.Status.ToString(),
-            model.tourist.PreferredLanguage.ToString(),
+            model.user.Email!,
+            model.tourist.Status,
             model.tourist.Nationality,
             model.user.EmailConfirmed,
-            model.user.EmailConfirmed ? model.user.CreatedAt : null,
-            // model.tourist.TotalTrips,
-            // model.tourist.TotalTrips,
             model.tourist.TotalReviews,
             model.TotalFavorites,
             model.tourist.Status == UserStatus.Banned,
             model.tourist.CreatedAt,
             model.tourist.LastModifiedAt,
-            model.user.LastLoginAt ?? model.user.CreatedAt,
+            model.user.LastLoginAt,
             model.user.AccessFailedCount);
     }
 
     public async Task<List<Guid>> GetFavoriteSiteIdsAsync(Guid touristId, CancellationToken cancellationToken = default)
     {
-        return await context.Tourists
-            .AsNoTracking()
+        return await Tourists
             .Where(t => t.Id == touristId)
             .SelectMany(t => t.Favourites)
             .Select(f => f.SiteId)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<PagedResult<FavoriteSiteDto>> GetFavoriteSitesAsync(Guid touristId, PagingParameters paging , CancellationToken cancellationToken = default)
+    public async Task<PagedResult<FavoriteSiteDto>> GetFavoriteSitesAsync(
+        Guid touristId,
+        PagingParameters paging,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
     {
-        var query = context.Tourists
-            .AsNoTracking()
+        var query = Tourists
             .Where(tourist => tourist.Id == touristId)
             .SelectMany(
                 tourist => tourist.Favourites,
@@ -258,10 +251,11 @@ internal class TouristQueryService(
             .Select(x => new FavoriteSiteDto(
                 x.favourite.Id,
                 x.site.Id,
-                x.site.Name,
-                x.site.Type.ToString(),
+                x.site.LocalizedContents.Where(c => c.Language == language || c.Language == LanguageCode.English)
+                    .Select(c => c.Name)
+                    .FirstOrDefault()!,
+                x.site.Type,
                 x.site.MainImageUrl,
-                x.site.City.Name,
                 x.site.AverageRating,
                 x.favourite.Notes,
                 x.favourite.CreatedAt));
@@ -279,10 +273,58 @@ internal class TouristQueryService(
             paging.PageSize);
     }
 
+    public async Task<PagedResult<VisitedSiteDto>> GetVisitedSitesAsync(Guid id, PagingParameters paging, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default)
+    {
+        var query = Tourists
+            .Where(tourist => tourist.Id == id)
+            .SelectMany(
+                tourist => tourist.VisitedSites,
+                (tourist, visited) => new
+                {
+                    visited
+                })
+            .Join(
+                context.Sites.AsNoTracking(),
+                x => x.visited.SiteId,
+                site => site.Id,
+                (x, site) => new
+                {
+                    x.visited,
+                    site
+                })
+            .OrderByDescending(x => x.visited.CreatedAt)
+            .Select(x => new VisitedSiteDto(
+                x.visited.Id,
+                x.site.Id,
+                x.site.LocalizedContents.Where(c => c.Language == language || c.Language == LanguageCode.English)
+                    .Select(c => c.Name)
+                    .FirstOrDefault()!,
+                x.site.Type,
+                x.site.MainImageUrl,
+                x.site.AverageRating,
+                x.visited.VisitDate,
+                x.visited.DurationMinutes,
+                x.visited.Rating ?? 0,
+                x.visited.Rating != null,
+                x.visited.Notes,
+                x.site.Type.ToString()));
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var items = await query
+            .Skip(paging.Skip)
+            .Take(paging.Take)
+            .ToListAsync(cancellationToken);
+
+        return new PagedResult<VisitedSiteDto>(
+            items,
+            totalCount,
+            paging.PageNumber,
+            paging.PageSize);
+    }
+
     public async Task<bool> HasFavoritedSiteAsync(Guid touristId, Guid siteId, CancellationToken cancellationToken = default)
     {
-        return await context.Tourists
-            .AsNoTracking()
+        return await Tourists
             .Where(t => t.Id == touristId)
             .SelectMany(t => t.Favourites)
             .AnyAsync(f => f.SiteId == siteId, cancellationToken);
