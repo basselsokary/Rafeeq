@@ -1,3 +1,5 @@
+using Domain.Enums;
+using Infrastructure.Identity.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,8 +15,7 @@ internal class JwtTokenGenerator(IOptions<JwtSettings> jwtSettings)
 
     public string GenerateAccessToken(ApplicationUser user, IList<string> roles)
     {
-        var securityKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
 
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
@@ -22,20 +23,24 @@ internal class JwtTokenGenerator(IOptions<JwtSettings> jwtSettings)
         {
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.PreferredUsername, user.UserName!),
-            new(JwtRegisteredClaimNames.Email, user.Email!),
-            new("userId", user.Id.ToString()),
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Email, user.Email!),
+            new(JwtRegisteredClaimNames.Email, user.Email!),
+            new(JwtRegisteredClaimNames.PreferredUsername, user.UserName!),
         };
 
         // Add roles as claims
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
+        // Set token expiration based on user role
+        var tokenExpiration = roles.Any(r => r.Equals(UserRole.Tourist.ToString(), StringComparison.OrdinalIgnoreCase))
+            ? DateTime.UtcNow.AddHours(_jwtSettings.AccessTokenExpirationInHours)
+            : DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationForAdminInMinutes);
+        // var tokenExpiration = DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationInHours);
+        
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationInMinutes),
+            Expires = tokenExpiration,
             Issuer = _jwtSettings.Issuer,
             Audience = _jwtSettings.Audience,
             SigningCredentials = credentials
@@ -76,5 +81,6 @@ internal class JwtTokenGenerator(IOptions<JwtSettings> jwtSettings)
         return principal;
     }
 
+    public int GetAccessTokenExpiryInHours => _jwtSettings.AccessTokenExpirationInHours;
     public int GetRefreshTokenExpiryInDays => _jwtSettings.RefreshTokenExpirationInDays;
 }

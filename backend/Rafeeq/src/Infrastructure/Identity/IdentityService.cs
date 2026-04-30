@@ -1,10 +1,11 @@
+using System.Security.Claims;
 using Application.Common.Interfaces.Authentication;
 using Application.Common.Models;
-using Domain.Enums;
+using Infrastructure.Identity.Entities;
 using Infrastructure.Persistence.ApplicationContext;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Shared.Models;
+using Shared;
 
 namespace Infrastructure.Identity;
 
@@ -18,28 +19,76 @@ internal class IdentityService(
         Guid userId,
         string userName,
         string email,
-        string password,
-        UserRole role = UserRole.Tourist)
+        string password)
     {
-        var existingUser = await userManager.FindByEmailAsync(email);
-        if (existingUser != null)
-        {
+        var touristResult = TouristUser.Create(userId, userName, email);
+        if (touristResult.Failed)
+            return touristResult;
+
+        string normalizedUserName = userManager.NormalizeName(userName);
+        var existingUser = await userManager.Users.AnyAsync(u => u.NormalizedUserName == normalizedUserName);
+        if (existingUser)
+            return ApplicationUserErrors.UserNameAlreadyInUse;
+
+        string normalizedEmail = userManager.NormalizeEmail(email);
+        existingUser = await userManager.Users.AnyAsync(u => u.NormalizedEmail == normalizedEmail);
+        if (existingUser)
             return ApplicationUserErrors.EmailAlreadyInUse;
-        }
 
-        var userResult = ApplicationUser.Create(userId, userName, email);
-        if (userResult.Failed)
-            return userResult;
+        TouristUser tourist = touristResult.Value;
 
-        var result = await userManager.CreateAsync(userResult.Value, password);
-
+        var result = await userManager.CreateAsync(tourist, password);
         if (!result.Succeeded)
         {
             return ValidationError.FromErrors(result.Errors.Select(e => Error.Validation(e.Code, e.Description)));
         }
+        
+        var identityResult = await userManager.AddToRoleAsync(tourist, tourist.Role.ToString());
+        if (!identityResult.Succeeded)
+        {
+            // Rollback user creation if role assignment fails
+            await userManager.DeleteAsync(tourist);
+            return ValidationError.FromErrors(identityResult.Errors.Select(e => Error.Validation(e.Code, e.Description)));
+        }
+        
+        return Result.Success();
+    }
 
-        // Assign default role
-        await userManager.AddToRoleAsync(userResult.Value, role.ToString());
+    public async Task<Result> RegisterAsync(
+        Guid userId,
+        string userName,
+        string email)
+    {
+        var touristResult = TouristUser.Create(userId, userName, email);
+        if (touristResult.Failed)
+            return touristResult;
+
+        string normalizedUserName = userManager.NormalizeName(userName);
+        var existingUser = await userManager.Users.AnyAsync(u => u.NormalizedUserName == normalizedUserName);
+        if (existingUser)
+            return ApplicationUserErrors.UserNameAlreadyInUse;
+
+        string normalizedEmail = userManager.NormalizeEmail(email);
+        existingUser = await userManager.Users.AnyAsync(u => u.NormalizedEmail == normalizedEmail);
+        if (existingUser)
+            return ApplicationUserErrors.EmailAlreadyInUse;
+
+        TouristUser tourist = touristResult.Value;
+
+        var result = await userManager.CreateAsync(tourist);
+        if (!result.Succeeded)
+        {
+            return ValidationError.FromErrors(result.Errors.Select(e => Error.Validation(e.Code, e.Description)));
+        }
+        
+        var identityResult = await userManager.AddToRoleAsync(tourist, tourist.Role.ToString());
+        if (!identityResult.Succeeded)
+        {
+            // Rollback user creation if role assignment fails
+            await userManager.DeleteAsync(tourist);
+            return ValidationError.FromErrors(identityResult.Errors.Select(e => Error.Validation(e.Code, e.Description)));
+        }
+        
         return Result.Success();
     }
 
@@ -56,10 +105,10 @@ internal class IdentityService(
             return AuthenticationResult.Failure(ApplicationUserErrors.InActiveUser);
         }
 
-        if (!await userManager.IsEmailConfirmedAsync(user))
-        {
-            return AuthenticationResult.Failure(ApplicationUserErrors.EmailNotConfirmed);
-        }
+        // if (!await userManager.IsEmailConfirmedAsync(user))
+        // {
+        //     return AuthenticationResult.Failure(ApplicationUserErrors.EmailNotConfirmed);
+        // }
 
         var result = await signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: true);
 
@@ -88,7 +137,38 @@ internal class IdentityService(
             return AuthenticationResult.Failure(saveTokenResult.Error);
         }
 
-        return AuthenticationResult.Success(accessToken, refreshToken, user.Id);
+        return AuthenticationResult.Success(accessToken, refreshToken, jwtTokenGenerator.GetAccessTokenExpiryInHours, jwtTokenGenerator.GetRefreshTokenExpiryInDays, user.Id);
+    }
+
+    public async Task<AuthenticationResult> LoginAsync(string email)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return AuthenticationResult.Failure(ApplicationUserErrors.InvalidCredentials);
+        }
+
+        if (!user.IsActive)
+        {
+            return AuthenticationResult.Failure(ApplicationUserErrors.InActiveUser);
+        }
+
+        // Update last login
+        user.RecordLastLogin();
+        await userManager.UpdateAsync(user);
+
+        var roles = await userManager.GetRolesAsync(user);
+        var accessToken = jwtTokenGenerator.GenerateAccessToken(user, roles);
+        var refreshToken = jwtTokenGenerator.GenerateRefreshToken();
+
+        // Save refresh token
+        Result saveTokenResult = await SaveRefreshTokenAsync(user.Id, refreshToken);
+        if (saveTokenResult.Failed)
+        {
+            return AuthenticationResult.Failure(saveTokenResult.Error);
+        }
+
+        return AuthenticationResult.Success(accessToken, refreshToken, jwtTokenGenerator.GetAccessTokenExpiryInHours, jwtTokenGenerator.GetRefreshTokenExpiryInDays, user.Id);
     }
 
     public async Task<AuthenticationResult> RefreshTokenAsync(string accessToken, string refreshToken)
@@ -99,7 +179,7 @@ internal class IdentityService(
             return AuthenticationResult.Failure(ApplicationUserErrors.InvalidToken);
         }
 
-        var userIdClaim = principal.FindFirst("userId")?.Value;
+        var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
         {
             return AuthenticationResult.Failure(ApplicationUserErrors.InvalidClaims);
@@ -130,7 +210,7 @@ internal class IdentityService(
 
         await SaveRefreshTokenAsync(user.Id, newRefreshToken);
 
-        return AuthenticationResult.Success(newAccessToken, newRefreshToken, user.Id);
+        return AuthenticationResult.Success(accessToken, refreshToken, jwtTokenGenerator.GetAccessTokenExpiryInHours, jwtTokenGenerator.GetRefreshTokenExpiryInDays, user.Id);
     }
 
     public async Task<Result> RevokeTokenAsync(string refreshToken)
@@ -166,12 +246,12 @@ internal class IdentityService(
         return Result.Success();
     }
 
-    public async Task<Result> ResetPasswordAsync(string id, string token, string newPassword)
+    public async Task<Result> ResetPasswordAsync(string token, string email, string newPassword)
     {
-        var user = await userManager.FindByIdAsync(id);
+        var user = await userManager.FindByEmailAsync(email);
         if (user == null)
         {
-            return ApplicationUserErrors.NotFound(id);
+            return ApplicationUserErrors.NotFound(email);
         }
 
         var result = await userManager.ResetPasswordAsync(user, token, newPassword);
@@ -194,12 +274,12 @@ internal class IdentityService(
         return (await userManager.GeneratePasswordResetTokenAsync(user), user.UserName!);
     }
 
-    public async Task<Result> ConfirmEmailAsync(Guid userId, string token)
+    public async Task<Result> ConfirmEmailAsync(string token, string email)
     {
-        var user = await userManager.FindByIdAsync(userId.ToString());
+        var user = await userManager.FindByEmailAsync(email);
         if (user == null)
         {
-            return ApplicationUserErrors.NotFound(userId);
+            return ApplicationUserErrors.NotFound(email);
         }
 
         var result = await userManager.ConfirmEmailAsync(user, token);
@@ -211,15 +291,24 @@ internal class IdentityService(
         return Result.Success();
     }
 
-    public async Task<Result<string>> GenerateEmailConfirmationTokenAsync(Guid userId)
+    public async Task<Result<(string ResetToken, string UserName)>> GenerateEmailConfirmationTokenAsync(string email)
     {
-        var user = await userManager.FindByIdAsync(userId.ToString());
+        var user = await userManager.FindByEmailAsync(email);
         if (user == null)
         {
-            return ApplicationUserErrors.NotFound(userId);
+            return ApplicationUserErrors.NotFound(email);
         }
 
-        return await userManager.GenerateEmailConfirmationTokenAsync(user);
+        return (await userManager.GenerateEmailConfirmationTokenAsync(user), user.UserName!);
+    }
+
+    public async Task<bool> IsUserExist(string email, CancellationToken cancellationToken)
+    {
+        string normalizedEmail = userManager.NormalizeEmail(email);
+        var existingUser = await userManager.Users.AnyAsync(
+            u => u.NormalizedEmail == normalizedEmail, cancellationToken);
+        
+        return existingUser;
     }
 
     private async Task<Result> SaveRefreshTokenAsync(Guid userId, string token)
