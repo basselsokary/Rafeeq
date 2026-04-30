@@ -1,27 +1,20 @@
 using Application.Common.Interfaces.Services;
-using Infrastructure.Identity;
+using Infrastructure.Identity.Entities;
 using Infrastructure.Persistence.ApplicationContext;
-using Shared.Models;
+using Shared;
 
 namespace Infrastructure.Services;
 
 internal class ModeratorService(
     ApplicationDbContext context) : IModeratorService
 {
-    public async Task<Result> ActivateUserAsync(Guid userId, bool activate)
+    public async Task<Result> ActivateTouristAsync(Guid userId)
     {
         var user = await context.Users.FindAsync(userId);
         if (user == null)
             return ApplicationUserErrors.NotFound(userId);
 
-        if (activate)
-        {
-            user.Activate();
-        }
-        else
-        {
-            user.Deactivate();
-        }
+        user.Activate();
 
         context.SaveChanges();
 
