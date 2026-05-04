@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Philae Temple",
+    "category": "Archaeological Site",
+    "zone": "Aswan",
+    "ticket_price": 550,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 24.02671331,
+    "longitude": 32.88426127,
+    "description": "Dedicated to the goddess Isis, Philae Temple is one of Egypt's most romantic and captivating sites, nestled on a lush island in the middle of the Nile. The temple features stunning Ptolemaic architecture and reliefs depicting the famous myth of Isis and Osiris. What makes this visit unique is the journey; you must take a small boat to reach the island, enjoying the scenic granite boulders and clear waters along the way. The entire complex was moved from its original location on Philae Island to Agilkia Island in a massive UNESCO salvage operation to save it from the rising waters of the High Dam.Tip: Negotiate the boat fare for a round trip and waiting time clearly before boarding."
+  },
+  {
+    "name": "Abu Simbel Great Temple",
+    "category": "Archaeological Site",
+    "zone": "Abu Simbel",
+    "ticket_price": 750,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 22.33772626,
+    "longitude": 31.62589676,
+    "description": "The Great Temple of Ramesses II at Abu Simbel is a marvel of both ancient engineering and modern preservation. Its facade is dominated by four colossal 20-meter statues of the Pharaoh. Carved entirely into the mountainside, the temple is astronomically aligned so that the sun illuminates the inner sanctum only twice a year (February 22 and October 22). The interior reliefs masterfully depict the Battle of Kadesh and the King’s divine power."
+  },
+  {
+    "name": "Botanical Garden (Kitchener's Island)",
+    "category": "Nature Reserve",
+    "zone": "Aswan",
+    "ticket_price": 15,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 24.09512993,
+    "longitude": 32.88660765,
+    "description": "A sanctuary of peace and beauty, this botanical garden occupies an entire island in the Nile. Originally gifted to Lord Kitchener, it was transformed into a lush paradise housing rare tropical and local plants from India, Africa, and Asia. Walking through its shaded pathways feels like wandering through a tropical forest in the middle of the desert. It is the perfect spot for relaxation, bird watching, and enjoying the scenic views of the Nile and colorful Nubian houses on the opposite bank.Tip: The best way to reach the island is by a traditional Felucca at sunset for a peaceful and classic experience."
+  },
+  {
+    "name": "Kom Ombo Temple",
+    "category": "Archaeological Site",
+    "zone": "Kom Ombo",
+    "ticket_price": 450,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 24.45228933,
+    "longitude": 32.92842597,
+    "description": "Kom Ombo is unique for its \"double\" design, split perfectly into two symmetrical halves: one dedicated to Sobek the crocodile god and the other to Horus the falcon god. Perched on a high dune overlooking the Nile, it offers breathtaking views. Inside, you'll find fascinating reliefs of ancient surgical instruments, an old Nilometer, and the adjacent Crocodile Museum, which houses large mummified crocodiles worshipped in ancient times. The blend of medical history and mythology makes it a standout site.Tip: The temple is most beautiful at night when the lighting dramatically highlights the columns and medical reliefs."
+  },
+  {
+    "name": "Edfu Temple",
+    "category": "Archaeological Site",
+    "zone": "Edfu",
+    "ticket_price": 550,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 24.97789141,
+    "longitude": 32.87259579,
+    "description": "The Temple of Horus at Edfu is the most intact ancient temple in Egypt, preserved for centuries under desert sands. Its massive pylon is among the most impressive in Egyptian architecture. Upon entering, the scale of Ptolemaic design is overwhelming, highlighted by the iconic granite falcon statue guarding the entrance. The walls are covered in texts detailing the legendary battle between Horus and Seth, as well as temple construction secrets and ancient festivals.Tip: The most popular way to reach the temple is by horse-drawn carriage from the Nile."
+  },
+  {
+    "name": "Unfinished Obelisk",
+    "category": "Archaeological Site",
+    "zone": "Luxor",
+    "ticket_price": 220,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 24.0771128,
+    "longitude": 32.89625776,
+    "description": "This site is essentially an ancient Egyptian \"workshop\" frozen in time. The Unfinished Obelisk would have been the largest in the world, measuring 42 meters and weighing 1,200 tons. It was abandoned after a crack appeared in the granite during carving. A visit here reveals the engineering genius of the pharaohs and how they cut hard granite using simple tools."
+  },
+  {
+    "name": "Nubian Village (Gharb Soheil)",
+    "category": "Cultural Center",
+    "zone": "Aswan",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 5,
+    "latitude": 24.05132524,
+    "longitude": 32.85914401,
+    "description": "Gharb Soheil is a vibrant village bursting with color on Aswan's West Bank. Nubian houses are famous for their unique vaulted designs and bright colors reflecting the rich culture of the Nubian people. During your visit, you can enter traditional homes, enjoy mint tea, get henna tattoos, and see the crocodiles that residents keep as pets. It’s the perfect place to buy authentic handicrafts and famous Aswan spices while enjoying views of the Nile’s First Cataract.Tip: Don’t just stick to the touristy shops; wander into the side alleys to witness real daily life and authentic Nubian architecture."
+  },
+  {
+    "name": "Elephantine Island",
+    "category": "Island",
+    "zone": "Aswan",
+    "ticket_price": 44,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": 24.08497814,
+    "longitude": 32.88363341,
+    "description": "Elephantine Island is the historic heart of Aswan and its oldest inhabited area. The island blends ancient archaeological sites—like the Temple of Satet and a historic Nilometer—with vibrant contemporary Nubian villages. Its name likely comes from its past as an ivory trading center or the elephant-shaped granite boulders scattered in the river nearby. Exploring the island offers a mix of Pharaonic history and the colorful, laid-back Nubian lifestyle, all set against breathtaking views of the Nile and the iconic Old Cataract Hotel."
+  },
+  {
+    "name": "Tombs of the Nobles",
+    "category": "Archaeological Site",
+    "zone": "Luxor",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 25.73096355,
+    "longitude": 32.60929137,
+    "description": "Perched on the West Bank hills overlooking the river, the Tombs of the Nobles are the final resting places of Aswan’s ancient governors and officials from the Old and Middle Kingdoms. These tombs are famous for their panoramic location and inscriptions detailing trade expeditions and explorations deep into Africa. Accessing them involves a scenic climb up the hillside, rewarding visitors with the best aerial views of the Nile, its islands, and the dramatic granite cataracts below. They offer a fascinating look at the administrative life of ancient Egypt's southern frontier."
+  },
+  {
+    "name": "Kalabsha Temple",
+    "category": "Archaeological Site",
+    "zone": "Aswan",
+    "ticket_price": 200,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 23.96095276,
+    "longitude": 32.8677249,
+    "description": "Kalabsha Temple is the largest freestanding temple in Nubia, relocated to its current island home behind the High Dam to save it from Lake Nasser's rising waters. Dedicated to the Nubian sun god Mandulis, it features impressive sandstone architecture and a grand pylon. The site also includes other rescued monuments like the rock-cut Temple of Beit el-Wali and smaller shrines. Visiting Kalabsha offers a sense of total tranquility and exclusivity, as it receives fewer tourists, and the boat trip across Lake Nasser provides a serene and scenic approach."
+  }
+]

@@ -1,0 +1,156 @@
+[
+  {
+    "name": "Abu Dabbab",
+    "category": "Diving Site",
+    "zone": "Marsa Alam",
+    "ticket_price": null,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": 25.33822755,
+    "longitude": 34.73782539,
+    "description": "One of the most famous global destinations for spotting the Dugong (sea cow) and giant green turtles in their natural habitat. The beach features soft white sand and shallow waters, making it ideal for snorkeling and swimming."
+  },
+  {
+    "name": "Wadi El Gemal Reserve",
+    "category": "Nature Reserve",
+    "zone": "Marsa Alam",
+    "ticket_price": 25,
+    "size_score": 9,
+    "crowd_score": 6,
+    "latitude": 24.47488705,
+    "longitude": 35.09881854,
+    "description": "A pristine nature reserve stretching between mountains and the sea, home to rare mangrove forests and diverse wildlife like gazelles and migratory birds. It's a perfect escape for those seeking raw nature and tranquility."
+  },
+  {
+    "name": "Nayzak Beach",
+    "category": "Beach",
+    "zone": "Marsa Alam",
+    "ticket_price": 0,
+    "size_score": 6,
+    "crowd_score": 7,
+    "latitude": 25.00250387,
+    "longitude": 34.93825346,
+    "description": "A natural pool carved into coastal rocks, believed by locals to be formed by a meteor strike. Its crystal-clear turquoise waters are warm year-round, making it one of the most magical and unique spots in Marsa Alam.Tip: The beach is entirely natural and lacks facilities, so bring your own snacks and water. Don't forget a waterproof phone case to capture stunning shots from inside the pool."
+  },
+  {
+    "name": "El Quseir Fort",
+    "category": "Historical Site",
+    "zone": "El Qoseir",
+    "ticket_price": 60,
+    "size_score": 5,
+    "crowd_score": 5,
+    "latitude": 27.91194529,
+    "longitude": 34.427638,
+    "description": "A majestic 16th-century fortress from the Ottoman era, built to protect the city and trade routes. It features historic chambers and a small museum showcasing the region's history, including the spice and coffee trade.Tip: After visiting the fort, take a walk through the nearby old town of El Quseir to admire the historic architecture and buy authentic spices and incense from local markets."
+  },
+  {
+    "name": "Port Ghalib",
+    "category": "Marina",
+    "zone": "Marsa Alam",
+    "ticket_price": 0,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": 25.53598194,
+    "longitude": 34.63899761,
+    "description": "A luxury resort town and international marina featuring upscale restaurants and boutique shops. It is the hub for nightlife and entertainment in Marsa Alam and the starting point for most major boat excursions.Tip: Enjoy a stroll along the promenade in the evening to see the yachts and vibrant lights. It’s a perfect spot for dining at one of the restaurants overlooking the marina."
+  },
+  {
+    "name": "Hankorab Beach",
+    "category": "Beach",
+    "zone": "Marsa Alam",
+    "ticket_price": null,
+    "size_score": 6,
+    "crowd_score": 7,
+    "latitude": 24.56189059,
+    "longitude": 35.171888,
+    "description": "Known as the \"Egyptian Maldives\" due to its crystal-clear turquoise waters and soft white sands. It is a completely natural beach offering an exceptional snorkeling experience with vibrant coral reefs very close to the shore."
+  },
+  {
+    "name": "Shaab Samadai (Dolphin House)",
+    "category": "Nature Reserve",
+    "zone": "Marsa Alam",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 24.99108311,
+    "longitude": 34.99990246,
+    "description": "A horseshoe-shaped marine protected area and one of the world's most important natural sanctuaries for spinner dolphins. It offers visitors a rare opportunity to swim alongside dolphins in their natural habitat amidst stunning coral reefs."
+  },
+  {
+    "name": "Gebel Elba National Park",
+    "category": "Nature Reserve",
+    "zone": "Red Sea Governorate",
+    "ticket_price": 0,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 22.25442266,
+    "longitude": 36.32729479,
+    "description": "A magical natural area in southeastern Egypt, featuring mist-covered mountains and lush greenery in the middle of the desert. It is home to the Bashari and Ababda tribes and hosts rare species of flora and fauna.Tip: Visiting this remote area requires prior security permits. It is essential to hire a local guide to safely explore the mountain trails and hidden valleys."
+  },
+  {
+    "name": "Sharm El Luli Beach",
+    "category": "Beach",
+    "zone": "Halayeb We Shalateen Rd",
+    "ticket_price": null,
+    "size_score": 6,
+    "crowd_score": 7,
+    "latitude": 24.61290219,
+    "longitude": 35.1164031,
+    "description": "Consistently ranked among the most beautiful beaches in the world. It is rock-free with no waves, resembling a vast natural swimming pool. The water is incredibly transparent with breathtaking color gradients.Tip: Since the beach is within a nature reserve, there are no buildings or services. Be sure to bring your own umbrella, plenty of water, and snacks for a comfortable day in pristine nature."
+  },
+  {
+    "name": "Hamata Islands",
+    "category": "Island",
+    "zone": "Red Sea Governorate",
+    "ticket_price": null,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": 24.66601417,
+    "longitude": 35.15902503,
+    "description": "A group of tropical islands featuring soft white sands and pristine coral reefs. Ideal for swimming, snorkeling, and escaping city life."
+  },
+  {
+    "name": "Satayah Reef",
+    "category": "Nature Reserve",
+    "zone": "Marsa Alam",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 25.03776744,
+    "longitude": 35.00668573,
+    "description": "A vast marine area known as the largest habitat for spinner dolphins in the Red Sea. It offers a unique chance to swim with dolphin pods in open water."
+  },
+  {
+    "name": "El Fawakhir Mine",
+    "category": "Historical Site",
+    "zone": "El Qoseir Red Sea Governorate",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 5,
+    "latitude": 26.11790058,
+    "longitude": 33.69684684,
+    "description": "An ancient gold mine from the Pharaonic and Roman eras, featuring ruins of old workers' huts and stone mills set in rugged mountains."
+  },
+  {
+    "name": "Qulaan Area",
+    "category": "Nature Reserve",
+    "zone": "Marsa Alam",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 24.36003633,
+    "longitude": 35.30839867,
+    "description": "A stunning eco-area famous for mangrove trees growing in the sea. It's home to the Ababda tribes, offering an authentic local cultural experience."
+  },
+  {
+    "name": "Sheikh El Shazly Shrine",
+    "category": "Religious Site",
+    "zone": "Marsa Alam",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 24.20080327,
+    "longitude": 34.63563662,
+    "description": "A significant religious site in the desert housing the shrine of Sufi leader Abu Al-Hassan El-Shazly, featuring beautiful Islamic architecture.Tip: The road to the shrine offers majestic mountain views. Visit during off-peak times to appreciate the site's spirituality and peace."
+  }
+]

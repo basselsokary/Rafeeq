@@ -1,0 +1,79 @@
+[
+  {
+    "name": "Pyramids of Giza",
+    "category": "Archaeological Site",
+    "zone": "Giza",
+    "ticket_price": 700,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 29.97785012,
+    "longitude": 31.13251906,
+    "description": "The pyramids of Giza and the Great Sphinx are among the most popular tourist destinations in the world, and indeed already were even in Roman times. Each of these spectacular structures served as the final resting place of a king of the 4th Dynasty (c.2613–2494 BC). The Great Pyramid of Giza was built for king Khufu (c.2589–2566 BC), and the other two for Khafre and Menkaure, his son and grandson. Khufu’s pyramid is both the oldest and largest of the three, and the first building to exceed it in height would not be built for another 3,800 years!"
+  },
+  {
+    "name": "Pyramid of Djedefre",
+    "category": "Archaeological Site",
+    "zone": "Giza",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 30.03229034,
+    "longitude": 31.07469237,
+    "description": "Location & Significance: Located in Abu Rawash, this monument holds the title of Egypt's northernmost pyramid. It was built by Pharaoh Djedefre, the son and immediate successor of King Khufu (builder of the Great Pyramid). In ancient times, the pyramid bore the poetic name \"Djedefre's Starry Sky.\" Today, however, it consists mostly of scattered ruins. History & Recent Theories: Completion & Scale: For decades, many Egyptologists believed the pyramid was left unfinished."
+  },
+  {
+    "name": "Dahshur Necropolis",
+    "category": "Archaeological Site",
+    "zone": "Dahshur",
+    "ticket_price": 200,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 29.75057664,
+    "longitude": 31.24759254,
+    "description": "Location & Significance: Dahshur is a vital part of the Memphite Necropolis, a designated UNESCO World Heritage Site located south of Saqqara. It is world-renowned for being the \"Royal Laboratory\" where ancient Egyptians mastered the transition from step pyramids to smooth-sided \"true\" pyramids. Historical Importance (The Pyramid School): The site served as an engineering classroom for King Sneferu (founder of the 4th Dynasty). The lessons learned from the structural challenges and successes at Dahshur provided the essential know-how to later construct the Great Pyramid of Giza."
+  },
+  {
+    "name": "Great Sphinx of Giza",
+    "category": "Archaeological Site",
+    "zone": "Giza",
+    "ticket_price": 200,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 29.97550929,
+    "longitude": 31.13829351,
+    "description": "Location & Significance: The Great Sphinx of Giza is the oldest known monumental sculpture in Egypt, featuring a mythical creature with the body of a lion and a human head. Carved from the limestone bedrock of the Giza Plateau, it faces east and forms a central part of the Memphite Necropolis, a UNESCO World Heritage Site. History & Foundation: The Builder: Archaeological evidence suggests it was created during the Old Kingdom during the reign of Pharaoh Khufu or his son Khafre (c. 2558–2532 BC)."
+  },
+  {
+    "name": "Mit Rahina Museum",
+    "category": "Museum",
+    "zone": "Giza",
+    "ticket_price": 200,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": 29.84960716,
+    "longitude": 31.25446407,
+    "description": "Location & Significance: Located in the village of Mit Rahina, Giza, this museum stands on the site of ancient Memphis, the first capital of unified Egypt founded by King Menes around 3100 BC. It is an open-air museum designed to showcase artifacts exactly where they were excavated. Key Highlights & Artifacts: Colossal Statue of Ramses II: Description: The museum's crown jewel is a massive limestone statue of King Ramses II. Originally 13 meters tall, it now lies horizontally inside a special gallery."
+  },
+  {
+    "name": "The Grand Egyptian Museum",
+    "category": "Museum",
+    "zone": "Giza",
+    "ticket_price": 600,
+    "size_score": 7,
+    "crowd_score": 7,
+    "latitude": 29.99333796,
+    "longitude": 31.12462329,
+    "description": "Location & Significance: The Grand Egyptian Museum, located just 2 kilometers from the Giza Pyramid Complex, is the largest museum in the world dedicated to a single civilization. Covering an expansive 500,000 square meters, it houses over 100,000 artifacts detailing Egyptian history from the Predynastic period to the Roman era. History & Foundation: The Concept: Originating in the early 1990s, the GEM was designed to modernize the display of Egypt's treasures and alleviate pressure on the old Tahrir Museum. Timeline: Announced in 1992, with the foundation stone laid in 2002."
+  },
+  {
+    "name": "Saqqara Monuments",
+    "category": "Archaeological Site",
+    "zone": "Saqqara",
+    "ticket_price": 600,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 29.86986979,
+    "longitude": 31.21897058,
+    "description": "Location & Significance: Saqqara is an Egyptian village located in Badrashin, Giza, approximately 30 km south of modern Cairo. It served as the primary necropolis for the ancient capital of Memphis. It is home to the oldest complete stone building complex in history—the Pyramid of Djoser—and has been a designated UNESCO World Heritage Site since 1979. Historical Eras: Early Dynastic (Dynasties 1-2): Originally a burial ground for nobles, featuring the first royal underground galleries."
+  }
+]

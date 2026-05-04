@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Tell Basta",
+    "category": "Archaeological Site",
+    "zone": "Zagazig",
+    "ticket_price": 150,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 30.57259865,
+    "longitude": 31.51197914,
+    "description": "Tell- Basta gets its name from the ancient Egyptian Per-Bastet “the house of goddess Bastet”, which was the cult center of the feline goddess Bastet. The latter, a lioness goddess, was associated with female fertility and played a main protective role. Per-Bastet was the capital of the 18th Lower Egyptian nome (province) during the New Kingdom period (c.1550–1069 BC). It was also the capital of the country during the 22nd Dynasty (c.945–715 BC)."
+  },
+  {
+    "name": "San El-Hagar",
+    "category": "Archaeological Site",
+    "zone": "San El-Hagar",
+    "ticket_price": 120,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 30.97615455,
+    "longitude": 31.87870279,
+    "description": "It was given this name due to the abundance of stones there, and it was also known as Tanis. It is a village in the Sharqia Governorate, known in ancient Egypt as \"Djanet,\" and served as the capital of Egypt during the Twenty-first Dynasty. The archaeological site includes a collection of monuments dating from the Late Period to the Ptolemaic era. It contains ruins of temples dedicated to the deities Amun, Mut, and Khonsu, as well as the deity Horus, a sacred lake, and statues of King Ramses II that were moved from the ancient capital, Pi-Ramesses, by the kings of the Twenty-first Dynasty."
+  }
+]

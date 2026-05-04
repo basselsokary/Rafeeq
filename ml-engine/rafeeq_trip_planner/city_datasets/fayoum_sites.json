@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Wadi El Rayan",
+    "category": "Nature Reserve",
+    "zone": "Wadi El Rayan Protected Area",
+    "ticket_price": 20,
+    "size_score": 9,
+    "crowd_score": 6,
+    "latitude": 29.2545924,
+    "longitude": 30.44093075,
+    "description": "A large protected desert oasis with two lakes joined by Egypt’s biggest waterfalls1. Rich in wildlife (gazelles, foxes, birds) and unique geology (springs, dunes, “Magic Lake”), it offers sand-boarding, camping and nature trails."
+  },
+  {
+    "name": "Wadi Al-Hitan (Whale Valley)",
+    "category": "Nature Reserve",
+    "zone": "Wadi Al Hitan",
+    "ticket_price": null,
+    "size_score": 9,
+    "crowd_score": 6,
+    "latitude": 29.26843957,
+    "longitude": 30.0224517,
+    "description": "A UNESCO World Heritage desert valley with fossil whale skeletons. The site’s fossil beds vividly illustrate whale evolution from land-dwellers to sea animals2. It includes a visitor museum (with a 37-million-year “walking whale”) and panoramic desert scenery."
+  },
+  {
+    "name": "Lake Qarun",
+    "category": "Nature Reserve",
+    "zone": "Birket Qarun",
+    "ticket_price": 0,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 29.451494,
+    "longitude": 30.58453058,
+    "description": "A large endorheic saltwater lake (once ancient Lake Moeris) in the Fayoum Oasis5. It is famous for scenic lakeside views, rich birdlife (flamingos, herons, etc.) and adjacent archaeology (e.g. Qasr Qarun temple)."
+  },
+  {
+    "name": "Qasr Qarun Temple",
+    "category": "Archaeological Site",
+    "zone": "Qasr Qarun Temple",
+    "ticket_price": 150,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 29.40600564,
+    "longitude": 30.41826503,
+    "description": "A Ptolemaic-era temple (crocodile temple) near Lake Qarun, dedicated to Sobek/Dionysus3. Its fortress-like exterior belies a complex interior of chambers and tunnels. The rooftop offers panoramic views of desert and farmland."
+  },
+  {
+    "name": "Hawara Pyramid",
+    "category": "Archaeological Site",
+    "zone": "Hawara Pyramid",
+    "ticket_price": 150,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 29.27447775,
+    "longitude": 30.89893503,
+    "description": "The Middle Kingdom Pyramid of Amenemhat III (ca. 1840 BC) at Hawara3. Originally part of a large complex (the “Labyrinth”), today visitors can enter the burial chamber (with a black basalt sarcophagus) and see remains of the mortuary temple. It’s an iconic Fayoum monument."
+  },
+  {
+    "name": "Lahun Pyramid (Senusret II)",
+    "category": "Archaeological Site",
+    "zone": "Lahun Pyramid",
+    "ticket_price": 150,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 29.23651233,
+    "longitude": 30.97061062,
+    "description": "Middle Kingdom pyramid of Senusret II at El-Lahun (Fayoum)15. It sits within a large archaeological site (the workers’ town of Kahun). Visitors can see the pyramid’s entrance and surrounding ruins, which have yielded famous Kahun papyri."
+  },
+  {
+    "name": "Karanis (Kom Oshim)",
+    "category": "Archaeological Site",
+    "zone": "Kom Oshim (Karanis)",
+    "ticket_price": 150,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 29.51819776,
+    "longitude": 30.89906739,
+    "description": "Ancient Graeco-Roman city (founded 3rd century BC) in central Fayoum17. Notable ruins include a well-preserved temple and houses. An on-site museum (Kom Oshim Museum) displays artifacts from the excavations. It illustrates Ptolemaic–Roman urban life."
+  },
+  {
+    "name": "Fayoum Water Wheels Park",
+    "category": "Park",
+    "zone": "Water Wheels Park",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 29.30853116,
+    "longitude": 30.84497277,
+    "description": "A city park in Faiyum featuring a collection of historic norias (water wheels) used for irrigation8. Set in landscaped gardens and ponds, it is a popular spot for leisure, picnics and family outings, showcasing local irrigation heritage and flora/fauna."
+  },
+  {
+    "name": "Karanis Site Museum (Kom Aushim)",
+    "category": "Museum",
+    "zone": "Tamiya",
+    "ticket_price": 100,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": 29.51886882,
+    "longitude": 30.89831102,
+    "description": "Archaeological museum at Kom Oshim (Karanis), Tamiya. Exhibits relics from prehistory through Greco-Roman to Islamic eras58. Home to the famous Fayoum mummy portraits and artifacts of Fayoum’s history."
+  },
+  {
+    "name": "Temple of Medinet Madi",
+    "category": "Archaeological Site",
+    "zone": "Medinet Madi (Narmuthis)",
+    "ticket_price": 120,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 29.19328654,
+    "longitude": 30.64211895,
+    "description": "Ptolemaic-era temple (Medinet Madi) built by Amenemhat III and expanded by Ptolemies, dedicated to Sobek. Known as the ancient city Dionysias, it has ruins of a pyramid and wall reliefs. Highlights Fayoum’s Greco-Roman heritage13."
+  }
+]

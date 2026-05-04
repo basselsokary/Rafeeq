@@ -1,0 +1,101 @@
+[
+  {
+    "name": "Karnak Temple Complex",
+    "category": "Archaeological Site",
+    "zone": "Karnak",
+    "ticket_price": 600,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 25.71899254,
+    "longitude": 32.65713097,
+    "description": "The Karnak Temple Complex is the largest religious building ever constructed, serving as a vast open-air museum of ancient Egyptian history spanning over 1,500 years. Dedicated to the Theban triad of Amun, Mut, and Khonsu, it features the breathtaking Great Hypostyle Hall with its 134 massive columns, many still retaining their original vibrant colors on the ceilings. The complex houses towering obelisks, a sacred lake used for purification rituals, and the famous Avenue of Sphinxes. Walking through Karnak is a profound experience of ancient power and engineering marvels that have stood the test of time.Tip: The site is immense, so wear very comfortable walking shoes."
+  },
+  {
+    "name": "Luxor Temple",
+    "category": "Archaeological Site",
+    "zone": "Luxor",
+    "ticket_price": 500,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 25.69968568,
+    "longitude": 32.63904554,
+    "description": "Located in the heart of modern Luxor, this temple is a living testament to the continuity of civilizations. Founded by Amenhotep III and completed by Ramesses II, it features a grand entrance with colossal seated statues and a towering obelisk. A unique aspect of Luxor Temple is the Abu al-Haggag Mosque built atop its ruins, showcasing Egypt’s multi-layered history. The temple was the primary site for the annual Opet Festival, where processions traveled from Karnak."
+  },
+  {
+    "name": "Valley of the Kings",
+    "category": "Archaeological Site",
+    "zone": "Luxor",
+    "ticket_price": 750,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 25.74562212,
+    "longitude": 32.59983218,
+    "description": "The Valley of the Kings is the mysterious necropolis chosen by New Kingdom pharaohs for their eternal rest, hidden away in the desert cliffs. It contains over 60 tombs carved deep into the limestone, the most famous being that of the boy-king Tutankhamun. Inside, the walls and ceilings are covered in vivid funerary texts and scenes from the \"Book of the Dead,\" appearing as if they were painted yesterday. The architecture was designed to protect the king’s journey to the afterlife, with long corridors leading to burial chambers once filled with unimaginable golden treasures.Tip: Your standard ticket allows entry into 3 tombs."
+  },
+  {
+    "name": "Mortuary Temple of Hatshepsut",
+    "category": "Archaeological Site",
+    "zone": "Luxor",
+    "ticket_price": 440,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 25.73844716,
+    "longitude": 32.60647818,
+    "description": "The Mortuary Temple of Hatshepsut, also known as Deir el-Bahari, is an architectural masterpiece featuring three massive terraced levels carved directly into the towering limestone cliffs. Designed by the royal architect Senenmut, it served as a funerary complex for Egypt’s powerful female pharaoh. The reliefs recount significant historical events, including the famous trade expedition to the Land of Punt to bring back incense and exotic trees. The seamless integration of man-made stone structures with the natural rugged mountainside creates a majestic atmosphere unique to this site.Tip: The site is very exposed to the sun with high reflection from the white stone; hats and sunglasses are essential."
+  },
+  {
+    "name": "Colossi of Memnon",
+    "category": "Monument",
+    "zone": "Luxor",
+    "ticket_price": 0,
+    "size_score": 7,
+    "crowd_score": 7,
+    "latitude": 25.72056272,
+    "longitude": 32.61040078,
+    "description": "The Colossi of Memnon are two massive stone statues representing Pharaoh Amenhotep III, the only remaining relics of his vast mortuary temple that was once larger than Karnak. Standing about 18 meters high, each statue is carved from a single block of quartzite sandstone. In Roman times, the northern statue was famous as the \"Singing Statue\" because its cracks whistled in the morning breeze. Despite centuries of erosion and earthquakes, they still stand tall amidst the green fields, serving as silent guardians of the ancient Theban Necropolis.Tip: Admission is free and it serves as an excellent 15-minute photo stop on your way to the Valley of the Kings."
+  },
+  {
+    "name": "Luxor Museum",
+    "category": "Museum",
+    "zone": "Luxor",
+    "ticket_price": 400,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": 25.70778706,
+    "longitude": 32.64455438,
+    "description": "Perched on the Nile corniche, the Luxor Museum is one of Egypt’s most sophisticated and well-curated museums. It features a high-quality collection of artifacts found in the Luxor area, including masterpieces from the \"Luxor Temple Cachette\" discovered in 1989. Key highlights include the mummies of New Kingdom pharaohs (Ahmose I and Ramesses I) and a stunning array of jewelry, weapons, and stelae. The museum’s lighting and layout are designed to highlight the beauty of each piece, offering a peaceful and focused cultural experience compared to larger museums."
+  },
+  {
+    "name": "Deir el-Medina",
+    "category": "Archaeological Site",
+    "zone": "Luxor",
+    "ticket_price": 220,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 25.72827597,
+    "longitude": 32.60143036,
+    "description": "Deir el-Medina is a unique archaeological site that tells the story of the \"ordinary people\" of ancient Egypt. It was the village of the artisans and workers who built and decorated the tombs in the Valley of the Kings and Queens. Here, you can explore the ruins of their stone houses and visit their private tombs, which feature surprisingly beautiful scenes of daily life and labor. The tomb of Sennedjem is world-famous for its vivid yellow background and exquisite details."
+  },
+  {
+    "name": "Medinet Habu",
+    "category": "Archaeological Site",
+    "zone": "Luxor",
+    "ticket_price": 220,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 25.72044449,
+    "longitude": 32.60068594,
+    "description": "Medinet Habu, the mortuary temple of Ramesses III, is one of the most massive and artistically impressive temples on Luxor’s West Bank. It is famous for its exceptionally deep-carved reliefs that depict grand land and sea battles against the \"Sea Peoples,\" many of which still retain their original pigments. The temple is enclosed by a massive mud-brick wall and features a high gate inspired by Syrian fortresses (Migdol). The vast open courtyards and towering columns provide visitors with a true sense of the grandeur and military might of the Ramesside era."
+  },
+  {
+    "name": "Esna Temple (Khnum)",
+    "category": "Archaeological Site",
+    "zone": "Esna",
+    "ticket_price": 200,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 25.29381097,
+    "longitude": 32.5561434,
+    "description": "The Temple of Khnum in Esna is located 9 meters below the modern street level, accessible via a staircase. It is renowned for its magnificent hypostyle hall featuring 24 columns with diverse, intricately carved floral capitals. A recent world-class restoration has revealed breathtaking original colors and astronomical inscriptions on the ceiling that were hidden under soot for centuries. These reliefs depict the zodiac, celestial bodies, and the sun’s journey, and are now considered among the most vibrant in Egypt."
+  }
+]

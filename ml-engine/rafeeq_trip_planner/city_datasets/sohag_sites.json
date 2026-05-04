@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Abydos Temple",
+    "category": "Archaeological Site",
+    "zone": "El Balyana",
+    "ticket_price": null,
+    "size_score": 9,
+    "crowd_score": 8,
+    "latitude": 26.18525595,
+    "longitude": 31.9188395,
+    "description": "The Temple of Seti I at Abydos is one of the most sacred ancient sites, considered the cult center of Osiris. It is renowned for having the finest and most detailed reliefs in Egyptian history, many with remarkably preserved colors. The temple houses the famous \"Abydos King List,\" recording the names of Egypt's rulers from the First Dynasty. Behind it lies the enigmatic Osireion, built with massive granite blocks underground."
+  },
+  {
+    "name": "The White Monastery",
+    "category": "Religious Site",
+    "zone": "Sohag",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 26.53477657,
+    "longitude": 31.64564645,
+    "description": "Known as the White Monastery due to its white limestone construction sourced from ancient Pharaonic ruins, it was founded by Saint Shenouda in the 4th century. The exterior architecture is striking for its resemblance to an ancient Egyptian temple, featuring sloped walls and grand cornices. Inside, the ancient church boasts semicircular apses decorated with historic frescoes and exquisite Corinthian capitals. It was once a global cultural hub, housing one of the largest libraries in the ancient Christian world."
+  },
+  {
+    "name": "The Red Monastery",
+    "category": "Religious Site",
+    "zone": "Sohag",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 26.55504752,
+    "longitude": 31.61996861,
+    "description": "The Red Monastery is a global art treasure, famous for housing 6th-century frescoes that are among the best-preserved in the world. Built primarily from red brick, its ancient church is a visual masterpiece, with every inch of the interior covered in vibrant religious paintings and intricate patterns. Art historians often compare it to the Sistine Chapel for its significance in Coptic-Byzantine art. Recent restorations have brought out the vivid reds, greens, and golds of the paintings, making it an essential stop for art lovers."
+  }
+]

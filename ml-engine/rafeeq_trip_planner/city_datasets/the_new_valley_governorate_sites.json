@@ -1,0 +1,222 @@
+[
+  {
+    "name": "Temple of Hibis",
+    "category": "Temple",
+    "zone": "Kharga Oasis",
+    "ticket_price": 180,
+    "size_score": 5,
+    "crowd_score": 5,
+    "latitude": 25.47,
+    "longitude": 30.55,
+    "description": "The Temple of Hibis is the largest and best preserved ancient Egyptian temple in the Kharga Oasis, dating to the Saite-Persian period ."
+  },
+  {
+    "name": "El Bagawat",
+    "category": "Archaeological Site",
+    "zone": "Near Kharga City",
+    "ticket_price": 120,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 25.48,
+    "longitude": 30.55,
+    "description": ": An ancient Christian cemetery in Kharga Oasis, one of the oldest Christian cemeteries in the world . It contains mudbrick burial chapels dating from the 3rd–6th centuries AD."
+  },
+  {
+    "name": "Cave of the Swimmers",
+    "category": "Archaeological Site",
+    "zone": "Gilf Kebir",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 23.4414,
+    "longitude": 25.8397,
+    "description": "A rock shelter on the Gilf Kebir plateau with Neolithic rock art depicting humans swimming, dating to ca. 10,000 years ago . It lies near the Libyan border in New Valley Governorate. A rock shelter on the Gilf Kebir plateau with Neolithic rock art depicting humans swimming, dating to ca."
+  },
+  {
+    "name": "Cave of the Beasts",
+    "category": "Archaeological Site",
+    "zone": "Gilf Kebir",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 23.25,
+    "longitude": 25.25,
+    "description": "A large natural rock shelter in the Western Desert containing Neolithic rock paintings over 7,000 years old. Its walls are covered with images of animals (“beasts”)."
+  },
+  {
+    "name": "Qasr al-Ghweita",
+    "category": "Archaeological Site",
+    "zone": "Kharga Oasis",
+    "ticket_price": 100,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 25.2727,
+    "longitude": 30.56,
+    "description": "A large mudbrick Roman fortress in Kharga Oasis (“Fortress of the Beautiful Garden”), built as a Darb al-Arba'in caravan route garrison . It overlooks the desert road north of Kharga."
+  },
+  {
+    "name": "Qasr al-Labekha",
+    "category": "Archaeological Site",
+    "zone": "شمال الخارجة",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 25.7153,
+    "longitude": 30.5545,
+    "description": "One of the largest Roman fortresses in Kharga Oasis, with temple remains. Described as “one of the most spectacular forts and temples in Kharga”."
+  },
+  {
+    "name": "Ain Umm al-Dabadib",
+    "category": "Archaeological Site",
+    "zone": "Kharga Oasis",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 25.73,
+    "longitude": 30.42,
+    "description": "A well-preserved Roman settlement in northern Kharga Oasis (ca. 3rd century AD), featuring a 5-level fort, mud-brick houses and five aqueduct tunnels."
+  },
+  {
+    "name": "Temple of Dush",
+    "category": "Archaeological Site",
+    "zone": "Near modern Bashindi",
+    "ticket_price": 100,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 24.56,
+    "longitude": 30.7,
+    "description": "An ancient desert garrison town and fort 125 km south of Kharga, known as Kysis in antiquity. It guarded intersections of desert routes and contains two small temples and many cemeteries with thousands of potsherds."
+  },
+  {
+    "name": "Qasr el-Zayyan",
+    "category": "Archaeological Site",
+    "zone": "75 km north of Dush on Kharga–Dakhla road",
+    "ticket_price": 100,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 25.25,
+    "longitude": 30.56,
+    "description": "Ruins of a Ptolemaic-era sandstone temple and surrounding settlement (“Takhoneourit” in Pharaonic times, later Tchonemyris) on the road between Dush and Kharga. The temple (Amun of Hibis) was later restored by Antoninus Pius."
+  },
+  {
+    "name": "Nadura Temple",
+    "category": "Archaeological Site",
+    "zone": "Kharga Oasis",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 25.46,
+    "longitude": 30.56,
+    "description": "A pair of ruined sandstone temples on a hill just south of Kharga City, built in the 2nd century AD (reign of Antoninus Pius) and dedicated to Amun-Ra"
+  },
+  {
+    "name": "Mut",
+    "category": "Archaeological Site",
+    "zone": "Mut city",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 25.49,
+    "longitude": 28.97,
+    "description": "The historic capital of Dakhla Oasis (Dakhleh Oasis), known for its traditional mud-brick houses. This small desert town (Arabic name موط) preserves an old quarter with Ottoman-era buildings."
+  },
+  {
+    "name": "Qila al-Dabba",
+    "category": "Archaeological Site",
+    "zone": "1 km east of Balat",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 25.55,
+    "longitude": 29.3,
+    "description": "A large Old Kingdom necropolis east of Balat (Mut) in Dakhla Oasis . It contains monumental mudbrick mastaba tombs (6th Dynasty) of Old Kingdom governors, resembling step pyramids ."
+  },
+  {
+    "name": "Necropolis of Muzawwaqa",
+    "category": "Archaeological Site",
+    "zone": "Between Dakhla Oasis and Farafra Oasis",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 25.68,
+    "longitude": 28.83,
+    "description": "A large Ptolemaic–Roman-era cemetery near Amheida (ancient Trimithis) in Dakhla. Over 300 tombs have been recorded, including the richly painted single-chamber tomb of Petubastis (1st century AD) and the double-chamber tomb of Petosiris ."
+  },
+  {
+    "name": "Deir el-Hagar (Temple of the Stone Monastery)",
+    "category": "Nature Reserve",
+    "zone": "Near Amheida",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 25.66,
+    "longitude": 28.81,
+    "description": "A sandstone Roman temple on the western edge of Dakhla Oasis, about 10 km west of El-Qasr . Erected under Emperor Nero (1st century AD) and later decorated by the Flavian emperors, it was dedicated to the Theban triad (Amun, Mut, Khonsu) and Seth ."
+  },
+  {
+    "name": "White Desert National Park",
+    "category": "Nature Reserve",
+    "zone": "Farafra Oasis",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 27.28,
+    "longitude": 28.2,
+    "description": "protected area in the Farafra Depression known for its surreal white chalk rock formations and sand dunes . Established in 2002, it includes attractions like the Mushrooms, Chicken and Turtle Rocks."
+  },
+  {
+    "name": "Crystal Mountain",
+    "category": "Nature Reserve",
+    "zone": "White Desert area",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 27.6622,
+    "longitude": 28.4293,
+    "description": "A barite-calcite crystal ridge within the White Desert, 120 km south of Bahariya and north of Farafra . The “crystal mountain” consists of sparkling crystal outcrops formed in eroded limestone."
+  },
+  {
+    "name": "Black Desert",
+    "category": "Nature Reserve",
+    "zone": "Farafra district",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 28.2019,
+    "longitude": 28.7309,
+    "description": "A volcanic-field landscape north of Farafra, composed of volcanic rock–capped black hills spread over ~30 km . Named for its dark basalt sills atop iron-rich mounds, it contrasts with the White Desert."
+  },
+  {
+    "name": "Ain Manawir",
+    "category": "Nature Reserve",
+    "zone": "Kharga Oasis",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 25.55,
+    "longitude": 30.64,
+    "description": "The remains of a Roman-era water channel (qanat) system near Kharga, including a long underground aqueduct carved into rock . It exemplifies ancient desert irrigation."
+  },
+  {
+    "name": "Deir al-Munira",
+    "category": "Archaeological Site",
+    "zone": "Kharga Oasis",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 25.59,
+    "longitude": 30.73,
+    "description": "Ruins of a ruined Roman fortress complex (Darb al-Arba’in fort) near Kharga, containing a temple and necropolis . It was part of the desert road network."
+  },
+  {
+    "name": "Great Sand Sea",
+    "category": "Nature Reserve",
+    "zone": "Western Desert",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 26.9,
+    "longitude": 26.03,
+    "description": "A vast erg of sand dunes (~72,000 km²) extending from western Egypt into Libya . Much of it lies in New Valley’s Western Desert, including the area west of Dakhla and south of Siwa"
+  }
+]

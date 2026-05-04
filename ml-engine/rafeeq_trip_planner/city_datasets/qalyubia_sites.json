@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Tell Atrib (Athribis)",
+    "category": "Archaeological Site",
+    "zone": "Banha",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 30.47203766,
+    "longitude": 31.18481959,
+    "description": "Tell Atrib, known in antiquity as Athribis, is one of the most significant archaeological sites in Lower Egypt, located northeast of Banha. Once the capital of the Tenth Nome of Lower Egypt, the site spans Ptolemaic, Roman, and Byzantine eras, featuring remnants of a large thermae (bathhouse), residential villas, pottery workshops, and a Coptic basilica. Over 300 terracotta figurines depicting Egyptian and Greek gods were unearthed here, alongside artifacts related to the cult of Horus-Khenty-khety. The site has been excavated since the 19th century and is studied by the Polish Centre of Mediterranean Archaeology in collaboration with Egyptian antiquities authorities."
+  },
+  {
+    "name": "Muhammad Ali Palace (Shubra Palace)",
+    "category": "Archaeological Site",
+    "zone": "Qalyubia Governorate",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 30.11600075,
+    "longitude": 31.24557396,
+    "description": "The Palace of Muhammad Ali Pasha in Shubra El-Kheima is a rare architectural masterpiece blending European and Islamic styles, built between 1808 and 1821 by Muhammad Ali Pasha, the founder of modern Egypt. The complex once spanned 50 acres, featuring extensive gardens, the Fountain Pavilion (Al-Fasqiyya), a Waterwheel Tower, and a private Nile anchorage — among the first buildings in Egypt to use gas lighting. After extensive restoration since 2018 by the Ministry of Tourism and Antiquities, the palace has been redeveloped as a premier cultural and tourist destination in Qalyubia."
+  },
+  {
+    "name": "Irrigation Museum",
+    "category": "Museum",
+    "zone": "Qalyubia Governorate",
+    "ticket_price": null,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": 30.19239099,
+    "longitude": 31.11626381,
+    "description": "The Irrigation Museum in Al-Qanatir Al-Khayriyyah documents Egypt's hydraulic engineering history from Pharaonic times to the modern era. The museum features scale models of the High Dam, Nile barrages, ancient shadouf (water-lifting devices), Archimedes screws, and various irrigation apparatus used throughout Egypt's agricultural history. Exhibits illustrate the evolution of water management methods that have sustained Egyptian civilization for millennia, complemented by historical photographs and engineering drawings."
+  },
+  {
+    "name": "Church of the Virgin Mary in Musturud (Al-Mahamma)",
+    "category": "Religious Site",
+    "zone": "Qalyubia Governorate",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 30.13945795,
+    "longitude": 31.29146368,
+    "description": "The Church of the Virgin Mary in Musturud is one of Egypt's most venerated Coptic pilgrimage sites, located on the Holy Family's flight route into Egypt. Its recorded history dates to 1185 AD when Pope Marcos III built a church at this spot. The church marks where the Virgin Mary bathed the infant Jesus at a nearby well, giving rise to its name 'Al-Mahamma' (the bathing place). The Byzantine-style building with domes and thick walls preserves the ancient well and a cave where the Holy Family rested."
+  },
+  {
+    "name": "Tell el-Yahudiyya (Tell el-Yehudi)",
+    "category": "Archaeological Site",
+    "zone": "Qalyubia Governorate",
+    "ticket_price": 0,
+    "size_score": 8,
+    "crowd_score": 7,
+    "latitude": 30.29428473,
+    "longitude": 31.3305717,
+    "description": "Tell el-Yahudiyya, meaning 'Mound of the Jews', is an ancient archaeological tell in Qalyubia Governorate associated with the settlement of Leontopolis. The site is historically significant as the location of a Jewish temple built by High Priest Onias IV around 160 BCE — modeled after the Jerusalem Temple — under the permission of Ptolemy VI Philometor. The temple operated for over 200 years before being demolished by Roman order after the Jewish revolt of 73 CE. The tell also contains Bronze Age remains and distinctive Hyksos-period decorated pottery, internationally known as 'Tell el-Yahudiyya Ware'."
+  },
+  {
+    "name": "Al-Khanka Historical Mosque and District",
+    "category": "Religious Site",
+    "zone": "Qalyubia Governorate",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 30.21462082,
+    "longitude": 31.35854249,
+    "description": "Al-Khanka is a city in Qalyubia Governorate whose name references a khanqah — a Sufi gathering place — underscoring its historic role as a center of Islamic learning and spirituality. The city's historical mosque stands as a representative landmark of Islamic architecture in the Delta region. Al-Khanka's traditional marketplace district and local heritage reflect the city's significance during the medieval Islamic period. The surrounding area hosts seasonal local markets and community gatherings offering visitors a glimpse into authentic Delta Egyptian life."
+  }
+]

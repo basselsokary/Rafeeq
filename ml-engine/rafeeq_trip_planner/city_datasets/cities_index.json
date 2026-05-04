@@ -1,0 +1,146 @@
+[
+  {
+    "city_id": "CITY-001",
+    "city": "Cairo",
+    "filename": "cairo_sites.json",
+    "num_sites": 42,
+    "center_lat": 30.046789,
+    "center_lon": 31.260869
+  },
+  {
+    "city_id": "CITY-002",
+    "city": "Giza",
+    "filename": "giza_sites.json",
+    "num_sites": 7,
+    "center_lat": 29.921292,
+    "center_lon": 31.170165
+  },
+  {
+    "city_id": "CITY-003",
+    "city": "Alexadria",
+    "filename": "alexadria_sites.json",
+    "num_sites": 26,
+    "center_lat": 31.185857,
+    "center_lon": 29.8919
+  },
+  {
+    "city_id": "CITY-006",
+    "city": "Southern Red Sea",
+    "filename": "southern_red_sea_sites.json",
+    "num_sites": 14,
+    "center_lat": 24.933312,
+    "center_lon": 34.947401
+  },
+  {
+    "city_id": "CITY-008",
+    "city": "Sinai",
+    "filename": "sinai_sites.json",
+    "num_sites": 26,
+    "center_lat": 28.551551,
+    "center_lon": 34.207228
+  },
+  {
+    "city_id": "CITY-009",
+    "city": "Suez Canal Cities",
+    "filename": "suez_canal_cities_sites.json",
+    "num_sites": 20,
+    "center_lat": 30.999565,
+    "center_lon": 32.231078
+  },
+  {
+    "city_id": "CITY-010",
+    "city": "North Red Sea",
+    "filename": "north_red_sea_sites.json",
+    "num_sites": 24,
+    "center_lat": 27.172155,
+    "center_lon": 33.844037
+  },
+  {
+    "city_id": "CITY-013",
+    "city": "Gharbia",
+    "filename": "gharbia_sites.json",
+    "num_sites": 14,
+    "center_lat": 30.854716,
+    "center_lon": 31.114239
+  },
+  {
+    "city_id": "CITY-014",
+    "city": "Marsa Matruh",
+    "filename": "marsa_matruh_sites.json",
+    "num_sites": 14,
+    "center_lat": 30.74725,
+    "center_lon": 26.712707
+  },
+  {
+    "city_id": "CITY-015",
+    "city": "The New Valley Governorate",
+    "filename": "the_new_valley_governorate_sites.json",
+    "num_sites": 20,
+    "center_lat": 25.659675,
+    "center_lon": 29.21072
+  },
+  {
+    "city_id": "CITY-016",
+    "city": "Menoufia",
+    "filename": "menoufia_sites.json",
+    "num_sites": 2,
+    "center_lat": 30.619898,
+    "center_lon": 30.88283
+  },
+  {
+    "city_id": "CITY-017",
+    "city": "Sharqia",
+    "filename": "sharqia_sites.json",
+    "num_sites": 2,
+    "center_lat": 30.774377,
+    "center_lon": 31.695341
+  },
+  {
+    "city_id": "CITY-018",
+    "city": "Qalyubia",
+    "filename": "qalyubia_sites.json",
+    "num_sites": 6,
+    "center_lat": 30.238132,
+    "center_lon": 31.254539
+  },
+  {
+    "city_id": "CITY-019",
+    "city": "Fayoum",
+    "filename": "fayoum_sites.json",
+    "num_sites": 10,
+    "center_lat": 29.343041,
+    "center_lon": 30.662019
+  },
+  {
+    "city_id": "CITY-020",
+    "city": "Luxor",
+    "filename": "luxor_sites.json",
+    "num_sites": 9,
+    "center_lat": 25.674848,
+    "center_lon": 32.612856
+  },
+  {
+    "city_id": "CITY-021",
+    "city": "Aswan",
+    "filename": "aswan_sites.json",
+    "num_sites": 10,
+    "center_lat": 24.179508,
+    "center_lon": 32.731384
+  },
+  {
+    "city_id": "CITY-030",
+    "city": "Qena",
+    "filename": "qena_sites.json",
+    "num_sites": 1,
+    "center_lat": 26.142612,
+    "center_lon": 32.670365
+  },
+  {
+    "city_id": "CITY-031",
+    "city": "Sohag",
+    "filename": "sohag_sites.json",
+    "num_sites": 3,
+    "center_lat": 26.425027,
+    "center_lon": 31.728152
+  }
+]

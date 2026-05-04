@@ -1,0 +1,222 @@
+[
+  {
+    "name": "The Old Lighthouse",
+    "category": "Historical Site",
+    "zone": "Port Said",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 5,
+    "latitude": 31.26448758,
+    "longitude": 32.31376593,
+    "description": "A world-class architectural masterpiece and the first building in the world constructed of reinforced concrete. Built in 1869 to guide ships into the newly opened Suez Canal, this octagonal tower stands as a witness to the city's golden era. Walking around its base, you can feel the history of the maritime world carved into its stones."
+  },
+  {
+    "name": "Misr Square & De Lesseps Boardwalk",
+    "category": "Park",
+    "zone": "Port Said",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 31.26710671,
+    "longitude": 32.31641916,
+    "description": "The pulse of the city where the Mediterranean Sea meets the Suez Canal. This newly developed square features the magnificent Misr Statue and the historical base of the De Lesseps statue. It is the perfect place to watch giant international ships transit the canal while enjoying the sea breeze."
+  },
+  {
+    "name": "Salt Mountains - Port Fouad",
+    "category": "Nature Reserve",
+    "zone": "Port Said",
+    "ticket_price": 5,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 31.23516456,
+    "longitude": 32.32371862,
+    "description": "Commonly known as the Egyptian Alps, these massive piles of white salt create a stunning illusion of snowy mountains. It has become a global trend for photography, where visitors climb the salt heaps to take creative photos that look like they were taken in the North Pole."
+  },
+  {
+    "name": "Port Said Military Museum",
+    "category": "Museum",
+    "zone": "Port Said",
+    "ticket_price": 40,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": 31.27025472,
+    "longitude": 32.30073173,
+    "description": "A museum that captures the bravery and history of Port Said, especially during the 1956 Tripartite Aggression. The outdoor garden displays captured tanks, planes, and missiles from various battles, while the indoor halls feature dioramas and artifacts telling the story of the city's resistance."
+  },
+  {
+    "name": "Saint Eugenie Church",
+    "category": "Religious Site",
+    "zone": "Port Said",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 31.26063778,
+    "longitude": 32.30632818,
+    "description": "One of the oldest and most beautiful churches in Port Said, built in 1890 with a stunning European architectural style that combines Italian and French elements. Its high ceilings, colorful glass windows, and calm atmosphere offer a peaceful escape in the heart of the city."
+  },
+  {
+    "name": "The Cathedral of Our Lady of Charity",
+    "category": "Religious Site",
+    "zone": "Port Said",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 31.2676707,
+    "longitude": 32.3090744,
+    "description": "A majestic cathedral known for its unique red-brick design and soaring towers that dominate the Port Said skyline. It serves as a symbol of the city's religious diversity and historical depth. The interior is decorated with beautiful icons and religious art."
+  },
+  {
+    "name": "Feryal Garden",
+    "category": "Park",
+    "zone": "Port Said",
+    "ticket_price": 10,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 31.26488741,
+    "longitude": 32.30971745,
+    "description": "A historical park famous for being the site of the legendary celebration for the Suez Canal opening in 1869. The park has been recently renovated with beautiful landscapes, fountains, and classic seating areas, offering a panoramic view of the canal's entrance."
+  },
+  {
+    "name": "The New Tourist Walkway",
+    "category": "Promenade",
+    "zone": "Port Said",
+    "ticket_price": 0,
+    "size_score": 4,
+    "crowd_score": 7,
+    "latitude": 31.26536258,
+    "longitude": 32.31488674,
+    "description": "A modern, elegantly designed walkway that extends along the coast, offering breathtaking views of the Mediterranean Sea. It is lined with modern cafes, restaurants, and shops, making it the favorite spot for locals and tourists alike for an evening stroll."
+  },
+  {
+    "name": "Ismailia Antiquities Museum",
+    "category": "Museum",
+    "zone": "Mohamed Aly St EL AFRANG DISTRICT، الاسماعيلية - القنطرة غرب",
+    "ticket_price": 100,
+    "size_score": 7,
+    "crowd_score": 7,
+    "latitude": 30.59312634,
+    "longitude": 32.2847557,
+    "description": "One of the oldest museums in Egypt, built in a unique architectural style resembling a Greek temple. It houses over 4,000 artifacts from various eras, including a world-famous mosaic floor from the Roman period depicting the legends of Dionysus. The museum tells the story of the Suez Canal region from ancient times to the modern era."
+  },
+  {
+    "name": "De Lesseps House",
+    "category": "Museum",
+    "zone": "Ismailia",
+    "ticket_price": 300,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": null,
+    "longitude": null,
+    "description": "The historic residence of Ferdinand de Lesseps, the engineer behind the Suez Canal. The house remains beautifully preserved with its original 19th-century European furniture, personal belongings, and the carriage de Lesseps used. It offers a nostalgic journey into the lifestyle of the canal's early days."
+  },
+  {
+    "name": "Timsah Lake",
+    "category": "Beach",
+    "zone": "Ismailia",
+    "ticket_price": 0,
+    "size_score": 7,
+    "crowd_score": 8,
+    "latitude": 30.57620856,
+    "longitude": 32.28603295,
+    "description": "The heart of Ismailia and its most famous natural landmark. This calm lake is surrounded by several private and public beaches where you can enjoy swimming, boat trips, and watching the massive ships transit the Suez Canal. It's the ultimate spot for relaxation and watching the sunset over the water."
+  },
+  {
+    "name": "Al Malaha Gardens",
+    "category": "Park",
+    "zone": "Ismailia",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 30.58817569,
+    "longitude": 32.27429688,
+    "description": "Known as the Lung of Ismailia, these vast green spaces extend along the Suez Canal. They are filled with rare trees, colorful flowers, and shaded pathways, making them a favorite for families and joggers. It's a place where the fresh air meets the historical charm of the city."
+  },
+  {
+    "name": "The Strong Hill - Jebel Maryam",
+    "category": "Historical Site",
+    "zone": "Ismailia",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 5,
+    "latitude": 30.55872172,
+    "longitude": 32.30120163,
+    "description": "A historical military site that played a crucial role during the October 1973 war. This high ground offers a panoramic view of the Suez Canal and houses remnants of military fortifications and memorials. It serves as a symbol of bravery and the strategic importance of the region."
+  },
+  {
+    "name": "Suez National Museum",
+    "category": "Museum",
+    "zone": "Suez",
+    "ticket_price": 180,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": 29.95524595,
+    "longitude": 32.56694198,
+    "description": "A magnificent museum that overlooks the Suez Canal and tells the history of the city from prehistoric times to the modern era. The museum consists of several halls featuring artifacts related to trade, maritime history, and the famous Greek and Roman eras in the region."
+  },
+  {
+    "name": "Port Tawfiq",
+    "category": "Historical Site",
+    "zone": "Suez",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 5,
+    "latitude": 29.95544489,
+    "longitude": 32.57811729,
+    "description": "A historical district located at the southern entrance of the Suez Canal. It is famous for its unique colonial-style architecture and the beautiful villas that once housed canal officials. The area has a quiet, nostalgic atmosphere and offers some of the closest views of the ships."
+  },
+  {
+    "name": "El Lesan Area",
+    "category": "Nature Reserve",
+    "zone": "Damietta",
+    "ticket_price": 0,
+    "size_score": 9,
+    "crowd_score": 6,
+    "latitude": 31.52748445,
+    "longitude": 31.84375691,
+    "description": "A unique geographical point where the Nile River meets the Mediterranean Sea. This breathtaking location offers a majestic view of the two waters colliding. The area is beautifully paved with seating areas and a long walkway, making it the most famous landmark in Damietta."
+  },
+  {
+    "name": "Nile Street",
+    "category": "Promenade",
+    "zone": "Ras El Bar",
+    "ticket_price": 0,
+    "size_score": 4,
+    "crowd_score": 7,
+    "latitude": 31.51577444,
+    "longitude": 31.83802432,
+    "description": "The vibrant heart of Ras El Bar, this commercial and tourist walkway runs parallel to the Nile. It is filled with shops, local restaurants, and cafes. The street comes alive at night with lights, music, and the famous Damietta sweets shops."
+  },
+  {
+    "name": "Palm Beach - Ras El Bar",
+    "category": "Beach",
+    "zone": "Damietta",
+    "ticket_price": 0,
+    "size_score": 6,
+    "crowd_score": 7,
+    "latitude": 31.49977015,
+    "longitude": 31.80506019,
+    "description": "One of the most organized and clean beaches in Ras El Bar, known for its calm waters and family-friendly environment. The beach offers various water sports and has many cafes and services nearby."
+  },
+  {
+    "name": "Al Rahma Mosque",
+    "category": "Religious Site",
+    "zone": "Ras El Bar",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 31.5138945,
+    "longitude": 31.83333904,
+    "description": "An architectural icon in Ras El Bar, known for its unique and modern design that stands out in the city's landscape. The mosque is not just a place for prayer but a landmark that visitors often stop to admire and photograph."
+  },
+  {
+    "name": "Al Khalidien Park",
+    "category": "Park",
+    "zone": "Ismailia",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 30.61232453,
+    "longitude": 32.2843042,
+    "description": "A beautiful public park in Damietta city that features green landscapes and statues of famous figures from the city’s history. It’s a quiet place for families to relax away from the busy streets."
+  }
+]

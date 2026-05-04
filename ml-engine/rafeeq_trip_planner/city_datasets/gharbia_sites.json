@@ -1,0 +1,156 @@
+[
+  {
+    "name": "Mosque of Sidi Ahmad al-Badawi",
+    "category": "Religious Site",
+    "zone": "City Center",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 30.78392,
+    "longitude": 30.9991,
+    "description": "A famous Islamic religious and historical site known for its stunning architecture. The mosque takes on a special festive appearance each year during the Sidi Ahmad al-Badawi moulid, attracting millions of pilgrims."
+  },
+  {
+    "name": "Tanta Museum",
+    "category": "Museum",
+    "zone": "Gharbia",
+    "ticket_price": 150,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": 30.789,
+    "longitude": 31.0,
+    "description": "Regional archaeology museum with exhibits of ancient Egyptian, Roman, Coptic and Islamic relics. It reopened in 2019 and contains around 2,000 artifacts, including limestone carvings of pharaohs ."
+  },
+  {
+    "name": "St. George Coptic Orthodox Cathedral",
+    "category": "Religious Site",
+    "zone": "Downtown",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 30.79061,
+    "longitude": 30.989325,
+    "description": "The largest Coptic Orthodox church in Tanta, dedicated in 1939. A historic Christian landmark and seat of the Coptic Metropolitan of Tanta."
+  },
+  {
+    "name": "Tanta Cultural Center",
+    "category": "Cultural Center",
+    "zone": "Tanta",
+    "ticket_price": null,
+    "size_score": 5,
+    "crowd_score": 5,
+    "latitude": 30.78676,
+    "longitude": 30.999813,
+    "description": "Historic city theater (Italian-style) now a modern cultural center. It seats ~450 people and was renovated (2010–2019) with new facilities for arts and events ."
+  },
+  {
+    "name": "Tanta Corniche",
+    "category": "Nature Reserve",
+    "zone": "Nile bank (West Tanta)",
+    "ticket_price": 0,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 30.8040859,
+    "longitude": 31.005146,
+    "description": "A scenic Nile-side promenade in Tanta for recreation. Visitors enjoy walking by the river, cafes and open-air markets with Delta views ."
+  },
+  {
+    "name": "Abdullah ‘Asi Mosque",
+    "category": "Religious Site",
+    "zone": "Mahalla El Kubra",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 30.970867,
+    "longitude": 31.1630106,
+    "description": "A large 18th-century mosque in Mahalla’s old market area. Only the original minaret survived; the rest was rebuilt recently."
+  },
+  {
+    "name": "Al-Motawally Al-Trini Al-Kabeer mosque",
+    "category": "Religious Site",
+    "zone": "between Nakra Sabha and al-Omariya",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 30.97288,
+    "longitude": 31.16255,
+    "description": "major historic mosque (two feddans in size) with a soaring minaret (74m) and multiple iwans. It has seven doors and was restored in the 19th century."
+  },
+  {
+    "name": "Church of the Virgin Mary & St. Abanoub",
+    "category": "Religious Site",
+    "zone": "Eastern Samannoud (Saad Zaghloul St.).",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 30.96,
+    "longitude": 31.25,
+    "description": "9th-century Coptic Orthodox church dedicated to the Virgin Mary and child-martyr Abanoub."
+  },
+  {
+    "name": "Ibrahim Seraj el-Din Hammam",
+    "category": "Historical Site",
+    "zone": "Mit Tatim locality",
+    "ticket_price": null,
+    "size_score": 5,
+    "crowd_score": 5,
+    "latitude": 30.966,
+    "longitude": 31.247,
+    "description": "A historic 18th-century hammam (public bathhouse) in Samannoud, known as Hammam Ibrahim Bey."
+  },
+  {
+    "name": "Zefta Barrages",
+    "category": "Nature Reserve",
+    "zone": "Damietta",
+    "ticket_price": 0,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 30.7219,
+    "longitude": 31.2454,
+    "description": "Historic early-20th-century Nile dam near Zefta, controlling water flow to Delta canals. Rehabilitated 2019–2022."
+  },
+  {
+    "name": "French Bridge",
+    "category": "Historical Site",
+    "zone": "Connecting Zefta and Mit Ghamr across the Nile",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 5,
+    "latitude": 30.72,
+    "longitude": 31.25,
+    "description": "Historic Nile crossing (417m, built by British engineers in 1907). A landmark of early 20th-century colonial engineering ."
+  },
+  {
+    "name": "Al Zober Mosque",
+    "category": "Religious Site",
+    "zone": "Sea Street",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 6,
+    "latitude": 30.71,
+    "longitude": 31.24,
+    "description": "The main mosque of Zefta (founded circa 7th century; current building mainly 12th–14th c. restorations). Notable for its riverside location."
+  },
+  {
+    "name": "Behbeit el-Hagar",
+    "category": "Historical Site",
+    "zone": "Behbeit El Hagar",
+    "ticket_price": 0,
+    "size_score": 5,
+    "crowd_score": 5,
+    "latitude": 31.03,
+    "longitude": 31.28,
+    "description": "a village and an archaeological site in Lower Egypt that contains the remains of an ancient Egyptian temple to the goddess Isis, known as the Iseion"
+  },
+  {
+    "name": "SA Al Hagar",
+    "category": "Nature Reserve",
+    "zone": "SA Al Hagar",
+    "ticket_price": 0,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 30.96,
+    "longitude": 30.768,
+    "description": "It is considered one of the most important ancient capitals in the western Delta. It was the capital of Egypt during the 26th Dynasty and is famous for the remains of Pharaonic temples (the Temple of Neith) and its rich history spanning thousands of years as a religious and political center."
+  }
+]

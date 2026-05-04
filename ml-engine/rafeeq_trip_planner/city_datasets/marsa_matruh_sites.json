@@ -1,0 +1,156 @@
+[
+  {
+    "name": "Cleopatra Beach",
+    "category": "Beach",
+    "zone": "Marsa Matruh",
+    "ticket_price": 0,
+    "size_score": 6,
+    "crowd_score": 7,
+    "latitude": 31.3724,
+    "longitude": 27.2026,
+    "description": "A scenic beach featuring a natural rock pool (legendary “Cleopatra’s Bath”) with clear turquoise water where visitors float in a sheltered saltwater pool ."
+  },
+  {
+    "name": "Agiba Beach",
+    "category": "Beach",
+    "zone": "28 km west of city",
+    "ticket_price": 0,
+    "size_score": 6,
+    "crowd_score": 7,
+    "latitude": 31.41,
+    "longitude": 27.01,
+    "description": "A picturesque cove famous as “The Wonder Beach,” nestled between white limestone cliffs with panoramic views of turquoise waters . The beach’s name (Ajiba meaning “wonder”) reflects its natural beauty ."
+  },
+  {
+    "name": "Al-Gharam Beach",
+    "category": "Beach",
+    "zone": "17 km west of city",
+    "ticket_price": 0,
+    "size_score": 6,
+    "crowd_score": 7,
+    "latitude": 31.3667,
+    "longitude": 27.2059,
+    "description": "A long sandy beach known from classic Egyptian cinema. It’s famous for being the spot where actress Leila Mourad sang in the 1950s film Shati al-Gharam , making it a nostalgic “Lover’s Beach” (Beach of Love)."
+  },
+  {
+    "name": "El-Awam Beach",
+    "category": "Beach",
+    "zone": "Marsa Matruh",
+    "ticket_price": null,
+    "size_score": 6,
+    "crowd_score": 7,
+    "latitude": 31.35,
+    "longitude": 27.23,
+    "description": "A city beach near the Sidi El-Awwam mosque"
+  },
+  {
+    "name": "El-Obayed Beach",
+    "category": "Beach",
+    "zone": "20 km west of city",
+    "ticket_price": null,
+    "size_score": 6,
+    "crowd_score": 7,
+    "latitude": 31.38,
+    "longitude": 27.07,
+    "description": "A wide sandy beach in western Matrouh"
+  },
+  {
+    "name": "El-Ramla Beach",
+    "category": "Beach",
+    "zone": "Marsa Matruh",
+    "ticket_price": null,
+    "size_score": 6,
+    "crowd_score": 7,
+    "latitude": 31.34,
+    "longitude": 27.34,
+    "description": "A sandy city beach with gentle surf"
+  },
+  {
+    "name": "Cleopatra Rock",
+    "category": "Beach",
+    "zone": "Off Cleopatra Beach",
+    "ticket_price": null,
+    "size_score": 6,
+    "crowd_score": 7,
+    "latitude": 31.37,
+    "longitude": 27.18,
+    "description": "A prominent natural rock formation on Cleopatra Beach. It has a tunnel-like opening (“Cleopatra’s Bath”) that fills with water at high tide, forming a natural pool said to be used by Queen Cleopatra ."
+  },
+  {
+    "name": "Rommel Cave Museum",
+    "category": "Museum",
+    "zone": "Corniche",
+    "ticket_price": 100,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": 31.36,
+    "longitude": 27.24,
+    "description": "A World War II museum housed in the sea caves that were Field Marshal Erwin Rommel’s headquarters in 1942. It displays Rommel’s personal items and military artifacts . The museum (opened in 1977) was established in honor of Rommel and reopened in 2017 after restoration."
+  },
+  {
+    "name": "Salt Cave Salman",
+    "category": "Nature Reserve",
+    "zone": "Beau Site Street",
+    "ticket_price": null,
+    "size_score": 8,
+    "crowd_score": 5,
+    "latitude": 31.36,
+    "longitude": 27.22,
+    "description": "An indoor salt therapy attraction modeled after traditional salt caves. Visitors can relax in a lounge area surrounded by salt-coated walls. It’s a modern wellness spot (salt from Siwa Oasis) promoted for respiratory relaxation."
+  },
+  {
+    "name": "Souq Libya (Libyan Market)",
+    "category": "Promenade",
+    "zone": "Central Marsa Matruh (near midan Souq)",
+    "ticket_price": 0,
+    "size_score": 4,
+    "crowd_score": 7,
+    "latitude": 31.35,
+    "longitude": 27.22,
+    "description": "The traditional market of Marsa Matruh, famous for spices, dates, olive products, and handmade goods. It is a “lively market” noted for affordable local goods and herbal products . Vendors sell souvenirs, textiles, and local produce."
+  },
+  {
+    "name": "Shali Fortress",
+    "category": "Fortress",
+    "zone": "Siwa town centre",
+    "ticket_price": null,
+    "size_score": 7,
+    "crowd_score": 6,
+    "latitude": 29.2,
+    "longitude": 25.52,
+    "description": "13th-century mudbrick fortress (karshef) on a rocky outcrop, once home to the town. Largely ruined by 1926 rains ."
+  },
+  {
+    "name": "Temple of the Oracle of Amun",
+    "category": "Temple",
+    "zone": "Village of Aghurmi",
+    "ticket_price": 125,
+    "size_score": 5,
+    "crowd_score": 5,
+    "latitude": 29.2,
+    "longitude": 25.54,
+    "description": "Ancient 26th-Dynasty Temple (oracle of Zeus-Amun) at Aghurmi (~4 km NE of Siwa) where Alexander the Great was confirmed as pharaoh ."
+  },
+  {
+    "name": "Mountain of the Dead – Gebel al-Mawta",
+    "category": "Temple",
+    "zone": "~2 km N of Siwa",
+    "ticket_price": 125,
+    "size_score": 5,
+    "crowd_score": 5,
+    "latitude": 29.21,
+    "longitude": 25.52,
+    "description": "Limestone necropolis hill with ~3,000 rock-cut tombs from 26th Dynasty through Roman/Byzantine times. It’s a major archaeological site (tombs of Si-Amun, Mesu-Isis, “Crocodile” tomb, etc.)."
+  },
+  {
+    "name": "Fatnas Island",
+    "category": "Temple",
+    "zone": "~5 km W of town",
+    "ticket_price": null,
+    "size_score": 5,
+    "crowd_score": 5,
+    "latitude": 29.1924,
+    "longitude": 25.4794,
+    "description": "Small palm-covered island on Siwa’s main salt lake (Birket Siwa), reachable by causeway. Renowned for spectacular sunsets and a simple lakeside café ."
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Denshway Museum",
+    "category": "Museum",
+    "zone": "Ash-Shuhada District",
+    "ticket_price": 0,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": 30.60237801,
+    "longitude": 30.8537233,
+    "description": "The Denshway Museum memorializes the 1906 Denshawai Incident. Housed in a building shaped like a traditional pigeon tower, it opened in 1999 and contains five halls of exhibits (paintings, statues, photographs, a model gallows) on the historic confrontation."
+  },
+  {
+    "name": "El-Sadat Museum",
+    "category": "Museum",
+    "zone": "Tala District",
+    "ticket_price": 0,
+    "size_score": 6,
+    "crowd_score": 6,
+    "latitude": 30.63741783,
+    "longitude": 30.91193638,
+    "description": "This museum in Sadat’s birthplace (Mit Abu al-Kom) is dedicated to President Anwar El-Sadat. It houses the late president’s personal belongings, military uniform, and historic photographs from his life and international visits."
+  }
+]
