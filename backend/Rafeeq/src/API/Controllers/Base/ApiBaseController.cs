@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Shared.Models;
+using Shared;
 
 namespace API.Controllers.Base;
 

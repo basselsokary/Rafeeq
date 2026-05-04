@@ -9,23 +9,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.QueryServices;
 
-internal class ReviewQueryService(
+internal sealed class ReviewQueryService(
     ApplicationDbContext context) : IReviewQueryService
 {
-    public async Task<ReviewDetailDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    private IQueryable<Review> Reviews => context.Reviews.AsNoTracking();
+
+    public async Task<ReviewDetailDto?> GetByIdAsync(Guid id, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default)
     {
-        return await context.Reviews.AsNoTracking()
+        return await Reviews
             .Where(r => r.Id == id)
+            .AsSplitQuery()
             .Select(r => new ReviewDetailDto(
                 r.Id,
                 r.SiteId,
-                r.Site.Name,
+                r.Site.LocalizedContents.Where(c => c.Language == language)
+                    .Select(c => c.Name)
+                    .FirstOrDefault()!,
+                r.Site.Type,
                 r.TouristId,
                 r.Tourist.FirstName,
                 r.Rating,
                 r.Title,
                 r.Content,
-                r.Status.ToString(),
+                r.Status,
                 r.HelpfulCount,
                 r.NotHelpfulCount,
                 r.HelpfulCount + r.NotHelpfulCount == 0 ? 0 : (double)r.HelpfulCount / (r.HelpfulCount + r.NotHelpfulCount),
@@ -41,9 +47,11 @@ internal class ReviewQueryService(
         int? rating = null,
         ReviewOrderBy orderBy = ReviewOrderBy.Helpful,
         ReviewStatus status = ReviewStatus.Approved,
+        LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
-        var query = context.Reviews.AsNoTracking()
+        var query = Reviews
+            .AsSplitQuery()
             .Where(r => r.SiteId == siteId && r.Status == status);
 
         if (rating.HasValue)
@@ -57,24 +65,30 @@ internal class ReviewQueryService(
             c => new ReviewListDto(
                 c.Id,
                 c.SiteId,
-                c.Site.Name,
+                c.Site.LocalizedContents.Where(c => c.Language == language)
+                    .Select(c => c.Name)
+                    .FirstOrDefault()!,
                 c.TouristId,
                 c.Tourist.FirstName,
                 c.Rating,
                 c.Title,
                 c.Content,
-                c.Status.ToString(),
+                c.Status,
                 c.HelpfulCount,
                 c.NotHelpfulCount,
                 c.HelpfulCount + c.NotHelpfulCount == 0 ? 0 : (double)c.HelpfulCount / (c.HelpfulCount + c.NotHelpfulCount),
-                c.CreatedAt
-            ),
+                c.CreatedAt),
             cancellationToken);
     }
 
-    public async Task<PagedResult<ReviewListDto>> GetByStatusAsync(PagingParameters paging, ReviewStatus status = ReviewStatus.Pending, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<ReviewListDto>> GetByStatusAsync(
+        PagingParameters paging,
+        ReviewStatus status = ReviewStatus.Pending,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
     {
-        var query = context.Reviews.AsNoTracking()
+        var query = Reviews
+            .AsSplitQuery()
             .Where(r => r.Status == status)
             .OrderByDescending(r => r.CreatedAt);
         
@@ -84,13 +98,15 @@ internal class ReviewQueryService(
             r => new ReviewListDto(
                 r.Id,
                 r.SiteId,
-                r.Site.Name,
+                r.Site.LocalizedContents.Where(c => c.Language == language)
+                    .Select(c => c.Name)
+                    .FirstOrDefault()!,
                 r.TouristId,
                 r.Tourist.FirstName,
                 r.Rating,
                 r.Title,
                 r.Content,
-                r.Status.ToString(),
+                r.Status,
                 r.HelpfulCount,
                 r.NotHelpfulCount,
                 r.HelpfulCount + r.NotHelpfulCount == 0 ? 0 : (double)r.HelpfulCount / (r.HelpfulCount + r.NotHelpfulCount),
@@ -99,33 +115,42 @@ internal class ReviewQueryService(
             cancellationToken);
     }
 
-    public async Task<PagedResult<TouristReviewDto>> GetByTouristIdAsync(Guid touristId, PagingParameters paging, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<TouristReviewDto>> GetByTouristIdAsync(
+        Guid touristId,
+        PagingParameters paging,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
     {
-        var query = context.Reviews.AsNoTracking()
+        var query = Reviews
             .Where(r => r.TouristId == touristId)
             .OrderByDescending(r => r.CreatedAt);
 
-        return await ToPagedResultAsync<TouristReviewDto>(
+        return await ToPagedResultAsync(
             query,
             paging,
             r => new TouristReviewDto(
                 r.Id,
                 r.SiteId,
-                r.Site.Name,
+                r.Site.LocalizedContents.Where(c => c.Language == language)
+                    .Select(c => c.Name)
+                    .FirstOrDefault()!,
                 r.Site.MainImageUrl,
-                r.Site.Type.ToString(),
+                r.Site.Type,
                 r.Rating,
                 r.Title,
-                r.Status.ToString(),
+                r.Status,
                 r.HelpfulCount,
                 r.CreatedAt,
                 r.LastModifiedAt),
             cancellationToken);
     }
 
-    public async Task<List<ReviewSummaryDto>> GetRecentBySiteIdAsync(Guid siteId, int count = 5, CancellationToken cancellationToken = default)
+    public async Task<List<ReviewSummaryDto>> GetRecentBySiteIdAsync(
+        Guid siteId,
+        int count = 5,
+        CancellationToken cancellationToken = default)
     {
-        var items = await context.Reviews.AsNoTracking()
+        var items = await Reviews
             .Where(r => r.SiteId == siteId && r.Status == ReviewStatus.Approved)
             .OrderByDescending(r => r.CreatedAt)
             .Take(count)
@@ -141,21 +166,27 @@ internal class ReviewQueryService(
         return items;
     }
 
-    public async Task<List<TouristReviewDto>> GetRecentByTouristIdAsync(Guid touristId, int count = 5, CancellationToken cancellationToken = default)
+    public async Task<List<TouristReviewDto>> GetRecentByTouristIdAsync(
+        Guid touristId,
+        int count = 5,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
     {
-        var items = await context.Reviews.AsNoTracking()
+        var items = await Reviews
             .Where(r => r.TouristId == touristId)
             .OrderByDescending(r => r.CreatedAt)
             .Take(count)
             .Select(r => new TouristReviewDto(
                 r.Id,
                 r.SiteId,
-                r.Site.Name,
+                r.Site.LocalizedContents.Where(c => c.Language == language)
+                    .Select(c => c.Name)
+                    .FirstOrDefault()!,
                 r.Site.MainImageUrl,
-                r.Site.Type.ToString(),
+                r.Site.Type,
                 r.Rating,
                 r.Title,
-                r.Status.ToString(),
+                r.Status,
                 r.HelpfulCount,
                 r.CreatedAt,
                 r.LastModifiedAt))
@@ -166,7 +197,7 @@ internal class ReviewQueryService(
 
     public async Task<List<ReviewSummaryDto>> GetTopHelpfulBySiteIdAsync(Guid siteId, int count = 5, CancellationToken cancellationToken = default)
     {
-        var query = context.Reviews.AsNoTracking()
+        var query = Reviews
             .Where(r => r.SiteId == siteId && r.Status == ReviewStatus.Approved);
 
         query = ApplySort(query, ReviewOrderBy.Helpful);
@@ -214,8 +245,7 @@ internal class ReviewQueryService(
             ReviewOrderBy.Helpful => query.OrderByDescending(r => r.HelpfulCount).ThenByDescending(r => r.CreatedAt),
             ReviewOrderBy.Recent => query.OrderByDescending(r => r.CreatedAt),
             ReviewOrderBy.Rating => query.OrderByDescending(r => r.Rating).ThenByDescending(r => r.CreatedAt),
-            _ => query.OrderByDescending(r => r.CreatedAt)
-            
+            _ => query.OrderByDescending(r => r.CreatedAt)  
         };
     }
 }

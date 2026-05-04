@@ -4,12 +4,12 @@ using Domain.Enums;
 
 namespace Application.Commands.Reviews;
 
-public record SetReviewStatusCommand(
+public sealed record SetReviewStatusCommand(
     Guid Id,
     ReviewStatus Status,
-    string RejectionReason) : ICommand;
+    string RejectionReason = "") : ICommand;
 
-internal class SetReviewStatusCommandHandler(
+internal sealed class SetReviewStatusCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<SetReviewStatusCommand>
 {
     public async Task<Result> HandleAsync(SetReviewStatusCommand command, CancellationToken cancellationToken)

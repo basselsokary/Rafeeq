@@ -1,12 +1,12 @@
 using Domain.Common;
-using Shared.Models;
+using Shared;
 
 namespace Domain.ValueObjects;
 
-public class Money : ValueObject 
+public sealed class Money : ValueObject 
 {
     public decimal Amount { get; }
-    public string Currency { get; } = string.Empty;
+    public string Currency { get; } = null!;
     
     private Money() { }
     private Money(decimal amount, string currency)

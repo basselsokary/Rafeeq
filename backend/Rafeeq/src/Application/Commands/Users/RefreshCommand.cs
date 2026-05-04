@@ -1,13 +1,12 @@
 using Application.Common.Interfaces.Authentication;
-using Shared.Extensions;
 
 namespace Application.Commands.Users;
 
-public record RefreshCommand(
+public sealed record RefreshCommand(
     string AccessToken,
     string RefreshToken) : ICommand<RefreshResponse>;
 
-public class RefreshCommandHandler(
+public sealed class RefreshCommandHandler(
     IIdentityService identityService) : ICommandHandler<RefreshCommand, RefreshResponse>
 {
     public async Task<Result<RefreshResponse>> HandleAsync(RefreshCommand command, CancellationToken cancellationToken)
@@ -19,8 +18,12 @@ public class RefreshCommandHandler(
         if (authenticationResult.Failed)
             return authenticationResult.To<RefreshResponse>();
 
-        return new RefreshResponse(authenticationResult.AccessToken!, authenticationResult.RefreshToken!);
+        return new RefreshResponse(
+            authenticationResult.AccessToken,
+            authenticationResult.RefreshToken,
+            authenticationResult.AccessTokenExpiresAtInHours,
+            authenticationResult.RefreshTokenExpiresAtInDays);
     }
 }
 
-public record RefreshResponse(string Token, string RefreshToken);
+public sealed record RefreshResponse(string AccessToken, string RefreshToken, int AccessTokenExpiresAtInHours, int RefreshTokenExpiresAtInDays);

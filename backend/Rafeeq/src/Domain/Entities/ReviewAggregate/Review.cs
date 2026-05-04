@@ -1,11 +1,11 @@
 using Domain.Common;
 using Domain.Common.Interfaces;
 using Domain.ValueObjects;
-using Shared.Models;
 using Domain.Enums;
 using Domain.Events;
 using Domain.Entities.SiteAggregate;
 using Domain.Entities.TouristAggregate;
+using Shared;
 
 namespace Domain.Entities.ReviewAggregate;
 
@@ -88,16 +88,14 @@ public class Review : BaseAuditableEntity, IAggregateRoot
         Title = title.Trim();
         Status = ReviewStatus.Pending;
 
-        MarkAsUpdated();
-        
-        RaiseDomainEvent(new ReviewUpdatedEvent(Id, SiteId, TouristId, oldRating, Rating));
+        RaiseDomainEvent(new ReviewUpdatedEvent(Id, SiteId, oldRating, Rating));
         
         return Result.Success();
     }
 
     public void Delete()
     {
-        RaiseDomainEvent(new ReviewDeletedEvent(Id, SiteId, TouristId, Rating));
+        RaiseDomainEvent(new ReviewDeletedEvent(Id, SiteId, Rating));
     }
 
     public Result Approve()
@@ -106,7 +104,6 @@ public class Review : BaseAuditableEntity, IAggregateRoot
 
         Status = ReviewStatus.Approved;
         RejectionReason = null;
-        MarkAsUpdated();
         
         RaiseDomainEvent(new ReviewApprovedEvent(Id, SiteId, TouristId, Rating));
 
@@ -120,7 +117,6 @@ public class Review : BaseAuditableEntity, IAggregateRoot
 
         Status = ReviewStatus.Rejected;
         RejectionReason = reason.Trim();
-        MarkAsUpdated();
 
         return Result.Success();
     }
@@ -128,20 +124,17 @@ public class Review : BaseAuditableEntity, IAggregateRoot
     public Result Flag()
     {
         Status = ReviewStatus.Flagged;
-        MarkAsUpdated();
         return Result.Success();
     }
 
     public void MarkAsHelpful()
     {
         HelpfulCount++;
-        MarkAsUpdated();
     }
 
     public void MarkAsNotHelpful()
     {
         NotHelpfulCount++;
-        MarkAsUpdated();
     }
 
     public double GetHelpfulnessScore()

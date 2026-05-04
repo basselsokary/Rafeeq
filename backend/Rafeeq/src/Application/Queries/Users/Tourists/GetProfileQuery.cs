@@ -5,9 +5,9 @@ using Domain.Entities.TouristAggregate;
 
 namespace Application.Queries.Users.Tourists;
 
-public record GetProfileQuery : IQuery<TouristProfileDto>;
+public sealed record GetProfileQuery : IQuery<TouristProfileDto>;
 
-internal class GetProfileQueryHandler(
+internal sealed class GetProfileQueryHandler(
     ITouristQueryService queryService,
     IUserContext userContext) : IQueryHandler<GetProfileQuery, TouristProfileDto>
 {

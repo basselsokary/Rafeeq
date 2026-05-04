@@ -5,20 +5,20 @@ using Domain.ValueObjects;
 
 namespace Application.Commands.Sites;
 
-public record UpdateSiteCommand(
+public sealed record UpdateSiteCommand(
     Guid Id,
-    string Name,
-    string Description,
     SiteType Type,
     double Latitude,
     double Longitude,
-    string Street,
-    string City,
-    string? Region,
-    string? PostalCode,
-    decimal? Fee) : ICommand;
+    int EstimatedDurationMinutes,
+    decimal? EgyptianTicketPrice,
+    decimal? ForeignerTicketPrice,
+    string? ForeignerCurrency,
+    bool IsFree,
+    string? ContactPhone,
+    string? ContactWebsiteUrl) : ICommand;
 
-internal class UpdateSiteCommandHandler(
+internal sealed class UpdateSiteCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<UpdateSiteCommand>
 {
     public async Task<Result> HandleAsync(UpdateSiteCommand command, CancellationToken cancellationToken)
@@ -41,30 +41,50 @@ internal class UpdateSiteCommandHandler(
         var locationResult = GeoLocation.Create(command.Latitude, command.Longitude);
         if (locationResult.Failed)
             return locationResult;
+
+        site.UpdateLocation(locationResult.Value);
+        var result = site.UpdateBasicInfo(command.Type, command.EstimatedDurationMinutes);
+        if (result.Failed)
+            return result;
         
-        var addressResult = Address.Create(command.Street, command.City, command.Region, command.PostalCode);
-        if (addressResult.Failed)
-            return addressResult;
+        if (!string.IsNullOrWhiteSpace(command.ContactPhone))
+        {
+            result = site.SetContactInfo(command.ContactPhone, command.ContactWebsiteUrl); 
+            if (result.Failed)
+                return result;
+        }
 
-        site.UpdateLocation(locationResult.Value, addressResult.Value);
-
-        if (command.Fee == null)
+        if (command.IsFree)
+        {
+            site.RemoveEntryFee(true);
+            return Result.Success();
+        }
+        
+        if (command.EgyptianTicketPrice == null && command.ForeignerTicketPrice == null)
         {   
             site.RemoveEntryFee();
         }
         else
         {
-            var moneyResult = Money.Create(command.Fee.Value);
-            if (moneyResult.Failed)
-                return moneyResult;
+            var egyMoneyResult = Money.Create(command.EgyptianTicketPrice ?? -1 , "EGP");
+            var foreMoneyResult = Money.Create(command.ForeignerTicketPrice ?? -1 , command.ForeignerCurrency ?? "USD");
             
-            site.SetEntryFee(moneyResult.Value);
+            Result<Ticket> ticketResult;
+            if (egyMoneyResult.Failed || foreMoneyResult.Failed)
+            {
+                return egyMoneyResult;
+            }
+            else if (foreMoneyResult.Failed)
+                ticketResult = Ticket.Create(egyMoneyResult.Value, null);
+            else
+                ticketResult = Ticket.Create(egyMoneyResult.Value, foreMoneyResult.Value);
+
+            if (ticketResult.Failed)
+                return ticketResult;
+
+            site.SetEntryFee(ticketResult.Value);
         }
 
-        var siteResult = site.UpdateBasicInfo(command.Name, command.Description, command.Type);
-        if (siteResult.Failed)
-            return siteResult;
-        
         return Result.Success();
     }
 }

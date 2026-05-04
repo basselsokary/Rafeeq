@@ -32,6 +32,7 @@ public interface ITouristQueryService
     Task<PagedResult<FavoriteSiteDto>> GetFavoriteSitesAsync(
         Guid touristId,
         PagingParameters paging,
+        LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default);
     
     Task<bool> HasFavoritedSiteAsync(
@@ -41,5 +42,11 @@ public interface ITouristQueryService
     
     Task<List<Guid>> GetFavoriteSiteIdsAsync(
         Guid touristId,
+        CancellationToken cancellationToken = default);
+    
+    Task<PagedResult<VisitedSiteDto>> GetVisitedSitesAsync(
+        Guid id,
+        PagingParameters paging,
+        LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default);
 }

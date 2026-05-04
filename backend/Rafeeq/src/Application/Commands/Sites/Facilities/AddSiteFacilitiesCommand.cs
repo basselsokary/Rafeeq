@@ -1,31 +1,25 @@
 using Domain.Common.Interfaces;
 using Domain.Entities.SiteAggregate;
+using Domain.Enums;
 
 namespace Application.Commands.Sites.Facilities;
 
-public record AddSiteFacilitiesCommand(
+public sealed record AddSiteFacilitiesCommand(
     Guid Id,
-    List<AddSiteFacilitiesDtoCommand> Facilities) : ICommand;
+    List<FacilityType> FacilityTypes) : ICommand;
 
-public record AddSiteFacilitiesDtoCommand(
-    string FacilityName,
-    string FacilityDescription) : ICommand;
-
-internal class AddSiteFacilitiesCommandHandler(
+internal sealed class AddSiteFacilitiesCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<AddSiteFacilitiesCommand>
 {
     public async Task<Result> HandleAsync(AddSiteFacilitiesCommand command, CancellationToken cancellationToken)
     {
-        var site = await unitOfWork.Sites.GetWithFacilitiesAsync(command.Id, cancellationToken);
+        var site = await unitOfWork.Sites.GetByIdAsync(command.Id, cancellationToken);
         if (site == null)
             return SiteErrors.NotFound(command.Id);
-
-        foreach (var facility in command.Facilities)
-        {
-            Result result = site.AddFacility(facility.FacilityName, facility.FacilityDescription);
-            if (result.Failed)
-                return result;
-        }   
+        
+        var result = site.AddFacilities(command.FacilityTypes);
+        if (result.Failed)
+            return result;
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

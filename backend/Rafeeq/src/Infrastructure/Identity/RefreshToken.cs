@@ -1,4 +1,5 @@
-using Shared.Models;
+using Infrastructure.Identity.Entities;
+using Shared;
 
 namespace Infrastructure.Identity;
 

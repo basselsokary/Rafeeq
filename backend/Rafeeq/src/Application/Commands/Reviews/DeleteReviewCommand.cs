@@ -5,9 +5,9 @@ using Domain.Enums;
 
 namespace Application.Commands.Reviews;
 
-public record DeleteReviewCommand(Guid Id) : ICommand;
+public sealed record DeleteReviewCommand(Guid Id) : ICommand;
 
-internal class DeleteReviewCommandHandler(
+internal sealed class DeleteReviewCommandHandler(
     IUnitOfWork unitOfWork,
     IUserContext userContext) : ICommandHandler<DeleteReviewCommand>
 {
@@ -17,8 +17,8 @@ internal class DeleteReviewCommandHandler(
         if (review == null)
             return ReviewErrors.NotFound(command.Id);
 
-        if (!userContext.IsInRole(UserRole.Admin) && review.TouristId != userContext.Id)
-            return Error.Unauthorized("","You are not the owner of this review.");
+        if (!userContext.IsInAnyRole(UserRole.Admin, UserRole.Moderator) && review.TouristId != userContext.Id)
+            return ReviewErrors.Unauthorized;
 
         review.Delete();
 

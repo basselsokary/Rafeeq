@@ -1,16 +1,20 @@
+using Application.Common.Interfaces.Authentication;
+using Application.Common.Interfaces.Localization;
 using Application.Common.Interfaces.QueryServices;
 using Application.DTOs.Sites;
 
 namespace Application.Queries.Sites;
 
-public record GetNearbySitesQuery(
+public sealed record GetNearbySitesQuery(
     double Latitude,
     double Longitude,
     SiteFilters Filters,
     int RadiusKm = 5) : IQuery<List<SiteListDto>>;
 
-internal class GetNearbySitesQueryHandler(
-    ISiteQueryService queryService) : IQueryHandler<GetNearbySitesQuery, List<SiteListDto>>
+internal sealed class GetNearbySitesQueryHandler(
+    ISiteQueryService queryService,
+    IEnumLocalizer enumLocalizer,
+    IUserContext userContext) : IQueryHandler<GetNearbySitesQuery, List<SiteListDto>>
 {
     public async Task<Result<List<SiteListDto>>> HandleAsync(GetNearbySitesQuery query, CancellationToken cancellationToken)
     {
@@ -19,8 +23,15 @@ internal class GetNearbySitesQueryHandler(
             query.Longitude,
             query.Filters,
             query.RadiusKm,
-            cancellationToken);
+            language: userContext.Language,
+            cancellationToken: cancellationToken);
 
-            return Result.Success(siteListDtos);
+        var localizedSiteListDtos = siteListDtos.Select(site => site with
+        {
+            StatusDisplay = enumLocalizer.Localize(site.Status),
+            TypeDisplay = enumLocalizer.Localize(site.Type)
+        }).ToList();
+
+        return Result.Success(localizedSiteListDtos);
     }
 }

@@ -3,7 +3,7 @@ using Domain.Common.Interfaces;
 using Domain.Entities.CityAggregate;
 using Domain.Enums;
 using Domain.ValueObjects;
-using Shared.Models;
+using Shared;
 
 namespace Domain.Entities.SiteAggregate;
 
@@ -13,220 +13,254 @@ public class Site : BaseAuditableEntity, IAggregateRoot
     /// Read only
     public City City { get; private set; } = null!;
 
-    public string Name { get; private set; } = null!;
-    public string Description { get; private set; } = null!;
     public SiteStatus Status { get; private set; }
     public SiteType Type { get; private set; }
-    public Address Address { get; private set; } = null!;
     public GeoLocation Location { get; private set; } = null!;
-    
-    public Money? EntryFee { get; private set; }
+
+    public Ticket? EntryTicket { get; private set; }
     public bool IsFree { get; private set; }
 
     public string? WebsiteUrl { get; private set; }
     public string? MainImageUrl { get; private set; }
     public string? ContactPhone { get; private set; }
+
+    public int EstimatedDurationMinutes { get; private set; }
+    public int TotalVisits { get; private set; }
+    public int TotalRating { get; private set; }
     public double AverageRating { get; private set; }
-    public int TotalReviews { get; private set; }
+    
+    /// IsFeatured and IsHiddenGem are mutually exclusive, but we allow both to be false for sites that are neither.
     public bool IsFeatured { get; private set; }
-    public bool IsActive { get; private set; }
+    public bool IsHiddenGem { get; private set; }
+    public bool IsPopular { get; private set; }
 
     private readonly List<NearestTransportation> _nearestTransportations = [];
     public IReadOnlyCollection<NearestTransportation> NearestTransportations => _nearestTransportations.AsReadOnly();
-    
+
     private readonly List<SiteImage> _images = [];
     public IReadOnlyCollection<SiteImage> Images => _images.AsReadOnly();
-    
+
     private readonly List<SiteLocalizedContent> _localizedContents = [];
     public IReadOnlyCollection<SiteLocalizedContent> LocalizedContents => _localizedContents.AsReadOnly();
-    
-    private readonly List<Facility> _facilities = [];
-    public IReadOnlyCollection<Facility> Facilities => _facilities.AsReadOnly();
+
+    private readonly List<FacilityType> _facilities = [];
+    public IReadOnlyCollection<FacilityType> Facilities => _facilities.AsReadOnly();
 
     private readonly List<OpeningHour> _openingHours = [];
     public IReadOnlyCollection<OpeningHour> OpeningHours => _openingHours.AsReadOnly();
-    
+
     private Site() { }
     private Site(
         Guid cityId,
-        string name,
-        string description,
         GeoLocation location,
-        Address address,
-        SiteType type)
+        SiteType type,
+        int estimatedDurationMinutes,
+        string? contactPhone,
+        string? contactWebsiteUrl)
     {
         CityId = cityId;
-        Name = name;
-        Description = description;
+
         Location = location;
-        Address = address;
         Type = type;
-        
-        Status = SiteStatus.Active;
-        IsActive = false;
+        EstimatedDurationMinutes = estimatedDurationMinutes;
+        ContactPhone = contactPhone;
+        WebsiteUrl = contactWebsiteUrl;
+
+        Status = SiteStatus.Inactive;
         IsFree = false;
+        
+        IsFeatured = false;
+        IsHiddenGem = false;
         AverageRating = 0.0;
-        TotalReviews = 0;
+        TotalRating = 0;
+        TotalVisits = 0;
     }
 
     public static Result<Site> Create(
         Guid cityId,
         string name,
         string description,
-        GeoLocation location,
         Address address,
-        SiteType type)
+        string? entryFeeNotes,
+        GeoLocation location,
+        SiteType type,
+        int estimatedDurationMinutes,
+        string? contactPhone,
+        string? contactWebsiteUrl)
     {
         if (cityId == Guid.Empty)
             return SiteErrors.CityIdRequired;
         
-        if (string.IsNullOrWhiteSpace(name))
-            return SiteErrors.NameRequired;
+        if (estimatedDurationMinutes <= 0)
+            return SiteErrors.InvalidEstimatedDuration;
         
-        if (string.IsNullOrWhiteSpace(description))
-            return SiteErrors.DescriptionRequired;
+        var site = new Site(cityId, location, type, estimatedDurationMinutes, contactPhone, contactWebsiteUrl);
+
+        var addResult = site.AddLocalizedContent(LanguageCode.English, name, description, address, entryFeeNotes);
+        if (addResult.Failed)
+            return addResult.To<Site>();
         
-        return new Site(cityId, name, description, location, address, type);
+        site.UpdatePopularityStatus();
+
+        return site;
     }
 
-    public Result UpdateBasicInfo(string name, string description, SiteType type)
+    public Result UpdateBasicInfo(SiteType type, int estimatedDurationMinutes)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            return SiteErrors.NameRequired;
-        
-        if (string.IsNullOrWhiteSpace(description))
-            return SiteErrors.DescriptionRequired;
+        if (estimatedDurationMinutes <= 0)
+            return Result.Failure(SiteErrors.InvalidEstimatedDuration);
 
-        Name = name.Trim();
-        Description = description.Trim();
         Type = type;
-        MarkAsUpdated();
-
+        EstimatedDurationMinutes = estimatedDurationMinutes;
         return Result.Success();
     }
 
-    public void UpdateLocation(GeoLocation location, Address address)
+    public void UpdateLocation(GeoLocation location)
     {
-        if (Location != location || Address != address)
+        if (location != Location)
         {
             Location = location;
-            Address = address;
-            MarkAsUpdated();
         }
     }
 
-    public void UpdateCity(Guid cityId)
-    {
-        if (CityId != cityId)
+    public void SetEntryFee(Ticket entryTicket)
+    {   
+        if (entryTicket != EntryTicket)
         {
-            CityId = cityId;
-            MarkAsUpdated();
-        }
-    }
-
-    public void SetEntryFee(Money fee)
-    {
-        if (fee != EntryFee)
-        {
-            EntryFee = fee;
-            if (EntryFee.Amount == 0)
+            EntryTicket = entryTicket;
+            if (EntryTicket.EgyptianPrice?.Amount == 0 && EntryTicket.ForeignerPrice?.Amount == 0)
                 IsFree = true;
             else
                 IsFree = false;
-                
-            MarkAsUpdated();
         }
     }
 
-    public void RemoveEntryFee()
+    public void RemoveEntryFee(bool isFree = false)
     {
-        EntryFee = null;
-        IsFree = false;
-        MarkAsUpdated();
+        EntryTicket = null;
+        IsFree = isFree;
     }
 
     public Result SetContactInfo(string phone, string? websiteUrl)
     {
         if (string.IsNullOrWhiteSpace(phone))
             return SiteErrors.PhoneRequired;
-    
+
         ContactPhone = phone;
         WebsiteUrl = websiteUrl;
-        MarkAsUpdated();
 
         return Result.Success();
     }
 
-    public void SetStatus(SiteStatus status)
+    public Result UpdateStatus(SiteStatus status, bool isHiddenGem, bool isFeatured)
     {
+        if (isHiddenGem && isFeatured)
+            return Result.Failure(SiteErrors.CannotBeFeaturedAndHiddenGem);
+
+        if (IsHiddenGem != isHiddenGem)
+            IsHiddenGem = isHiddenGem;
+        
+        if (IsFeatured != isFeatured)
+            IsFeatured = isFeatured;
+        
         if (Status != status)
         {
             Status = status;
-            MarkAsUpdated();
         }
+
+        return Result.Success();
     }
 
     public void AddRating(Rating rating)
     {
-        var totalScore = AverageRating * TotalReviews;
-        TotalReviews++;
-        AverageRating = (totalScore + rating) / TotalReviews;
-
-        MarkAsUpdated();
+        var totalScore = AverageRating * TotalRating;
+        TotalRating++;
+        AverageRating = (totalScore + rating) / TotalRating;
+        UpdatePopularityStatus();
     }
 
     public void RemoveRating(Rating rating)
     {
-        if (TotalReviews == 0)
+        if (TotalRating == 0)
             return;
 
-        var totalScore = AverageRating * TotalReviews;
-        TotalReviews--;
-        AverageRating = TotalReviews > 0 ? (totalScore - rating) / TotalReviews : 0.0;
-
-        MarkAsUpdated();
+        var totalScore = AverageRating * TotalRating;
+        TotalRating--;
+        AverageRating = TotalRating > 0 ? (totalScore - rating) / TotalRating : 0.0;
+        UpdatePopularityStatus();
     }
 
     public void UpdateRating(Rating oldRating, Rating newRating)
     {
-        if (TotalReviews == 0)
+        if (TotalRating == 0 || oldRating == newRating)
             return;
 
-        var totalScore = AverageRating * TotalReviews;
-        AverageRating = (totalScore - oldRating + newRating) / TotalReviews;
-
-        MarkAsUpdated();
+        var totalScore = AverageRating * TotalRating;
+        AverageRating = (totalScore - oldRating + newRating) / TotalRating;
+        UpdatePopularityStatus();
     }
 
-    // public void AddNearestTransportation(string type, string description, double distanceKm)
-    // {
-    //     var transportation = NearestTransportation.Create(type, description, distanceKm);
-    //     _nearestTransportations.Add(transportation);
-    //     MarkAsUpdated();
-    // }
-
-    public Result AddOpeningHours(DayOfWeek dayOfWeek, TimeRange openingTime, bool isClosed)
+    public Result<NearestTransportation> AddNearestTransportation(
+        TransportationType type,
+        GeoLocation location,
+        double distanceKm)
     {
-        var newOpeningHours = OpeningHour.Create(dayOfWeek, openingTime, isClosed);
-        
-        var existing = _openingHours.FirstOrDefault(oh => oh.DayOfWeek == dayOfWeek);
-        if (existing != null)
-        {
-            if (existing.Equals(newOpeningHours))
-                return Result.Success(); // No changes, so we can skip the update
-            
-            _openingHours.Remove(existing);
-        }
+        var transportationResult = NearestTransportation.Create(type, location, distanceKm);
+        if (transportationResult.Failed)
+            return transportationResult;
 
-        _openingHours.Add(newOpeningHours);
-        MarkAsUpdated();
+        var transportation = _nearestTransportations.FirstOrDefault(t => t.Location == location);
+        if (transportation != null)
+            return SiteErrors.TransportationWithSameLocationAlreadyExists;
+
+        _nearestTransportations.Add(transportationResult.Value);
+
+        return Result.Success(transportationResult.Value);
+    }
+
+    public Result RemoveNearestTransportation(Guid transportationId)
+    {
+        var transportation = _nearestTransportations.FirstOrDefault(t => t.Id == transportationId);
+        if (transportation == null)
+            return SiteErrors.TransportationNotFound;
+
+        _nearestTransportations.Remove(transportation);
 
         return Result.Success();
     }
 
-    public Result AddImage(string imageUrl, bool isMain, int displayOrder, string? caption = null)
+    public Result<OpeningHour> AddOpeningHour(WeekDay day, TimeRange openingTime, bool isClosed)
     {
-        var imageResult = SiteImage.Create(imageUrl, isMain, displayOrder, caption);
+        var newOpeningHours = OpeningHour.Create(day, openingTime, isClosed);
+
+        var existing = _openingHours.FirstOrDefault(oh => oh.Day == day);
+        if (existing != null)
+        {
+            if (existing.Equals(newOpeningHours))
+                return existing; // No changes, so we can skip the update
+
+            _openingHours.Remove(existing);
+        }
+
+        _openingHours.Add(newOpeningHours);
+
+        return newOpeningHours;
+    }
+
+    public Result RemoveOpeningHour(WeekDay day)
+    {
+        var openingHour = _openingHours.FirstOrDefault(t => t.Day == day);
+        if (openingHour == null)
+            return SiteErrors.OpeningHourNotFound;
+
+        _openingHours.Remove(openingHour);
+
+        return Result.Success();
+    }
+
+    public Result<SiteImage> AddImage(StorageKey storageKey, string imageUrl, bool isMain, int displayOrder, string? caption = null)
+    {
+        var imageResult = SiteImage.Create(storageKey, imageUrl, isMain, displayOrder, caption);
         if (imageResult.Failed)
             return imageResult;
 
@@ -234,14 +268,16 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         {
             foreach (var img in _images)
                 img.SetAsMain(false);
-            
+
+            SetMainImage(imageUrl);
+        } else if (MainImageUrl == null)
+        {
             SetMainImage(imageUrl);
         }
 
         _images.Add(imageResult.Value);
-        MarkAsUpdated();
 
-        return Result.Success();
+        return Result.Success(imageResult.Value);
     }
 
     public Result RemoveImage(Guid imageId)
@@ -261,83 +297,77 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         {
             MainImageUrl = null;
         }
-        
-        MarkAsUpdated();
 
         return Result.Success();
     }
 
-    public Result AddLocalizedContent(LanguageCode language, string name, string description)
+    public Result<SiteLocalizedContent> AddLocalizedContent(LanguageCode language, string name, string description, Address address, string? entryFeeNotes)
     {
-        var contentResult = SiteLocalizedContent.Create(language, name, description);
+        var contentResult = SiteLocalizedContent.Create(language, name, description, address, entryFeeNotes);
         if (contentResult.Failed)
             return contentResult;
-        
+
         var existing = _localizedContents.FirstOrDefault(lc => lc.Language == language);
         if (existing != null)
             _localizedContents.Remove(existing);
 
         _localizedContents.Add(contentResult.Value);
-        MarkAsUpdated();
 
-        return Result.Success();
+        return Result.Success(contentResult.Value);
     }
 
-    public Result UpdateLocalizedContent(Guid contentId, string name, string description)
+    public Result UpdateLocalizedContent(LanguageCode language, string name, string description, Address address, string? entryFeeNotes)
     {
-        var existing = _localizedContents.FirstOrDefault(lc => lc.Id == contentId);
+        var existing = _localizedContents.FirstOrDefault(lc => lc.Language == language);
         if (existing == null)
             return SiteErrors.LocalizedContentNotFound;
 
-        Result result = existing.Update(name, description);
+        Result result = existing.Update(name, description, entryFeeNotes);
         if (result.Failed)
             return result;
+
+        existing.UpdateAddress(address);
         
-        MarkAsUpdated();
-
         return Result.Success();
     }
 
-    public Result AddFacility(string name, string description)
+    public Result AddFacilities(List<FacilityType> facilityTypes)
     {
-        var facilityResult = Facility.Create(name, description);
-        if (facilityResult.Failed)
-            return facilityResult;
-
-        _facilities.Add(facilityResult.Value);
-        MarkAsUpdated();
+        if (_facilities.Count == facilityTypes.Count &&
+            !_facilities.Except(facilityTypes).Any())
+        {
+            return Result.Success();
+        }
+        
+        if (_facilities.Any(f => facilityTypes.Contains(f)))
+            return SiteErrors.FacilityAlreadyExists;
+        
+        _facilities.AddRange(facilityTypes);
 
         return Result.Success();
     }
-
-    public Result RemoveFacility(Guid facilityId)
+    
+    public void RemoveFacilities(List<FacilityType> facilityTypes)
     {
-        var facility = _facilities.FirstOrDefault(f => f.Id == facilityId);
-        if (facility == null)
-            return SiteErrors.FacilityNotFound;
-
-        _facilities.Remove(facility);
-        MarkAsUpdated();
-
-        return Result.Success();
+        _facilities.RemoveAll(f => facilityTypes.Contains(f));
     }
 
-    public void SetAsFeatured(bool isFeatured)
+    public bool IsOpenAt(WeekDay day, TimeSpan time)
     {
-        IsFeatured = isFeatured;
-        MarkAsUpdated();
-    }
-
-    public void Activate(bool active)
-    {
-        IsActive = active;
-        MarkAsUpdated();
-    }
-
-    public bool IsOpenAt(DayOfWeek day, TimeSpan time)
-    {
-        var hours = _openingHours.FirstOrDefault(oh => oh.DayOfWeek == day);
+        var hours = _openingHours.FirstOrDefault(oh => oh.Day == day);
         return hours != null && !hours.IsClosed && hours.OpeningTime.IsWithinRange(time);
+    }
+
+    public void IncrementVisitCount()
+    {
+        TotalVisits++;
+        UpdatePopularityStatus();
+    }
+    
+    private void UpdatePopularityStatus()
+    {
+        const int popularityThreshold = 1000;
+        IsPopular = TotalVisits >= popularityThreshold || AverageRating >= 4.5;
     }
 
     private void SetMainImage(string imageUrl)

@@ -1,6 +1,6 @@
 using Domain.Common;
 using Domain.Enums;
-using Shared.Models;
+using Shared;
 
 namespace Domain.Entities.CityAggregate;
 
@@ -29,7 +29,7 @@ public class CityLocalizedContent : BaseAuditableEntity
         return new CityLocalizedContent(language, name.Trim(), description.Trim());
     }
 
-    internal Result Update(string name, string description)
+    internal Result<CityLocalizedContent> Update(string name, string description)
     {
         if (string.IsNullOrWhiteSpace(name))
             return CityErrors.NameRequired;
@@ -39,8 +39,7 @@ public class CityLocalizedContent : BaseAuditableEntity
 
         Name = name.Trim();
         Description = description.Trim();
-        MarkAsUpdated();
 
-        return Result.Success();
+        return this;
     }
 }

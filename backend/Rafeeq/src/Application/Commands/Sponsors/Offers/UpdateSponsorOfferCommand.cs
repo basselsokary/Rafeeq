@@ -4,19 +4,17 @@ using Domain.ValueObjects;
 
 namespace Application.Commands.Sponsors.Offers;
 
-public record UpdateSponsorOfferCommand(
+public sealed record UpdateSponsorOfferCommand(
     Guid SponsorId,
     Guid OfferId,
-    string Title,
-    string Description,
     decimal? DiscountAmount,
     int? DiscountPercentage,
     DateTime StartDate,
     DateTime EndDate,
-    string? TermsAndConditions,
-    int? MaxRedemptions) : ICommand;
+    int? MaxRedemptions,
+    string? PromoCode) : ICommand;
 
-internal class UpdateSponsorOfferCommandHandler(
+internal sealed class UpdateSponsorOfferCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<UpdateSponsorOfferCommand>
 {
     public async Task<Result> HandleAsync(UpdateSponsorOfferCommand command, CancellationToken cancellationToken)
@@ -36,21 +34,28 @@ internal class UpdateSponsorOfferCommandHandler(
         var sponsor = await unitOfWork.Sponsors.GetWithOffersAsync(command.SponsorId, cancellationToken);
         if (sponsor == null)
             return SponsorErrors.NotFound(command.SponsorId);
+        
+        var offer = sponsor.Offers.FirstOrDefault(o => o.Id == command.OfferId);
+        if (offer == null)
+            return SponsorErrors.OfferNotFound(command.OfferId);
 
         if (command.MaxRedemptions.HasValue)
         {
-            Offer? offer = sponsor.Offers.FirstOrDefault(o => o.Id == command.OfferId);
-            offer?.SetMaxRedemptions(command.MaxRedemptions.Value);
+            offer.SetMaxRedemptions(command.MaxRedemptions.Value);
+        }
+
+        if (!string.IsNullOrEmpty(command.PromoCode))
+        {
+            var codeResult = offer.SetPromoCode(command.PromoCode);
+            if (codeResult.Failed)
+                return codeResult;
         }
 
         Result result = sponsor.UpdateOffer(
             command.OfferId,
-            command.Title,
-            command.Description,
             moneyResult?.Value,
             command.DiscountPercentage,
-            dateRangeResult.Value,
-            command.TermsAndConditions);
+            dateRangeResult.Value);
         
         if (result.Failed)
             return result;

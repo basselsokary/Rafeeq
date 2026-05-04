@@ -3,9 +3,9 @@ using Domain.Entities.ContentReportAggregate;
 
 namespace Application.Commands.ContentReports;
 
-public record EscalateContentReportCommand(Guid Id) : ICommand;
+public sealed record EscalateContentReportCommand(Guid Id) : ICommand;
 
-internal class EscalateContentReportCommandHandler(
+internal sealed class EscalateContentReportCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<EscalateContentReportCommand>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;

@@ -1,13 +1,12 @@
 using Application.Common.Interfaces.Authentication;
-using Shared.Extensions;
 
 namespace Application.Commands.Users;
 
-public record LoginCommand(
+public sealed record LoginCommand(
     string Email,
     string Password) : ICommand<LoginResponse>;
 
-public class LoginCommandHandler(
+public sealed class LoginCommandHandler(
     IIdentityService identityService) : ICommandHandler<LoginCommand, LoginResponse>
 {
     public async Task<Result<LoginResponse>> HandleAsync(LoginCommand command, CancellationToken cancellationToken)
@@ -19,8 +18,12 @@ public class LoginCommandHandler(
         if (authenticationResult.Failed)
             return authenticationResult.To<LoginResponse>();
 
-        return new LoginResponse(authenticationResult.AccessToken!, authenticationResult.RefreshToken!);
+        return new LoginResponse(
+            authenticationResult.AccessToken,
+            authenticationResult.RefreshToken,
+            authenticationResult.AccessTokenExpiresAtInHours,
+            authenticationResult.RefreshTokenExpiresAtInDays);
     }
 }
 
-public record LoginResponse(string Token, string RefreshToken);
+public sealed record LoginResponse(string AccessToken, string RefreshToken, int AccessTokenExpiresAtInHours, int RefreshTokenExpiresAtInDays);

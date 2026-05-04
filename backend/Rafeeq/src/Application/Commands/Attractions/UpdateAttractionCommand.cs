@@ -5,17 +5,14 @@ using Domain.ValueObjects;
 
 namespace Application.Commands.Attractions;
 
-public record UpdateAttractionCommand(
+public sealed record UpdateAttractionCommand(
     Guid Id,
-    string Name,
-    string Description,
     AttractionType Type,
-    HistoricalPeriod HistoricalPeriod,
+    List<HistoricalPeriod> HistoricalPeriods,
     double? Latitude,
-    double? Longitude,
-    string? LocationDescription) : ICommand;
+    double? Longitude) : ICommand;
 
-internal class UpdateAttractionCommandHandler(
+internal sealed class UpdateAttractionCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<UpdateAttractionCommand>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
@@ -30,14 +27,12 @@ internal class UpdateAttractionCommandHandler(
         if (result.Failed)
             return result;
 
-        var attractionResult = attraction.UpdateBasicInfo(
-            command.Name,
-            command.Description,
+        result = attraction.UpdateBasicInfo(
             command.Type,
-            command.HistoricalPeriod);
+            command.HistoricalPeriods);
 
-        if (attractionResult.Failed)
-            return attractionResult;
+        if (result.Failed)
+            return result;
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -52,7 +47,7 @@ internal class UpdateAttractionCommandHandler(
             if (locationResult.Failed)
                 return locationResult;
 
-            attraction.SetLocation(locationResult.Value, command.LocationDescription);
+            attraction.SetLocation(locationResult.Value);
         }
 
         return Result.Success();

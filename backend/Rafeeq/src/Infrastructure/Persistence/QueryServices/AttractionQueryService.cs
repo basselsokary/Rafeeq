@@ -4,70 +4,182 @@ using Application.DTOs.Attractions;
 using Application.DTOs.Common;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Domain.Entities.AttractionAggregate;
 
 namespace Infrastructure.Persistence.QueryServices;
 
-internal class AttractionQueryService(
+internal sealed class AttractionQueryService(
     ApplicationDbContext context) : IAttractionQueryService
 {
-    public async Task<AttractionDetailDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    private IQueryable<Attraction> Attractions => context.Attractions.AsNoTracking();
+
+    public async Task<AttractionDetailDto?> GetByIdAsync(
+        Guid id,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
     {
-        return await context.Attractions
-            .Where(a => a.Id == id)
-            .Select(a => new AttractionDetailDto(
+        var data = await Attractions.Where(a => a.Id == id)
+            .Select(a => new {
                 a.Id,
-                a.Name,
-                a.Description,
-                a.Type.ToString(),
-                a.Location == null ? null : new LocationDto(a.Location.Latitude, a.Location.Longitude),
-                a.HistoricalPeriod,
-                a.LocationDescription,
-                a.Images.Select(i => new ImageDto(i.Id, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder)).ToList()))
+                Localized = a.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => new { lc.Name, lc.Description, lc.LocationDescription })
+                    .FirstOrDefault()!,
+                a.Type,
+                a.Location,
+                HistoricalPeriods = a.HistoricalPeriods.ToList(),
+                images = a.Images.Select(i => new ImageDto(i.Id, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder)).ToList()
+            })
             .FirstOrDefaultAsync(cancellationToken);
+        
+        if (data == null)
+            return null;
+        
+        return new AttractionDetailDto(
+            data.Id,
+            data.Localized.Name,
+            data.Localized.Description,
+            data.Type,
+            data.Location == null ? null : new LocationDto(data.Location.Latitude, data.Location.Longitude),
+            data.HistoricalPeriods,
+            data.Localized.LocationDescription,
+            data.images,
+            []);
+    }
+
+    public async Task<AttractionAdminDetailDto?> GetByIdForAdminAsync(
+        Guid id,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
+    {
+        var data = await Attractions.Where(a => a.Id == id)
+            .Select(a => new {
+                a.Id,
+                Localized = a.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => new { lc.Name, lc.Description, lc.LocationDescription })
+                    .FirstOrDefault()!,
+                a.Type,
+                a.Location,
+                HistoricalPeriods = a.HistoricalPeriods.ToList(),
+                images = a.Images.Select(i => new ImageDto(i.Id, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder)).ToList(),
+                a.CreatedAt,
+                a.CreatedBy,
+                a.LastModifiedAt,
+                a.LastModifiedBy
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        if (data == null)
+            return null;
+        
+        return new AttractionAdminDetailDto(
+            data.Id,
+            data.Localized.Name,
+            data.Localized.Description,
+            data.Type,
+            data.Location == null ? null : new LocationDto(data.Location.Latitude, data.Location.Longitude),
+            data.HistoricalPeriods,
+            data.Localized.LocationDescription,
+            data.images,
+            data.CreatedAt,
+            data.CreatedBy,
+            data.LastModifiedAt,
+            data.LastModifiedBy);
     }
 
     public async Task<PagedResult<AttractionListDto>> GetBySiteIdAsync(
         Guid siteId,
-        AttractionType type,
+        AttractionType? type,
         PagingParameters paging,
+        LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
-        var query = context.Attractions
-            .Where(a => a.SiteId == siteId && a.Type == type);
+        var query = Attractions.Where(a => a.SiteId == siteId);
+        if (type != null)
+        {
+            query = query.Where(a => a.Type == type);
+        }
         
         var totalCount = await query.CountAsync(cancellationToken);
         
         var items = await query
-            .OrderBy(a => a.Name)
+            .OrderBy(a => a.IsFeatured)
             .Skip(paging.Skip)
             .Take(paging.Take)
             .Select(a => new AttractionListDto(
                 a.Id,
-                a.Name,
-                a.Description,
-                a.Type.ToString(),
+                a.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!,
+                a.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Description)
+                    .FirstOrDefault()!,
+                a.Type,
                 a.Location == null ? null : new LocationDto(a.Location.Latitude, a.Location.Longitude),
-                a.Images.First(i => i.IsMain).ImageUrl))
+                a.Images.Where(i => i.IsMain).Select(i => i.ImageUrl).FirstOrDefault()))
             .ToListAsync(cancellationToken);
         
         return new PagedResult<AttractionListDto>(items, totalCount, paging.PageNumber, paging.PageSize);
     }
 
-    public async Task<AttractionAdminDetailDto?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<List<AttractionLocalizedContentDto>> GetLocalizedContentsAsync(
+        Guid attractionId,
+        CancellationToken cancellationToken = default)
     {
-        return await context.Attractions
-            .Where(a => a.Id == id)
-            .Select(a => new AttractionAdminDetailDto(
-                a.Id,
-                a.Name,
-                a.Description,
-                a.Type.ToString(),
-                a.Location == null ? null : new LocationDto(a.Location.Latitude, a.Location.Longitude),
-                a.HistoricalPeriod,
-                a.LocationDescription,
-                a.Images.Select(i => new ImageDto(i.Id, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder)).ToList(),
-                a.CreatedAt,
-                a.LastModifiedAt))
+        return await Attractions
+            .Where(a => a.Id == attractionId)
+            .SelectMany(a => a.LocalizedContents)
+            .Select(lc => new AttractionLocalizedContentDto(
+                lc.Id,
+                lc.Language,
+                lc.Name,
+                lc.Description,
+                lc.LocationDescription
+            )).ToListAsync(cancellationToken);
+    }
+
+    public async Task<AttractionLocalizedContentDto?> GetLocalizedContentByIdAsync(
+        Guid attractionId,
+        Guid contentId,
+        CancellationToken cancellationToken = default)
+    {
+        return await Attractions
+            .Where(a => a.Id == attractionId)
+            .SelectMany(a => a.LocalizedContents)
+            .Where(lc => lc.Id == contentId)
+            .Select(lc => new AttractionLocalizedContentDto(
+                lc.Id,
+                lc.Language,
+                lc.Name,
+                lc.Description,
+                lc.LocationDescription))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<List<ImageDto>> GetImagesAsync(
+        Guid attractionId,
+        CancellationToken cancellationToken = default)
+    {
+        return await Attractions
+            .Where(a => a.Id == attractionId)
+            .SelectMany(a => a.Images)
+            .Select(i => new ImageDto(i.Id, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder))
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<ImageDto?> GetImageByIdAsync(
+        Guid attractionId,
+        Guid imageId,
+        CancellationToken cancellationToken = default)
+    {
+        return await Attractions
+            .Where(a => a.Id == attractionId)
+            .SelectMany(a => a.Images)
+            .Where(i => i.Id == imageId)
+            .Select(i => new ImageDto(i.Id, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder))
             .FirstOrDefaultAsync(cancellationToken);
     }
 }

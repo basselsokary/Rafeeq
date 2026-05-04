@@ -3,23 +3,33 @@ using Application.DTOs.Cities;
 using Application.Common.Interfaces.QueryServices;
 using Application.DTOs.Common;
 using Infrastructure.Persistence.ApplicationContext;
+using Domain.Enums;
+using Domain.Entities.CityAggregate;
 
 namespace Infrastructure.Persistence.QueryServices;
 
-internal class CityQueryService(
+internal sealed class CityQueryService(
     ApplicationDbContext context) : ICityQueryService
 {
+    private IQueryable<City> Cities => context.Cities.AsNoTracking();
+    
     public async Task<CityDetailDto?> GetByIdAsync(
         Guid id,
+        LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
-        return await context.Cities
-            .AsNoTracking()
+        return await Cities
             .Where(c => c.Id == id)
             .Select(c => new CityDetailDto(
                 c.Id,
-                c.Name,
-                c.Description,
+                c.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!,
+                c.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Description)
+                    .FirstOrDefault()!,
                 new(c.CenterLocation.Latitude, c.CenterLocation.Longitude),
                 c.ImageUrl,
                 c.TotalSites,
@@ -27,52 +37,99 @@ internal class CityQueryService(
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<List<CitySummaryDto>> GetAsync(CancellationToken cancellationToken = default)
-    {
-        return await context.Cities
-            .AsNoTracking()
-            .OrderBy(c => c.DisplayOrder)
-            .Select(c => new CitySummaryDto(c.Id, c.Name, c.ImageUrl))
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<PagedResult<CityListDto>> GetAsync(
-        PagingParameters paging,
+    public async Task<CityAdminDetailDto?> GetByIdForAdminAsync(
+        Guid id,
+        LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
-        var query = context.Cities
-            .AsNoTracking()
-            .OrderBy(c => c.DisplayOrder)
-            .Select(c => new CityListDto(c.Id, c.Name, c.Description, c.ImageUrl, c.TotalSites));
-
-        var totalCount = await query.CountAsync(cancellationToken);
-        var items = await query
-            .Skip(paging.Skip)
-            .Take(paging.Take)
-            .ToListAsync(cancellationToken);
-
-        return new PagedResult<CityListDto>(
-            items,
-            totalCount,
-            paging.PageNumber,
-            paging.PageSize);
-    }
-
-    public async Task<CityAdminDetailDto?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken = default)
-    {
-        return await context.Cities
-            .AsNoTracking()
+        return await Cities
             .Where(c => c.Id == id)
             .Select(c => new CityAdminDetailDto(
                 c.Id,
-                c.Name,
-                c.Description,
-                new(c.CenterLocation.Latitude, c.CenterLocation.Longitude),
+                new LocationDto(c.CenterLocation.Latitude, c.CenterLocation.Longitude),
                 c.ImageUrl,
                 c.TotalSites,
                 c.DisplayOrder,
                 c.CreatedAt,
-                c.LastModifiedAt))
-            .FirstOrDefaultAsync(cancellationToken);
+                c.LastModifiedAt,
+                c.LocalizedContents
+                    .Select(lc => new CityLocalizedContentDto(
+                        lc.Id,
+                        lc.Language,
+                        lc.Name,
+                        lc.Description
+                    )).ToList())
+            ).FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<List<CitySummaryDto>> GetSummariesAsync(
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
+    {
+        return await Cities
+            .OrderBy(c => c.DisplayOrder)
+            .ThenByDescending(c => c.TotalSites)
+            .Select(c => new CitySummaryDto(
+                c.Id,
+                c.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!,
+                c.ImageUrl))
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<CityListDto>> GetAsync(
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
+    {
+        var query = Cities
+            .OrderBy(c => c.DisplayOrder)
+            .ThenByDescending(c => c.TotalSites)
+            .Select(c => new CityListDto(
+                c.Id,
+                c.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!,
+                c.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Description)
+                    .FirstOrDefault()!,
+                new LocationDto(c.CenterLocation.Latitude, c.CenterLocation.Longitude),
+                c.ImageUrl,
+                c.TotalSites));
+        
+        return await query.ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<CityLocalizedContentDto>> GetLocalizedContentsAsync(
+        Guid cityId,
+        CancellationToken cancellationToken = default)
+    {
+        return await Cities
+            .Where(c => c.Id == cityId)
+            .SelectMany(c => c.LocalizedContents)
+            .Select(lc => new CityLocalizedContentDto(
+                lc.Id,
+                lc.Language,
+                lc.Name,
+                lc.Description
+            )).ToListAsync(cancellationToken);
+    }
+
+    public async Task<CityLocalizedContentDto?> GetLocalizedContentByIdAsync(
+        Guid cityId, Guid contentId, CancellationToken cancellationToken)
+    {
+        return await Cities
+            .Where(c => c.Id == cityId)
+            .SelectMany(c => c.LocalizedContents)
+            .Where(lc => lc.Id == contentId)
+            .Select(lc => new CityLocalizedContentDto(
+                lc.Id,
+                lc.Language,
+                lc.Name,
+                lc.Description
+            )).FirstOrDefaultAsync(cancellationToken);
     }
 }

@@ -1,17 +1,22 @@
 using Application.Common.Interfaces.QueryServices;
+using Application.Common.Interfaces.Authentication;
 using Application.DTOs.Attractions;
 using Domain.Entities.AttractionAggregate;
 
 namespace Application.Queries.Attractions;
 
-public record GetAttractionByIdForAdminQuery(Guid Id) : IQuery<AttractionAdminDetailDto>;
+public sealed record GetAttractionByIdForAdminQuery(Guid Id) : IQuery<AttractionAdminDetailDto>;
 
-internal class GetAttractionByIdForAdminQueryHandler(
-    IAttractionQueryService queryService) : IQueryHandler<GetAttractionByIdForAdminQuery, AttractionAdminDetailDto>
+internal sealed class GetAttractionByIdForAdminQueryHandler(
+    IAttractionQueryService queryService,
+    IUserContext userContext) : IQueryHandler<GetAttractionByIdForAdminQuery, AttractionAdminDetailDto>
 {
     public async Task<Result<AttractionAdminDetailDto>> HandleAsync(GetAttractionByIdForAdminQuery query, CancellationToken cancellationToken)
     {
-        var attractionDto = await queryService.GetByIdForAdminAsync(query.Id, cancellationToken);
+        var attractionDto = await queryService.GetByIdForAdminAsync(
+            query.Id,
+            userContext.Language,
+            cancellationToken);
         if (attractionDto == null)
             return AttractionErrors.NotFound(query.Id);
 

@@ -1,21 +1,23 @@
 using Domain.Common.Interfaces;
 using Domain.Entities.SponsorAggregate;
+using Domain.Enums;
 using Domain.ValueObjects;
 
 namespace Application.Commands.Sponsors.Offers;
 
-public record AddSponsorOfferCommand(
+public sealed record AddSponsorOfferCommand(
     Guid SponsorId,
-    string Title,
-    string Description,
     decimal? DiscountAmount,
     int? DiscountPercentage,
     DateTime StartDate,
     DateTime EndDate,
-    string? TermsAndConditions,
-    int? MaxRedemptions) : ICommand;
+    int? MaxRedemptions,
+    string? PromoCode,
+    List<AddOfferLocalizedContentDto> LocalizedContents) : ICommand;
 
-internal class AddSponsorOfferCommandHandler(
+public sealed record AddOfferLocalizedContentDto(LanguageCode Language, string Title, string Description, string? TermsAndConditions);
+
+internal sealed class AddSponsorOfferCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<AddSponsorOfferCommand>
 {
     public async Task<Result> HandleAsync(AddSponsorOfferCommand command, CancellationToken cancellationToken)
@@ -36,17 +38,29 @@ internal class AddSponsorOfferCommandHandler(
         if (sponsor == null)
             return SponsorErrors.NotFound(command.SponsorId);
 
-        Result result = sponsor.AddOffer(
-            command.Title,
-            command.Description,
+        Result<Offer> offerResult = sponsor.AddOffer(
             moneyResult?.Value,
             command.DiscountPercentage,
             dateRangeResult.Value,
-            command.TermsAndConditions,
-            command.MaxRedemptions);
+            command.MaxRedemptions,
+            command.PromoCode);
+
+        if (offerResult.Failed)
+            return offerResult;
         
-        if (result.Failed)
-            return result;
+        var offer = offerResult.Value;
+        
+        foreach (var content in command.LocalizedContents)
+        {
+            var localizedContentResult = offer.AddLocalizedContent(
+                content.Language,
+                content.Title,
+                content.Description,
+                content.TermsAndConditions);
+
+            if (localizedContentResult.Failed)
+                return localizedContentResult;
+        }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
         

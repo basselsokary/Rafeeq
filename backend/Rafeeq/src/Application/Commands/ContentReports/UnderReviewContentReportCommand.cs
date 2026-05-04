@@ -4,9 +4,9 @@ using Domain.Entities.ContentReportAggregate;
 
 namespace Application.Commands.ContentReports;
 
-public record UnderReviewContentReportCommand(Guid Id) : ICommand;
+public sealed record UnderReviewContentReportCommand(Guid Id) : ICommand;
 
-internal class UnderReviewContentReportCommandHandler(
+internal sealed class UnderReviewContentReportCommandHandler(
     IUnitOfWork unitOfWork,
     IUserContext userContext) : ICommandHandler<UnderReviewContentReportCommand>
 {

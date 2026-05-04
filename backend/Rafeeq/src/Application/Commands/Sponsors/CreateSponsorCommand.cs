@@ -5,21 +5,21 @@ using Domain.ValueObjects;
 
 namespace Application.Commands.Sponsors;
 
-public record CreateSponsorCommand(
+public sealed record CreateSponsorCommand(
     string Title,
     string Description,
+    string Address,
     SponsorType Type,
     SponsorTier Tier,
     double Latitude,
     double Longitude,
-    string Street,
-    string City,
-    string? Region,
-    string? PostalCode,
     DateTime StartDate,
-    DateTime EndDate) : ICommand;
+    DateTime EndDate,
+    string? WebsiteUrl,
+    string? ContactPhone,
+    string? ContactEmail) : ICommand;
 
-internal class CreateSponsorCommandHandler(
+internal sealed class CreateSponsorCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<CreateSponsorCommand>
 {
     public async Task<Result> HandleAsync(CreateSponsorCommand command, CancellationToken cancellationToken)
@@ -28,24 +28,46 @@ internal class CreateSponsorCommandHandler(
         if (locationResult.Failed)
             return locationResult;
 
-        var addressResult = Address.Create(command.Street, command.City, command.Region, command.PostalCode);
+        var dateRange = DateRange.Create(command.StartDate, command.EndDate);
+        if (dateRange.Failed)
+            return dateRange;
+        
+        var addressResult = Address.Create(command.Address);
         if (addressResult.Failed)
             return addressResult;
+        
+        PhoneNumber? phone = null;
+        if (!string.IsNullOrWhiteSpace(command.ContactPhone))
+        {
+            var phoneResult = PhoneNumber.Create(command.ContactPhone);
+            if (phoneResult.Succeeded)
+                phone = phoneResult.Value;
+        }
 
-        Result<Sponsor> result = Sponsor.Create(
+        Email? email = null;
+        if (!string.IsNullOrWhiteSpace(command.ContactEmail))
+        {
+            var emailResult = Email.Create(command.ContactEmail);
+            if (emailResult.Succeeded)
+                email = emailResult.Value;
+        }
+
+        Result<Sponsor> sponsorResult = Sponsor.Create(
             command.Title,
             command.Description,
+            addressResult.Value,
             command.Type,
             command.Tier,
             locationResult.Value,
-            addressResult.Value,
-            command.StartDate,
-            command.EndDate);
-        
-        if (result.Failed)
-            return result;
+            dateRange.Value,
+            command.WebsiteUrl,
+            phone,
+            email);
 
-        await unitOfWork.Sponsors.AddAsync(result.Value, cancellationToken);
+        if (sponsorResult.Failed)
+            return sponsorResult;
+
+        await unitOfWork.Sponsors.AddAsync(sponsorResult.Value, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

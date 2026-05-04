@@ -3,9 +3,9 @@ using Domain.Entities.SponsorAggregate;
 
 namespace Application.Commands.Sponsors;
 
-public record DeleteSponsorCommand(Guid Id) : ICommand;
+public sealed record DeleteSponsorCommand(Guid Id) : ICommand;
 
-internal class DeleteSponsorCommandHandler(
+internal sealed class DeleteSponsorCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<DeleteSponsorCommand>
 {
     public async Task<Result> HandleAsync(DeleteSponsorCommand command, CancellationToken cancellationToken)

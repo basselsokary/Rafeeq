@@ -1,35 +1,41 @@
 using Domain.Entities.SiteAggregate;
+using Infrastructure.Persistence.ApplicationContext.Configurations.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using static Domain.Common.Constants.DomainConstants.Site;
+using static Domain.Common.Constants.DomainConstants.Ticket;
 
 namespace Infrastructure.Persistence.ApplicationContext.Configurations.Sites;
 
-public sealed class SiteLocalizedContentConfiguration : IEntityTypeConfiguration<SiteLocalizedContent>
+internal sealed class SiteLocalizedContentConfiguration : IEntityTypeConfiguration<SiteLocalizedContent>
 {
     public void Configure(EntityTypeBuilder<SiteLocalizedContent> builder)
     {
-        builder.Property(c => c.Language)
-            .HasConversion<string>()
-            .HasMaxLength(16)
-            .IsRequired();
-
         builder.Property(c => c.Name)
-            .HasMaxLength(200)
+            .HasMaxLength(MaxNameLength)
             .IsRequired();
-
+            
         builder.Property(c => c.Description)
-            .HasMaxLength(2000)
+            .HasMaxLength(MaxDescriptionLength)
             .IsRequired();
+        
+        builder.Property(t => t.EntryTicketNotes)
+            .HasMaxLength(MaxNotesLength)
+            .IsRequired(false);
 
-        builder.Property(c => c.CreatedAt)
-            .IsRequired();
-
-        builder.Property(c => c.LastModifiedAt);
+        builder.OwnsOne(s => s.Address, address =>
+        {
+            address.Configure();
+        });
 
         builder.HasIndex("SiteId", nameof(SiteLocalizedContent.Language))
             .IsUnique()
             .HasDatabaseName("IX_SiteLocalizedContents_SiteId_Language");
+        
+        builder.HasIndex(s => new { s.Language, s.Name })
+            .HasDatabaseName("IX_SiteLocalizedContents_Language_Name");
 
-        builder.Ignore(c => c.DomainEvents);
+        builder.HasIndex(s => s.Name)
+            .HasDatabaseName("IX_SiteLocalizedContents_Name");
     }
 }

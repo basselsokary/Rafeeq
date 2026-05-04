@@ -1,15 +1,15 @@
 using Application.Common.Interfaces.QueryServices;
-using Application.DTOs.Sponsors;
+using Application.DTOs.Admins;
 using Domain.Entities.SponsorAggregate;
 
 namespace Application.Queries.Sponsors;
 
-public record GetSponsorByIdForAdminQuery(Guid Id) : IQuery<SponsorAdminDetailDto>;
+public sealed record GetSponsorByIdForAdminQuery(Guid Id) : IQuery<AdminSponsorDetailDto>;
 
-internal class GetSponsorByIdForAdminQueryHandler(
-    ISponsorQueryService queryService) : IQueryHandler<GetSponsorByIdForAdminQuery, SponsorAdminDetailDto>
+internal sealed class GetSponsorByIdForAdminQueryHandler(
+    ISponsorQueryService queryService) : IQueryHandler<GetSponsorByIdForAdminQuery, AdminSponsorDetailDto>
 {
-    public async Task<Result<SponsorAdminDetailDto>> HandleAsync(GetSponsorByIdForAdminQuery query, CancellationToken cancellationToken)
+    public async Task<Result<AdminSponsorDetailDto>> HandleAsync(GetSponsorByIdForAdminQuery query, CancellationToken cancellationToken)
     {
         var siteDetailDto = await queryService.GetByIdForAdminAsync(query.Id, cancellationToken);
         if (siteDetailDto == null)

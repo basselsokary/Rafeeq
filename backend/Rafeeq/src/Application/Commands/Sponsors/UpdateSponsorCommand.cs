@@ -5,22 +5,18 @@ using Domain.ValueObjects;
 
 namespace Application.Commands.Sponsors;
 
-public record UpdateSponsorCommand(
+public sealed record UpdateSponsorCommand(
     Guid Id,
-    string Title,
-    string Description,
     SponsorType Type,
     SponsorTier Tier,
     double Latitude,
     double Longitude,
-    string Street,
-    string City,
-    string? Region,
-    string? PostalCode,
-    DateTime StartDate,
-    DateTime EndDate) : ICommand;
+    DateTime? NewEndDate,
+    string? ContactPhone,
+    string? ContactEmail,
+    string? WebsiteUrl) : ICommand;
 
-internal class UpdateSponsorCommandHandler(
+internal sealed class UpdateSponsorCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<UpdateSponsorCommand>
 {
     public async Task<Result> HandleAsync(UpdateSponsorCommand command, CancellationToken cancellationToken)
@@ -44,15 +40,36 @@ internal class UpdateSponsorCommandHandler(
         if (locationResult.Failed)
             return locationResult;
 
-        var addressResult = Address.Create(command.Street, command.City, command.Region, command.PostalCode);
-        if (addressResult.Failed)
-            return addressResult;
-
         sponsor.UpdateTier(command.Tier);
-        sponsor.UpdateLocation(locationResult.Value, addressResult.Value);
-        Result result = sponsor.UpdateBasicInfo(command.Title, command.Description, command.Type);
+        sponsor.UpdateLocation(locationResult.Value);
+        Result result = sponsor.UpdateBasicInfo(command.Type);
         if (result.Failed)
             return result;
+        
+        if (command.NewEndDate is not null)
+        {
+            result = sponsor.ExtendContract(command.NewEndDate.Value);
+            if (result.Failed)
+                return result;
+        }
+        
+        PhoneNumber? phone = null;
+        if (!string.IsNullOrWhiteSpace(command.ContactPhone))
+        {
+            var phoneResult = PhoneNumber.Create(command.ContactPhone);
+            if (phoneResult.Succeeded)
+                phone = phoneResult.Value;
+        }
+
+        Email? email = null;
+        if (!string.IsNullOrWhiteSpace(command.ContactEmail))
+        {
+            var emailResult = Email.Create(command.ContactEmail);
+            if (emailResult.Succeeded)
+                email = emailResult.Value;
+        }
+
+        sponsor.SetContactInfo(phone, email, command.WebsiteUrl);
 
         return Result.Success();
     }

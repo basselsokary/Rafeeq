@@ -4,14 +4,14 @@ using Domain.ValueObjects;
 
 namespace Application.Commands.Sponsors.Offers;
 
-public record ActivateSponsorOfferCommand(
+public sealed record ActivateSponsorOfferCommand(
     Guid SponsorId,
     Guid OfferId,
     bool IsActive,
     DateTime? StartDate = null,
     DateTime? EndDate = null) : ICommand;
 
-internal class ActivateSponsorOfferCommandHandler(
+internal sealed class ActivateSponsorOfferCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<ActivateSponsorOfferCommand>
 {
     public async Task<Result> HandleAsync(ActivateSponsorOfferCommand command, CancellationToken cancellationToken)

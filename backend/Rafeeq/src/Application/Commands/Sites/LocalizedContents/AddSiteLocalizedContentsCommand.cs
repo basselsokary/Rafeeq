@@ -1,19 +1,22 @@
 using Domain.Common.Interfaces;
 using Domain.Entities.SiteAggregate;
 using Domain.Enums;
+using Domain.ValueObjects;
 
 namespace Application.Commands.Sites.LocalizedContents;
 
-public record AddSiteLocalizedContentsCommand(
+public sealed record AddSiteLocalizedContentsCommand(
     Guid Id,
     List<AddSiteLocalizedContentsDtoCommand> LocalizedContents) : ICommand;
 
-public record AddSiteLocalizedContentsDtoCommand(
+public sealed record AddSiteLocalizedContentsDtoCommand(
     LanguageCode Language,
     string Name,
-    string Description);
+    string Description,
+    string Address,
+    string? EntryFeeNotes);
 
-internal class AddSiteLocalizedContentCommandHandler(
+internal sealed class AddSiteLocalizedContentCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<AddSiteLocalizedContentsCommand>
 {
     public async Task<Result> HandleAsync(AddSiteLocalizedContentsCommand command, CancellationToken cancellationToken)
@@ -24,9 +27,15 @@ internal class AddSiteLocalizedContentCommandHandler(
 
         foreach (var content in command.LocalizedContents)
         {
-            Result result = site.AddLocalizedContent(content.Language, content.Name, content.Description);
+            var addressResult = Address.Create(content.Address);
+            if (addressResult.Failed)
+                return addressResult;
+
+            var result = site.AddLocalizedContent(content.Language, content.Name, content.Description, addressResult.Value, content.EntryFeeNotes);
             if (result.Failed)
                 return result;
+            
+            await unitOfWork.AddAsync(result.Value, cancellationToken);
         }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);

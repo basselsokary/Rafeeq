@@ -3,11 +3,11 @@ using Domain.Entities.SponsorAggregate;
 
 namespace Application.Commands.Sponsors.Offers;
 
-public record RemoveSponsorOfferCommand(
+public sealed record RemoveSponsorOfferCommand(
     Guid SponsorId,
     Guid OfferId) : ICommand;
 
-internal class RemoveSponsorOfferCommandHandler(
+internal sealed class RemoveSponsorOfferCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<RemoveSponsorOfferCommand>
 {
     public async Task<Result> HandleAsync(RemoveSponsorOfferCommand command, CancellationToken cancellationToken)

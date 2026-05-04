@@ -1,15 +1,15 @@
 using Application.Common.Interfaces.QueryServices;
-using Application.DTOs.Sites;
+using Application.DTOs.Admins;
 using Domain.Entities.SiteAggregate;
 
 namespace Application.Queries.Sites;
 
-public record GetSiteByIdForAdminQuery(Guid Id) : IQuery<SiteAdminDetailDto>;
+public sealed record GetSiteByIdForAdminQuery(Guid Id) : IQuery<AdminSiteDetailDto>;
 
-internal class GetSiteByIdForAdminQueryHandler(
-    ISiteQueryService queryService) : IQueryHandler<GetSiteByIdForAdminQuery, SiteAdminDetailDto>
+internal sealed class GetSiteByIdForAdminQueryHandler(
+    ISiteQueryService queryService) : IQueryHandler<GetSiteByIdForAdminQuery, AdminSiteDetailDto>
 {
-    public async Task<Result<SiteAdminDetailDto>> HandleAsync(GetSiteByIdForAdminQuery query, CancellationToken cancellationToken)
+    public async Task<Result<AdminSiteDetailDto>> HandleAsync(GetSiteByIdForAdminQuery query, CancellationToken cancellationToken)
     {
         var siteDetailDto = await queryService.GetByIdForAdminAsync(query.Id, cancellationToken);
         if (siteDetailDto == null)

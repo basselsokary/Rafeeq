@@ -1,20 +1,23 @@
+using Application.Common.Interfaces.Services;
+using Application.Common.Validators;
+using Domain.Common;
 using Domain.Common.Interfaces;
 using Domain.Entities.CityAggregate;
 using Domain.ValueObjects;
 
 namespace Application.Commands.Cities;
 
-public record UpdateCityCommand(
+public sealed record UpdateCityCommand(
     Guid Id,
-    string Name,
-    string Description,
+    Stream? Image,
+    string? OriginalFileName,
     double CenterLatitude,
     double CenterLongitude,
-    int DisplayOrder,
-    string? ImageUrl) : ICommand;
+    int DisplayOrder) : ICommand;
 
-internal class UpdateCityCommandHandler(
-    IUnitOfWork unitOfWork) : ICommandHandler<UpdateCityCommand>
+internal sealed class UpdateCityCommandHandler(
+    IUnitOfWork unitOfWork,
+    IFileStorageService storageService) : ICommandHandler<UpdateCityCommand>
 {
     public async Task<Result> HandleAsync(UpdateCityCommand command, CancellationToken cancellationToken)
     {
@@ -22,37 +25,58 @@ internal class UpdateCityCommandHandler(
         if (city == null)
             return CityErrors.NotFound(command.Id);
         
-        var result = ApplyChanges(command, city);
-        if (result.Failed)
-            return result;
+        try
+        {
+            var result = await ApplyChanges(command, city, cancellationToken);
+            if (result.Failed)
+                return result;
+        }
+        catch
+        {
+            return Result.Failure(ImageErrors.UploadFailed);
+        }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }
 
-    private static Result ApplyChanges(UpdateCityCommand command, City city)
+    private async Task<Result> ApplyChanges(UpdateCityCommand command, City city, CancellationToken cancellationToken)
     {
         var locationResult = GeoLocation.Create(command.CenterLatitude, command.CenterLongitude);
         if (locationResult.Failed)
             return locationResult;
         
         city.SetCenterLocation(locationResult.Value);
-        
-        var cityResult = city.UpdateBasicInfo(command.Name, command.Description);
-        if (cityResult.Failed)
-            return cityResult;
 
-        if (command.ImageUrl != null)
+        if (command.Image != null && command.OriginalFileName != null)
         {
-            cityResult = city.SetImage(command.ImageUrl);
-            if (cityResult.Failed)
-                return cityResult;
+            var ext = Path.GetExtension(command.OriginalFileName).ToLowerInvariant();
+            if (!FileSignatureValidator.IsValid(command.Image, ext))
+            {
+                return ImageErrors.InvalidSignature;
+            }
+
+            var storageKey = StorageKey.ForCitiesImages(ext);
+
+            command.Image.Position = 0;
+
+            var uploadResult = await storageService.UploadAsync(
+                command.Image,
+                storageKey,
+                cancellationToken);
+
+            if (uploadResult.Failed)
+            {
+                return uploadResult;
+            }
+
+            city.SetImage(storageKey, uploadResult.Url);
         }
 
-        cityResult = city.SetDisplayOrder(command.DisplayOrder);
-        if (cityResult.Failed)
-            return cityResult;
+        var result = city.SetDisplayOrder(command.DisplayOrder);
+        if (result.Failed)
+            return result;
 
         return Result.Success();
     }

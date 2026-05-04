@@ -1,4 +1,5 @@
 using Domain.Common.Interfaces;
+using Domain.Entities.TouristAggregate;
 using Domain.Events;
 using Microsoft.Extensions.Logging;
 
@@ -14,8 +15,8 @@ internal class ReviewUpdatedEventHandler(
         if (site == null)
         {
             logger.LogWarning(
-                "Site {SiteId} not found while processing ReviewUpdatedEvent",
-                domainEvent);
+                "Site with ID {SiteId} not found for ReviewUpdatedEvent with Review ID {ReviewId}",
+                domainEvent.SiteId, domainEvent.ReviewId);
 
             return;
         }

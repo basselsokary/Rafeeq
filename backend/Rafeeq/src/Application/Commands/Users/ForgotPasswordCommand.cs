@@ -3,16 +3,15 @@ using Application.Common.Interfaces.Email;
 
 namespace Application.Commands.Users;
 
-public record ForgotPasswordCommand(string Email) : ICommand;
+public sealed record ForgotPasswordCommand(string Email) : ICommand;
 
-public class ForgotPasswordCommandHandler(
+public sealed class ForgotPasswordCommandHandler(
     IIdentityService identityService,
     IEmailService emailService) : ICommandHandler<ForgotPasswordCommand>
 {
     public async Task<Result> HandleAsync(ForgotPasswordCommand command, CancellationToken cancellationToken)
     {
         var result = await identityService.GeneratePasswordResetTokenAsync(command.Email);
-
         if (result.Failed)
             return result;
             

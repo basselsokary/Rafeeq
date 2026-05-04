@@ -3,11 +3,11 @@ using Domain.Entities.ReviewAggregate;
 
 namespace Application.Commands.Reviews;
 
-public record HelpfulReviewCommand(
+public sealed record HelpfulReviewCommand(
     Guid Id,
     bool IsHelpful) : ICommand;
 
-internal class HelpfulReviewCommandHandler(
+internal sealed class HelpfulReviewCommandHandler(
     IUnitOfWork unitOfWork) : ICommandHandler<HelpfulReviewCommand>
 {
     public async Task<Result> HandleAsync(HelpfulReviewCommand command, CancellationToken cancellationToken)

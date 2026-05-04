@@ -5,87 +5,248 @@ using Application.DTOs.Common;
 using System.Linq.Expressions;
 using Domain.Entities.SiteAggregate;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Identity;
 using Domain.Enums;
-using Application.Common.Interfaces.Authentication;
+using Application.Extensions;
+using Application.DTOs.Admins;
 
 namespace Infrastructure.Persistence.QueryServices;
 
-internal class SiteQueryService(
-    ApplicationDbContext context,
-    IUserContext currentUser) : ISiteQueryService
+internal sealed class SiteQueryService(
+    ApplicationDbContext context) : ISiteQueryService
 {
-    public async Task<SiteDetailDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    private IQueryable<Site> Sites => context.Sites.AsNoTracking();
+    
+    public async Task<AdminSiteDetailDto?> GetByIdForAdminAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
     {
-        return await context.Sites.AsNoTracking()
+        var data = await Sites
             .Where(s => s.Id == id)
-            .Select(s => new SiteDetailDto(
+            .AsSplitQuery()
+            .Select(s => new {
                 s.Id,
-                s.Name,
-                s.Description,
-                s.Type.ToString(),
-                s.Status.ToString(),
-                new(s.Location.Latitude, s.Location.Longitude),
-                new(s.Address.Street, s.Address.City, s.Address.Region, s.Address.PostalCode, s.Address.ToString()),
+                CityName = s.City.LocalizedContents.Where(lc => lc.Language == LanguageCode.English)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!,
+                Localized = s.LocalizedContents.Where(lc => lc.Language == LanguageCode.English)
+                    .Select(lc => new {lc.Name, lc.Description, lc.Address, lc.EntryTicketNotes})
+                    .FirstOrDefault()!,
+                s.Type,
+                s.Status,
+                s.Location.Latitude, 
+                s.Location.Longitude,
                 s.ContactPhone,
                 s.WebsiteUrl,
+                s.MainImageUrl,
                 s.AverageRating,
-                s.TotalReviews,
-                s.EntryFee != null ? new(s.EntryFee.Amount, s.EntryFee.Currency, s.EntryFee.ToString()) : null,
-                s.Images.Select(i => new ImageDto(
-                    i.Id,
-                    i.ImageUrl,
-                    i.Caption,
-                    i.IsMain,
-                    i.DisplayOrder)).Take(5).ToList(),
-                s.OpeningHours.Select(oh => new OpeningHoursDto(
-                    oh.DayOfWeek.ToString(),
-                    oh.OpeningTime.StartTime.ToString(),
-                    oh.OpeningTime.EndTime.ToString(),
-                    oh.IsClosed)).ToList(),
-                s.Facilities.Select(f => new FacilityDto(
-                    f.Id,
-                    f.Name,
-                    f.Description,
-                    f.IsAvailable)).ToList(),
-                s.NearestTransportations.Select(nt => new NearestTransportationDto(
-                    nt.Id,
-                    nt.Type.ToString(),
-                    nt.Name,
-                    new(nt.Location.Latitude, nt.Location.Longitude),
-                    nt.Address != null ? new(nt.Address.Street, nt.Address.City, nt.Address.Region, nt.Address.PostalCode, nt.Address.ToString()) : null,
-                    nt.Description,
-                    nt.IsOperational,
-                    nt.HasAccessibility,
-                    nt.OperatingHours != null ? new(nt.OperatingHours.StartTime.ToString(), nt.OperatingHours.EndTime.ToString(), nt.OperatingHours.DurationInMinutes) : null)).ToList(),
+                s.TotalRating,
+                s.EntryTicket,
                 s.IsFree,
-                s.IsFeatured))
+                s.IsFeatured,
+                s.CreatedAt,
+                s.CreatedBy,
+                s.CreatedByName,
+                s.LastModifiedAt,
+                s.LastModifiedBy,
+                s.LastModifiedByName
+                })
             .FirstOrDefaultAsync(cancellationToken);
+
+        if (data is null)
+            return null;
+        
+        var auditInfo = new AuditInfoDto(
+            data.CreatedAt,
+            data.CreatedBy,
+            data.CreatedByName,
+            data.LastModifiedAt,
+            data.LastModifiedBy,
+            data.LastModifiedByName);
+        
+        return data == null ? null : new AdminSiteDetailDto(
+            data.Id,
+            data.CityName,
+            data.Localized.Name,
+            data.Localized.Description,
+            data.Type,
+            data.Status,
+            new(data.Latitude, data.Longitude),
+            data.Localized.Address,
+            data.ContactPhone,
+            data.WebsiteUrl,
+            data.MainImageUrl,
+            data.AverageRating,
+            data.TotalRating,
+            data.EntryTicket.ToDto(data.Localized.EntryTicketNotes),
+            data.IsFree,
+            data.IsFeatured,
+            auditInfo);
+    }
+
+    public Task<PagedResult<SiteListDto>> GetByStatusAsync(
+        SiteStatus status,
+        SiteType type,
+        PagingParameters paging,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
+    {
+        var query = Sites
+            .Where(s => s.Status == status && s.Type == type)
+            .OrderByDescending(s => s.IsFeatured)
+            .ThenByDescending(s => s.AverageRating)
+            .ThenByDescending(s => s.TotalRating);
+
+        return ToPagedResultAsync(
+            query,
+            paging,
+            ConvertSiteToListDto(language),
+            cancellationToken);
+    }
+    
+    public async Task<SiteDetailDto?> GetByIdAsync(
+        Guid id,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
+    {
+        var data = await Sites
+            .AsSplitQuery()
+            .Where(s => s.Id == id)
+            .Select(s => new {
+                s.Id,
+                CityName = s.City.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!,
+                Localized = s.LocalizedContents
+                    .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => new { lc.Name , lc.Description, lc.Address, lc.EntryTicketNotes })
+                    .FirstOrDefault()!,
+                s.Type,
+                s.Status,
+                LocationDto = new LocationDto(s.Location.Latitude, s.Location.Longitude),
+                s.ContactPhone,
+                s.WebsiteUrl,
+                s.MainImageUrl,
+                s.AverageRating,
+                s.TotalRating,
+                s.EntryTicket,
+
+                ImageDtos = s.Images
+                    .OrderBy(i => i.DisplayOrder)
+                    .Select(i => new ImageDto(
+                        default,
+                        i.ImageUrl,
+                        i.Caption,
+                        i.IsMain,
+                        i.DisplayOrder
+                    ))
+                    .ToList(),
+                
+                OpeningHourDtos = s.OpeningHours
+                    .Select(oh => new OpeningHourDto(
+                        oh.Day,
+                        oh.OpeningTime.StartTime,
+                        oh.OpeningTime.EndTime,
+                        oh.IsClosed
+                    ))
+                    .ToList(),
+                
+                FacilityTypes = s.Facilities.ToList(),
+                
+                NearestTransportation = s.NearestTransportations
+                    .Select(t => new {
+                        Id = (Guid)default,
+                        t.Type,
+                        Localized = t.LocalizedContents
+                            .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                            .OrderBy(lc => lc.Language == language ? 0 : 1)
+                            .Select(lc => new { lc.Name, lc.Description, lc.Address })
+                            .FirstOrDefault()!,
+                        LocationDto = new LocationDto(t.Location.Latitude, t.Location.Longitude),
+                        t.DistanceKm,
+                        t.IsOperational,
+                        t.HasAccessibility,
+                        TimeRange = t.OperatingHours
+                    })
+                    .ToList(),
+                s.IsFree,
+                s.IsFeatured
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        if (data == null)
+            return null;
+        
+        var site = new SiteDetailDto(
+                data.Id,
+                data.CityName,
+                data.Localized.Name,
+                data.Localized.Description,
+                data.Type,
+                data.Status,
+                data.LocationDto,
+                data.Localized.Address,
+                data.ContactPhone,
+                data.WebsiteUrl,
+                data.MainImageUrl,
+                data.AverageRating,
+                data.TotalRating,
+                data.EntryTicket.ToDto(data.Localized.EntryTicketNotes),
+
+                data.ImageDtos,
+                data.OpeningHourDtos,
+                data.FacilityTypes,
+                data.NearestTransportation.Select(t => new NearestTransportationDto(
+                    t.Id,
+                    t.Type,
+                    t.Localized.Name,
+                    t.Localized.Description,
+                    t.LocationDto,
+                    t.Localized.Address,
+                    t.DistanceKm,
+                    t.IsOperational,
+                    t.HasAccessibility,
+                    t.TimeRange != null ? new TimeRangeDto(
+                        t.TimeRange.StartTime,
+                        t.TimeRange.EndTime,
+                        t.TimeRange.DurationInMinutes
+                    ) : null
+                )).ToList(),
+
+                data.IsFree,
+                data.IsFeatured,
+                FacilityTypeDisplays: new()
+            );
+        
+        return site;
     }
     
     public async Task<PagedResult<SiteListDto>> GetAsync(
         SiteFilters filters,
         PagingParameters paging,
+        LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
-        var query = context.Sites.AsNoTracking();
-        query = ApplyFilters(query, filters);
-
+        var query = Sites;
+        query = ApplyFilters(query, filters)
+            .OrderByDescending(s => s.AverageRating)
+            .ThenByDescending(s => s.TotalRating);
 
         return await ToPagedResultAsync(
             query,
             paging,
-            ConvertSiteToListDto(currentUser.Language),
+            ConvertSiteToListDto(language),
             cancellationToken);
     }
 
     public Task<List<SiteListDto>> GetFeaturedAsync(
         int count = 10,
         Guid? city = null,
+        LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
-        var query = context.Sites
-            .AsNoTracking()
+        var query = Sites
             .Where(s => s.IsFeatured && s.Status == SiteStatus.Active);
         
         if (city.HasValue && city.Value != Guid.Empty)
@@ -94,28 +255,11 @@ internal class SiteQueryService(
         }
 
         return query
-            .OrderByDescending(s => s.AverageRating)
-            .ThenByDescending(s => s.TotalReviews)
+            .OrderByDescending(s => s.IsFeatured)
+            .ThenByDescending(s => s.AverageRating)
+            .ThenByDescending(s => s.TotalRating)
             .Take(count)
-            .Select(ConvertSiteToListDto(currentUser.Language))
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<List<LocalizedContentDto>> GetLocalizedContentsAsync(
-        Guid siteId,
-        CancellationToken cancellationToken = default)
-    {
-        return await context.Sites
-            .AsNoTracking()
-            .Where(s => s.Id == siteId)
-            .SelectMany(s => s.LocalizedContents)
-            .OrderBy(lc => lc.Language == currentUser.Language ? 0 : 1)
-            .ThenBy(lc => lc.Language == LanguageCode.English ? 0 : 1)
-            .Select(lc => new LocalizedContentDto(
-                lc.Language.ToString(),
-                lc.Name,
-                lc.Description
-            ))
+            .Select(ConvertSiteToListDto(language))
             .ToListAsync(cancellationToken);
     }
 
@@ -124,14 +268,15 @@ internal class SiteQueryService(
         double longitude,
         SiteFilters filters,
         int radiusKm = 5,
+        int count = 20,
+        LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
         // coarse filter in SQL by bounding box, then exact distance in memory
         var latDelta = radiusKm / 111d;
         var lonDelta = radiusKm / (111d * Math.Cos(latitude * Math.PI / 180d));
         
-        var query = context.Sites
-            .AsNoTracking()
+        var query = Sites
             .Where(s =>
                 s.Location.Latitude >= latitude - latDelta &&
                 s.Location.Latitude <= latitude + latDelta &&
@@ -147,33 +292,53 @@ internal class SiteQueryService(
         var candidates = await query
             .Select(s => new
             {
-                Site = s,
-                Distance = HaversineKm(
-                    latitude,
-                    longitude,
-                    s.Location.Latitude,
-                    s.Location.Longitude)
+                Site = new SiteListDto(
+                    s.Id,
+                    s.City.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                        .OrderBy(lc => lc.Language == language ? 0 : 1)
+                        .Select(lc => lc.Name)
+                        .FirstOrDefault()!,
+                    s.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                        .OrderBy(lc => lc.Language == language ? 0 : 1)
+                        .Select(lc => lc.Name)
+                        .FirstOrDefault()!,
+                    s.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                        .OrderBy(lc => lc.Language == language ? 0 : 1)
+                        .Select(lc => lc.Description)
+                        .FirstOrDefault()!,
+                    s.Type,
+                    s.Status,
+                    new(s.Location.Latitude, s.Location.Longitude),
+                    s.MainImageUrl,
+                    s.AverageRating,
+                    s.TotalRating,
+                    s.IsFree,
+                    s.IsFeatured),
+                Distance = 6371 * 2 * Math.Asin(
+                    Math.Sqrt(
+                        Math.Pow(Math.Sin((latitude - s.Location.Latitude) * Math.PI / 180 / 2), 2) +
+                        Math.Cos(latitude * Math.PI / 180) *
+                        Math.Cos(s.Location.Latitude * Math.PI / 180) *
+                        Math.Pow(Math.Sin((longitude - s.Location.Longitude) * Math.PI / 180 / 2), 2)
+                    )
+                )
             })
             .Where(x => x.Distance <= radiusKm)
             .OrderBy(x => x.Distance)
             .ThenByDescending(x => x.Site.AverageRating)
-            .Take(100)
+            .Take(count) 
             .ToListAsync(cancellationToken);
         
-        return candidates
-            .Select(x => x.Site)
-            .AsQueryable()
-            .Select(ConvertSiteToListDto(currentUser.Language))
-            .ToList();
+        return candidates.Select(x => x.Site).ToList();
     }
 
     public async Task<List<SiteListDto>> GetSimilarAsync(
         Guid siteId,
         int count = 5,
+        LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
-        var seed = await context.Sites
-            .AsNoTracking()
+        var seed = await Sites
             .Where(s => s.Id == siteId)
             .Select(s => new { s.Id, s.Type, s.CityId })
             .FirstOrDefaultAsync(cancellationToken);
@@ -183,8 +348,7 @@ internal class SiteQueryService(
             return [];
         }
         
-        return await context.Sites
-            .AsNoTracking()
+        return await Sites
             .Where(s =>
                 s.Id != seed.Id &&
                 s.Status == SiteStatus.Active &&
@@ -192,9 +356,9 @@ internal class SiteQueryService(
             .OrderByDescending(s => s.Type == seed.Type)
             .ThenByDescending(s => s.CityId == seed.CityId)
             .ThenByDescending(s => s.AverageRating)
-            .ThenByDescending(s => s.TotalReviews)
+            .ThenByDescending(s => s.TotalRating)
             .Take(count)
-            .Select(ConvertSiteToListDto(currentUser.Language))
+            .Select(ConvertSiteToListDto(language))
             .ToListAsync(cancellationToken);
     }
 
@@ -202,6 +366,7 @@ internal class SiteQueryService(
         BoundingBox bounds,
         SiteFilters filters,
         int count = 20,
+        LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
         var minLat = bounds.SouthLatitude;
@@ -209,8 +374,7 @@ internal class SiteQueryService(
         var minLng = bounds.WestLongitude;
         var maxLng = bounds.EastLongitude;
         
-        var query = context.Sites
-            .AsNoTracking()
+        var query = Sites
             .Where(s =>
                 s.Location.Latitude >= minLat &&
                 s.Location.Latitude <= maxLat &&
@@ -227,10 +391,11 @@ internal class SiteQueryService(
             .Select(s => new SiteMapMarkerDto(
                 s.Id,
                 s.LocalizedContents
-                    .Where(lc => lc.Language == currentUser.Language || lc.Language == LanguageCode.English)
+                    .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(lc => lc.Name)
-                    .First(),
-                s.Type.ToString(),
+                    .FirstOrDefault()!,
+                s.Type,
                 new LocationDto(s.Location.Latitude, s.Location.Longitude),
                 s.AverageRating,
                 s.MainImageUrl,
@@ -239,32 +404,468 @@ internal class SiteQueryService(
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<List<SiteSummaryDto>> GetMustVisitAsync(
+        int count = 10,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
+    {
+        return await Sites
+            .Where(s => s.Status == SiteStatus.Active)
+            .Where(s => 
+                s.IsFeatured || 
+                s.AverageRating >= 4.5)
+            .OrderByDescending(s => s.IsFeatured)
+            .ThenByDescending(s => s.AverageRating)
+            .Take(count)
+            .Select(s => new SiteSummaryDto(
+                s.Id,
+                s.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!,
+                s.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Description)
+                    .FirstOrDefault()!,
+                s.City.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!,
+                s.Type,
+                s.MainImageUrl,
+                s.AverageRating,
+                s.TotalRating,
+                new LocationDto(s.Location.Latitude, s.Location.Longitude),
+                s.IsFree,
+                "Must Visit")
+            )
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<SiteSummaryDto>> GetHiddenGemsAsync(
+        int count = 10,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
+    {
+        return await Sites
+            .Where(s => s.Status == SiteStatus.Active)
+            .Where(s => s.IsHiddenGem ||
+                s.AverageRating >= 4.0 ||
+                s.TotalRating >= 5) // At least some reviews
+            .OrderByDescending(s => s.IsHiddenGem)
+            .ThenBy(s => s.AverageRating)
+            .Take(count)
+            .Select(s => new SiteSummaryDto(
+                s.Id,
+                s.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!,
+                s.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Description)
+                    .FirstOrDefault()!,
+                s.City.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!,
+                s.Type,
+                s.MainImageUrl,
+                s.AverageRating,
+                s.TotalRating,
+                new LocationDto(s.Location.Latitude, s.Location.Longitude),
+                s.IsFree,
+                "Hidden Gem")
+            )
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<SiteSummaryDto>> GetNearbyAsync(
+        double latitude,
+        double longitude,
+        double radiusKm = 50,
+        int count = 10,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
+    {
+        var latDelta = radiusKm / 111.0;
+        var lonDelta = radiusKm / (111.0 * Math.Cos(latitude * Math.PI / 180.0));
+
+        var minLat = latitude - latDelta;
+        var maxLat = latitude + latDelta;
+        var minLon = longitude - lonDelta;
+        var maxLon = longitude + lonDelta;
+
+        var sites = await Sites
+            .Where(a => a.Status == SiteStatus.Active)
+            .Where(s => 
+                s.Location.Latitude >= minLat &&
+                s.Location.Latitude <= maxLat &&
+                s.Location.Longitude >= minLon &&
+                s.Location.Longitude <= maxLon)
+            .Select(s => new
+            {
+                Site = s,
+                Distance = 6371 * 2 * Math.Asin(
+                    Math.Sqrt(
+                        Math.Pow(Math.Sin((latitude - s.Location.Latitude) * Math.PI / 180 / 2), 2) +
+                        Math.Cos(latitude * Math.PI / 180) *
+                        Math.Cos(s.Location.Latitude * Math.PI / 180) *
+                        Math.Pow(Math.Sin((longitude - s.Location.Longitude) * Math.PI / 180 / 2), 2)
+                    )
+                )
+            })
+            .Where(x => x.Distance <= radiusKm)
+            .OrderBy(x => x.Distance)
+            .Take(count)
+            .Select(s => new SiteSummaryDto(
+                s.Site.Id,
+                s.Site.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!,
+                s.Site.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Description)
+                    .FirstOrDefault()!,
+                s.Site.City.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!,
+                s.Site.Type,
+                s.Site.MainImageUrl,
+                s.Site.AverageRating,
+                s.Site.TotalRating,
+                new LocationDto(s.Site.Location.Latitude, s.Site.Location.Longitude),
+                s.Site.IsFree,
+                "Near You")
+            )
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        return sites;
+    }
+
+    public async Task<List<SiteMapMarkerDto>> GetNearbyMarkerAsync(
+        double latitude,
+        double longitude,
+        int radiusKm = 20,
+        int count = 10,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
+    {
+        var latDelta = radiusKm / 111.0;
+        var lonDelta = radiusKm / (111.0 * Math.Cos(latitude * Math.PI / 180.0));
+
+        var minLat = latitude - latDelta;
+        var maxLat = latitude + latDelta;
+        var minLon = longitude - lonDelta;
+        var maxLon = longitude + lonDelta;
+
+        var sites = Sites
+            .Where(a => a.Status == SiteStatus.Active)
+            // .Where(s => 
+            //     s.Location.Latitude >= minLat &&
+            //     s.Location.Latitude <= maxLat &&
+            //     s.Location.Longitude >= minLon &&
+            //     s.Location.Longitude <= maxLon)
+            .Select(s => new
+            {
+                Site = s,
+                Distance = 6371 * 2 * Math.Asin(
+                    Math.Sqrt(
+                        Math.Pow(Math.Sin((latitude - s.Location.Latitude) * Math.PI / 180 / 2), 2) +
+                        Math.Cos(latitude * Math.PI / 180) *
+                        Math.Cos(s.Location.Latitude * Math.PI / 180) *
+                        Math.Pow(Math.Sin((longitude - s.Location.Longitude) * Math.PI / 180 / 2), 2)
+                    )
+                )
+            })
+            // .Where(x => x.Distance <= radiusKm)
+            .OrderBy(x => x.Distance);
+        
+        return await sites
+            .OrderByDescending(s => s.Site.IsFeatured)
+            .ThenByDescending(s => s.Site.AverageRating)
+            .Take(count)
+            .Select(s => new SiteMapMarkerDto(
+                s.Site.Id,
+                s.Site.LocalizedContents
+                    .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!,
+                s.Site.Type,
+                new LocationDto(s.Site.Location.Latitude, s.Site.Location.Longitude),
+                s.Site.AverageRating,
+                s.Site.MainImageUrl,
+                s.Site.IsFeatured
+            ))
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<PagedResult<SiteListDto>> SearchAsync(
         string searchTerm,
         SiteFilters filters,
         PagingParameters paging,
+        LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
         var term = searchTerm.Trim();
-        var query = context.Sites.AsNoTracking();
+        var query = Sites;
         query = ApplyFilters(query, filters);
-        
+
         query = query.Where(s =>
-            EF.Functions.Like(s.Name, $"%{term}%") ||
-            EF.Functions.Like(s.Description, $"%{term}%") ||
             s.LocalizedContents.Any(lc =>
-                EF.Functions.Like(lc.Name, $"%{term}%") ||
-                EF.Functions.Like(lc.Description, $"%{term}%")));
+                lc.Language == language &&
+                (EF.Functions.Like(lc.Name, $"%{term}%") ||
+                    EF.Functions.Like(lc.Description, $"%{term}%"))));
         
         query = query.OrderByDescending(s => s.IsFeatured)
             .ThenByDescending(s => s.AverageRating)
-            .ThenByDescending(s => s.TotalReviews);
+            .ThenByDescending(s => s.TotalRating);
         
         return ToPagedResultAsync(
             query,
             paging,
-            ConvertSiteToListDto(currentUser.Language),
+            ConvertSiteToListDto(language),
             cancellationToken);
+    }
+
+    public async Task<List<AdminSiteLocalizedContentDto>> GetLocalizedContentsAsync(
+        Guid siteId,
+        CancellationToken cancellationToken = default)
+    {
+        return await Sites
+            .Where(s => s.Id == siteId)
+            .SelectMany(s => s.LocalizedContents)
+            .Select(lc => new AdminSiteLocalizedContentDto(
+                lc.Id,
+                lc.Language,
+                lc.Name,
+                lc.Description,
+                lc.Address,
+                new(
+                    lc.CreatedAt,
+                    lc.CreatedBy,
+                    lc.CreatedByName,
+                    lc.LastModifiedAt,
+                    lc.LastModifiedBy,
+                    lc.LastModifiedByName)
+            )).ToListAsync(cancellationToken);
+    }
+
+    public async Task<AdminSiteLocalizedContentDto?> GetLocalizedContentByIdAsync(
+        Guid siteId,
+        Guid contentId,
+        CancellationToken cancellationToken = default)
+    {
+        return await Sites
+            .Where(s => s.Id == siteId)
+            .SelectMany(s => s.LocalizedContents)
+            .Where(lc => lc.Id == contentId)
+            .Select(lc => new AdminSiteLocalizedContentDto(
+                lc.Id,
+                lc.Language,
+                lc.Name,
+                lc.Description,
+                lc.Address,
+                new AuditInfoDto(
+                    lc.CreatedAt,
+                    lc.CreatedBy,
+                    lc.CreatedByName,
+                    lc.LastModifiedAt,
+                    lc.LastModifiedBy,
+                    lc.LastModifiedByName)
+            ))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<List<AdminSiteFacilityDto>> GetFacilitiesAsync(
+        Guid siteId,
+        CancellationToken cancellationToken = default)
+    {
+        var facilities = await Sites
+            .Where(s => s.Id == siteId)
+            .Select(s => s.Facilities)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (facilities == null)
+            return new List<AdminSiteFacilityDto>();
+
+        return facilities
+            .Select(f => new AdminSiteFacilityDto(f, f.ToString()))
+            .ToList();
+    }
+
+    public async Task<List<AdminSiteNearestTransportationDto>> GetNearestTransportationAsync(Guid siteId, CancellationToken cancellationToken = default)
+    {
+        var data = await context.NearestTransportations.AsNoTracking()
+            .Where(t => t.SiteId == siteId)
+            .Select(t => new {
+                t.Id,
+                t.Type,
+                LocationDto = new LocationDto(t.Location.Latitude, t.Location.Longitude),
+                t.DistanceKm,
+                t.IsOperational,
+                t.HasAccessibility,
+                t.OperatingHours,
+                LocalizedContents = t.LocalizedContents.Select(lc => new AdminSiteNearestTransportationLocalizedContentDto(
+                    lc.Language,
+                    lc.Name,
+                    lc.Description,
+                    lc.Address,
+                    new AuditInfoDto(
+                        lc.CreatedAt,
+                        lc.CreatedBy,
+                        lc.CreatedByName,
+                        lc.LastModifiedAt,
+                        lc.LastModifiedBy,
+                        lc.LastModifiedByName)
+                )).ToList(),
+                AuditInfo = new AuditInfoDto(
+                    t.CreatedAt,
+                    t.CreatedBy,
+                    t.CreatedByName,
+                    t.LastModifiedAt,
+                    t.LastModifiedBy,
+                    t.LastModifiedByName)
+            }).ToListAsync(cancellationToken);
+        
+        return data.Select(t => new AdminSiteNearestTransportationDto(
+            t.Id,
+            t.Type,
+            t.LocationDto,
+            t.DistanceKm,
+            t.IsOperational,
+            t.HasAccessibility,
+            t.OperatingHours != null ? new TimeRangeDto(
+                t.OperatingHours.StartTime,
+                t.OperatingHours.EndTime,
+                t.OperatingHours.DurationInMinutes
+            ) : null,
+            t.LocalizedContents,
+            t.AuditInfo
+        )).ToList();
+    }
+
+    public async Task<AdminSiteNearestTransportationDto?> GetNearestTransportationByIdAsync(
+        Guid siteId,
+        Guid transportationId,
+        CancellationToken cancellationToken = default)
+    {
+        var data = await context.NearestTransportations.AsNoTracking()
+            .Where(t => t.SiteId == siteId && t.Id == transportationId)
+            .Select(t => new {
+                t.Id,
+                t.Type,
+                LocationDto = new LocationDto(t.Location.Latitude, t.Location.Longitude),
+                t.DistanceKm,
+                t.IsOperational,
+                t.HasAccessibility,
+                t.OperatingHours,
+                LocalizedContents = t.LocalizedContents.Select(lc => new AdminSiteNearestTransportationLocalizedContentDto(
+                    lc.Language,
+                    lc.Name,
+                    lc.Description,
+                    lc.Address,
+                    new AuditInfoDto(
+                        lc.CreatedAt,
+                        lc.CreatedBy,
+                        lc.CreatedByName,
+                        lc.LastModifiedAt,
+                        lc.LastModifiedBy,
+                        lc.LastModifiedByName)
+                )).ToList(),
+                AuditInfo = new AuditInfoDto(
+                    t.CreatedAt,
+                    t.CreatedBy,
+                    t.CreatedByName,
+                    t.LastModifiedAt,
+                    t.LastModifiedBy,
+                    t.LastModifiedByName)
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (data is null)
+            return null;
+
+        return new AdminSiteNearestTransportationDto(
+            data.Id,
+            data.Type,
+            data.LocationDto,
+            data.DistanceKm,
+            data.IsOperational,
+            data.HasAccessibility,
+            data.OperatingHours != null
+                ? new TimeRangeDto(
+                    data.OperatingHours.StartTime,
+                    data.OperatingHours.EndTime,
+                    data.OperatingHours.DurationInMinutes)
+                : null,
+            data.LocalizedContents,
+            data.AuditInfo);
+    }
+
+    public Task<AdminSiteNearestTransportationLocalizedContentDto?> GetNearestTransportationLocalizedContentByIdAsync(
+        Guid siteId,
+        Guid transportationId,
+        Guid contentId,
+        CancellationToken cancellationToken = default)
+    {
+        return context.NearestTransportations.AsNoTracking()
+            .Where(t => t.SiteId == siteId && t.Id == transportationId)
+            .SelectMany(t => t.LocalizedContents)
+            .Where(lc => lc.Id == contentId)
+            .Select(lc => new AdminSiteNearestTransportationLocalizedContentDto(
+                lc.Language,
+                lc.Name,
+                lc.Description,
+                lc.Address,
+                new AuditInfoDto(
+                    lc.CreatedAt,
+                    lc.CreatedBy,
+                    lc.CreatedByName,
+                    lc.LastModifiedAt,
+                    lc.LastModifiedBy,
+                    lc.LastModifiedByName)
+            ))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<List<ImageDto>> GetImagesAsync(Guid siteId, CancellationToken cancellationToken = default)
+    {
+        return Sites
+            .Where(s => s.Id == siteId)
+            .SelectMany(s => s.Images)
+            .OrderBy(i => i.DisplayOrder)
+            .Select(i => new ImageDto(
+                i.Id,
+                i.ImageUrl,
+                i.Caption,
+                i.IsMain,
+                i.DisplayOrder
+            )).ToListAsync(cancellationToken);
+    }
+
+    public Task<ImageDto?> GetImageByIdAsync(
+        Guid siteId,
+        Guid imageId,
+        CancellationToken cancellationToken = default)
+    {
+        return Sites
+            .Where(s => s.Id == siteId)
+            .SelectMany(s => s.Images)
+            .Where(i => i.Id == imageId)
+            .Select(i => new ImageDto(
+                i.Id,
+                i.ImageUrl,
+                i.Caption,
+                i.IsMain,
+                i.DisplayOrder
+            ))
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     private static async Task<PagedResult<T>> ToPagedResultAsync<T>(
@@ -319,44 +920,28 @@ internal class SiteQueryService(
         return query;
     }
 
-    private static Expression<Func<Site, SiteListDto>> ConvertSiteToListDto(LanguageCode language)
+    private Expression<Func<Site, SiteListDto>> ConvertSiteToListDto(LanguageCode language)
     {
-        if (language != LanguageCode.English)
-        {
-            return s => new SiteListDto(
-                s.Id,
-                
-                s.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
-                    .Select(lc => lc.Name)
-                    .First(),
-                s.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
-                    .Select(lc => lc.Description)
-                    .First(),
-                
-                s.Type.ToString(),
-                s.Status.ToString(),
-                new(s.Location.Latitude, s.Location.Longitude),
-                s.City.Name,
-                s.MainImageUrl,
-                s.AverageRating,
-                s.TotalReviews,
-                s.EntryFee != null ? s.EntryFee.Amount : 0,
-                s.IsFree,
-                s.IsFeatured);
-        }
-
         return s => new SiteListDto(
             s.Id,
-            s.Name,
-            s.Description,
-            s.Type.ToString(),
-            s.Status.ToString(),
+            s.City.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                .OrderBy(lc => lc.Language == language ? 0 : 1)
+                .Select(lc => lc.Name)
+                .FirstOrDefault()!,
+            s.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                .OrderBy(lc => lc.Language == language ? 0 : 1)
+                .Select(lc => lc.Name)
+                .FirstOrDefault()!,
+            s.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                .OrderBy(lc => lc.Language == language ? 0 : 1)
+                .Select(lc => lc.Description)
+                .FirstOrDefault()!,
+            s.Type,
+            s.Status,
             new(s.Location.Latitude, s.Location.Longitude),
-            s.City.Name,
             s.MainImageUrl,
             s.AverageRating,
-            s.TotalReviews,
-            s.EntryFee != null ? s.EntryFee.Amount : 0,
+            s.TotalRating,
             s.IsFree,
             s.IsFeatured);
     }
@@ -373,44 +958,31 @@ internal class SiteQueryService(
         return R * c;
     }
 
-    public async Task<SiteAdminDetailDto?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<List<AdminSiteOpeningHourDto>> GetOpeningHoursAsync(Guid siteId, CancellationToken cancellationToken)
     {
-        return await context.Sites.AsNoTracking()
-            .Where(s => s.Id == id)
-            .Select(s => new SiteAdminDetailDto(
-                s.Id,
-                s.Name,
-                s.Description,
-                s.Type.ToString(),
-                s.Status.ToString(),
-                new(s.Location.Latitude, s.Location.Longitude),
-                new(s.Address.Street, s.Address.City, s.Address.Region, s.Address.PostalCode, s.Address.ToString()),
-                s.ContactPhone,
-                s.WebsiteUrl,
-                s.AverageRating,
-                s.TotalReviews,
-                s.EntryFee != null ? new(s.EntryFee.Amount, s.EntryFee.Currency, s.EntryFee.ToString()) : null,
-                s.IsFree,
-                s.IsFeatured,
-                s.CreatedAt,
-                s.LastModifiedAt))
-            .FirstOrDefaultAsync(cancellationToken);
+        return await Sites.Where(s => s.Id == siteId)
+            .SelectMany(s => s.OpeningHours)
+            .Select(oh => new AdminSiteOpeningHourDto(
+                oh.Day,
+                oh.OpeningTime.StartTime,
+                oh.OpeningTime.EndTime,
+                oh.IsClosed
+            ))
+            .ToListAsync(cancellationToken);
     }
 
-    public Task<PagedResult<SiteListDto>> GetByStatusAsync(SiteStatus status, SiteType type, PagingParameters paging, CancellationToken cancellationToken = default)
+    public async Task<AdminSiteDashboardDto> GetDashboardAsync(CancellationToken cancellationToken)
     {
-        var query = context.Sites
-            .AsNoTracking()
-            .Where(s => s.Status == status && s.Type == type)
-            .OrderByDescending(s => s.IsFeatured)
-            .ThenByDescending(s => s.AverageRating)
-            .ThenByDescending(s => s.TotalReviews);
-
-        return ToPagedResultAsync(
-            query,
-            paging,
-            ConvertSiteToListDto(currentUser.Language),
-            cancellationToken);
+        return await Sites
+            .GroupBy(_ => 1)
+            .Select(g => new AdminSiteDashboardDto(
+                TotalSites: g.Count(),
+                ActiveSites: g.Count(s => s.Status == SiteStatus.Active),
+                FeaturedSites: g.Count(s => s.IsFeatured),
+                HiddenGemSites: g.Count(s => s.IsHiddenGem),
+                AverageRating: g.Average(s => s.AverageRating),
+                TotalRating: g.Sum(s => s.TotalRating)
+            ))
+            .SingleAsync(cancellationToken);
     }
-
 }

@@ -1,6 +1,8 @@
 using Domain.Entities.ReviewAggregate;
+using Infrastructure.Persistence.ApplicationContext.Configurations.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using static Domain.Common.Constants.DomainConstants.Review;
 
 namespace Infrastructure.Persistence.ApplicationContext.Configurations.Reviews;
 
@@ -15,52 +17,35 @@ public sealed class ReviewConfiguration : IEntityTypeConfiguration<Review>
             .IsRequired();
 
         builder.Property(r => r.Title)
-            .HasMaxLength(200)
+            .HasMaxLength(MaxTitleLength)
             .IsRequired();
 
         builder.Property(r => r.Content)
-            .HasMaxLength(2000)
+            .HasMaxLength(MaxContentLength)
             .IsRequired();
-
-        builder.Property(r => r.Status)
-            .HasConversion<string>()
-            .HasMaxLength(50)
-            .IsRequired();
-
-        builder.Property(r => r.HelpfulCount)
-            .HasDefaultValue(0);
-
-        builder.Property(r => r.NotHelpfulCount)
-            .HasDefaultValue(0);
 
         builder.Property(r => r.RejectionReason)
-            .HasMaxLength(500);
-
-        builder.Property(r => r.CreatedAt)
-            .IsRequired();
-
-        builder.Property(r => r.LastModifiedAt);
+            .IsRequired(false)
+            .HasMaxLength(MaxRejectionReasonLength);
 
         builder.OwnsOne(r => r.Rating, rating =>
         {
-            rating.Property(x => x.Value)
-                .HasColumnName("Rating")
-                .IsRequired();
+            rating.Configure();
 
             rating.HasIndex(rt => rt.Value)
                 .HasDatabaseName("IX_Reviews_Rating");
-
-            rating.WithOwner();
         });
 
         builder.HasOne(r => r.Site)
             .WithMany()
             .HasForeignKey(r => r.SiteId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(r => r.Tourist)
             .WithMany()
             .HasForeignKey(r => r.TouristId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(r => r.SiteId)
@@ -72,12 +57,7 @@ public sealed class ReviewConfiguration : IEntityTypeConfiguration<Review>
         builder.HasIndex(r => r.Status)
             .HasDatabaseName("IX_Reviews_Status");
 
-        builder.HasIndex(r => r.CreatedAt)
-            .HasDatabaseName("IX_Reviews_CreatedAt");
-
         builder.HasIndex(r => new { r.SiteId, r.Status })
             .HasDatabaseName("IX_Reviews_SiteId_Status");
-
-        builder.Ignore(r => r.DomainEvents);
     }
 }

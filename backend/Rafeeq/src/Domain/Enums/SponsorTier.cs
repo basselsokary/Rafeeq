@@ -2,8 +2,8 @@ namespace Domain.Enums;
 
 public enum SponsorTier
 {
-    Bronze,
-    Silver,
-    Gold,
-    Platinum
+    Bronze = 1,
+    Silver = 2,
+    Gold = 3,
+    Platinum = 4
 }

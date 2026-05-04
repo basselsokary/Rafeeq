@@ -1,20 +1,24 @@
+using Application.Common.Interfaces.Services;
 using Domain.Common.Interfaces;
 using Domain.Entities.SponsorAggregate;
+using Domain.ValueObjects;
 
 namespace Application.Commands.Sponsors.Images;
 
-public record AddSponsorImagesCommand(
+public sealed record AddSponsorImagesCommand(
     Guid Id,
     List<AddSponsorImageDto> Images) : ICommand;
 
-public record AddSponsorImageDto(
-    string ImageUrl,
+public sealed record AddSponsorImageDto(
+    Stream Stream,
+    string OriginalFileName,
     bool IsMain,
     int DisplayOrder,
     string? Caption = null);
 
-internal class AddSponsorImagesCommandHandler(
-    IUnitOfWork unitOfWork) : ICommandHandler<AddSponsorImagesCommand>
+internal sealed class AddSponsorImagesCommandHandler(
+    IUnitOfWork unitOfWork,
+    IFileStorageService storageService) : ICommandHandler<AddSponsorImagesCommand>
 {
     public async Task<Result> HandleAsync(AddSponsorImagesCommand command, CancellationToken cancellationToken)
     {
@@ -22,15 +26,64 @@ internal class AddSponsorImagesCommandHandler(
         if (sponsor == null)
             return SponsorErrors.NotFound(command.Id);
 
+        var uploadedKeys = new List<StorageKey>();
+
         foreach (var image in command.Images)
         {
-            Result result = sponsor.AddImage(image.ImageUrl, image.IsMain, image.DisplayOrder, image.Caption);
-            if (result.Failed)
-                return result;
+            try {
+                var ext = Path.GetExtension(image.OriginalFileName).ToLowerInvariant();
+                var storageKey = StorageKey.ForSponsorImages(ext);
+
+                image.Stream.Position = 0;
+
+                var uploadResult = await storageService.UploadAsync(
+                    image.Stream,
+                    storageKey,
+                    cancellationToken);
+
+                if (uploadResult.Failed)
+                {
+                    await FallBackStorageAsync(storageService, uploadedKeys, cancellationToken);
+                    return uploadResult;
+                }
+
+                var addImageResult = sponsor.AddImage(
+                    storageKey,         // Store key (important!)
+                    uploadResult.Url, // URL
+                    image.IsMain,
+                    image.DisplayOrder,
+                    image.Caption);
+
+                if (addImageResult.Failed)
+                {
+                    await FallBackStorageAsync(storageService, uploadedKeys, cancellationToken);
+                    return addImageResult;
+                }
+
+                uploadedKeys.Add(storageKey);
+                await unitOfWork.AddAsync(addImageResult.Value, cancellationToken);
+            }
+            catch
+            {
+                await FallBackStorageAsync(storageService, uploadedKeys, cancellationToken);
+                return Result.Failure("An error occurred while processing the images.");
+            }
+            finally
+            {
+                image.Stream.Close();
+            }
         }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
+    }
+
+    private static async Task FallBackStorageAsync(
+        IFileStorageService storageService,
+        List<StorageKey> uploadedKeys,
+        CancellationToken cancellationToken)
+    {
+        await storageService.DeleteAsync(uploadedKeys, cancellationToken);
     }
 }
