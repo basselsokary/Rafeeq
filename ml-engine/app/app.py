@@ -91,13 +91,9 @@ async def predict(file: UploadFile = File(...)):
         if ref_features is not None:
             similarity_score = float(cosine_similarity(uploaded_features, ref_features) * 100)
             
-            if similarity_score > 65.0:
+            if similarity_score > 60.0:
                 response_data = {
-                    "predicted_class": int(predicted_index),
-                    "label": label_name,
-                    "confidence": round(confidence, 2),
-                    "similarity_score": round(similarity_score, 2),
-                    "status": "Verified"
+                    "label": label_name,                    
                 }
             else:
                 response_data = {
