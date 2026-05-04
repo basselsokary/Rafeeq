@@ -1,7 +1,7 @@
 [
   {
     "name": "Philae Temple",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Aswan",
     "ticket_price": 550,
     "size_score": 9,
@@ -12,7 +12,7 @@
   },
   {
     "name": "Abu Simbel Great Temple",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Abu Simbel",
     "ticket_price": 750,
     "size_score": 9,
@@ -23,7 +23,7 @@
   },
   {
     "name": "Botanical Garden (Kitchener's Island)",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Aswan",
     "ticket_price": 15,
     "size_score": 8,
@@ -34,7 +34,7 @@
   },
   {
     "name": "Kom Ombo Temple",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Kom Ombo",
     "ticket_price": 450,
     "size_score": 9,
@@ -45,7 +45,7 @@
   },
   {
     "name": "Edfu Temple",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Edfu",
     "ticket_price": 550,
     "size_score": 9,
@@ -56,7 +56,7 @@
   },
   {
     "name": "Unfinished Obelisk",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Luxor",
     "ticket_price": 220,
     "size_score": 8,
@@ -67,7 +67,7 @@
   },
   {
     "name": "Nubian Village (Gharb Soheil)",
-    "category": "Cultural Center",
+    "category": "Cultural",
     "zone": "Aswan",
     "ticket_price": 0,
     "size_score": 5,
@@ -89,7 +89,7 @@
   },
   {
     "name": "Tombs of the Nobles",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Luxor",
     "ticket_price": null,
     "size_score": 8,
@@ -100,7 +100,7 @@
   },
   {
     "name": "Kalabsha Temple",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Aswan",
     "ticket_price": 200,
     "size_score": 8,

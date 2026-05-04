@@ -89,7 +89,7 @@
   },
   {
     "name": "Salt Cave Salman",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Beau Site Street",
     "ticket_price": null,
     "size_score": 8,
@@ -100,7 +100,7 @@
   },
   {
     "name": "Souq Libya (Libyan Market)",
-    "category": "Promenade",
+    "category": "Walkway",
     "zone": "Central Marsa Matruh (near midan Souq)",
     "ticket_price": 0,
     "size_score": 4,
@@ -125,8 +125,8 @@
     "category": "Temple",
     "zone": "Village of Aghurmi",
     "ticket_price": 125,
-    "size_score": 5,
-    "crowd_score": 5,
+    "size_score": 7,
+    "crowd_score": 7,
     "latitude": 29.2,
     "longitude": 25.54,
     "description": "Ancient 26th-Dynasty Temple (oracle of Zeus-Amun) at Aghurmi (~4 km NE of Siwa) where Alexander the Great was confirmed as pharaoh ."
@@ -136,8 +136,8 @@
     "category": "Temple",
     "zone": "~2 km N of Siwa",
     "ticket_price": 125,
-    "size_score": 5,
-    "crowd_score": 5,
+    "size_score": 7,
+    "crowd_score": 7,
     "latitude": 29.21,
     "longitude": 25.52,
     "description": "Limestone necropolis hill with ~3,000 rock-cut tombs from 26th Dynasty through Roman/Byzantine times. It’s a major archaeological site (tombs of Si-Amun, Mesu-Isis, “Crocodile” tomb, etc.)."
@@ -147,8 +147,8 @@
     "category": "Temple",
     "zone": "~5 km W of town",
     "ticket_price": null,
-    "size_score": 5,
-    "crowd_score": 5,
+    "size_score": 7,
+    "crowd_score": 7,
     "latitude": 29.1924,
     "longitude": 25.4794,
     "description": "Small palm-covered island on Siwa’s main salt lake (Birket Siwa), reachable by causeway. Renowned for spectacular sunsets and a simple lakeside café ."

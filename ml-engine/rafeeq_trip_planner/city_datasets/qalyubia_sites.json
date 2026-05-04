@@ -1,7 +1,7 @@
 [
   {
     "name": "Tell Atrib (Athribis)",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Banha",
     "ticket_price": null,
     "size_score": 8,
@@ -12,7 +12,7 @@
   },
   {
     "name": "Muhammad Ali Palace (Shubra Palace)",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Qalyubia Governorate",
     "ticket_price": null,
     "size_score": 8,
@@ -34,7 +34,7 @@
   },
   {
     "name": "Church of the Virgin Mary in Musturud (Al-Mahamma)",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Qalyubia Governorate",
     "ticket_price": 0,
     "size_score": 5,
@@ -45,7 +45,7 @@
   },
   {
     "name": "Tell el-Yahudiyya (Tell el-Yehudi)",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Qalyubia Governorate",
     "ticket_price": 0,
     "size_score": 8,
@@ -56,7 +56,7 @@
   },
   {
     "name": "Al-Khanka Historical Mosque and District",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Qalyubia Governorate",
     "ticket_price": 0,
     "size_score": 5,

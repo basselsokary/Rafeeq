@@ -1,7 +1,7 @@
 [
   {
     "name": "Greco-Roman Museum",
-    "category": "Cultural Center",
+    "category": "Cultural",
     "zone": "Al Attarin",
     "ticket_price": 400,
     "size_score": 5,
@@ -12,7 +12,7 @@
   },
   {
     "name": "Qaitbay Citadel",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Al Gomrok",
     "ticket_price": 200,
     "size_score": 6,
@@ -23,7 +23,7 @@
   },
   {
     "name": "Royal Jewelry Museum Alexandria",
-    "category": "Cultural Center",
+    "category": "Cultural",
     "zone": "El Raml 2",
     "ticket_price": 220,
     "size_score": 5,
@@ -34,7 +34,7 @@
   },
   {
     "name": "Alexandria Bibliotheca",
-    "category": "Cultural Center",
+    "category": "Cultural",
     "zone": "Bab Sharqi",
     "ticket_price": 150,
     "size_score": 6,
@@ -56,7 +56,7 @@
   },
   {
     "name": "Serapeum of Alexandria",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Karmouz",
     "ticket_price": 200,
     "size_score": 5,
@@ -67,7 +67,7 @@
   },
   {
     "name": "Catacombs of Kom El Shoqafa",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Port al-Basal",
     "ticket_price": 100,
     "size_score": 6,
@@ -78,7 +78,7 @@
   },
   {
     "name": "Catacombs of Mostafa Kamel",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Sidi Gaber",
     "ticket_price": 40,
     "size_score": 5,
@@ -89,7 +89,7 @@
   },
   {
     "name": "Antoniades Palace",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Smouha",
     "ticket_price": 30,
     "size_score": 5,
@@ -100,7 +100,7 @@
   },
   {
     "name": "Montaza Palace",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Montaza 2",
     "ticket_price": 50,
     "size_score": 6,
@@ -111,7 +111,7 @@
   },
   {
     "name": "Sidi Morsi Abu al Abbas Mosque",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Qesm Al Gomrok",
     "ticket_price": 0,
     "size_score": 5,
@@ -122,7 +122,7 @@
   },
   {
     "name": "Alexandria Ancient Roman Theater",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Al Attarin",
     "ticket_price": 200,
     "size_score": 5,
@@ -133,7 +133,7 @@
   },
   {
     "name": "St Mark's Cathedral Alexandria",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Al Attarin",
     "ticket_price": 0,
     "size_score": 5,
@@ -144,7 +144,7 @@
   },
   {
     "name": "Taposiris Magna",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Alexandria Governorate",
     "ticket_price": null,
     "size_score": 8,
@@ -155,7 +155,7 @@
   },
   {
     "name": "Shatby Cemetery",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Port Said",
     "ticket_price": 100,
     "size_score": 8,
@@ -166,7 +166,7 @@
   },
   {
     "name": "Anfushi Tombs",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Alexandria",
     "ticket_price": 100,
     "size_score": 8,
@@ -180,8 +180,8 @@
     "category": "Temple",
     "zone": "Alexandria Governorate",
     "ticket_price": 0,
-    "size_score": 5,
-    "crowd_score": 5,
+    "size_score": 7,
+    "crowd_score": 7,
     "latitude": 31.20336515,
     "longitude": 29.91877353,
     "description": "Location & Significance: The Ras el-Soda Temple is a significant Roman-Egyptian religious structure in Alexandria. Originally located in the Ras el-Soda district, it was relocated in the early 1990s by the Supreme Council for Antiquities to the Chatby Garden on Horreya Street to protect it from rising groundwater. History & Foundation: Dating back to the 2nd century CE (Roman era), the temple was a private foundation established by a Roman citizen named Isidoros. He had the temple erected as a dedicated offering to the Egyptian goddess Isis, thanking her for healing his foot after a severe fall from his horse-driven carriage."
@@ -199,7 +199,7 @@
   },
   {
     "name": "Monastery of Saint Mina",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Alexandria Governorate",
     "ticket_price": 0,
     "size_score": 6,
@@ -210,7 +210,7 @@
   },
   {
     "name": "Sacred Heart Church",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Port Said",
     "ticket_price": 0,
     "size_score": 5,
@@ -221,7 +221,7 @@
   },
   {
     "name": "Saint Catherine Cathedral",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Alexandria",
     "ticket_price": 0,
     "size_score": 5,
@@ -232,7 +232,7 @@
   },
   {
     "name": "Terbanh Mosque",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Alexandria",
     "ticket_price": 0,
     "size_score": 5,
@@ -243,7 +243,7 @@
   },
   {
     "name": "El Nabi Daniel Mosque",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Alexandria",
     "ticket_price": 0,
     "size_score": 6,

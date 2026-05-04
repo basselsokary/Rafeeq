@@ -1,7 +1,7 @@
 [
   {
     "name": "Al-Mu'izz Street",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "El Gamaliya",
     "ticket_price": 220,
     "size_score": 8,
@@ -12,7 +12,7 @@
   },
   {
     "name": "Cairo Citadel",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "El Khalifa",
     "ticket_price": 550,
     "size_score": 9,
@@ -45,7 +45,7 @@
   },
   {
     "name": "All Saints’ Cathedral",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Zamalek",
     "ticket_price": 0,
     "size_score": 5,
@@ -122,7 +122,7 @@
   },
   {
     "name": "Cairo Opera House",
-    "category": "Cultural Center",
+    "category": "Cultural",
     "zone": "Zamalek",
     "ticket_price": null,
     "size_score": 5,
@@ -155,7 +155,7 @@
   },
   {
     "name": "Aisha Fahmy Palace",
-    "category": "Cultural Center",
+    "category": "Cultural",
     "zone": "Zamalek",
     "ticket_price": 0,
     "size_score": 5,
@@ -188,11 +188,11 @@
   },
   {
     "name": "Zamalek Art Gallery",
-    "category": "Museum",
+    "category": "Gallery",
     "zone": "Zamalek",
     "ticket_price": 0,
-    "size_score": 6,
-    "crowd_score": 6,
+    "size_score": 4,
+    "crowd_score": 4,
     "latitude": 30.06155398,
     "longitude": 31.22293394,
     "description": "A private gallery promoting contemporary Egyptian artists, hosting rotating exhibitions of modern art and photography. (Gallery space in central Zamalek.)"
@@ -221,7 +221,7 @@
   },
   {
     "name": "Bab Zuwayla",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Al-Gamaliya",
     "ticket_price": 100,
     "size_score": 8,
@@ -232,7 +232,7 @@
   },
   {
     "name": "Bab al-Futuh",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Al-Gamaliya",
     "ticket_price": null,
     "size_score": 8,
@@ -243,7 +243,7 @@
   },
   {
     "name": "Bab al-Nasr",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Al-Gamaliya",
     "ticket_price": null,
     "size_score": 8,
@@ -254,7 +254,7 @@
   },
   {
     "name": "Bayt al-Suhaymi",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Al-Gamaliya",
     "ticket_price": 220,
     "size_score": 5,
@@ -265,7 +265,7 @@
   },
   {
     "name": "Mosque of al-Hakim bi-Amr Allah",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Al-Gamaliya",
     "ticket_price": 0,
     "size_score": 5,
@@ -276,7 +276,7 @@
   },
   {
     "name": "Madrasa, Mausoleum and Bimaristan of al-Mansur Qalawun",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Al-Gamaliya",
     "ticket_price": null,
     "size_score": 8,
@@ -287,7 +287,7 @@
   },
   {
     "name": "Mosque and Madrasa of al-Nasir Muhammad Ibn Qalawun",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Al-Gamaliya",
     "ticket_price": null,
     "size_score": 5,
@@ -298,7 +298,7 @@
   },
   {
     "name": "Sultan al-Ghuri Complex",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Al-Gamaliya",
     "ticket_price": 150,
     "size_score": 8,
@@ -309,7 +309,7 @@
   },
   {
     "name": "Mosque of al-Zahir Baybars",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Al-Gamaliya",
     "ticket_price": 0,
     "size_score": 5,
@@ -320,7 +320,7 @@
   },
   {
     "name": "Palace of Prince Taz",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Al-Khalifa",
     "ticket_price": 0,
     "size_score": 8,
@@ -331,7 +331,7 @@
   },
   {
     "name": "House of Gamal al-Din al-Dhahabi",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Al-Gamaliya",
     "ticket_price": 30,
     "size_score": 5,
@@ -342,7 +342,7 @@
   },
   {
     "name": "House of Sitt Wasila",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Al-Gamaliya",
     "ticket_price": 100,
     "size_score": 5,
@@ -353,7 +353,7 @@
   },
   {
     "name": "Sabil-Kuttab of Muhammad Ali",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Al-Gamaliya",
     "ticket_price": null,
     "size_score": 8,
@@ -364,7 +364,7 @@
   },
   {
     "name": "Mosque of al-Fakahani",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Al-Gamaliya",
     "ticket_price": 0,
     "size_score": 5,
@@ -375,7 +375,7 @@
   },
   {
     "name": "Sabil of al-Amir Shaykhu",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Al-Sayyidah Zeinab",
     "ticket_price": 0,
     "size_score": 8,
@@ -386,7 +386,7 @@
   },
   {
     "name": "Imam al-Shafi'i Mosque",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Al-Sayyida Aisha",
     "ticket_price": 0,
     "size_score": 5,
@@ -397,7 +397,7 @@
   },
   {
     "name": "Mosque, Khanqa, and Madrasa of Sultan Farag ibn Barquq",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Al-Gamaliya",
     "ticket_price": null,
     "size_score": 8,
@@ -408,7 +408,7 @@
   },
   {
     "name": "Baron Empain Palace",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Heliopolis",
     "ticket_price": 220,
     "size_score": 5,
@@ -419,7 +419,7 @@
   },
   {
     "name": "Maimonides Synagogue",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Coptic Cairo",
     "ticket_price": 0,
     "size_score": 5,
@@ -430,7 +430,7 @@
   },
   {
     "name": "Mary's Tree (Matariyya)",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Matariyya",
     "ticket_price": 120,
     "size_score": 5,
@@ -441,7 +441,7 @@
   },
   {
     "name": "Obelisk of Senwosret I (Ayn Shams / Ancient Heliopolis)",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Ayn Shams (Matariyya)",
     "ticket_price": 200,
     "size_score": 8,
@@ -452,7 +452,7 @@
   },
   {
     "name": "Al-Fustat (Old Cairo Archaeological Site)",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Old Cairo",
     "ticket_price": 20,
     "size_score": 8,

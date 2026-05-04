@@ -1,7 +1,7 @@
 [
   {
     "name": "Wadi El Rayan",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Wadi El Rayan Protected Area",
     "ticket_price": 20,
     "size_score": 9,
@@ -12,7 +12,7 @@
   },
   {
     "name": "Wadi Al-Hitan (Whale Valley)",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Wadi Al Hitan",
     "ticket_price": null,
     "size_score": 9,
@@ -23,7 +23,7 @@
   },
   {
     "name": "Lake Qarun",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Birket Qarun",
     "ticket_price": 0,
     "size_score": 8,
@@ -34,7 +34,7 @@
   },
   {
     "name": "Qasr Qarun Temple",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Qasr Qarun Temple",
     "ticket_price": 150,
     "size_score": 8,
@@ -45,7 +45,7 @@
   },
   {
     "name": "Hawara Pyramid",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Hawara Pyramid",
     "ticket_price": 150,
     "size_score": 9,
@@ -56,7 +56,7 @@
   },
   {
     "name": "Lahun Pyramid (Senusret II)",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Lahun Pyramid",
     "ticket_price": 150,
     "size_score": 9,
@@ -67,7 +67,7 @@
   },
   {
     "name": "Karanis (Kom Oshim)",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Kom Oshim (Karanis)",
     "ticket_price": 150,
     "size_score": 8,
@@ -100,7 +100,7 @@
   },
   {
     "name": "Temple of Medinet Madi",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Medinet Madi (Narmuthis)",
     "ticket_price": 120,
     "size_score": 8,

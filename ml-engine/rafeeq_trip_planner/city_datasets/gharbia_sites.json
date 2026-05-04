@@ -1,7 +1,7 @@
 [
   {
     "name": "Mosque of Sidi Ahmad al-Badawi",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "City Center",
     "ticket_price": 0,
     "size_score": 5,
@@ -23,7 +23,7 @@
   },
   {
     "name": "St. George Coptic Orthodox Cathedral",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Downtown",
     "ticket_price": 0,
     "size_score": 5,
@@ -34,7 +34,7 @@
   },
   {
     "name": "Tanta Cultural Center",
-    "category": "Cultural Center",
+    "category": "Cultural",
     "zone": "Tanta",
     "ticket_price": null,
     "size_score": 5,
@@ -45,7 +45,7 @@
   },
   {
     "name": "Tanta Corniche",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Nile bank (West Tanta)",
     "ticket_price": 0,
     "size_score": 8,
@@ -56,7 +56,7 @@
   },
   {
     "name": "Abdullah ‘Asi Mosque",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Mahalla El Kubra",
     "ticket_price": 0,
     "size_score": 5,
@@ -67,7 +67,7 @@
   },
   {
     "name": "Al-Motawally Al-Trini Al-Kabeer mosque",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "between Nakra Sabha and al-Omariya",
     "ticket_price": 0,
     "size_score": 5,
@@ -78,7 +78,7 @@
   },
   {
     "name": "Church of the Virgin Mary & St. Abanoub",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Eastern Samannoud (Saad Zaghloul St.).",
     "ticket_price": 0,
     "size_score": 5,
@@ -89,7 +89,7 @@
   },
   {
     "name": "Ibrahim Seraj el-Din Hammam",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Mit Tatim locality",
     "ticket_price": null,
     "size_score": 5,
@@ -100,18 +100,18 @@
   },
   {
     "name": "Zefta Barrages",
-    "category": "Nature Reserve",
+    "category": "River",
     "zone": "Damietta",
     "ticket_price": 0,
-    "size_score": 8,
-    "crowd_score": 5,
+    "size_score": 6,
+    "crowd_score": 4,
     "latitude": 30.7219,
     "longitude": 31.2454,
     "description": "Historic early-20th-century Nile dam near Zefta, controlling water flow to Delta canals. Rehabilitated 2019–2022."
   },
   {
     "name": "French Bridge",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Connecting Zefta and Mit Ghamr across the Nile",
     "ticket_price": 0,
     "size_score": 5,
@@ -122,7 +122,7 @@
   },
   {
     "name": "Al Zober Mosque",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Sea Street",
     "ticket_price": 0,
     "size_score": 5,
@@ -133,7 +133,7 @@
   },
   {
     "name": "Behbeit el-Hagar",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Behbeit El Hagar",
     "ticket_price": 0,
     "size_score": 5,
@@ -144,11 +144,11 @@
   },
   {
     "name": "SA Al Hagar",
-    "category": "Nature Reserve",
+    "category": "Mountain",
     "zone": "SA Al Hagar",
     "ticket_price": 0,
     "size_score": 8,
-    "crowd_score": 5,
+    "crowd_score": 4,
     "latitude": 30.96,
     "longitude": 30.768,
     "description": "It is considered one of the most important ancient capitals in the western Delta. It was the capital of Egypt during the 26th Dynasty and is famous for the remains of Pharaonic temples (the Temple of Neith) and its rich history spanning thousands of years as a religious and political center."

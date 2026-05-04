@@ -12,7 +12,7 @@
   },
   {
     "name": "Wadi El Gemal Reserve",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Marsa Alam",
     "ticket_price": 25,
     "size_score": 9,
@@ -34,7 +34,7 @@
   },
   {
     "name": "El Quseir Fort",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "El Qoseir",
     "ticket_price": 60,
     "size_score": 5,
@@ -67,7 +67,7 @@
   },
   {
     "name": "Shaab Samadai (Dolphin House)",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Marsa Alam",
     "ticket_price": null,
     "size_score": 8,
@@ -78,11 +78,11 @@
   },
   {
     "name": "Gebel Elba National Park",
-    "category": "Nature Reserve",
+    "category": "Mountain",
     "zone": "Red Sea Governorate",
     "ticket_price": 0,
     "size_score": 8,
-    "crowd_score": 5,
+    "crowd_score": 4,
     "latitude": 22.25442266,
     "longitude": 36.32729479,
     "description": "A magical natural area in southeastern Egypt, featuring mist-covered mountains and lush greenery in the middle of the desert. It is home to the Bashari and Ababda tribes and hosts rare species of flora and fauna.Tip: Visiting this remote area requires prior security permits. It is essential to hire a local guide to safely explore the mountain trails and hidden valleys."
@@ -111,7 +111,7 @@
   },
   {
     "name": "Satayah Reef",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Marsa Alam",
     "ticket_price": null,
     "size_score": 8,
@@ -122,7 +122,7 @@
   },
   {
     "name": "El Fawakhir Mine",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "El Qoseir Red Sea Governorate",
     "ticket_price": 0,
     "size_score": 5,
@@ -133,7 +133,7 @@
   },
   {
     "name": "Qulaan Area",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Marsa Alam",
     "ticket_price": null,
     "size_score": 8,
@@ -144,7 +144,7 @@
   },
   {
     "name": "Sheikh El Shazly Shrine",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Marsa Alam",
     "ticket_price": 0,
     "size_score": 5,

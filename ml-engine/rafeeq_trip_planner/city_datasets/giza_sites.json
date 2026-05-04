@@ -1,7 +1,7 @@
 [
   {
     "name": "Pyramids of Giza",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Giza",
     "ticket_price": 700,
     "size_score": 9,
@@ -12,7 +12,7 @@
   },
   {
     "name": "Pyramid of Djedefre",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Giza",
     "ticket_price": null,
     "size_score": 8,
@@ -23,7 +23,7 @@
   },
   {
     "name": "Dahshur Necropolis",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Dahshur",
     "ticket_price": 200,
     "size_score": 8,
@@ -34,7 +34,7 @@
   },
   {
     "name": "Great Sphinx of Giza",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Giza",
     "ticket_price": 200,
     "size_score": 9,
@@ -67,7 +67,7 @@
   },
   {
     "name": "Saqqara Monuments",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Saqqara",
     "ticket_price": 600,
     "size_score": 9,

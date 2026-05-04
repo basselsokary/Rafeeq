@@ -4,15 +4,15 @@
     "category": "Temple",
     "zone": "Kharga Oasis",
     "ticket_price": 180,
-    "size_score": 5,
-    "crowd_score": 5,
+    "size_score": 7,
+    "crowd_score": 7,
     "latitude": 25.47,
     "longitude": 30.55,
     "description": "The Temple of Hibis is the largest and best preserved ancient Egyptian temple in the Kharga Oasis, dating to the Saite-Persian period ."
   },
   {
     "name": "El Bagawat",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Near Kharga City",
     "ticket_price": 120,
     "size_score": 8,
@@ -23,7 +23,7 @@
   },
   {
     "name": "Cave of the Swimmers",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Gilf Kebir",
     "ticket_price": null,
     "size_score": 8,
@@ -34,7 +34,7 @@
   },
   {
     "name": "Cave of the Beasts",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Gilf Kebir",
     "ticket_price": null,
     "size_score": 8,
@@ -45,7 +45,7 @@
   },
   {
     "name": "Qasr al-Ghweita",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Kharga Oasis",
     "ticket_price": 100,
     "size_score": 8,
@@ -56,7 +56,7 @@
   },
   {
     "name": "Qasr al-Labekha",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "شمال الخارجة",
     "ticket_price": null,
     "size_score": 8,
@@ -67,7 +67,7 @@
   },
   {
     "name": "Ain Umm al-Dabadib",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Kharga Oasis",
     "ticket_price": null,
     "size_score": 8,
@@ -78,7 +78,7 @@
   },
   {
     "name": "Temple of Dush",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Near modern Bashindi",
     "ticket_price": 100,
     "size_score": 8,
@@ -89,7 +89,7 @@
   },
   {
     "name": "Qasr el-Zayyan",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "75 km north of Dush on Kharga–Dakhla road",
     "ticket_price": 100,
     "size_score": 8,
@@ -100,7 +100,7 @@
   },
   {
     "name": "Nadura Temple",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Kharga Oasis",
     "ticket_price": null,
     "size_score": 8,
@@ -111,7 +111,7 @@
   },
   {
     "name": "Mut",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Mut city",
     "ticket_price": null,
     "size_score": 8,
@@ -122,7 +122,7 @@
   },
   {
     "name": "Qila al-Dabba",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "1 km east of Balat",
     "ticket_price": null,
     "size_score": 8,
@@ -133,7 +133,7 @@
   },
   {
     "name": "Necropolis of Muzawwaqa",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Between Dakhla Oasis and Farafra Oasis",
     "ticket_price": null,
     "size_score": 8,
@@ -144,7 +144,7 @@
   },
   {
     "name": "Deir el-Hagar (Temple of the Stone Monastery)",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Near Amheida",
     "ticket_price": null,
     "size_score": 8,
@@ -155,7 +155,7 @@
   },
   {
     "name": "White Desert National Park",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Farafra Oasis",
     "ticket_price": null,
     "size_score": 8,
@@ -166,7 +166,7 @@
   },
   {
     "name": "Crystal Mountain",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "White Desert area",
     "ticket_price": null,
     "size_score": 8,
@@ -177,7 +177,7 @@
   },
   {
     "name": "Black Desert",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Farafra district",
     "ticket_price": null,
     "size_score": 8,
@@ -188,7 +188,7 @@
   },
   {
     "name": "Ain Manawir",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Kharga Oasis",
     "ticket_price": null,
     "size_score": 8,
@@ -199,7 +199,7 @@
   },
   {
     "name": "Deir al-Munira",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Kharga Oasis",
     "ticket_price": null,
     "size_score": 8,
@@ -210,7 +210,7 @@
   },
   {
     "name": "Great Sand Sea",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Western Desert",
     "ticket_price": null,
     "size_score": 8,

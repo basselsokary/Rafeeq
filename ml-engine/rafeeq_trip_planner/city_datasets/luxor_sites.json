@@ -1,7 +1,7 @@
 [
   {
     "name": "Karnak Temple Complex",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Karnak",
     "ticket_price": 600,
     "size_score": 9,
@@ -12,7 +12,7 @@
   },
   {
     "name": "Luxor Temple",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Luxor",
     "ticket_price": 500,
     "size_score": 9,
@@ -23,7 +23,7 @@
   },
   {
     "name": "Valley of the Kings",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Luxor",
     "ticket_price": 750,
     "size_score": 9,
@@ -34,7 +34,7 @@
   },
   {
     "name": "Mortuary Temple of Hatshepsut",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Luxor",
     "ticket_price": 440,
     "size_score": 9,
@@ -67,7 +67,7 @@
   },
   {
     "name": "Deir el-Medina",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Luxor",
     "ticket_price": 220,
     "size_score": 9,
@@ -78,7 +78,7 @@
   },
   {
     "name": "Medinet Habu",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Luxor",
     "ticket_price": 220,
     "size_score": 8,
@@ -89,7 +89,7 @@
   },
   {
     "name": "Esna Temple (Khnum)",
-    "category": "Archaeological Site",
+    "category": "Archaeological",
     "zone": "Esna",
     "ticket_price": 200,
     "size_score": 8,

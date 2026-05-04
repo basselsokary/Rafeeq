@@ -91,23 +91,36 @@ MAX_TOTAL_WALK_KM = {
 # ── Fix 6: Category alias map — broader matching ─────────────────────────────
 # When user asks for cat X, sites in CATEGORY_ALIASES[X] also match (at 0.6x score).
 CATEGORY_ALIASES: dict[str, list] = {
-    "Historical Site":    ["Monument", "Landmark", "Archaeological Site", "Citadel", "Fortress"],
-    "Monument":           ["Historical Site", "Landmark"],
-    "Archaeological Site":["Historical Site", "Landmark", "Necropolis"],
+    # Existing aliases
+    "Historical Site":    ["Monument", "Landmark", "Archaeological Site", "Citadel", "Fortress", "Historical"],
+    "Monument":           ["Historical Site", "Landmark", "Historical"],
+    "Archaeological Site":["Historical Site", "Landmark", "Necropolis", "Archaeological"],
     "Landmark":           ["Historical Site", "Monument", "Archaeological Site"],
-    "Religious Site":     ["Mosque", "Church", "Synagogue", "Monastery", "Temple"],
-    "Mosque":             ["Religious Site", "Church"],
-    "Church":             ["Religious Site", "Mosque"],
-    "Museum":             ["Cultural Center"],
-    "Cultural Center":    ["Museum"],
-    "Beach":              ["Nature Reserve", "Island", "Promenade"],
-    "Island":             ["Beach", "Nature Reserve"],
-    "Nature Reserve":     ["Park", "Beach", "Island"],
-    "Park":               ["Nature Reserve"],
-    "Temple":             ["Archaeological Site", "Historical Site"],
-    "Pyramid":            ["Archaeological Site", "Historical Site", "Monument"],
-    "Fortress":           ["Historical Site", "Citadel"],
-    "Citadel":            ["Historical Site", "Fortress"],
+    "Religious Site":     ["Mosque", "Church", "Synagogue", "Monastery", "Temple", "Religious"],
+    "Mosque":             ["Religious Site", "Church", "Religious"],
+    "Church":             ["Religious Site", "Mosque", "Religious"],
+    "Museum":             ["Cultural Center", "Gallery", "Cultural"],
+    "Cultural Center":    ["Museum", "Library", "Cultural", "Gallery"],
+    "Beach":              ["Nature Reserve", "Island", "Promenade", "Walkway", "Natural"],
+    "Island":             ["Beach", "Nature Reserve", "Natural"],
+    "Nature Reserve":     ["Park", "Beach", "Island", "Natural", "Mountain", "River"],
+    "Park":               ["Nature Reserve", "Natural"],
+    "Temple":             ["Archaeological Site", "Historical Site", "Religious", "Archaeological"],
+    "Pyramid":            ["Archaeological Site", "Historical Site", "Monument", "Archaeological"],
+    "Fortress":           ["Historical Site", "Citadel", "Historical"],
+    "Citadel":            ["Historical Site", "Fortress", "Historical"],
+    # New Excel-matching category aliases
+    "Religious":          ["Mosque", "Church", "Synagogue", "Monastery", "Temple", "Religious Site"],
+    "Archaeological":     ["Historical", "Monument", "Landmark", "Archaeological Site", "Historical Site"],
+    "Historical":         ["Archaeological", "Monument", "Landmark", "Historical Site", "Archaeological Site"],
+    "Natural":            ["Park", "Beach", "Island", "Mountain", "River", "Nature Reserve"],
+    "Mountain":           ["Natural", "Nature Reserve", "Park"],
+    "River":              ["Natural", "Nature Reserve"],
+    "Gallery":            ["Museum", "Cultural", "Cultural Center"],
+    "Cultural":           ["Museum", "Gallery", "Library", "Cultural Center"],
+    "Library":            ["Cultural", "Cultural Center", "Museum"],
+    "Walkway":            ["Promenade", "Beach", "Park"],
+    "Therapeutic":        ["Spa & Thermal Springs", "Natural"],
 }
 
 # Behavioral config per tolerance level.
@@ -210,11 +223,14 @@ ALLOWED_CATEGORIES = {
     "Historical Site", "Palace", "Fortress", "Tomb",
     "Gate", "Bazaar", "Necropolis", "Temple", "Synagogue",
     "Archaeological Site", "Citadel",
-    # New multi-city normalized categories
-    "Religious Site", "Nature Reserve", "Beach", "Island",
-    "Diving Site", "Spa & Thermal Springs", "Park", "Promenade",
-    "Marina", "Market", "Entertainment", "Aquarium",
-    "Cultural Center", "Landmark", "Monastery",
+    # Old normalized names (kept for backward compat)
+    "Religious Site", "Nature Reserve", "Diving Site", "Spa & Thermal Springs",
+    "Park", "Promenade", "Marina", "Market", "Entertainment", "Aquarium",
+    "Cultural Center", "Landmark", "Monastery", "Beach", "Island",
+    # New Excel-matching category names
+    "Religious", "Natural", "Historical", "Archaeological",
+    "Mountain", "River", "Therapeutic", "Gallery", "Library",
+    "Cultural", "Walkway",
 }
 # ALLOWED_ZONES removed — zones are now city-specific and not whitelisted.
 

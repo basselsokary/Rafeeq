@@ -1,7 +1,7 @@
 [
   {
     "name": "The Old Lighthouse",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Port Said",
     "ticket_price": 0,
     "size_score": 5,
@@ -23,7 +23,7 @@
   },
   {
     "name": "Salt Mountains - Port Fouad",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Port Said",
     "ticket_price": 5,
     "size_score": 8,
@@ -45,7 +45,7 @@
   },
   {
     "name": "Saint Eugenie Church",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Port Said",
     "ticket_price": 0,
     "size_score": 5,
@@ -56,7 +56,7 @@
   },
   {
     "name": "The Cathedral of Our Lady of Charity",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Port Said",
     "ticket_price": 0,
     "size_score": 5,
@@ -78,7 +78,7 @@
   },
   {
     "name": "The New Tourist Walkway",
-    "category": "Promenade",
+    "category": "Walkway",
     "zone": "Port Said",
     "ticket_price": 0,
     "size_score": 4,
@@ -133,7 +133,7 @@
   },
   {
     "name": "The Strong Hill - Jebel Maryam",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Ismailia",
     "ticket_price": 0,
     "size_score": 5,
@@ -155,7 +155,7 @@
   },
   {
     "name": "Port Tawfiq",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Suez",
     "ticket_price": 0,
     "size_score": 5,
@@ -166,7 +166,7 @@
   },
   {
     "name": "El Lesan Area",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Damietta",
     "ticket_price": 0,
     "size_score": 9,
@@ -177,7 +177,7 @@
   },
   {
     "name": "Nile Street",
-    "category": "Promenade",
+    "category": "Walkway",
     "zone": "Ras El Bar",
     "ticket_price": 0,
     "size_score": 4,
@@ -199,7 +199,7 @@
   },
   {
     "name": "Al Rahma Mosque",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Ras El Bar",
     "ticket_price": 0,
     "size_score": 5,

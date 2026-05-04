@@ -1,7 +1,7 @@
 [
   {
     "name": "Saint Catherine's Monastery",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "St. Catherine",
     "ticket_price": 0,
     "size_score": 6,
@@ -12,7 +12,7 @@
   },
   {
     "name": "Ras Mohammed National Park",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Sharm El Sheikh",
     "ticket_price": 25,
     "size_score": 9,
@@ -23,7 +23,7 @@
   },
   {
     "name": "Salah El-Din Castle",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Taba",
     "ticket_price": 550,
     "size_score": 5,
@@ -34,7 +34,7 @@
   },
   {
     "name": "The Blue Hole",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Dahab",
     "ticket_price": 25,
     "size_score": 9,
@@ -45,7 +45,7 @@
   },
   {
     "name": "Mount Sinai",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "St. Catherine",
     "ticket_price": 0,
     "size_score": 6,
@@ -56,7 +56,7 @@
   },
   {
     "name": "Moses Springs",
-    "category": "Spa & Thermal Springs",
+    "category": "Therapeutic",
     "zone": "Saint Catherine",
     "ticket_price": 0,
     "size_score": 3,
@@ -67,7 +67,7 @@
   },
   {
     "name": "Colored Canyon",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Dahab",
     "ticket_price": 16,
     "size_score": 8,
@@ -78,7 +78,7 @@
   },
   {
     "name": "Nabq Protected Area",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Dahab",
     "ticket_price": 25,
     "size_score": 8,
@@ -89,7 +89,7 @@
   },
   {
     "name": "Tiran Island",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Sharm El Sheikh",
     "ticket_price": null,
     "size_score": 8,
@@ -100,7 +100,7 @@
   },
   {
     "name": "Blue Lagoon",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Dahab",
     "ticket_price": 0,
     "size_score": 8,
@@ -111,7 +111,7 @@
   },
   {
     "name": "Abu Galum Reserve",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Dahab",
     "ticket_price": 25,
     "size_score": 8,
@@ -122,7 +122,7 @@
   },
   {
     "name": "Three Pools",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Dahab",
     "ticket_price": 0,
     "size_score": 8,
@@ -133,7 +133,7 @@
   },
   {
     "name": "Serabit el-Khadim",
-    "category": "Historical Site",
+    "category": "Historical",
     "zone": "Suez",
     "ticket_price": 0,
     "size_score": 5,
@@ -177,7 +177,7 @@
   },
   {
     "name": "Al Sahaba Mosque",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "Old Market",
     "ticket_price": 0,
     "size_score": 5,
@@ -188,7 +188,7 @@
   },
   {
     "name": "Hammam Faroun",
-    "category": "Spa & Thermal Springs",
+    "category": "Therapeutic",
     "zone": "Abu Zenima",
     "ticket_price": 0,
     "size_score": 3,
@@ -199,7 +199,7 @@
   },
   {
     "name": "Wadi Genay",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "South Sinai Governorate 8771001",
     "ticket_price": 0,
     "size_score": 8,
@@ -221,7 +221,7 @@
   },
   {
     "name": "Wishwashi Canyon",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "Taba",
     "ticket_price": 0,
     "size_score": 8,
@@ -232,7 +232,7 @@
   },
   {
     "name": "Seven Girls Monastery",
-    "category": "Religious Site",
+    "category": "Religious",
     "zone": "St. Catherine",
     "ticket_price": 0,
     "size_score": 5,
@@ -254,7 +254,7 @@
   },
   {
     "name": "Ain Khudra",
-    "category": "Nature Reserve",
+    "category": "Natural",
     "zone": "St. Catherine",
     "ticket_price": 0,
     "size_score": 8,
