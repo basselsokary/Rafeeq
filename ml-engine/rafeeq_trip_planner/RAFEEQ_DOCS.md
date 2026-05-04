@@ -407,7 +407,7 @@ so administrative boundaries never limit the itinerary.
 | File | Role |
 |---|---|
 | `test_api.py` | **API test suite** (151 checks). Uses FastAPI TestClient — no server needed. Run with `python test_api.py`. |
-| `mnya.py` | **Engine test suite** — calls `generate_trip()` directly. Covers 10 city-center cases + 6 budget cases. Run with `python mnya.py`. |
+| `test_cases.py` | **Engine test suite** — calls `generate_trip()` directly. Covers 10 city-center cases + 6 budget cases. Run with `python test_cases.py`. |
 
 
 ---
@@ -431,7 +431,7 @@ Expected output:
 ### Engine tests
 
 ```bash
-python mnya.py
+python test_cases.py
 ```
 
 Expected output:
