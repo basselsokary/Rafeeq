@@ -185,6 +185,7 @@ class TripRequest(BaseModel):
     @field_validator("walking_tolerance")
     @classmethod
     def _check_tolerance(cls, v: str) -> str:
+        v = v.strip().lower()
         if v not in ("low", "medium", "high"):
             raise ValueError("walking_tolerance must be 'low', 'medium', or 'high'")
         return v
@@ -442,7 +443,7 @@ def generate_trip_endpoint(body: TripRequest):
         total_time_minutes=round(total_time, 1),
         total_ticket_cost=total_cost,
         currency="EGP",
-        budget_limit=round(ticket_budget_egp, 2) if ticket_budget_egp is not None else None,
+        budget_limit=round(ticket_budget_egp, 2) if ticket_budget_egp is not None else 0,
         budget_used_percentage=pct,
         budget_status=bstatus,
         start_time=body.start_time,
@@ -617,6 +618,7 @@ class FlatTripRequest(BaseModel):
     @field_validator("walking_tolerance")
     @classmethod
     def _tol(cls, v: str) -> str:
+        v = v.strip().lower()
         if v not in ("low", "medium", "high"):
             raise ValueError("walking_tolerance must be 'low', 'medium', or 'high'")
         return v
@@ -815,6 +817,6 @@ def flat_generate_trip(body: FlatTripRequest):
         "itinerary":          itinerary,
         "total_time_minutes": round(total_time, 1),
         "total_ticket_cost_egp": total_cost,
-        "budget_limit_egp":   round(ticket_budget_egp, 2) if ticket_budget_egp else None,
+        "budget_limit_egp":   round(ticket_budget_egp, 2) if ticket_budget_egp else 0,
         "currency":           "EGP",
     }
