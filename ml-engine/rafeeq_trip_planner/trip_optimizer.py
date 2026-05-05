@@ -202,8 +202,8 @@ def resolve_ticket_budget(profile: dict) -> float | None:
     Callers treat None as "no financial constraint".
     """
     amount = float(profile.get("budget_amount") or 0)
-    if amount <= 0:
-        return None   # 0 = open / unlimited mode
+    if amount < 0:
+        return None   # negative → open / unlimited mode
     currency = str(profile.get("currency", "EGP")).upper().strip()
     if currency == "USD":
         amount = amount * USD_TO_EGP
