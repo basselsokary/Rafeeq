@@ -820,3 +820,326 @@ def flat_generate_trip(body: FlatTripRequest):
         "budget_limit_egp":   round(ticket_budget_egp, 2) if ticket_budget_egp else 0,
         "currency":           "EGP",
     }
+
+
+# ==============================================================================
+# POST /generate-multi-day-trip
+# ------------------------------------------------------------------------------
+# Orchestrates N sequential calls to generate_trip().
+#
+# Key guarantees
+#   • No site is visited twice across days (global visited-set)
+#   • Budget is split evenly per day; respects currency conversion
+#   • Start location rolls to the last stop of each completed day
+#   • Empty days get 2 fallback retries before being recorded as empty
+# ==============================================================================
+
+class MultiDayTripRequest(BaseModel):
+    """
+    Request body for multi-day trip planning.
+    total_budget = 0 (or omit) → unlimited per day.
+    total_budget > 0 → daily_budget = total_budget / days (currency required).
+    """
+    # ── required ──────────────────────────────────────────────────────────────
+    start_lat: float = Field(..., ge=-90,  le=90,  examples=[30.0444])
+    start_lon: float = Field(..., ge=-180, le=180, examples=[31.2357])
+    days:      int   = Field(..., ge=1,    le=30,  examples=[3],
+                             description="Number of days (1–30)")
+
+    # ── optional with defaults ─────────────────────────────────────────────────
+    total_budget:           float     = Field(default=0.0, ge=0,
+                                              description="0 = unlimited",
+                                              examples=[900])
+    available_hours_per_day: float    = Field(default=6.0, ge=0.5, le=24.0,
+                                              examples=[5])
+    start_time:             str       = Field(default="09:00", examples=["09:00"])
+    preferred_categories:   List[str] = Field(default=[], examples=[["Museum"]])
+    walking_tolerance:      str       = Field(default="medium", examples=["medium"])
+    currency:               Optional[str] = Field(default=None, examples=["EGP"])
+
+    # ── validators ────────────────────────────────────────────────────────────
+    @field_validator("walking_tolerance")
+    @classmethod
+    def _tol(cls, v: str) -> str:
+        v = v.strip().lower()
+        if v not in ("low", "medium", "high"):
+            raise ValueError("walking_tolerance must be 'low', 'medium', or 'high'")
+        return v
+
+    @field_validator("start_time")
+    @classmethod
+    def _time(cls, v: str) -> str:
+        import re
+        if not re.match(r"^\d{2}:\d{2}$", v):
+            raise ValueError("start_time must be HH:MM (e.g. '09:00')")
+        h, m = map(int, v.split(":"))
+        if not (0 <= h <= 23 and 0 <= m <= 59):
+            raise ValueError("start_time is out of range")
+        return v
+
+    @model_validator(mode="after")
+    def _budget(self) -> "MultiDayTripRequest":
+        if self.total_budget > 0:
+            if not self.currency:
+                raise ValueError(
+                    "currency is required when total_budget > 0 (use 'EGP' or 'USD')"
+                )
+            if self.currency.upper() not in ("EGP", "USD"):
+                raise ValueError("currency must be 'EGP' or 'USD'")
+        return self
+
+    @model_validator(mode="after")
+    def _egypt(self) -> "MultiDayTripRequest":
+        if not (21.0 <= self.start_lat <= 32.5):
+            raise ValueError(f"start_lat {self.start_lat} is outside Egypt (21-32.5)")
+        if not (24.0 <= self.start_lon <= 37.5):
+            raise ValueError(f"start_lon {self.start_lon} is outside Egypt (24-37.5)")
+        return self
+
+
+def _build_day_itinerary(stops: list) -> list:
+    """Convert raw generate_trip() output into the compact stop format."""
+    return [
+        {
+            "name":                       s.get("name", ""),
+            "arrival_time":               s.get("arrival_time", ""),
+            "predicted_duration_minutes": round(s.get("predicted_duration_minutes", 0), 1),
+            "travel_time_minutes":        round(s.get("travel_time_minutes", 0), 1),
+            "ticket_price_egp":           float(s.get("ticket_price_egp") or 0),
+            "category":                   s.get("category", ""),
+            "zone":                       s.get("zone", ""),
+            "latitude":                   s.get("latitude"),
+            "longitude":                  s.get("longitude"),
+        }
+        for s in stops
+    ]
+
+
+def _run_day(
+    generate_trip,
+    base_profile: dict,
+    visited: set,
+    fallback_pass: int = 0,
+) -> list:
+    """
+    Call generate_trip() once and return the raw stop list.
+
+    fallback_pass controls how much we relax constraints:
+      0 → full constraints (visited set + category filter)
+      1 → keep visited set but drop preferred_categories
+      2 → also clear visited set (last resort)
+    """
+    profile = dict(base_profile)
+
+    if fallback_pass == 0:
+        profile["visited_sites"] = sorted(visited)
+    elif fallback_pass == 1:
+        profile["visited_sites"] = sorted(visited)
+        profile["preferred_categories"] = []
+    else:  # fallback_pass == 2
+        profile["visited_sites"] = []
+        profile["preferred_categories"] = []
+
+    try:
+        return generate_trip(
+            profile,
+            model_path=MODEL_FILE,
+            city_resolver=_city_resolver,
+        ) or []
+    except Exception as exc:
+        log.warning("[MultiDay] Engine error on day pass=%d: %s", fallback_pass, exc)
+        return []
+
+
+@app.post(
+    "/generate-multi-day-trip",
+    tags=["Trip Planning"],
+    summary="Generate a multi-day personalised itinerary",
+    responses={
+        400: {"description": "Invalid input"},
+        404: {"description": "No itinerary could be generated"},
+        500: {"description": "Engine error"},
+    },
+)
+def generate_multi_day_trip(body: MultiDayTripRequest):
+    """
+    **Multi-day trip planner** — orchestrates N sequential calls to the
+    single-day engine, guaranteeing no duplicate site visits across days.
+
+    URL: `POST http://127.0.0.1:8000/generate-multi-day-trip`
+
+    ### Key behaviour
+    - `total_budget` is split evenly per day (`daily_budget = total_budget / days`)
+    - `total_budget = 0` (or omit) → unlimited budget every day
+    - The start location rolls to the **last stop of each day** for the next day
+    - A site visited on any day is excluded from all subsequent days
+    - If a day returns empty, two fallback retries are attempted:
+        1. Drop `preferred_categories` (wider search)
+        2. Also clear `visited_sites` (last resort — may repeat a site)
+
+    ### Example request
+    ```json
+    {
+      "start_lat": 30.0444,
+      "start_lon": 31.2357,
+      "days": 3,
+      "total_budget": 900,
+      "available_hours_per_day": 5,
+      "start_time": "09:00",
+      "preferred_categories": ["Museum", "Historical"],
+      "walking_tolerance": "medium",
+      "currency": "EGP"
+    }
+    ```
+
+    ### Example response
+    ```json
+    {
+      "trip_summary": {
+        "total_days": 3,
+        "total_sites_visited": 9,
+        "total_ticket_cost_egp": 540,
+        "total_budget_egp": 900,
+        "daily_budget_egp": 300,
+        "currency": "EGP"
+      },
+      "days": [
+        {
+          "day": 1,
+          "city": "Cairo",
+          "start_location": [30.0444, 31.2357],
+          "itinerary": [...],
+          "day_ticket_cost_egp": 180,
+          "day_budget_egp": 300,
+          "total_time_minutes": 290,
+          "fallback_used": false
+        }
+      ]
+    }
+    ```
+    """
+    try:
+        from trip_optimizer import generate_trip, resolve_ticket_budget
+    except ImportError as exc:
+        log.error("Could not import trip_optimizer: %s", exc)
+        raise HTTPException(status_code=500, detail=f"Engine unavailable: {exc}")
+
+    currency   = (body.currency or "EGP").upper()
+    is_budget  = body.total_budget > 0
+    daily_budget = round(body.total_budget / body.days, 2) if is_budget else 0.0
+
+    log.info(
+        "[MultiDay] %d days | %.1fh/day | budget=%s | tol=%s | cats=%s",
+        body.days, body.available_hours_per_day,
+        f"{body.total_budget} {currency}" if is_budget else "unlimited",
+        body.walking_tolerance,
+        body.preferred_categories or "any",
+    )
+
+    # ── Shared state across days ───────────────────────────────────────────────
+    global_visited: set  = set()
+    current_lat:  float  = body.start_lat
+    current_lon:  float  = body.start_lon
+    trip_days:    list   = []
+    grand_cost:   float  = 0.0
+
+    for day_num in range(1, body.days + 1):
+        day_start_lat = current_lat
+        day_start_lon = current_lon
+
+        base_profile = {
+            "start_lat":            current_lat,
+            "start_lon":            current_lon,
+            "available_hours":      body.available_hours_per_day,
+            "preferred_categories": list(body.preferred_categories),
+            "walking_tolerance":    body.walking_tolerance,
+            "start_time":           body.start_time,
+            "budget_amount":        daily_budget,
+            "currency":             currency,
+        }
+
+        # ── Try up to 3 passes (original → relax cats → clear visited) ─────────
+        raw_stops   = []
+        fallback_lvl = 0
+        for attempt in range(3):
+            raw_stops = _run_day(generate_trip, base_profile, global_visited, attempt)
+            if raw_stops:
+                fallback_lvl = attempt
+                break
+            log.info("[MultiDay] Day %d attempt %d returned empty — retrying", day_num, attempt + 1)
+
+        # ── Build compact itinerary ────────────────────────────────────────────
+        itinerary  = _build_day_itinerary(raw_stops)
+        day_cost   = sum(s["ticket_price_egp"] for s in itinerary)
+        total_time = raw_stops[-1].get("cumulative_time_minutes", 0) if raw_stops else 0
+        city_name  = _detect_city_name(day_start_lat, day_start_lon)
+
+        # ── Update global visited set ─────────────────────────────────────────
+        for stop in itinerary:
+            if stop["name"]:
+                global_visited.add(stop["name"])
+
+        grand_cost += day_cost
+
+        # ── Roll start location to last stop with valid GPS ───────────────────
+        for stop in reversed(raw_stops):
+            slat = stop.get("latitude")
+            slon = stop.get("longitude")
+            if slat is not None and slon is not None:
+                current_lat = slat
+                current_lon = slon
+                break
+        # (if all stops lack GPS, keep current_lat/lon unchanged)
+
+        trip_days.append({
+            "day":                 day_num,
+            "city":                city_name,
+            "start_location":      [day_start_lat, day_start_lon],
+            "itinerary":           itinerary,
+            "day_ticket_cost_egp": round(day_cost, 2),
+            "day_budget_egp":      round(daily_budget, 2) if is_budget else None,
+            "total_time_minutes":  round(total_time, 1),
+            "fallback_used":       fallback_lvl > 0,
+            "fallback_level":      fallback_lvl,
+        })
+
+        log.info(
+            "[MultiDay] Day %d done | city=%s | %d stops | %.0f min | %.0f EGP%s",
+            day_num, city_name, len(itinerary), total_time, day_cost,
+            f" [fallback={fallback_lvl}]" if fallback_lvl else "",
+        )
+
+    # ── Guard: every day was empty ─────────────────────────────────────────────
+    total_stops = sum(len(d["itinerary"]) for d in trip_days)
+    if total_stops == 0:
+        return JSONResponse(
+            status_code=404,
+            content={
+                "status": "error",
+                "reason": "No attractions found near your location for any day",
+                "days":   [],
+            },
+        )
+
+    # ── Resolve total budget in EGP for summary ────────────────────────────────
+    total_budget_egp: Optional[float] = None
+    if is_budget:
+        sample_profile = {"budget_amount": body.total_budget, "currency": currency}
+        total_budget_egp = resolve_ticket_budget(sample_profile)
+
+    log.info(
+        "[MultiDay] Complete | %d days | %d total stops | %.0f EGP total cost",
+        body.days, total_stops, grand_cost,
+    )
+
+    return {
+        "trip_summary": {
+            "total_days":            body.days,
+            "total_sites_visited":   total_stops,
+            "total_ticket_cost_egp": round(grand_cost, 2),
+            "total_budget_egp":      round(total_budget_egp, 2) if total_budget_egp else None,
+            "daily_budget_egp":      round(daily_budget, 2) if is_budget else None,
+            "currency":              "EGP",
+        },
+        "days": trip_days,
+    }

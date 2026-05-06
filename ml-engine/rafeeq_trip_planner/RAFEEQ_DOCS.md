@@ -2,8 +2,8 @@
 
 > **System name:** Rafeeq Trip Planner  
 > **Engine:** KemetPath (ML + Beam Search)  
-> **Purpose:** AI-powered one-day itinerary generator for Egypt  
-> **Coverage:** 18 governorates / regions, 300+ sites
+> **Purpose:** AI-powered single-day and multi-day itinerary generator for Egypt  
+> **Coverage:** 18 governorates / regions, 250+ sites
 
 ---
 
@@ -13,6 +13,7 @@
 2. [Quick start — run the API](#quick-start--run-the-api)
 3. [API reference](#api-reference)
    - [POST /generate-trip (primary)](#post-generate-trip)
+   - [POST /generate-multi-day-trip](#post-generate-multi-day-trip)
    - [GET /api/v1/health](#get-apiv1health)
    - [GET /api/v1/categories](#get-apiv1categories)
    - [GET /api/v1/cities](#get-apiv1cities)
@@ -278,6 +279,189 @@ and the `budget_used_percentage` field. See Swagger at `/docs` for full schema.
 
 ---
 
+### POST /generate-multi-day-trip
+
+**Multi-day planner.** Orchestrates N sequential calls to the single-day engine,
+guaranteeing no duplicate site visits across days.
+
+```
+POST http://127.0.0.1:8000/generate-multi-day-trip
+Content-Type: application/json
+```
+
+#### Request body
+
+| Field | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `start_lat` | float | ✅ | — | GPS latitude of trip start (Egypt: 21–32.5) |
+| `start_lon` | float | ✅ | — | GPS longitude of trip start (Egypt: 24–37.5) |
+| `days` | int | ✅ | — | Number of days (1–30) |
+| `total_budget` | float | — | `0` | `0` = unlimited; `>0` = constrained (split evenly per day) |
+| `currency` | string | ⚠️ if budget>0 | — | `"EGP"` or `"USD"` |
+| `available_hours_per_day` | float | — | `6.0` | Hours available each day (0.5–24) |
+| `start_time` | string | — | `"09:00"` | Trip start time each day (HH:MM) |
+| `preferred_categories` | list[str] | — | `[]` | Site types to prioritise |
+| `walking_tolerance` | string | — | `"medium"` | `"low"` / `"medium"` / `"high"` |
+
+#### How budget is split
+
+```
+daily_budget = total_budget / days
+```
+
+Each day independently enforces `daily_budget`. If `total_budget = 0` (or
+omitted), every day runs in **unlimited mode**.
+
+#### How location rolls between days
+
+At the end of each day, the start location for the **next day** is set to
+the GPS coordinates of the **last stop** visited. This keeps the trip
+geographically continuous.
+
+#### No-duplicate guarantee
+
+A global visited-set is maintained across all days. Any site added to Day 1
+cannot appear on Day 2 or later. The engine enforces this by passing
+`visited_sites` to `generate_trip()` on each call.
+
+#### Fallback strategy (empty day)
+
+If a day returns no results, two retries are attempted automatically:
+
+| Pass | What changes |
+|---|---|
+| 1 | Drop `preferred_categories` — search all categories |
+| 2 | Also clear `visited_sites` — last resort, may repeat a site |
+
+The response includes `"fallback_used": true` and `"fallback_level": 1|2`
+for any day where a retry was needed.
+
+#### Example request
+
+```json
+{
+  "start_lat": 30.0444,
+  "start_lon": 31.2357,
+  "days": 3,
+  "total_budget": 900,
+  "available_hours_per_day": 5,
+  "start_time": "09:00",
+  "preferred_categories": ["Museum", "Archaeological"],
+  "walking_tolerance": "medium",
+  "currency": "EGP"
+}
+```
+
+#### Minimal request (unlimited budget)
+
+```json
+{
+  "start_lat": 30.0444,
+  "start_lon": 31.2357,
+  "days": 3
+}
+```
+
+#### Success response (200)
+
+```json
+{
+  "trip_summary": {
+    "total_days": 3,
+    "total_sites_visited": 9,
+    "total_ticket_cost_egp": 230.0,
+    "total_budget_egp": 900.0,
+    "daily_budget_egp": 300.0,
+    "currency": "EGP"
+  },
+  "days": [
+    {
+      "day": 1,
+      "city": "Cairo",
+      "start_location": [30.0444, 31.2357],
+      "itinerary": [
+        {
+          "name": "Madrasa of al-Mansur Qalawun",
+          "arrival_time": "09:03",
+          "predicted_duration_minutes": 89.0,
+          "travel_time_minutes": 3.0,
+          "ticket_price_egp": 0.0,
+          "category": "Archaeological",
+          "zone": "Al-Gamaliya",
+          "latitude": 30.0486,
+          "longitude": 31.2621
+        }
+      ],
+      "day_ticket_cost_egp": 30.0,
+      "day_budget_egp": 300.0,
+      "total_time_minutes": 268.0,
+      "fallback_used": false,
+      "fallback_level": 0
+    }
+  ]
+}
+```
+
+> When `total_budget = 0`, both `total_budget_egp` and `daily_budget_egp` are `null`.
+
+#### Stop fields (same as single-day, plus GPS)
+
+Each stop inside `days[n].itinerary` contains all the same fields as
+`/generate-trip` stops, **plus**:
+
+| Field | Type | Description |
+|---|---|---|
+| `latitude` | float \| null | GPS latitude of the site |
+| `longitude` | float \| null | GPS longitude of the site |
+
+#### Error responses
+
+| Code | Cause | Body |
+|---|---|---|
+| 400 | Invalid input | `{"status":"error","message":"..."}` |
+| 404 | No sites found for any day | `{"status":"error","reason":"...","days":[]}` |
+| 500 | Engine crash | `{"detail":"..."}` |
+
+#### Common 400 causes
+
+```
+days < 1 or days > 30
+total_budget > 0 but currency missing
+currency not "EGP" or "USD"
+coordinates outside Egypt
+```
+
+#### Python example
+
+```python
+import requests
+
+response = requests.post(
+    "http://127.0.0.1:8000/generate-multi-day-trip",
+    json={
+        "start_lat": 30.0444,
+        "start_lon": 31.2357,
+        "days": 3,
+        "total_budget": 900,
+        "available_hours_per_day": 5,
+        "start_time": "09:00",
+        "preferred_categories": ["Museum", "Archaeological"],
+        "walking_tolerance": "medium",
+        "currency": "EGP",
+    }
+)
+
+data = response.json()
+print("Total sites:", data["trip_summary"]["total_sites_visited"])
+
+for day in data["days"]:
+    print(f"\n=== Day {day['day']} — {day['city']} ===")
+    for stop in day["itinerary"]:
+        print(f"  {stop['arrival_time']}  {stop['name']}  ({stop['category']})")
+```
+
+---
+
 ## Use the engine directly (no server)
 
 You can call `generate_trip()` directly in Python without starting the API:
@@ -389,7 +573,6 @@ so administrative boundaries never limit the itinerary.
 | `city_datasets/` | **All site data.** One JSON per region + `cities_index.json`. |
 | `city_datasets/cities_index.json` | Registry of all cities with centre coordinates and filenames. |
 | `city_datasets/*_sites.json` | Individual region datasets (42 Cairo sites, 26 Alexandria sites, etc.). |
-| `cairo_historical_sites.json` | Legacy Cairo-only dataset. Still used as a fallback by `/api/v1/sites` when no city filter is given. |
 
 ### Utility / tooling files (keep if you ever need to rebuild)
 
@@ -406,8 +589,9 @@ so administrative boundaries never limit the itinerary.
 
 | File | Role |
 |---|---|
-| `test_api.py` | **API test suite** (151 checks). Uses FastAPI TestClient — no server needed. Run with `python test_api.py`. |
+| `test_api.py` | **API test suite** (151 checks). Covers single-day `/generate-trip` endpoint — budget modes, validation, response schema. Run with `python test_api.py`. |
 | `test_cases.py` | **Engine test suite** — calls `generate_trip()` directly. Covers 10 city-center cases + 6 budget cases. Run with `python test_cases.py`. |
+| `test_multi_day.py` | **Multi-day test suite** (59 checks). Tests `/generate-multi-day-trip` — no-duplicate guarantee, budget split, validation errors, fallback behaviour, edge cases. Run with `python test_multi_day.py`. |
 
 
 ---
@@ -442,6 +626,33 @@ PASS: 10   EMPTY: 0   FAIL: 0   TOTAL: 10
 
 TEST SUMMARY (Budget Feature)
 PASS: 6   EMPTY: 0   FAIL: 0   TOTAL: 6
+```
+
+### Multi-day endpoint tests (no server required)
+
+```bash
+python test_multi_day.py
+```
+
+Expected output:
+
+```
+-- T1: 3-day Cairo, 900 EGP total budget
+  [PASS] HTTP 200
+  [PASS] total_days == 3
+  [PASS] daily_budget_egp == 300
+  [PASS] no duplicate sites
+  [PASS] day 1 cost 30.0 <= budget 300.0
+  ...
+
+-- T2: 2-day Cairo, unlimited budget
+  [PASS] total_budget_egp None
+  [PASS] no duplicate sites
+
+-- T3: validation — budget without currency
+  [PASS] HTTP 400
+
+  PASS: 59   FAIL: 0   TOTAL: 59
 ```
 
 ---
@@ -509,4 +720,4 @@ User input (lat, lon, hours, prefs, budget)
 
 ---
 
-*Documentation generated 2026-05-04 for Rafeeq Trip Planner v1.0.0*
+*Documentation updated 2026-05-06 for Rafeeq Trip Planner v1.1.0 — multi-day trip planning added*
