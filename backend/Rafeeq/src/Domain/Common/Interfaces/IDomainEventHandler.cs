@@ -1,5 +1,3 @@
-using Domain.Events;
-
 namespace Domain.Common.Interfaces;
 
 /// <summary>
