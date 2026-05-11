@@ -8,21 +8,17 @@ public sealed class StorageKey : ValueObject
 
     private StorageKey() {}
     private StorageKey(string value) => Value = value;
+    
+    public static StorageKey ForEntites(FileHash hash, string ext) =>
+        new($"images/dedup/{hash.Value[..2]}/{hash.Value}{ext}");
 
-    public static StorageKey General(string ext) =>
-        new($"images/general/{Guid.NewGuid()}{ext}");
-    
-    public static StorageKey ForCitiesImages(string ext) =>
-        new($"images/cities/{Guid.NewGuid()}{ext}");
-    
-    public static StorageKey ForSiteImages(string ext) =>
-        new($"images/sites/{Guid.NewGuid()}{ext}");
-    
-    public static StorageKey ForAttractionImages(string ext) =>
-        new($"images/attractions/{Guid.NewGuid()}{ext}");
-    
-    public static StorageKey ForSponsorImages(string ext) =>
-        new($"images/sponsors/{Guid.NewGuid()}{ext}");
+    /// <summary>
+    /// User-scoped key: users/{userId}/{yyyy}/{MM}/{fileId}{ext}
+    /// Date prefix enables lifecycle policies and natural partitioning.
+    /// </summary>
+    public static StorageKey ForUserUpload(
+        Guid userId, Guid fileId, string ext, DateTimeOffset at) =>
+        new($"users/{userId}/{at:yyyy}/{fileId}{ext}");
 
     public override string ToString() => Value;
 

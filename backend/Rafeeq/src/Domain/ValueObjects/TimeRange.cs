@@ -5,28 +5,43 @@ namespace Domain.ValueObjects;
 
 public class TimeRange : ValueObject
 {
-    public TimeSpan StartTime { get; }
-    public TimeSpan EndTime { get; }
+    public TimeOnly StartTime { get; }
+    public TimeOnly EndTime { get; }
 
     private TimeRange() { }
-    private TimeRange(TimeSpan startTime, TimeSpan endTime)
+    private TimeRange(TimeOnly startTime, TimeOnly endTime)
     {
         StartTime = startTime;
         EndTime = endTime;
     }
 
-    public static Result<TimeRange> Create(TimeSpan startTime, TimeSpan endTime)
+    public static Result<TimeRange> Create(TimeOnly startTime, TimeOnly endTime, bool differentDays = false)
     {
-        if (startTime >= endTime)
+        if (startTime > endTime && !differentDays)
             return TimeRangeErrors.StartTimeNotBeforeEndTime;
 
         return new TimeRange(startTime, endTime);
     }
 
-    public TimeSpan Duration => EndTime - StartTime;
-    public int DurationInMinutes => (int)Duration.TotalMinutes;
+    public TimeSpan Duration
+    {
+        get
+        {
+            var start = StartTime.ToTimeSpan();
+            var end = EndTime.ToTimeSpan();
 
-    public bool IsWithinRange(TimeSpan time)
+            return end >= start
+                ? end - start
+                : TimeSpan.FromDays(1) - start + end;
+        }
+    }
+
+    public int DurationInMinutes => (int)Duration.TotalMinutes;
+    public int DurationInHours => (int)Duration.TotalHours;
+
+    public bool IsOvernight => EndTime < StartTime;
+
+    public bool IsWithinRange(TimeOnly time)
     {
         return time >= StartTime && time <= EndTime;
     }

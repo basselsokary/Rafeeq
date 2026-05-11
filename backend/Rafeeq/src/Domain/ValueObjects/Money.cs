@@ -8,6 +8,8 @@ public sealed class Money : ValueObject
     public decimal Amount { get; }
     public string Currency { get; } = null!;
     
+    public static Money Zero => new(0, "EGP");
+
     private Money() { }
     private Money(decimal amount, string currency)
     {
@@ -21,7 +23,7 @@ public sealed class Money : ValueObject
             return MoneyErrors.NegativeAmount;
 
         if (string.IsNullOrWhiteSpace(currency))
-            return MoneyErrors.EmptyCurrency;
+            return MoneyErrors.CurrencyRequired;
 
         if (currency.Length != 3)
             return MoneyErrors.InvalidCurrencyFormat;
@@ -35,6 +37,14 @@ public sealed class Money : ValueObject
             return MoneyErrors.CurrencyMismatch;
 
         return new Money(Amount + other.Amount, Currency);
+    }
+
+    /// <summary>
+    /// This method does not handle currency conversion. It assumes both Money instances are in the same currency.
+    /// </summary>
+    public Money Add(decimal amount)
+    {
+        return new Money(Amount + amount, Currency);
     }
 
     public Result<Money> Subtract(Money other)

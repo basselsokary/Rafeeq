@@ -22,7 +22,7 @@ public sealed class Email : ValueObject
     public static Result<Email> Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            return EmailErrors.Empty;
+            return EmailErrors.Required;
 
         var normalizedEmail = value.Trim().ToLowerInvariant();
         if (normalizedEmail.Length > MaxEmailLength)

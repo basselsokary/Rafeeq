@@ -47,7 +47,7 @@ public static class DateRangeErrors
 
 public static class EmailErrors
 {
-    public static Error Empty =>
+    public static Error Required =>
         Error.Validation("EMAIL_REQUIRED", "Email is required.");
 
     public static Error TooLong =>
@@ -71,7 +71,7 @@ public static class MoneyErrors
     public static Error NegativeAmount =>
         Error.Validation("MONEY_NEGATIVE_AMOUNT", "Amount cannot be negative.");
 
-    public static Error EmptyCurrency =>
+    public static Error CurrencyRequired =>
         Error.Validation("MONEY_CURRENCY_REQUIRED", "Currency is required.");
 
     public static Error InvalidCurrencyFormat =>

@@ -17,7 +17,7 @@ public class DateRange : ValueObject
 
     public static Result<DateRange> Create(DateTime startDate, DateTime endDate)
     {
-        if (startDate >= endDate)
+        if (startDate > endDate)
             return DateRangeErrors.StartDateNotBeforeEndDate;
 
         return new DateRange(startDate.Date, endDate.Date);
