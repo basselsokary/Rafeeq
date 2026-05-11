@@ -3,10 +3,10 @@ info:
   title: Rafeeq API
   version: v1
 paths:
-  '/api/admins/cities/{id}':
+  '/api/admins/sponsors/{id}':
     get:
       tags:
-        - AdminCities
+        - AdminSponsors
       parameters:
         - name: id
           in: path
@@ -20,135 +20,16 @@ paths:
           content:
             text/plain:
               schema:
-                $ref: '#/components/schemas/CityAdminDetailDto'
+                $ref: '#/components/schemas/AdminSponsorDetailDto'
             application/json:
               schema:
-                $ref: '#/components/schemas/CityAdminDetailDto'
+                $ref: '#/components/schemas/AdminSponsorDetailDto'
             text/json:
               schema:
-                $ref: '#/components/schemas/CityAdminDetailDto'
+                $ref: '#/components/schemas/AdminSponsorDetailDto'
     put:
       tags:
-        - AdminCities
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                CenterLocation.Latitude:
-                  type: number
-                  format: double
-                CenterLocation.Longitude:
-                  type: number
-                  format: double
-                DisplayOrder:
-                  type: integer
-                  format: int32
-                Image:
-                  type: string
-                  format: binary
-            encoding:
-              CenterLocation.Latitude:
-                style: form
-              CenterLocation.Longitude:
-                style: form
-              DisplayOrder:
-                style: form
-              Image:
-                style: form
-      responses:
-        '200':
-          description: OK
-    delete:
-      tags:
-        - AdminCities
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-  /api/admins/cities:
-    post:
-      tags:
-        - AdminCities
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                Name:
-                  type: string
-                Description:
-                  type: string
-                CenterLocation.Latitude:
-                  type: number
-                  format: double
-                CenterLocation.Longitude:
-                  type: number
-                  format: double
-                DisplayOrder:
-                  type: integer
-                  format: int32
-                Image:
-                  type: string
-                  format: binary
-            encoding:
-              Name:
-                style: form
-              Description:
-                style: form
-              CenterLocation.Latitude:
-                style: form
-              CenterLocation.Longitude:
-                style: form
-              DisplayOrder:
-                style: form
-              Image:
-                style: form
-      responses:
-        '200':
-          description: OK
-  '/api/admins/sites/{id}':
-    get:
-      tags:
-        - AdminSites
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            text/plain:
-              schema:
-                $ref: '#/components/schemas/AdminSiteDetailDto'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AdminSiteDetailDto'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/AdminSiteDetailDto'
-    put:
-      tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
         - name: id
           in: path
@@ -160,19 +41,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateSiteRequest'
+              $ref: '#/components/schemas/UpdateSponsorRequest'
           text/json:
             schema:
-              $ref: '#/components/schemas/UpdateSiteRequest'
+              $ref: '#/components/schemas/UpdateSponsorRequest'
           application/*+json:
             schema:
-              $ref: '#/components/schemas/UpdateSiteRequest'
+              $ref: '#/components/schemas/UpdateSponsorRequest'
       responses:
         '200':
           description: OK
     delete:
       tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
         - name: id
           in: path
@@ -185,7 +66,7 @@ paths:
           description: OK
     patch:
       tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
         - name: id
           in: path
@@ -197,79 +78,38 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SiteStatusUpdateRequest'
+              $ref: '#/components/schemas/ActivateSponsorRequest'
           text/json:
             schema:
-              $ref: '#/components/schemas/SiteStatusUpdateRequest'
+              $ref: '#/components/schemas/ActivateSponsorRequest'
           application/*+json:
             schema:
-              $ref: '#/components/schemas/SiteStatusUpdateRequest'
+              $ref: '#/components/schemas/ActivateSponsorRequest'
       responses:
         '200':
           description: OK
-  '/api/admins/sites/{id}/localized-contents':
-    get:
-      tags:
-        - AdminSites
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            text/plain:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AdminSiteLocalizedContentDto'
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AdminSiteLocalizedContentDto'
-            text/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AdminSiteLocalizedContentDto'
+  /api/admins/sponsors:
     post:
       tags:
-        - AdminSites
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - AdminSponsors
       requestBody:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/AddSiteLocalizedContentsDtoCommand'
+              $ref: '#/components/schemas/CreateSponsorRequest'
           text/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/AddSiteLocalizedContentsDtoCommand'
+              $ref: '#/components/schemas/CreateSponsorRequest'
           application/*+json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/AddSiteLocalizedContentsDtoCommand'
+              $ref: '#/components/schemas/CreateSponsorRequest'
       responses:
         '200':
           description: OK
-    put:
+  '/api/admins/sponsors/{id}/set-main-image':
+    patch:
       tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
         - name: id
           in: path
@@ -277,144 +117,19 @@ paths:
           schema:
             type: string
             format: uuid
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateSiteLocalizedContentRequest'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/UpdateSiteLocalizedContentRequest'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/UpdateSiteLocalizedContentRequest'
+        - name: imageId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
           description: OK
-  '/api/admins/sites/{id}/localized-contents/{contentId}':
+  '/api/admins/sponsors/{id}/images':
     get:
       tags:
-        - AdminSites
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: contentId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            text/plain:
-              schema:
-                $ref: '#/components/schemas/AdminSiteLocalizedContentDto'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AdminSiteLocalizedContentDto'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/AdminSiteLocalizedContentDto'
-  '/api/admins/sites/{id}/facilities':
-    get:
-      tags:
-        - AdminSites
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            text/plain:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AdminSiteFacilityDto'
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AdminSiteFacilityDto'
-            text/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AdminSiteFacilityDto'
-    post:
-      tags:
-        - AdminSites
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/FacilityType'
-          text/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/FacilityType'
-          application/*+json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/FacilityType'
-      responses:
-        '200':
-          description: OK
-    delete:
-      tags:
-        - AdminSites
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/FacilityType'
-          text/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/FacilityType'
-          application/*+json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/FacilityType'
-      responses:
-        '200':
-          description: OK
-  '/api/admins/sites/{id}/images':
-    get:
-      tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
         - name: id
           in: path
@@ -443,7 +158,7 @@ paths:
                   $ref: '#/components/schemas/ImageDto'
     post:
       tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
         - name: id
           in: path
@@ -460,7 +175,7 @@ paths:
                 Images:
                   type: array
                   items:
-                    $ref: '#/components/schemas/AddSiteImageItem'
+                    $ref: '#/components/schemas/AddSponsorImageItem'
             encoding:
               Images:
                 style: form
@@ -469,7 +184,7 @@ paths:
           description: OK
     delete:
       tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
         - name: id
           in: path
@@ -477,33 +192,21 @@ paths:
           schema:
             type: string
             format: uuid
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: string
-                format: uuid
-          text/json:
-            schema:
-              type: array
-              items:
-                type: string
-                format: uuid
-          application/*+json:
-            schema:
-              type: array
-              items:
-                type: string
-                format: uuid
+        - name: imageIds
+          in: path
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
       responses:
         '200':
           description: OK
-  '/api/admins/sites/{id}/images/{imageId}':
+  '/api/admins/sponsors/{id}/images/{imageId}':
     get:
       tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
         - name: id
           in: path
@@ -530,10 +233,10 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ImageDto'
-  '/api/admins/sites/{id}/nearest-transportation':
+  '/api/admins/sponsors/{id}/offers':
     get:
       tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
         - name: id
           in: path
@@ -549,20 +252,20 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AdminSiteNearestTransportationDto'
+                  $ref: '#/components/schemas/SponsorOfferDto'
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AdminSiteNearestTransportationDto'
+                  $ref: '#/components/schemas/SponsorOfferDto'
             text/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AdminSiteNearestTransportationDto'
+                  $ref: '#/components/schemas/SponsorOfferDto'
     post:
       tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
         - name: id
           in: path
@@ -574,28 +277,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AddSiteNearestTransportationRequest'
+              $ref: '#/components/schemas/AddSponsorOfferRequest'
           text/json:
             schema:
-              $ref: '#/components/schemas/AddSiteNearestTransportationRequest'
+              $ref: '#/components/schemas/AddSponsorOfferRequest'
           application/*+json:
             schema:
-              $ref: '#/components/schemas/AddSiteNearestTransportationRequest'
+              $ref: '#/components/schemas/AddSponsorOfferRequest'
       responses:
         '200':
           description: OK
-  '/api/admins/sites/{id}/nearest-transportation/{transportationId}':
+  '/api/admins/sponsors/offers/{offerId}':
     get:
       tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: transportationId
+        - name: offerId
           in: path
           required: true
           schema:
@@ -607,16 +304,17 @@ paths:
           content:
             text/plain:
               schema:
-                $ref: '#/components/schemas/AdminSiteNearestTransportationDto'
+                $ref: '#/components/schemas/SponsorOfferDto'
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminSiteNearestTransportationDto'
+                $ref: '#/components/schemas/SponsorOfferDto'
             text/json:
               schema:
-                $ref: '#/components/schemas/AdminSiteNearestTransportationDto'
+                $ref: '#/components/schemas/SponsorOfferDto'
+  '/api/admins/sponsors/{id}/offers/{offerId}':
     put:
       tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
         - name: id
           in: path
@@ -624,7 +322,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: transportationId
+        - name: offerId
           in: path
           required: true
           schema:
@@ -634,19 +332,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateSiteNearestTransportationRequest'
+              $ref: '#/components/schemas/UpdateSponsorOfferRequest'
           text/json:
             schema:
-              $ref: '#/components/schemas/UpdateSiteNearestTransportationRequest'
+              $ref: '#/components/schemas/UpdateSponsorOfferRequest'
           application/*+json:
             schema:
-              $ref: '#/components/schemas/UpdateSiteNearestTransportationRequest'
+              $ref: '#/components/schemas/UpdateSponsorOfferRequest'
       responses:
         '200':
           description: OK
     delete:
       tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
         - name: id
           in: path
@@ -654,7 +352,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: transportationId
+        - name: offerId
           in: path
           required: true
           schema:
@@ -663,24 +361,12 @@ paths:
       responses:
         '200':
           description: OK
-  '/api/admins/sites/{id}/nearest-transportation/{transportationId}/localized-contents/{contentId}':
+  '/api/admins/sponsors/{id}/localized-contents':
     get:
       tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
         - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: transportationId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: contentId
           in: path
           required: true
           schema:
@@ -692,35 +378,22 @@ paths:
           content:
             text/plain:
               schema:
-                $ref: '#/components/schemas/AdminSiteNearestTransportationLocalizedContentDto'
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdminSponsorLocalizedContentDto'
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminSiteNearestTransportationLocalizedContentDto'
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdminSponsorLocalizedContentDto'
             text/json:
               schema:
-                $ref: '#/components/schemas/AdminSiteNearestTransportationLocalizedContentDto'
-  /api/admins/sites:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdminSponsorLocalizedContentDto'
     post:
       tags:
-        - AdminSites
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateSiteRequest'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/CreateSiteRequest'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/CreateSiteRequest'
-      responses:
-        '200':
-          description: OK
-  '/api/admins/sites/{id}/opening-hours':
-    post:
-      tags:
-        - AdminSites
+        - AdminSponsors
       parameters:
         - name: id
           in: path
@@ -734,77 +407,71 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/AddSiteOpeningHoursDtoCommand'
+                $ref: '#/components/schemas/AddSponsorLocalizedContentsDtoCommand'
           text/json:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/AddSiteOpeningHoursDtoCommand'
+                $ref: '#/components/schemas/AddSponsorLocalizedContentsDtoCommand'
           application/*+json:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/AddSiteOpeningHoursDtoCommand'
+                $ref: '#/components/schemas/AddSponsorLocalizedContentsDtoCommand'
       responses:
         '200':
           description: OK
-  /api/cities:
-    get:
+    put:
       tags:
-        - Cities
+        - AdminSponsors
       parameters:
-        - name: page
-          in: query
+        - name: id
+          in: path
+          required: true
           schema:
-            type: integer
-            format: int32
-            default: 1
-        - name: pageSize
-          in: query
-          schema:
-            type: integer
-            format: int32
-            default: 20
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/UpdateSponsorLocalizedContentsDto'
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/UpdateSponsorLocalizedContentsDto'
+          application/*+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/UpdateSponsorLocalizedContentsDto'
+      responses:
+        '200':
+          description: OK
+  /api/admins/sponsors/dashboard:
+    get:
+      tags:
+        - AdminSponsors
       responses:
         '200':
           description: OK
           content:
             text/plain:
               schema:
-                $ref: '#/components/schemas/CityListDtoPagedResult'
+                $ref: '#/components/schemas/AdminSponsorDashboardDto'
             application/json:
               schema:
-                $ref: '#/components/schemas/CityListDtoPagedResult'
+                $ref: '#/components/schemas/AdminSponsorDashboardDto'
             text/json:
               schema:
-                $ref: '#/components/schemas/CityListDtoPagedResult'
-  /api/cities/summaries:
+                $ref: '#/components/schemas/AdminSponsorDashboardDto'
+  /api/sponsors:
     get:
       tags:
-        - Cities
-      responses:
-        '200':
-          description: OK
-          content:
-            text/plain:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CitySummaryDto'
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CitySummaryDto'
-            text/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CitySummaryDto'
-  /api/sites:
-    get:
-      tags:
-        - Sites
+        - Sponsors
       parameters:
         - name: searchTerm
           in: query
@@ -813,26 +480,15 @@ paths:
         - name: type
           in: query
           schema:
-            $ref: '#/components/schemas/SiteType'
-        - name: city
+            $ref: '#/components/schemas/SponsorType'
+        - name: tier
           in: query
           schema:
-            type: string
-            format: uuid
-        - name: isFree
+            $ref: '#/components/schemas/SponsorTier'
+        - name: activeOnly
           in: query
           schema:
             type: boolean
-        - name: minRating
-          in: query
-          schema:
-            type: integer
-            format: int32
-        - name: maxRating
-          in: query
-          schema:
-            type: integer
-            format: int32
         - name: page
           in: query
           schema:
@@ -851,17 +507,17 @@ paths:
           content:
             text/plain:
               schema:
-                $ref: '#/components/schemas/SiteListDtoPagedResult'
+                $ref: '#/components/schemas/SponsorListDtoPagedResult'
             application/json:
               schema:
-                $ref: '#/components/schemas/SiteListDtoPagedResult'
+                $ref: '#/components/schemas/SponsorListDtoPagedResult'
             text/json:
               schema:
-                $ref: '#/components/schemas/SiteListDtoPagedResult'
-  '/api/sites/{id}':
+                $ref: '#/components/schemas/SponsorListDtoPagedResult'
+  '/api/sponsors/{id}':
     get:
       tags:
-        - Sites
+        - Sponsors
       parameters:
         - name: id
           in: path
@@ -875,46 +531,17 @@ paths:
           content:
             text/plain:
               schema:
-                $ref: '#/components/schemas/SiteDetailDto'
+                $ref: '#/components/schemas/SponsorDetailDto'
             application/json:
               schema:
-                $ref: '#/components/schemas/SiteDetailDto'
+                $ref: '#/components/schemas/SponsorDetailDto'
             text/json:
               schema:
-                $ref: '#/components/schemas/SiteDetailDto'
-  /api/sites/featured:
+                $ref: '#/components/schemas/SponsorDetailDto'
+  /api/sponsors/nearby:
     get:
       tags:
-        - Sites
-      parameters:
-        - name: city
-          in: query
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            text/plain:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SiteListDto'
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SiteListDto'
-            text/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SiteListDto'
-  /api/sites/nearby:
-    get:
-      tags:
-        - Sites
+        - Sponsors
       parameters:
         - name: latitude
           in: query
@@ -931,130 +558,18 @@ paths:
           schema:
             type: integer
             format: int32
-        - name: types
-          in: query
-          schema:
-            $ref: '#/components/schemas/SiteType'
-        - name: city
-          in: query
-          schema:
-            type: string
-            format: uuid
-        - name: isFree
-          in: query
-          schema:
-            type: boolean
-        - name: minRating
-          in: query
-          schema:
-            type: integer
-            format: int32
-        - name: maxRating
-          in: query
-          schema:
-            type: integer
-            format: int32
-      responses:
-        '200':
-          description: OK
-          content:
-            text/plain:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SiteListDto'
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SiteListDto'
-            text/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SiteListDto'
-  /api/sites/nearby-marker:
-    get:
-      tags:
-        - Sites
-      parameters:
-        - name: latitude
-          in: query
-          schema:
-            type: number
-            format: double
-        - name: longitude
-          in: query
-          schema:
-            type: number
-            format: double
-      responses:
-        '200':
-          description: OK
-          content:
-            text/plain:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SiteMapMarkerDto'
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SiteMapMarkerDto'
-            text/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SiteMapMarkerDto'
-  /api/sites/within-bounds:
-    get:
-      tags:
-        - Sites
-      parameters:
-        - name: northLatitude
-          in: query
-          schema:
-            type: number
-            format: double
-        - name: southLatitude
-          in: query
-          schema:
-            type: number
-            format: double
-        - name: eastLongitude
-          in: query
-          schema:
-            type: number
-            format: double
-        - name: westLongitude
-          in: query
-          schema:
-            type: number
-            format: double
         - name: type
           in: query
           schema:
-            $ref: '#/components/schemas/SiteType'
-        - name: city
+            $ref: '#/components/schemas/SponsorType'
+        - name: tier
           in: query
           schema:
-            type: string
-            format: uuid
-        - name: isFree
+            $ref: '#/components/schemas/SponsorTier'
+        - name: activeOnly
           in: query
           schema:
             type: boolean
-        - name: minRating
-          in: query
-          schema:
-            type: integer
-            format: int32
-        - name: maxRating
-          in: query
-          schema:
-            type: integer
-            format: int32
       responses:
         '200':
           description: OK
@@ -1063,23 +578,168 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/SiteMapMarkerDto'
+                  $ref: '#/components/schemas/NearbySponsorDto'
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/SiteMapMarkerDto'
+                  $ref: '#/components/schemas/NearbySponsorDto'
             text/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/SiteMapMarkerDto'
+                  $ref: '#/components/schemas/NearbySponsorDto'
+  '/api/sponsors/{id}/offers':
+    get:
+      tags:
+        - Sponsors
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: activeOnly
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SponsorOfferDto'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SponsorOfferDto'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SponsorOfferDto'
+  /api/sponsors/offers:
+    get:
+      tags:
+        - Sponsors
+      parameters:
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/SponsorType'
+        - name: tier
+          in: query
+          schema:
+            $ref: '#/components/schemas/SponsorTier'
+        - name: sponsorActiveOnly
+          in: query
+          schema:
+            type: boolean
+        - name: activeOnly
+          in: query
+          schema:
+            type: boolean
+        - name: page
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 20
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/SponsorOfferListDtoPagedResult'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SponsorOfferListDtoPagedResult'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/SponsorOfferListDtoPagedResult'
+  '/api/sponsors/offers/{offerId}':
+    get:
+      tags:
+        - Sponsors
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/SponsorOfferDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SponsorOfferDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/SponsorOfferDto'
+  '/api/sponsors/{id}/offers/{offerId}/redeem':
+    put:
+      tags:
+        - Sponsors
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
-    AddSiteImageItem:
+    ActivateSponsorRequest:
       type: object
       properties:
-        file:
+        activate:
+          type: boolean
+      additionalProperties: false
+    AddOfferLocalizedContentDto:
+      type: object
+      properties:
+        language:
+          $ref: '#/components/schemas/LanguageCode'
+        title:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        termsAndConditions:
+          type: string
+          nullable: true
+      additionalProperties: false
+    AddSponsorImageItem:
+      type: object
+      properties:
+        image:
           type: string
           format: binary
           nullable: true
@@ -1092,237 +752,154 @@ components:
           type: string
           nullable: true
       additionalProperties: false
-    AddSiteLocalizedContentsDtoCommand:
+    AddSponsorLocalizedContentsDtoCommand:
       type: object
       properties:
         language:
           $ref: '#/components/schemas/LanguageCode'
-        name:
+        title:
           type: string
           nullable: true
         description:
           type: string
           nullable: true
-        street:
-          type: string
-          nullable: true
-        city:
-          type: string
-          nullable: true
-        region:
-          type: string
-          nullable: true
-        postalCode:
+        address:
           type: string
           nullable: true
       additionalProperties: false
-    AddSiteNearestTransportationRequest:
+    AddSponsorOfferRequest:
       type: object
       properties:
-        name:
-          type: string
-          nullable: true
-        description:
-          type: string
-          nullable: true
-        type:
-          $ref: '#/components/schemas/TransportationType'
-        location:
-          $ref: '#/components/schemas/LocationRequest'
-        distanceKm:
+        discountAmount:
           type: number
           format: double
-        address:
-          $ref: '#/components/schemas/AddressRequest'
+          nullable: true
+        discountPercentage:
+          type: integer
+          format: int32
+          nullable: true
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        maxRedemptions:
+          type: integer
+          format: int32
+          nullable: true
+        promoCode:
+          type: string
+          nullable: true
+        localizedContents:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddOfferLocalizedContentDto'
+          nullable: true
       additionalProperties: false
-    AddSiteOpeningHoursDtoCommand:
+    AdminSponsorDashboardDto:
       type: object
       properties:
-        dayOfWeek:
-          $ref: '#/components/schemas/WeekDay'
-        openingTime:
-          $ref: '#/components/schemas/TimeRange'
-        isClosed:
-          type: boolean
+        totalSponsors:
+          type: integer
+          format: int32
+        activeSponsors:
+          type: integer
+          format: int32
+        expiredSponsors:
+          type: integer
+          format: int32
+        totalOffers:
+          type: integer
+          format: int32
+        activeOffers:
+          type: integer
+          format: int32
       additionalProperties: false
-    AddressDto:
-      type: object
-      properties:
-        street:
-          type: string
-          nullable: true
-        city:
-          type: string
-          nullable: true
-        region:
-          type: string
-          nullable: true
-        postalCode:
-          type: string
-          nullable: true
-        fullAddress:
-          type: string
-          nullable: true
-      additionalProperties: false
-    AddressRequest:
-      type: object
-      properties:
-        street:
-          type: string
-          nullable: true
-        city:
-          type: string
-          nullable: true
-        region:
-          type: string
-          nullable: true
-        postalCode:
-          type: string
-          nullable: true
-      additionalProperties: false
-    AdminSiteDetailDto:
+    AdminSponsorDetailDto:
       type: object
       properties:
         id:
           type: string
           format: uuid
-        cityName:
-          type: string
-          nullable: true
-        name:
+        title:
           type: string
           nullable: true
         description:
           type: string
           nullable: true
         type:
-          $ref: '#/components/schemas/SiteType'
-        status:
-          $ref: '#/components/schemas/SiteStatus'
+          $ref: '#/components/schemas/SponsorType'
+        tier:
+          $ref: '#/components/schemas/SponsorTier'
         location:
           $ref: '#/components/schemas/LocationDto'
         address:
-          $ref: '#/components/schemas/AddressDto'
+          type: string
+          nullable: true
         contactPhone:
           type: string
           nullable: true
-        website:
+        contactEmail:
           type: string
           nullable: true
-        averageRating:
-          type: number
-          format: double
-        totalRatings:
+        websiteUrl:
+          type: string
+          nullable: true
+        dateRange:
+          $ref: '#/components/schemas/DateRangeDto'
+        isContractValid:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/SponsorStatus'
+        totalRedemptions:
           type: integer
           format: int32
-        entryTicket:
-          $ref: '#/components/schemas/TicketDto'
-        isFree:
-          type: boolean
-        isFeatured:
-          type: boolean
-        auditInfo:
-          $ref: '#/components/schemas/AuditInfoDto'
-      additionalProperties: false
-    AdminSiteFacilityDto:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/FacilityType'
-        name:
-          type: string
-          nullable: true
-      additionalProperties: false
-    AdminSiteLocalizedContentDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        language:
-          $ref: '#/components/schemas/LanguageCode'
-        name:
-          type: string
-          nullable: true
-        description:
-          type: string
-          nullable: true
-        address:
-          $ref: '#/components/schemas/AddressDto'
-        auditInfo:
-          $ref: '#/components/schemas/AuditInfoDto'
-      additionalProperties: false
-    AdminSiteNearestTransportationDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        type:
-          $ref: '#/components/schemas/TransportationType'
-        location:
-          $ref: '#/components/schemas/LocationDto'
         distanceKm:
           type: number
           format: double
-        isOperational:
-          type: boolean
-        hasAccessibility:
-          type: boolean
-        operatingHours:
-          $ref: '#/components/schemas/TimeRangeDto'
-        localizedContent:
-          type: array
-          items:
-            $ref: '#/components/schemas/AdminSiteNearestTransportationLocalizedContentDto'
           nullable: true
-        auditInfo:
-          $ref: '#/components/schemas/AuditInfoDto'
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+          format: uuid
+        createdByName:
+          type: string
+          nullable: true
+        lastModifiedAt:
+          type: string
+          format: date-time
+          nullable: true
+        lastModifiedBy:
+          type: string
+          format: uuid
+          nullable: true
+        lastModifiedByName:
+          type: string
+          nullable: true
       additionalProperties: false
-    AdminSiteNearestTransportationLocalizedContentDto:
+    AdminSponsorLocalizedContentDto:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
         language:
           $ref: '#/components/schemas/LanguageCode'
-        name:
+        title:
           type: string
           nullable: true
         description:
           type: string
           nullable: true
         address:
-          $ref: '#/components/schemas/AddressDto'
+          type: string
+          nullable: true
         auditInfo:
           $ref: '#/components/schemas/AuditInfoDto'
       additionalProperties: false
-    AttractionType:
-      enum:
-        - other
-        - pyramid
-        - temple
-        - tomb
-        - statue
-        - monument
-        - mosque
-        - church
-        - synagogue
-        - museumHall
-        - exhibition
-        - palace
-        - fortress
-        - gate
-        - obelisk
-        - column
-        - ruins
-        - garden
-        - courtyard
-        - cave
-        - rockCutStructure
-        - archaeologicalStructure
-        - historicBuilding
-        - viewingPoint
-        - culturalExhibit
-      type: string
     AuditInfoDto:
       type: object
       properties:
@@ -1347,125 +924,39 @@ components:
           type: string
           nullable: true
       additionalProperties: false
-    CityAdminDetailDto:
+    CreateSponsorRequest:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
-        name:
+        title:
           type: string
           nullable: true
         description:
           type: string
           nullable: true
-        centerLocation:
-          $ref: '#/components/schemas/LocationDto'
-        imageUrl:
-          type: string
-          nullable: true
-        totalSites:
-          type: integer
-          format: int32
-        displayOrder:
-          type: integer
-          format: int32
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-          nullable: true
-      additionalProperties: false
-    CityListDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-          nullable: true
-        description:
-          type: string
-          nullable: true
-        imageUrl:
-          type: string
-          nullable: true
-        totalSites:
-          type: integer
-          format: int32
-      additionalProperties: false
-    CityListDtoPagedResult:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CityListDto'
-          nullable: true
-        totalCount:
-          type: integer
-          format: int32
-        pageNumber:
-          type: integer
-          format: int32
-        pageSize:
-          type: integer
-          format: int32
-        totalPages:
-          type: integer
-          format: int32
-          readOnly: true
-        hasPrevious:
-          type: boolean
-          readOnly: true
-        hasNext:
-          type: boolean
-          readOnly: true
-      additionalProperties: false
-    CitySummaryDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-          nullable: true
-        imageUrl:
-          type: string
-          nullable: true
-      additionalProperties: false
-    ContactInfo:
-      type: object
-      properties:
-        phone:
-          type: string
-          nullable: true
-        websiteUrl:
-          type: string
-          nullable: true
-      additionalProperties: false
-    CreateSiteRequest:
-      type: object
-      properties:
-        cityId:
-          type: string
-          format: uuid
-        name:
-          type: string
-          nullable: true
-        description:
+        address:
           type: string
           nullable: true
         type:
-          $ref: '#/components/schemas/SiteType'
+          $ref: '#/components/schemas/SponsorType'
+        tier:
+          $ref: '#/components/schemas/SponsorTier'
         location:
           $ref: '#/components/schemas/LocationRequest'
-        address:
-          $ref: '#/components/schemas/AddressRequest'
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        websiteUrl:
+          type: string
+          nullable: true
+        contactPhone:
+          type: string
+          nullable: true
+        contactEmail:
+          type: string
+          nullable: true
       additionalProperties: false
     DateRangeDto:
       type: object
@@ -1480,71 +971,15 @@ components:
           type: integer
           format: int32
       additionalProperties: false
-    FacilityType:
-      enum:
-        - restrooms
-        - parking
-        - cafeteriaOrRestaurant
-        - giftShop
-        - informationCenter
-        - firstAid
-        - wiFi
-        - atm
-        - prayerRoom
-        - wheelchairAccess
-        - audioGuide
-        - lockers
-        - babyChanging
-        - petFriendly
-        - photographyAllowed
-        - guidedTours
-        - bicycleRental
-        - strollerAccess
-        - signLanguageTours
-        - elevator
-        - galleries
-        - exhibition
-        - theaters
-        - gardens
-        - library
-        - readingRooms
-        - boardRides
-        - localMarkets
-        - natureTrails
-      type: string
-    HistoricalPeriod:
-      enum:
-        - unknown
-        - predynastic
-        - earlyDynastic
-        - oldKingdom
-        - firstIntermediatePeriod
-        - middleKingdom
-        - secondIntermediatePeriod
-        - newKingdom
-        - thirdIntermediatePeriod
-        - latePeriod
-        - ptolemaic
-        - roman
-        - byzantine
-        - rashidun
-        - umayyad
-        - abbasid
-        - tulunid
-        - ikhshidid
-        - fatimid
-        - ayyubid
-        - bahriMamluk
-        - burjiMamluk
-        - ottoman
-        - muhammadAliDynasty
-      type: string
     ImageDto:
       type: object
       properties:
         id:
           type: string
           format: uuid
+        storageKey:
+          type: string
+          nullable: true
         url:
           type: string
           nullable: true
@@ -1556,24 +991,6 @@ components:
         displayOrder:
           type: integer
           format: int32
-      additionalProperties: false
-    ImageResult:
-      type: object
-      properties:
-        name:
-          type: string
-          nullable: true
-        description:
-          type: string
-          nullable: true
-        siteName:
-          type: string
-          nullable: true
-        images:
-          type: array
-          items:
-            type: string
-          nullable: true
       additionalProperties: false
     LanguageCode:
       enum:
@@ -1604,12 +1021,6 @@ components:
           type: number
           format: double
       additionalProperties: false
-    MarkHelpfulRequest:
-      type: object
-      properties:
-        isHelpful:
-          type: boolean
-      additionalProperties: false
     MoneyDto:
       type: object
       properties:
@@ -1623,65 +1034,47 @@ components:
           type: string
           nullable: true
       additionalProperties: false
-    NearestTransportationDto:
+    NearbySponsorDto:
       type: object
       properties:
         id:
           type: string
           format: uuid
-        type:
-          $ref: '#/components/schemas/TransportationType'
         name:
           type: string
           nullable: true
-        description:
-          type: string
-          nullable: true
-        location:
-          $ref: '#/components/schemas/LocationDto'
-        address:
-          $ref: '#/components/schemas/AddressDto'
+        type:
+          $ref: '#/components/schemas/SponsorType'
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
         distanceKm:
           type: number
           format: double
-        isOperational:
+        primaryImageUrl:
+          type: string
+          nullable: true
+        averageRating:
+          type: number
+          format: double
+        hasActiveOffers:
           type: boolean
-        hasAccessibility:
-          type: boolean
-        operatingHours:
-          $ref: '#/components/schemas/TimeRangeDto'
+        activeOffersCount:
+          type: integer
+          format: int32
         typeDisplay:
           type: string
           nullable: true
       additionalProperties: false
-    OpeningHourDto:
-      type: object
-      properties:
-        day:
-          $ref: '#/components/schemas/WeekDay'
-        openTime:
-          type: string
-          format: date-span
-          nullable: true
-        closeTime:
-          type: string
-          format: date-span
-          nullable: true
-        isClosed:
-          type: boolean
-        dayDisplay:
-          type: string
-          nullable: true
-      additionalProperties: false
-    SiteDetailDto:
+    SponsorDetailDto:
       type: object
       properties:
         id:
           type: string
           format: uuid
-        cityName:
-          type: string
-          nullable: true
         name:
           type: string
           nullable: true
@@ -1689,20 +1082,19 @@ components:
           type: string
           nullable: true
         type:
-          $ref: '#/components/schemas/SiteType'
-        status:
-          $ref: '#/components/schemas/SiteStatus'
+          $ref: '#/components/schemas/SponsorType'
         location:
           $ref: '#/components/schemas/LocationDto'
         address:
-          $ref: '#/components/schemas/AddressDto'
+          type: string
+          nullable: true
         contactPhone:
           type: string
           nullable: true
-        website:
+        contactEmail:
           type: string
           nullable: true
-        mainImageUrl:
+        website:
           type: string
           nullable: true
         averageRating:
@@ -1711,65 +1103,56 @@ components:
         totalReviews:
           type: integer
           format: int32
-        entryTicket:
-          $ref: '#/components/schemas/TicketDto'
         images:
           type: array
           items:
             $ref: '#/components/schemas/ImageDto'
           nullable: true
-        openingHours:
+        activeOffers:
           type: array
           items:
-            $ref: '#/components/schemas/OpeningHourDto'
+            $ref: '#/components/schemas/SponsorOfferDto'
           nullable: true
-        facilityTypes:
-          type: array
-          items:
-            $ref: '#/components/schemas/FacilityType'
-          nullable: true
-        nearestTransportations:
-          type: array
-          items:
-            $ref: '#/components/schemas/NearestTransportationDto'
-          nullable: true
-        isFree:
+        dateRange:
+          $ref: '#/components/schemas/DateRangeDto'
+        isContractValid:
           type: boolean
-        isFeatured:
-          type: boolean
-        facilityTypeDisplays:
-          type: array
-          items:
-            type: string
+        status:
+          $ref: '#/components/schemas/SponsorStatus'
+        totalClicks:
+          type: integer
+          format: int32
+        totalRedemptions:
+          type: integer
+          format: int32
+        distanceKm:
+          type: number
+          format: double
           nullable: true
         typeDisplay:
           type: string
           nullable: true
-        statusDisplay:
-          type: string
-          nullable: true
       additionalProperties: false
-    SiteListDto:
+    SponsorListDto:
       type: object
       properties:
         id:
           type: string
           format: uuid
-        cityName:
-          type: string
-          nullable: true
-        name:
+        title:
           type: string
           nullable: true
         description:
           type: string
           nullable: true
         type:
-          $ref: '#/components/schemas/SiteType'
-        status:
-          $ref: '#/components/schemas/SiteStatus'
-        location:
-          $ref: '#/components/schemas/LocationDto'
+          $ref: '#/components/schemas/SponsorType'
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
         primaryImageUrl:
           type: string
           nullable: true
@@ -1779,24 +1162,26 @@ components:
         totalReviews:
           type: integer
           format: int32
-        isFree:
-          type: boolean
-        isFeatured:
-          type: boolean
+        status:
+          $ref: '#/components/schemas/SponsorStatus'
+        activeOffersCount:
+          type: integer
+          format: int32
+        distanceKm:
+          type: number
+          format: double
+          nullable: true
         typeDisplay:
           type: string
           nullable: true
-        statusDisplay:
-          type: string
-          nullable: true
       additionalProperties: false
-    SiteListDtoPagedResult:
+    SponsorListDtoPagedResult:
       type: object
       properties:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/SiteListDto'
+            $ref: '#/components/schemas/SponsorListDto'
           nullable: true
         totalCount:
           type: integer
@@ -1818,255 +1203,207 @@ components:
           type: boolean
           readOnly: true
       additionalProperties: false
-    SiteMapMarkerDto:
+    SponsorOfferDto:
       type: object
       properties:
         id:
           type: string
           format: uuid
-        name:
-          type: string
-          nullable: true
-        type:
-          $ref: '#/components/schemas/SiteType'
-        location:
-          $ref: '#/components/schemas/LocationDto'
-        averageRating:
-          type: number
-          format: double
-        primaryImageUrl:
-          type: string
-          nullable: true
-        isFeatured:
-          type: boolean
-        typeDisplay:
-          type: string
-          nullable: true
-      additionalProperties: false
-    SiteStatus:
-      enum:
-        - active
-        - underMaintenance
-        - temporarilyClosed
-        - permanentlyClosed
-      type: string
-    SiteStatusUpdateRequest:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/SiteStatus'
-        activate:
-          type: boolean
-        isFeatured:
-          type: boolean
-        isHiddenGem:
-          type: boolean
-      additionalProperties: false
-    SiteSummaryDto:
-      type: object
-      properties:
-        id:
+        sponsorId:
           type: string
           format: uuid
-        name:
+        sponsorName:
+          type: string
+          nullable: true
+        title:
           type: string
           nullable: true
         description:
           type: string
           nullable: true
-        city:
-          type: string
-          nullable: true
-        type:
-          $ref: '#/components/schemas/SiteType'
-        primaryImageUrl:
-          type: string
-          nullable: true
-        averageRating:
-          type: number
-          format: double
-        totalReviews:
-          type: integer
-          format: int32
-        location:
-          $ref: '#/components/schemas/LocationDto'
-        isFree:
-          type: boolean
-        badge:
-          type: string
-          nullable: true
-        typeDisplay:
-          type: string
-          nullable: true
-      additionalProperties: false
-    SiteType:
-      enum:
-        - other
-        - historical
-        - museum
-        - religious
-        - archaeological
-        - cultural
-        - natural
-        - entertainment
-        - monument
-        - palace
-        - temple
-        - park
-        - zoo
-        - aquarium
-        - botanicalGarden
-        - castle
-        - fortress
-        - gallery
-        - library
-        - theater
-        - stadium
-        - beach
-        - mountain
-        - lake
-        - river
-        - waterfall
-        - cave
-        - volcano
-        - desert
-        - island
-        - gate
-        - therapeutic
-        - divingSite
-        - marina
-        - walkway
-      type: string
-    TicketDto:
-      type: object
-      properties:
-        egyptianTicketPrice:
+        discountAmount:
           $ref: '#/components/schemas/MoneyDto'
-        foreingerTicketPrice:
-          $ref: '#/components/schemas/MoneyDto'
-        notes:
-          type: string
+        discountPercentage:
+          type: integer
+          format: int32
           nullable: true
-      additionalProperties: false
-    TicketRequest:
-      type: object
-      properties:
-        egyptianTicketPrice:
-          type: number
-          format: double
-          nullable: true
-        foreignerTicketPrice:
-          type: number
-          format: double
-          nullable: true
-        foreignerCurrency:
-          type: string
-          nullable: true
-        notes:
-          type: string
-          nullable: true
-        isFree:
+        validityPeriod:
+          $ref: '#/components/schemas/DateRangeDto'
+        isValid:
           type: boolean
-      additionalProperties: false
-    TimeRange:
-      type: object
-      properties:
-        startTime:
-          type: string
-          format: date-span
-          readOnly: true
-        endTime:
-          type: string
-          format: date-span
-          readOnly: true
-        duration:
-          type: string
-          format: date-span
-          readOnly: true
-        durationInMinutes:
+        daysUntilExpiry:
           type: integer
           format: int32
-          readOnly: true
-      additionalProperties: false
-    TimeRangeDto:
-      type: object
-      properties:
-        startTime:
+        termsAndConditions:
           type: string
-          format: date-span
-        endTime:
+          nullable: true
+        promoCode:
           type: string
-          format: date-span
-        durationMinutes:
+          nullable: true
+        maxRedemptions:
           type: integer
           format: int32
+          nullable: true
+        redemptionCount:
+          type: integer
+          format: int32
+        canBeRedeemed:
+          type: boolean
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
       additionalProperties: false
-    TransportationType:
-      enum:
-        - bus
-        - metro
-        - taxi
-        - train
-        - tram
-        - ferry
-        - carRental
-        - bicycleRental
-        - walking
-      type: string
-    UpdateSiteLocalizedContentRequest:
+    SponsorOfferListDto:
       type: object
       properties:
-        contentId:
+        id:
           type: string
           format: uuid
-        name:
+        sponsorId:
+          type: string
+          format: uuid
+        sponsorTitle:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        discountAmount:
+          $ref: '#/components/schemas/MoneyDto'
+        discountPercentage:
+          type: integer
+          format: int32
+          nullable: true
+        validityPeriod:
+          $ref: '#/components/schemas/DateRangeDto'
+        isValid:
+          type: boolean
+        canBeRedeemed:
+          type: boolean
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    SponsorOfferListDtoPagedResult:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SponsorOfferListDto'
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+          readOnly: true
+        hasPrevious:
+          type: boolean
+          readOnly: true
+        hasNext:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    SponsorStatus:
+      enum:
+        - active
+        - inactive
+        - expired
+      type: string
+    SponsorTier:
+      enum:
+        - bronze
+        - silver
+        - gold
+        - platinum
+      type: string
+    SponsorType:
+      enum:
+        - restaurant
+        - hotel
+        - shop
+        - service
+        - tour
+        - transportation
+      type: string
+    UpdateSponsorLocalizedContentsDto:
+      type: object
+      properties:
+        language:
+          $ref: '#/components/schemas/LanguageCode'
+        title:
           type: string
           nullable: true
         description:
           type: string
           nullable: true
         address:
-          $ref: '#/components/schemas/AddressRequest'
+          type: string
+          nullable: true
       additionalProperties: false
-    UpdateSiteNearestTransportationRequest:
+    UpdateSponsorOfferRequest:
       type: object
       properties:
-        startOperatingHoursTime:
+        discountAmount:
+          type: number
+          format: double
+          nullable: true
+        discountPercentage:
+          type: integer
+          format: int32
+          nullable: true
+        startDate:
           type: string
-          format: date-span
-        endOperatingHoursTime:
+          format: date-time
+        endDate:
           type: string
-          format: date-span
-        isOperational:
-          type: boolean
-        hasAccessibility:
-          type: boolean
+          format: date-time
+        maxRedemptions:
+          type: integer
+          format: int32
+          nullable: true
+        promoCode:
+          type: string
+          nullable: true
       additionalProperties: false
-    UpdateSiteRequest:
+    UpdateSponsorRequest:
       type: object
       properties:
         type:
-          $ref: '#/components/schemas/SiteType'
+          $ref: '#/components/schemas/SponsorType'
+        tier:
+          $ref: '#/components/schemas/SponsorTier'
         location:
           $ref: '#/components/schemas/LocationRequest'
-        estimatedDurationMinutes:
-          type: integer
-          format: int32
-        ticket:
-          $ref: '#/components/schemas/TicketRequest'
-        contactInfo:
-          $ref: '#/components/schemas/ContactInfo'
+        newEndDate:
+          type: string
+          format: date-time
+          nullable: true
+        contactPhone:
+          type: string
+          nullable: true
+        contactEmail:
+          type: string
+          nullable: true
+        websiteUrl:
+          type: string
+          nullable: true
       additionalProperties: false
-    WeekDay:
-      enum:
-        - saturday
-        - sunday
-        - monday
-        - tuesday
-        - wednesday
-        - thursday
-        - friday
-      type: string
   securitySchemes:
     Bearer:
       type: http

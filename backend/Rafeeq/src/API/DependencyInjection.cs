@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using API.Configurations;
 using API.Middlewares;
 using Microsoft.OpenApi.Models;
 
@@ -7,7 +8,8 @@ namespace API;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddPresentation(this IServiceCollection services)
+    public static IServiceCollection AddPresentation(
+        this IServiceCollection services, IConfiguration configuration)
     {
         // global exception handling and problem details
         services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -27,6 +29,8 @@ public static class DependencyInjection
         services.AddEndpointsApiExplorer();
 
         services.AddCors();
+
+        services.AddRateLimiter(configuration);
 
         services.Configure<RouteOptions>(options =>
         {

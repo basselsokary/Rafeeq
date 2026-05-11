@@ -11,7 +11,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services
-            .AddPresentation()
+            .AddPresentation(builder.Configuration)
             .AddApplication()
             .AddInfrastructure(builder.Configuration);
 
@@ -36,6 +36,8 @@ public class Program
         #region Middlewares
         
         app.UseExceptionHandler();
+
+        app.UseRateLimiter();
 
         // With Serilog
         // app.UseSerilogRequestLogging(opts =>
