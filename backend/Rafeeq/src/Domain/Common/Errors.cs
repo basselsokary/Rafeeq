@@ -99,3 +99,24 @@ public static class ImageErrors
     public static Error ImageUrlRequired =>
         Error.Validation("IMAGE_URL_REQUIRED", "Image URL is required.");
 }
+
+public static class FileErrors
+{
+    public static readonly Error InvalidId =
+        Error.Validation("FILE_INVALID_ID", "File ID must not be empty.");
+
+    public static readonly Error InvalidName =
+        Error.Validation("FILE_INVALID_NAME", "File name is invalid or empty.");
+
+    public static readonly Error EmptyFile =
+        Error.Validation("FILE_EMPTY", "File contains no data.");
+
+    public static readonly Error InvalidSignature =
+        Error.Validation("FILE_INVALID_SIGNATURE", "File content does not match its declared type.");
+
+    public static Error FileTooLarge(long maxBytes) =>
+        Error.Validation("FILE_TOO_LARGE", $"File exceeds the maximum allowed size of {maxBytes / 1024 / 1024} MB.");
+
+    public static Error UnsupportedType(string ext) =>
+        Error.Validation("FILE_UNSUPPORTED_TYPE", $"File type '{ext}' is not supported.");
+}

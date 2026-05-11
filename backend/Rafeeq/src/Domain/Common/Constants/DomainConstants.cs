@@ -7,7 +7,7 @@ public static class DomainConstants
     public static class Site
     {
         public const int MaxNameLength = 128;
-        public const int MaxDescriptionLength = 4096;
+        public const int MaxDescriptionLength = 4000;
         public const int MaxWebsiteUrlLength = 256;
         public const int MaxNearestTransportationStationLength = 128;
         public const int MaxNearestBusStopLength = 128;
@@ -17,7 +17,7 @@ public static class DomainConstants
     public class Sponsor
     {
         public const int MaxTitleLength = 128;
-        public const int MaxDescriptionLength = 4096;
+        public const int MaxDescriptionLength = 4000;
         public const int MaxTermsLength = 2048;
         public const int MaxPromoCodeLength = 64;
         public const int MaxNearestTransportationStationLength = 128;
@@ -28,33 +28,34 @@ public static class DomainConstants
     public static class Attraction
     {
         public const int MaxNameLength = 128;
-        public const int MaxDescriptionLength = 4096;
+        public const int MaxDescriptionLength = 4000;
         public const int MaxLocationDescriptionLength = 1024;
     }
 
     public static class Artifact
     {
         public const int MaxNameLength = 128;
-        public const int MaxDescriptionLength = 4096;
+        public const int MaxDescriptionLength = 4000;
     }
 
     public static class City
     {
         public const int MaxNameLength = 128;
-        public const int MaxDescriptionLength = 4096;
+        public const int MaxDescriptionLength = 4000;
     }
 
     public static class Trip
     {
         public const int MaxNameLength = 256;
-        public const int MaxDescriptionLength = 4096;
+        public const int MaxDescriptionLength = 4000;
         public const int MaxNoteLength = 2048;
+        public const int MaxDurationDays = 7;
     }
 
     public static class Review
     {
         public const int MaxTitleLength = 256;
-        public const int MaxContentLength = 4096;
+        public const int MaxContentLength = 4000;
         public const int MaxRejectionReasonLength = 512;
         public const int MaxRatingValue = 5;
         public const int MinRatingValue = 1;
@@ -64,7 +65,7 @@ public static class DomainConstants
     public static class ContentReport
     {
         public const int HighPriority = 5;
-        public const int MaxDescriptionLength = 4096;
+        public const int MaxDescriptionLength = 4000;
         public const int MaxReviewNotesLength = 2048;
         public const int MaxNotesLength = 2048;
         public const int MaxReasonLength = 512;
@@ -123,12 +124,14 @@ public static class DomainConstants
         public const int MaxRefreshTokenLength = 128;
     }
 
-    public static class Image
+    public static class File
     {
         public const int MaxImagesPerRequest = 5;
-        public const int MaxFileSizeBytes = 5 * 1024 * 1024; // 5 MB
         public const int MaxStorageKeyLength = 256;
         public const int MaxImageUrlLength = 512;
         public const int MaxCaptionLength = 256;
+        public const int MaxContentTypeLength = 128;
+        public const int MaxFileSizeBytes = 5 * 1024 * 1024; // 5 MB
+        public const int MaxHashLength = 64; // SHA-256 hash length in hex
     }
 }
