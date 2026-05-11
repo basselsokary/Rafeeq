@@ -1,7 +1,6 @@
 using API.Controllers.Base;
 using Application.Common.Interfaces.Messaging;
 using Application.DTOs.Cities;
-using Application.DTOs.Common;
 using Application.Queries.Cities;
 using Microsoft.AspNetCore.Mvc;
 

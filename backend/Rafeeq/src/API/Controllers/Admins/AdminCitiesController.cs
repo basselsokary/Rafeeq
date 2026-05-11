@@ -3,9 +3,11 @@ using API.DTOs;
 using Application.Commands.Cities;
 using Application.Commands.Cities.LocalizedContents;
 using Application.Common.Interfaces.Messaging;
+using Application.DTOs.Admins;
 using Application.DTOs.Cities;
 using Application.Queries.Cities;
 using Application.Queries.Cities.LocalizedContents;
+using Application.Services;
 using Domain.Common.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,14 +36,13 @@ public class AdminCitiesController : ApiBaseController
 	[HttpPost]
 	public async Task<IActionResult> Create(
 		[FromForm] CreateCityRequest request,
-		IFormFile Image,
+		IFormFile image,
 		[FromServices] ICommandHandler<CreateCityCommand> commandHandler,
 		CancellationToken cancellationToken = default)
 	{		
-		await using var imageStream = Image.OpenReadStream();
+		await using var imageStream = image.OpenReadStream();
 		var command = new CreateCityCommand(
-			imageStream,
-			Image.FileName,
+			new FileUploadInput(imageStream, image.FileName, image.Length),
 			request.Name,
 			request.Description,
 			request.CenterLocation.Latitude,
@@ -59,15 +60,11 @@ public class AdminCitiesController : ApiBaseController
 	public async Task<IActionResult> Update(
 		[FromRoute] Guid id,
 		[FromForm] UpdateCityRequest request,
-		IFormFile Image,
 		[FromServices] ICommandHandler<UpdateCityCommand> commandHandler,
 		CancellationToken cancellationToken = default)
 	{
-		await using var imageStream = Image.OpenReadStream();
 		var command = new UpdateCityCommand(
 			id,
-			Image == null || Image.Length == 0 ? null : imageStream,
-			Image?.FileName,
 			request.CenterLocation.Latitude,
 			request.CenterLocation.Longitude,
 			request.DisplayOrder);
@@ -84,6 +81,25 @@ public class AdminCitiesController : ApiBaseController
 		CancellationToken cancellationToken = default)
 	{
 		var command = new DeleteCityCommand(id);
+		var result = await commandHandler.HandleAsync(command, cancellationToken);
+
+		return HandleResult(result);
+	}
+	#endregion
+
+	#region Partial Updates (PATCH)
+	[HttpPatch("{id:guid}/image")]
+	public async Task<ActionResult> SetImage(
+		[FromRoute] Guid id,
+		IFormFile image,
+		[FromServices] ICommandHandler<SetCityImageCommand> commandHandler,
+		CancellationToken cancellationToken = default)
+	{
+		await using var imageStream = image.OpenReadStream();
+		var command = new SetCityImageCommand(
+			id,
+			new FileUploadInput(imageStream, image.FileName, image.Length));
+
 		var result = await commandHandler.HandleAsync(command, cancellationToken);
 
 		return HandleResult(result);
@@ -129,4 +145,34 @@ public class AdminCitiesController : ApiBaseController
 		return HandleResult(result);
 	}
 	#endregion
+
+	#region Dashboard
+	[HttpGet("dashboard")]
+	public async Task<ActionResult<AdminCityDashboardDto>> GetDashboard(
+		[FromServices] IQueryHandler<GetCityDashboardQuery, AdminCityDashboardDto> queryHandler,
+		CancellationToken cancellationToken = default)
+	{
+		var query = new GetCityDashboardQuery();
+		var result = await queryHandler.HandleAsync(query, cancellationToken);
+
+		return HandleResult(result);
+	}
+	#endregion
+
+	[HttpPost("import")]
+    // [Authorize(Policy = "SuperAdminOnly")]
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(typeof(ImportCitiesResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ImportCitiesResultDto>> ImportCities(
+        IFormFile file,
+        [FromServices] ICommandHandler<ImportCitiesCommand, ImportCitiesResultDto> commandHandler,
+        [FromQuery] bool dryRun = true)
+    {
+        await using var stream = file.OpenReadStream(); 
+        var command = new ImportCitiesCommand(stream, file.FileName, dryRun);
+        var result = await commandHandler.HandleAsync(command);
+        
+        return HandleResult(result);
+    }
 }

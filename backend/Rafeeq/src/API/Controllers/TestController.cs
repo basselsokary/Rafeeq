@@ -1,7 +1,7 @@
 using API.Controllers.Base;
 using Application.Common.Interfaces.Email;
 using Application.Common.Interfaces.Services;
-using Application.Common.Models;
+using Application.DTOs.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared;
@@ -49,7 +49,7 @@ public class TestController() : ApiBaseController
 
         // Here you would typically save the file to storage and return the URL
         // For demonstration, we'll just return a success message with the file name
-        return Ok($"File '{result.Url}' uploaded successfully!");
+        return Ok($"File '{result.Value.Url}' uploaded successfully!");
     }
 
     [HttpPost("upload-images")]
@@ -82,7 +82,7 @@ public class TestController() : ApiBaseController
         using var stream = file.OpenReadStream();
 
         var storageKey = $"test-uploads/{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-        Result<UploadedFileResult> result = await fileStorageService.UploadAsync(stream, storageKey, cancellationToken);
+        Result<UploadedFileResponse> result = await fileStorageService.UploadAsync(stream, storageKey, cancellationToken);
         if (result.Failed)
             return StatusCode(500, "Failed to upload file.");
 
@@ -108,4 +108,15 @@ public class TestController() : ApiBaseController
         return Ok(result.Value);
     }
 
+    [HttpDelete("remove-user")]
+    public async Task<IActionResult> RemoveUser(
+        string email,
+        [FromServices] IAdminService adminService)
+    {
+        var result = await adminService.DeleteUserAsync(email);
+        if (result.Failed)
+            return StatusCode(500, "Failed to delete user.");
+
+        return Ok("User deleted successfully!");
+    }
 }

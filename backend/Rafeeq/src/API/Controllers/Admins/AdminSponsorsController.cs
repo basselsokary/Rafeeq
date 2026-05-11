@@ -1,5 +1,6 @@
 using API.Controllers.Base;
 using API.DTOs;
+using Application.Commands.Attractions.Images;
 using Application.Commands.Sponsors;
 using Application.Commands.Sponsors.Images;
 using Application.Commands.Sponsors.LocalizedContents;
@@ -12,6 +13,7 @@ using Application.Queries.Sponsors;
 using Application.Queries.Sponsors.Images;
 using Application.Queries.Sponsors.LocalizedContents;
 using Application.Queries.Sponsors.Offers;
+using Application.Services;
 using Domain.Common.Constants;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -115,6 +117,19 @@ public class AdminSponsorsController : ApiBaseController
 
 		return HandleResult(result);
 	}
+
+	[HttpPatch("{id:guid}/set-main-image/{imageId:guid}")]
+	public async Task<IActionResult> SetMainImage(
+		[FromRoute] Guid id,
+		[FromRoute] Guid imageId,
+		[FromServices] ICommandHandler<SetMainSponsorImageCommand> commandHandler,
+		CancellationToken cancellationToken = default)
+	{
+		var command = new SetMainSponsorImageCommand(id, imageId);
+		var result = await commandHandler.HandleAsync(command, cancellationToken);
+
+		return HandleResult(result);
+	}
 	#endregion
 
 	#region Images
@@ -162,8 +177,7 @@ public class AdminSponsorsController : ApiBaseController
 			imageStream.Position = 0;
 
 			images.Add(new AddSponsorImageDto(
-				imageStream,
-				item.Image.FileName,
+				new FileUploadInput(imageStream, item.Image.FileName, item.Image.Length),
 				item.IsMain,
 				item.DisplayOrder,
 				item.Caption));
@@ -178,7 +192,7 @@ public class AdminSponsorsController : ApiBaseController
 	[HttpDelete("{id:guid}/images")]
 	public async Task<IActionResult> RemoveImages(
 		[FromRoute] Guid id,
-		[FromRoute] List<Guid> imageIds,
+		[FromBody] List<Guid> imageIds,
 		[FromServices] ICommandHandler<RemoveSponsorImagesCommand> commandHandler,
         CancellationToken cancellationToken = default)
 	{

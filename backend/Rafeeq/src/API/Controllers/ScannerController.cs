@@ -1,5 +1,7 @@
 using API.Controllers.Base;
-using Application.Common.Interfaces.Services;
+using Application.Commands.Artifacts;
+using Application.Common.Interfaces.Messaging;
+using Application.DTOs.Artifacts;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +13,9 @@ namespace API.Controllers;
 public class ScannerController : ApiBaseController
 {
     [HttpPost("scan-image")]
-    public async Task<ActionResult<ImageResult>> ScanImage(
+    public async Task<ActionResult<ArtifactDetailsDto>> ScanImage(
         IFormFile file,
-        [FromServices] ScannerService scannerService,
+        [FromServices] ICommandHandler<ScanImageCommand, ArtifactDetailsDto> commandHandler,
         CancellationToken cancellationToken = default)
     {
         if (file == null || file.Length == 0)
@@ -21,7 +23,8 @@ public class ScannerController : ApiBaseController
         
         await using var stream = file.OpenReadStream();
 
-        var result = await scannerService.ScanArtifactAsync(stream, file.ContentType, cancellationToken);
+        var command = new ScanImageCommand(stream, file.ContentType);
+        var result = await commandHandler.HandleAsync(command, cancellationToken);
         return HandleResult(result);
     }
 }

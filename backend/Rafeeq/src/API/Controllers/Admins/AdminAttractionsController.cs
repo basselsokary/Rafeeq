@@ -4,11 +4,13 @@ using Application.Commands.Attractions;
 using Application.Commands.Attractions.Images;
 using Application.Commands.Attractions.LocalizedContents;
 using Application.Common.Interfaces.Messaging;
+using Application.DTOs.Admins;
 using Application.DTOs.Attractions;
 using Application.DTOs.Common;
-using Application.Queries.Attractions.Images;
 using Application.Queries.Attractions;
+using Application.Queries.Attractions.Images;
 using Application.Queries.Attractions.LocalizedContents;
+using Application.Services;
 using Domain.Common.Constants;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +30,22 @@ public class AdminAttractionsController : ApiBaseController
 		CancellationToken cancellationToken = default)
 	{
 		var query = new GetAttractionByIdForAdminQuery(id);
+		var result = await queryHandler.HandleAsync(query, cancellationToken);
+		return HandleResult(result);
+	}
+
+    [HttpGet]
+	public async Task<ActionResult<PagedResult<AttractionListDto>>> GetAll(
+		[FromQuery] string? searchTerm,
+		[FromQuery] AttractionType? type,
+		[FromServices] IQueryHandler<GetAllAttractionsQuery, PagedResult<AttractionListDto>> queryHandler,
+		[FromQuery] int page = 1,
+		[FromQuery] int pageSize = 20,
+		CancellationToken cancellationToken = default)
+	{
+		var paging = new PagingParameters(page, pageSize);
+		var query = new GetAllAttractionsQuery(searchTerm, type, paging);
+		
 		var result = await queryHandler.HandleAsync(query, cancellationToken);
 		return HandleResult(result);
 	}
@@ -90,7 +108,37 @@ public class AdminAttractionsController : ApiBaseController
 	}
 	#endregion
 
-	#region Images
+	#region Partial Updates (PATCH)
+	public sealed record MarkAttractionAsFeaturedRequest(bool IsFeatured);
+
+	[HttpPatch("{id:guid}")]
+	public async Task<IActionResult> MarkAsFeatured(
+		[FromRoute] Guid id,
+		[FromBody] MarkAttractionAsFeaturedRequest request,
+		[FromServices] ICommandHandler<MarkAttractionAsFeaturedCommand> commandHandler,
+		CancellationToken cancellationToken = default)
+	{
+		var command = new MarkAttractionAsFeaturedCommand(id, request.IsFeatured);
+		var result = await commandHandler.HandleAsync(command, cancellationToken);
+
+		return HandleResult(result);
+	}
+
+	[HttpPatch("{id:guid}/set-main-image/{imageId:guid}")]
+	public async Task<IActionResult> SetMainImage(
+		[FromRoute] Guid id,
+		[FromRoute] Guid imageId,
+		[FromServices] ICommandHandler<SetMainAttractionImageCommand> commandHandler,
+		CancellationToken cancellationToken = default)
+	{
+		var command = new SetMainAttractionImageCommand(id, imageId);
+		var result = await commandHandler.HandleAsync(command, cancellationToken);
+
+		return HandleResult(result);
+	}
+	#endregion
+
+	#region Images Management
 	[HttpGet("{id:guid}/images")]
 	public async Task<ActionResult<List<ImageDto>>> GetImages(
 		[FromRoute] Guid id,
@@ -115,26 +163,6 @@ public class AdminAttractionsController : ApiBaseController
 
 		return HandleResult(result);
 	}
-	#endregion
-
-	#region Partial Updates (PATCH)
-	public sealed record MarkAttractionAsFeaturedRequest(bool IsFeatured);
-
-	[HttpPatch("{id:guid}")]
-	public async Task<IActionResult> MarkAsFeatured(
-		[FromRoute] Guid id,
-		[FromBody] MarkAttractionAsFeaturedRequest request,
-		[FromServices] ICommandHandler<MarkAttractionAsFeaturedCommand> commandHandler,
-		CancellationToken cancellationToken = default)
-	{
-		var command = new MarkAttractionAsFeaturedCommand(id, request.IsFeatured);
-		var result = await commandHandler.HandleAsync(command, cancellationToken);
-
-		return HandleResult(result);
-	}
-	#endregion
-
-	#region Images Management
 	public sealed record AddAttractionImagesRequest(List<AddAttractionImageItem> Images);
     public sealed record AddAttractionImageItem(IFormFile Image, bool IsMain, int DisplayOrder, string? Caption);
 
@@ -154,8 +182,7 @@ public class AdminAttractionsController : ApiBaseController
 			imageStream.Position = 0;
 
 			images.Add(new AddAttractionImageDto(
-				imageStream,
-				item.Image.FileName,
+				new FileUploadInput(imageStream, item.Image.FileName, item.Image.Length),
 				item.IsMain,
 				item.DisplayOrder,
 				item.Caption));
@@ -222,6 +249,32 @@ public class AdminAttractionsController : ApiBaseController
 	#endregion
 
 	#region Dashboard
+	[HttpGet("dashboard")]
+	public async Task<ActionResult<AdminAttractionDashboardDto>> GetDashboard(
+		[FromServices] IQueryHandler<GetAttractionsDashboardQuery, AdminAttractionDashboardDto> queryHandler,
+		CancellationToken cancellationToken = default)
+	{
+		var query = new GetAttractionsDashboardQuery();
+		var result = await queryHandler.HandleAsync(query, cancellationToken);
+
+		return HandleResult(result);
+	}
 	#endregion
 
+	[HttpPost("import")]
+    // [Authorize(Policy = "SuperAdminOnly")]
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(typeof(ImportAttractionsResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ImportAttractionsResultDto>> ImportAttractions(
+        IFormFile file,
+        [FromServices] ICommandHandler<ImportAttractionsCommand, ImportAttractionsResultDto> commandHandler,
+        [FromQuery] bool dryRun = true)
+    {
+        await using var stream = file.OpenReadStream(); 
+        var command = new ImportAttractionsCommand(stream, file.FileName, dryRun);
+        var result = await commandHandler.HandleAsync(command);
+        
+        return HandleResult(result);
+    }
 }

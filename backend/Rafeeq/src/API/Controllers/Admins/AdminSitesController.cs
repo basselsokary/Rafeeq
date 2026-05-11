@@ -8,21 +8,25 @@ using Application.Commands.Sites.OpeningHours;
 using Application.Common.Interfaces.Messaging;
 using Application.DTOs.Admins;
 using Application.DTOs.Common;
+using Application.DTOs.Sites;
+using Application.DTOs.Services;
 using Application.Queries.Sites;
 using Application.Queries.Sites.Facilities;
 using Application.Queries.Sites.Images;
 using Application.Queries.Sites.LocalizedContents;
 using Application.Queries.Sites.NearestTransportations;
 using Application.Queries.Sites.OpeningHours;
+using Application.Services;
 using Domain.Common.Constants;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Application.Commands.Sites.NearestTransportations;
 
 namespace API.Controllers.Admins;
 
 [Route("api/admins/sites/")]
-//  [Authorize(Roles = UserRoles.Admin)]
+[Authorize(Roles = UserRoles.Admin)]
 public class AdminSitesController : ApiBaseController
 {
     #region Basic CRUD Operations
@@ -38,6 +42,18 @@ public class AdminSitesController : ApiBaseController
         return HandleResult(result);
     }
 
+    [HttpGet("search")]
+    public async Task<ActionResult<List<SiteLookupDto>>> Search(
+        [FromQuery] string q,
+        [FromServices] IQueryHandler<SearchSitesQuery, List<SiteLookupDto>> queryHandler,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new SearchSitesQuery(q);
+        var result = await queryHandler.HandleAsync(query, cancellationToken);
+
+        return HandleResult(result);
+    }
+    
     public record CreateSiteRequest(Guid CityId, string Name, string Description, string Address, SiteType Type, LocationRequest Location, int EstimatedDurationMinutes, TicketRequest Ticket, ContactInfo? ContactInfo);
     public record ContactInfo(string? Phone, string? WebsiteUrl);
 
@@ -107,9 +123,7 @@ public class AdminSitesController : ApiBaseController
 
         return HandleResult(result);
     }
-    #endregion
-
-	#region Partial Updates (PATCH)
+    
     public record SiteStatusUpdateRequest(SiteStatus Status, bool IsFeatured, bool IsHiddenGem);
 
     [HttpPatch("{id:guid}")]
@@ -200,10 +214,10 @@ public class AdminSitesController : ApiBaseController
     public sealed record AddSiteImageItem(IFormFile Image, bool IsMain, int DisplayOrder, string? Caption);
 
     [HttpPost("{id:guid}/images")]
-    public async Task<IActionResult> AddImages(
+    public async Task<ActionResult<BatchUploadResult<ImageMetadata>>> AddImages(
         [FromRoute] Guid id,
         [FromForm] AddSiteImagesRequest request,
-        [FromServices] ICommandHandler<AddSiteImagesCommand> commandHandler,
+        [FromServices] ICommandHandler<AddSiteImagesCommand, BatchUploadResult<ImageMetadata>> commandHandler,
         CancellationToken cancellationToken = default)
     {
         var images = new List<AddSiteImageDto>();
@@ -215,8 +229,7 @@ public class AdminSitesController : ApiBaseController
 			imageStream.Position = 0;
 
 			images.Add(new AddSiteImageDto(
-				imageStream,
-				item.Image.FileName,
+				new FileUploadInput(imageStream, item.Image.FileName, item.Image.Length),
 				item.IsMain,
 				item.DisplayOrder,
 				item.Caption));
@@ -240,6 +253,19 @@ public class AdminSitesController : ApiBaseController
 
         return HandleResult(result);
     }
+
+    [HttpPatch("{id:guid}/set-main-image/{imageId:guid}")]
+	public async Task<IActionResult> SetMainImage(
+		[FromRoute] Guid id,
+		[FromRoute] Guid imageId,
+		[FromServices] ICommandHandler<SetMainSiteImageCommand> commandHandler,
+		CancellationToken cancellationToken = default)
+	{
+		var command = new SetMainSiteImageCommand(id, imageId);
+		var result = await commandHandler.HandleAsync(command, cancellationToken);
+
+		return HandleResult(result);
+	}
     #endregion
 
     #region Facilities
@@ -321,6 +347,24 @@ public class AdminSitesController : ApiBaseController
 
         return HandleResult(result);
     }
+
+    [HttpPost("nearest-transportations/import")]
+    // [Authorize(Policy = "SuperAdminOnly")]
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(typeof(ImportNearestTransportationsResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ImportNearestTransportationsResultDto>> ImportNearestTransportations(
+        IFormFile file,
+        [FromServices] ICommandHandler<ImportNearestTransportationsCommand, ImportNearestTransportationsResultDto> commandHandler,
+        [FromQuery] bool dryRun = true)
+    {
+        await using var stream = file.OpenReadStream(); 
+        var command = new ImportNearestTransportationsCommand(stream, file.FileName, dryRun);
+        var result = await commandHandler.HandleAsync(command);
+        
+        return HandleResult(result);
+    }
+
     // public record AddSiteNearestTransportationRequest(string Name, string? Description, TransportationType Type, LocationRequest Location, double DistanceKm, string Address, List<AddNearestTransportationLocalizedContentDto> LocalizedContents);
 
     // [HttpPost("{id:guid}/nearest-transportation")]
@@ -418,6 +462,23 @@ public class AdminSitesController : ApiBaseController
 
         return HandleResult(result);
     }
+
+    [HttpPost("opening-hours/import")]
+    // [Authorize(Policy = "SuperAdminOnly")]
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(typeof(ImportOpeningHoursResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ImportOpeningHoursResultDto>> ImportOpeningHours(
+        IFormFile file,
+        [FromServices] ICommandHandler<ImportOpeningHoursCommand, ImportOpeningHoursResultDto> commandHandler,
+        [FromQuery] bool dryRun = true)
+    {
+        await using var stream = file.OpenReadStream(); 
+        var command = new ImportOpeningHoursCommand(stream, file.FileName, dryRun);
+        var result = await commandHandler.HandleAsync(command);
+        
+        return HandleResult(result);
+    }
     #endregion
 
     #region Dashboard & Statistics
@@ -432,22 +493,21 @@ public class AdminSitesController : ApiBaseController
         return HandleResult(result);
     }
     #endregion
-    
-    // public sealed record ImportSitesRequest(IFormFile File);
 
-    // [HttpPost("import")]
+    [HttpPost("import")]
     // [Authorize(Policy = "SuperAdminOnly")]
-    // [Consumes("multipart/form-data")]
-    // [ProducesResponseType(typeof(ImportSitesResultDto), StatusCodes.Status200OK)]
-    // [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    // public async Task<ActionResult<ImportSitesResultDto>> ImportSites(
-    //     [FromForm] ImportSitesRequest request,
-    //     [FromServices] ICommandHandler<ImportSitesCommand, ImportSitesResultDto> commandHandler)
-    // {
-    //     await using var stream = request.File.OpenReadStream(); 
-    //     var command = new ImportSitesCommand(stream, request.File.FileName);
-    //     var result = await commandHandler.HandleAsync(command);
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(typeof(ImportSitesResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ImportSitesResultDto>> ImportSites(
+        IFormFile file,
+        [FromServices] ICommandHandler<ImportSitesCommand, ImportSitesResultDto> commandHandler,
+        [FromQuery] bool dryRun = true)
+    {
+        await using var stream = file.OpenReadStream(); 
+        var command = new ImportSitesCommand(stream, file.FileName, dryRun);
+        var result = await commandHandler.HandleAsync(command);
         
-    //     return HandleResult(result);
-    // }
+        return HandleResult(result);
+    }
 }
