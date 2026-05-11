@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Application.Common.Interfaces.Authentication;
 using Application.Common.Models;
+using Domain.Enums;
 using Infrastructure.Identity.Entities;
 using Infrastructure.Persistence.ApplicationContext;
 using Microsoft.AspNetCore.Identity;
@@ -131,7 +132,7 @@ internal class IdentityService(
         var refreshToken = jwtTokenGenerator.GenerateRefreshToken();
 
         // Save refresh token
-        Result saveTokenResult = await SaveRefreshTokenAsync(user.Id, refreshToken);
+        Result saveTokenResult = await SaveRefreshTokenAsync(user.Id, refreshToken, roles);
         if (saveTokenResult.Failed)
         {
             return AuthenticationResult.Failure(saveTokenResult.Error);
@@ -162,7 +163,7 @@ internal class IdentityService(
         var refreshToken = jwtTokenGenerator.GenerateRefreshToken();
 
         // Save refresh token
-        Result saveTokenResult = await SaveRefreshTokenAsync(user.Id, refreshToken);
+        Result saveTokenResult = await SaveRefreshTokenAsync(user.Id, refreshToken, roles);
         if (saveTokenResult.Failed)
         {
             return AuthenticationResult.Failure(saveTokenResult.Error);
@@ -208,9 +209,9 @@ internal class IdentityService(
 
         await appContext.SaveChangesAsync();
 
-        await SaveRefreshTokenAsync(user.Id, newRefreshToken);
+        await SaveRefreshTokenAsync(user.Id, newRefreshToken, roles);
 
-        return AuthenticationResult.Success(accessToken, refreshToken, jwtTokenGenerator.GetAccessTokenExpiryInHours, jwtTokenGenerator.GetRefreshTokenExpiryInDays, user.Id);
+        return AuthenticationResult.Success(newAccessToken, newRefreshToken, jwtTokenGenerator.GetAccessTokenExpiryInHours, jwtTokenGenerator.GetRefreshTokenExpiryInDays, user.Id);
     }
 
     public async Task<Result> RevokeTokenAsync(string refreshToken)
@@ -311,12 +312,14 @@ internal class IdentityService(
         return existingUser;
     }
 
-    private async Task<Result> SaveRefreshTokenAsync(Guid userId, string token)
+    private async Task<Result> SaveRefreshTokenAsync(Guid userId, string token, IEnumerable<string> roles)
     {
         var refreshTokenResult = RefreshToken.Create(
             token,
             userId,
-            DateTime.UtcNow.AddDays(jwtTokenGenerator.GetRefreshTokenExpiryInDays)
+            roles.Any(r => r.Equals(UserRole.Tourist.ToString(), StringComparison.OrdinalIgnoreCase)) 
+                ? DateTime.UtcNow.AddDays(jwtTokenGenerator.GetRefreshTokenExpiryInDays)
+                : DateTime.UtcNow.AddHours(jwtTokenGenerator.GetRefreshTokenExpirationForAdminInHours)
         );
 
         if (refreshTokenResult.Failed)

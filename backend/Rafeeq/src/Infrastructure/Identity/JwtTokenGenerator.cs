@@ -35,6 +35,7 @@ internal class JwtTokenGenerator(IOptions<JwtSettings> jwtSettings)
         var tokenExpiration = roles.Any(r => r.Equals(UserRole.Tourist.ToString(), StringComparison.OrdinalIgnoreCase))
             ? DateTime.UtcNow.AddHours(_jwtSettings.AccessTokenExpirationInHours)
             : DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationForAdminInMinutes);
+        
         // var tokenExpiration = DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationInHours);
         
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -83,4 +84,5 @@ internal class JwtTokenGenerator(IOptions<JwtSettings> jwtSettings)
 
     public int GetAccessTokenExpiryInHours => _jwtSettings.AccessTokenExpirationInHours;
     public int GetRefreshTokenExpiryInDays => _jwtSettings.RefreshTokenExpirationInDays;
+    public int GetRefreshTokenExpirationForAdminInHours => _jwtSettings.RefreshTokenExpirationForAdminInHours;
 }

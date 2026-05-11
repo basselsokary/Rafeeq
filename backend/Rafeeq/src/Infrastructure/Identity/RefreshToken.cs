@@ -12,6 +12,7 @@ public class RefreshToken
         UserId = userId;
         ExpiresAt = expiresAt;
 
+        CreatedAt = DateTime.UtcNow;
         IsRevoked = false;
     }
 
@@ -24,7 +25,7 @@ public class RefreshToken
     public bool IsRevoked { get; private set; }
     public DateTime? RevokedAt { get; private set; }
 
-    public bool IsActive => !IsRevoked && !(DateTime.UtcNow >= ExpiresAt);
+    public bool IsActive => !IsRevoked && (DateTime.UtcNow < ExpiresAt);
 
     public static Result<RefreshToken> Create(string token, Guid userId, DateTime expiresAt)
     {
