@@ -6,6 +6,7 @@ namespace Domain.Entities.SponsorAggregate;
 
 public class SponsorImage : BaseAuditableEntity
 {
+    public Guid StoredFileId { get; private set; }  // FK → StoredFile
     public StorageKey StorageKey { get; init; } = null!;
     public string ImageUrl { get; init; } = null!;
     public string? Caption { get; private set; }
@@ -13,8 +14,9 @@ public class SponsorImage : BaseAuditableEntity
     public int DisplayOrder { get; private set; }
 
     private SponsorImage() { }
-    private SponsorImage(StorageKey storageKey, string imageUrl, bool isMain, int displayOrder, string? caption)
+    private SponsorImage(Guid storedFileId, StorageKey storageKey, string imageUrl, bool isMain, int displayOrder, string? caption)
     {
+        StoredFileId = storedFileId;
         StorageKey = storageKey;
 
         ImageUrl = imageUrl;
@@ -23,8 +25,11 @@ public class SponsorImage : BaseAuditableEntity
         DisplayOrder = displayOrder;
     }
 
-    internal static Result<SponsorImage> Create(StorageKey storageKey, string imageUrl, bool isMain, int displayOrder, string? caption)
+    internal static Result<SponsorImage> Create(Guid storedFileId, StorageKey storageKey, string imageUrl, bool isMain, int displayOrder, string? caption)
     {
+        if (storedFileId == Guid.Empty)
+            return FileErrors.InvalidId;
+
         if (string.IsNullOrWhiteSpace(storageKey))
             return ImageErrors.StorageKeyRequired;
 
@@ -34,7 +39,7 @@ public class SponsorImage : BaseAuditableEntity
         if (displayOrder < 0)
             return ImageErrors.NegativeDisplayOrder;
 
-        return new SponsorImage(storageKey, imageUrl, isMain, displayOrder, caption?.Trim());
+        return new SponsorImage(storedFileId, storageKey, imageUrl, isMain, displayOrder, caption?.Trim());
     }
 
     internal void SetAsMain(bool isMain)

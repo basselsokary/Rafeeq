@@ -6,7 +6,7 @@ using Shared;
 
 namespace Domain.Entities.SponsorAggregate;
 
-public class Sponsor : BaseAuditableEntity, IAggregateRoot
+public partial class Sponsor : BaseAuditableEntity, IAggregateRoot
 {   
     public SponsorType Type { get; private set; }
     public SponsorTier Tier { get; private set; }
@@ -75,12 +75,16 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         
         sponsor.AddLocalizedContent(LanguageCode.English, title, description, address);
 
+        sponsor.RaiseDomainEvent(new SponsorCreatedEvent(sponsor.Id, title.Trim(), type));
+
         return sponsor;
     }
 
     public Result UpdateBasicInfo(SponsorType type)
     {
         Type = type;
+
+        RaiseDomainEvent(new SponsorUpdatedEvent(Id));
 
         return Result.Success();
     }
@@ -90,6 +94,7 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         if (location != Location)
         {
             Location = location;
+            RaiseDomainEvent(new SponsorUpdatedEvent(Id));
         }
     }
 
@@ -100,6 +105,8 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
             ContactPhone = contactPhone;
             ContactEmail = contactEmail;
             WebsiteUrl = website;
+
+            RaiseDomainEvent(new SponsorUpdatedEvent(Id));
         }
     }
 
@@ -108,7 +115,7 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         if (Tier == tier) return;
 
         Tier = tier;
-        // RaiseDomainEvent(new SponsorTierChangedEvent(Id, tier));
+        RaiseDomainEvent(new SponsorTierChangedEvent(Id, tier));
     }
 
     public Result ExtendContract(DateTime newEndDate)
@@ -122,6 +129,8 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
 
         ContractDate = result.Value;
 
+        RaiseDomainEvent(new SponsorUpdatedEvent(Id));
+
         return Result.Success();
     }
 
@@ -132,12 +141,15 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
 
         Status = SponsorStatus.Active;
 
+        RaiseDomainEvent(new SponsorUpdatedEvent(Id));
+
         return Result.Success();
     }
 
     public void Deactivate()
     {
         Status = SponsorStatus.Inactive;
+        RaiseDomainEvent(new SponsorUpdatedEvent(Id));
     }
 
     public Result<Offer> AddOffer(
@@ -159,6 +171,8 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
 
         _offers.Add(offerResult.Value);
 
+        RaiseDomainEvent(new SponsorOfferChangedEvent(Id, offerResult.Value.Id));
+
         return Result.Success(offerResult.Value);
     }
 
@@ -169,6 +183,8 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
             return SponsorErrors.OfferNotFound(offerId);
 
         _offers.Remove(offer);
+
+        RaiseDomainEvent(new SponsorOfferChangedEvent(Id, offerId));
 
         return Result.Success();
     }
@@ -191,18 +207,21 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
         if (result.Failed)
             return result;
 
+        RaiseDomainEvent(new SponsorOfferChangedEvent(Id, offerId));
+
         return Result.Success(offer);
     }
 
-    public Result<SponsorImage> AddImage(StorageKey storageKey, string imageUrl, bool isMain, int displayOrder, string? caption = null)
+    public Result<SponsorImage> AddImage(Guid storedFileId, StorageKey storageKey, string imageUrl, bool isMain, int displayOrder, string? caption = null)
     {
-        var imageResult = SponsorImage.Create(storageKey, imageUrl, isMain, displayOrder, caption);
+        var imageResult = SponsorImage.Create(storedFileId, storageKey, imageUrl, isMain, displayOrder, caption);
         if (imageResult.Failed)
             return imageResult;
 
         if (isMain)
         {
-            foreach (var img in _images)
+            var mainImages = _images.Where(i => i.IsMain == true).ToList();
+            foreach (var img in mainImages)
                 img.SetAsMain(false);
 
             SetMainImage(imageUrl);
@@ -213,10 +232,11 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
 
         _images.Add(imageResult.Value);
 
+        RaiseDomainEvent(new SponsorImageUpdatedEvent(Id));
         return Result.Success(imageResult.Value);
     }
 
-    public Result RemoveImage(Guid imageId)
+    public Result<SponsorImage> RemoveImage(Guid imageId)
     {
         var image = _images.FirstOrDefault(i => i.Id == imageId);
         if (image == null)
@@ -234,6 +254,24 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
             MainImageUrl = null;
         }
 
+        RaiseDomainEvent(new SponsorImageUpdatedEvent(Id));
+        return Result.Success(image);
+    }
+
+    public Result SetMainImage(Guid imageId)
+    {
+        var image = _images.FirstOrDefault(i => i.Id == imageId);
+        if (image == null)
+            return SponsorErrors.ImageNotFound;
+
+        var mainImages = _images.Where(i => i.IsMain == true).ToList();
+        foreach (var img in mainImages)
+            img.SetAsMain(false);
+
+        image.SetAsMain(true);
+        SetMainImage(image.ImageUrl);
+
+        RaiseDomainEvent(new SponsorImageUpdatedEvent(Id));
         return Result.Success();
     }
 
@@ -248,6 +286,8 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
             return offerResult;
 
         TotalRedemptions++;
+
+        RaiseDomainEvent(new SponsorOfferChangedEvent(Id, offerId));
 
         return Result.Success();
     }
@@ -264,6 +304,8 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
 
         _localizedContents.Add(contentResult.Value);
 
+        RaiseDomainEvent(new SponsorLocalizedContentUpdatedEvent(Id));
+
         return Result.Success(contentResult.Value);
     }
 
@@ -278,6 +320,8 @@ public class Sponsor : BaseAuditableEntity, IAggregateRoot
             return result;
         
         existing.UpdateAddress(address);
+
+        RaiseDomainEvent(new SponsorLocalizedContentUpdatedEvent(Id));
 
         return Result.Success();
     }

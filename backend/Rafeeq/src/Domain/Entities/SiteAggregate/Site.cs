@@ -101,6 +101,7 @@ public class Site : BaseAuditableEntity, IAggregateRoot
             return addResult.To<Site>();
         
         site.UpdatePopularityStatus();
+        site.RaiseDomainEvent(new SiteCreatedEvent(site.Id));
 
         return site;
     }
@@ -112,6 +113,7 @@ public class Site : BaseAuditableEntity, IAggregateRoot
 
         Type = type;
         EstimatedDurationMinutes = estimatedDurationMinutes;
+        RaiseDomainEvent(new SiteUpdatedEvent(Id));
         return Result.Success();
     }
 
@@ -120,6 +122,7 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         if (location != Location)
         {
             Location = location;
+            RaiseDomainEvent(new SiteUpdatedEvent(Id));
         }
     }
 
@@ -132,6 +135,8 @@ public class Site : BaseAuditableEntity, IAggregateRoot
                 IsFree = true;
             else
                 IsFree = false;
+            
+            RaiseDomainEvent(new SiteUpdatedEvent(Id));
         }
     }
 
@@ -139,6 +144,7 @@ public class Site : BaseAuditableEntity, IAggregateRoot
     {
         EntryTicket = null;
         IsFree = isFree;
+        RaiseDomainEvent(new SiteUpdatedEvent(Id));
     }
 
     public Result SetContactInfo(string phone, string? websiteUrl)
@@ -149,6 +155,7 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         ContactPhone = phone;
         WebsiteUrl = websiteUrl;
 
+        RaiseDomainEvent(new SiteUpdatedEvent(Id));
         return Result.Success();
     }
 
@@ -168,6 +175,7 @@ public class Site : BaseAuditableEntity, IAggregateRoot
             Status = status;
         }
 
+        RaiseDomainEvent(new SiteUpdatedEvent(Id));
         return Result.Success();
     }
 
@@ -205,7 +213,7 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         GeoLocation location,
         double distanceKm)
     {
-        var transportationResult = NearestTransportation.Create(type, location, distanceKm);
+        var transportationResult = NearestTransportation.Create(Id, type, location, distanceKm);
         if (transportationResult.Failed)
             return transportationResult;
 
@@ -214,6 +222,8 @@ public class Site : BaseAuditableEntity, IAggregateRoot
             return SiteErrors.TransportationWithSameLocationAlreadyExists;
 
         _nearestTransportations.Add(transportationResult.Value);
+
+        RaiseDomainEvent(new SiteUpdatedEvent(Id));
 
         return Result.Success(transportationResult.Value);
     }
@@ -226,6 +236,7 @@ public class Site : BaseAuditableEntity, IAggregateRoot
 
         _nearestTransportations.Remove(transportation);
 
+        RaiseDomainEvent(new SiteUpdatedEvent(Id));
         return Result.Success();
     }
 
@@ -244,6 +255,8 @@ public class Site : BaseAuditableEntity, IAggregateRoot
 
         _openingHours.Add(newOpeningHours);
 
+        RaiseDomainEvent(new SiteUpdatedEvent(Id));
+
         return newOpeningHours;
     }
 
@@ -255,18 +268,20 @@ public class Site : BaseAuditableEntity, IAggregateRoot
 
         _openingHours.Remove(openingHour);
 
+        RaiseDomainEvent(new SiteUpdatedEvent(Id));
         return Result.Success();
     }
 
-    public Result<SiteImage> AddImage(StorageKey storageKey, string imageUrl, bool isMain, int displayOrder, string? caption = null)
+    public Result<SiteImage> AddImage(Guid storedFileId, StorageKey storageKey, string imageUrl, bool isMain, int displayOrder, string? caption = null)
     {
-        var imageResult = SiteImage.Create(storageKey, imageUrl, isMain, displayOrder, caption);
+        var imageResult = SiteImage.Create(storedFileId, storageKey, imageUrl, isMain, displayOrder, caption);
         if (imageResult.Failed)
             return imageResult;
 
         if (isMain)
         {
-            foreach (var img in _images)
+            var mainImages = _images.Where(i => i.IsMain == true).ToList();
+            foreach (var img in mainImages)
                 img.SetAsMain(false);
 
             SetMainImage(imageUrl);
@@ -277,10 +292,11 @@ public class Site : BaseAuditableEntity, IAggregateRoot
 
         _images.Add(imageResult.Value);
 
+        RaiseDomainEvent(new SiteImageUpdatedEvent(Id));
         return Result.Success(imageResult.Value);
     }
 
-    public Result RemoveImage(Guid imageId)
+    public Result<SiteImage> RemoveImage(Guid imageId)
     {
         var image = _images.FirstOrDefault(i => i.Id == imageId);
         if (image == null)
@@ -298,6 +314,24 @@ public class Site : BaseAuditableEntity, IAggregateRoot
             MainImageUrl = null;
         }
 
+        RaiseDomainEvent(new SiteImageUpdatedEvent(Id));
+        return Result.Success(image);
+    }
+
+    public Result SetMainImage(Guid imageId)
+    {
+        var image = _images.FirstOrDefault(i => i.Id == imageId);
+        if (image == null)
+            return SiteErrors.ImageNotFound;
+
+        var mainImages = _images.Where(i => i.IsMain == true).ToList();
+        foreach (var img in mainImages)
+            img.SetAsMain(false);
+
+        image.SetAsMain(true);
+        SetMainImage(image.ImageUrl);
+
+        RaiseDomainEvent(new SiteImageUpdatedEvent(Id));
         return Result.Success();
     }
 
@@ -313,6 +347,8 @@ public class Site : BaseAuditableEntity, IAggregateRoot
 
         _localizedContents.Add(contentResult.Value);
 
+        RaiseDomainEvent(new SiteLocalizedContentUpdatedEvent(Id));
+
         return Result.Success(contentResult.Value);
     }
 
@@ -327,6 +363,8 @@ public class Site : BaseAuditableEntity, IAggregateRoot
             return result;
 
         existing.UpdateAddress(address);
+
+        RaiseDomainEvent(new SiteLocalizedContentUpdatedEvent(Id));
         
         return Result.Success();
     }
@@ -344,18 +382,15 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         
         _facilities.AddRange(facilityTypes);
 
+        RaiseDomainEvent(new SiteUpdatedEvent(Id));
+
         return Result.Success();
     }
     
     public void RemoveFacilities(List<FacilityType> facilityTypes)
     {
         _facilities.RemoveAll(f => facilityTypes.Contains(f));
-    }
-
-    public bool IsOpenAt(WeekDay day, TimeSpan time)
-    {
-        var hours = _openingHours.FirstOrDefault(oh => oh.Day == day);
-        return hours != null && !hours.IsClosed && hours.OpeningTime.IsWithinRange(time);
+        RaiseDomainEvent(new SiteUpdatedEvent(Id));
     }
 
     public void IncrementVisitCount()

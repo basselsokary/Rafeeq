@@ -38,20 +38,22 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
 
     public static Result<Attraction> Create(
         Guid siteId,
-        string Name,
-        string Description,
-        string? LocationDescription,
+        string name,
+        string description,
+        string? locationDescription,
         AttractionType type,
-        List<HistoricalPeriod> historicalPeriod)
+        List<HistoricalPeriod> historicalPeriods)
     {
         var attraction = new Attraction(
             siteId,
             type,
-            historicalPeriod);
+            historicalPeriods);
         
-        var result = attraction.AddLocalizedContent(LanguageCode.English, Name, Description, LocationDescription);
+        var result = attraction.AddLocalizedContent(LanguageCode.English, name.Trim(), description.Trim(), locationDescription?.Trim());
         if (result.Failed)
             return result.To<Attraction>();
+        
+        attraction.RaiseDomainEvent(new AttractionCreatedEvent(attraction.Id));
 
         return attraction;
     }
@@ -73,6 +75,7 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
             return AttractionErrors.HistoricalPeriodAlreadyExists;
 
         _historicalPeriods.AddRange(historicalPeriods);
+        RaiseDomainEvent(new AttractionUpdatedEvent(Id));
 
         return Result.Success();
     }
@@ -82,6 +85,7 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
         if (exactLocation != null && exactLocation != Location)
         {
             Location = exactLocation;
+            RaiseDomainEvent(new AttractionUpdatedEvent(Id));
         }
     }
 
@@ -91,6 +95,7 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
             return;
 
         IsFeatured = isFeatured;
+        RaiseDomainEvent(new AttractionUpdatedEvent(Id));
     }
 
     public Result AddHistoricalPeriods(List<HistoricalPeriod> facilityTypes)
@@ -101,23 +106,26 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
         _historicalPeriods.Clear();
         _historicalPeriods.AddRange(facilityTypes);
 
+        RaiseDomainEvent(new AttractionUpdatedEvent(Id));
         return Result.Success();
     }
     
     public void RemoveHistoricalPeriods(List<HistoricalPeriod> facilityTypes)
     {
         _historicalPeriods.RemoveAll(f => facilityTypes.Contains(f));
+        RaiseDomainEvent(new AttractionUpdatedEvent(Id));
     }
 
-    public Result<AttractionImage> AddImage(string storageKey, string imageUrl, bool isMain, int displayOrder, string? caption = null)
+    public Result<AttractionImage> AddImage(Guid storedFileId, StorageKey storageKey, string imageUrl, bool isMain, int displayOrder, string? caption = null)
     {
-        var imageResult = AttractionImage.Create(storageKey, imageUrl, isMain, displayOrder, caption);
+        var imageResult = AttractionImage.Create(storedFileId, storageKey, imageUrl, isMain, displayOrder, caption);
         if (imageResult.Failed)
             return imageResult;
 
         if (isMain)
         {
-            foreach (var img in _images)
+            var mainImages = _images.Where(i => i.IsMain == true).ToList();
+            foreach (var img in mainImages)
                 img.SetAsMain(false);
 
             SetMainImage(imageUrl);
@@ -128,10 +136,11 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
 
         _images.Add(imageResult.Value);
 
+        RaiseDomainEvent(new AttractionImageUpdatedEvent(Id));
         return Result.Success(imageResult.Value);
     }
 
-    public Result RemoveImage(Guid imageId)
+    public Result<AttractionImage> RemoveImage(Guid imageId)
     {
         var image = _images.FirstOrDefault(i => i.Id == imageId);
         if (image == null)
@@ -149,6 +158,24 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
             MainImageUrl = null;
         }
 
+        RaiseDomainEvent(new AttractionImageUpdatedEvent(Id));
+        return Result.Success(image);
+    }
+
+    public Result SetMainImage(Guid imageId)
+    {
+        var image = _images.FirstOrDefault(i => i.Id == imageId);
+        if (image == null)
+            return AttractionErrors.ImageNotFound;
+
+        var mainImages = _images.Where(i => i.IsMain == true).ToList();
+        foreach (var img in mainImages)
+            img.SetAsMain(false);
+
+        image.SetAsMain(true);
+        SetMainImage(image.ImageUrl);
+
+        RaiseDomainEvent(new AttractionImageUpdatedEvent(Id));
         return Result.Success();
     }
 
@@ -164,6 +191,8 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
 
         _localizedContents.Add(contentResult.Value);
 
+        RaiseDomainEvent(new AttractionLocalizedContentUpdatedEvent(Id));
+
         return Result.Success(contentResult.Value);
     }
 
@@ -176,6 +205,8 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
         Result result = existing.Update(name, description, locationDescription);
         if (result.Failed)
             return result;
+
+        RaiseDomainEvent(new AttractionLocalizedContentUpdatedEvent(Id));
 
         return Result.Success();
     }

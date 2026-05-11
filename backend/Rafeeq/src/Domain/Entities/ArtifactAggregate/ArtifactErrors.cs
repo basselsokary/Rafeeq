@@ -4,6 +4,8 @@ namespace Domain.Entities.ArtifactAggregate;
 
 public static class ArtifactErrors
 {
+    public static Error NotFound
+        => Error.NotFound("ARTIFACT_NOT_FOUND", "Artifact not found.");
     public static Error NameRequired
         => Error.Validation("ARTIFACT_NAME_REQUIRED", "Name is required.");
     public static Error DescriptionRequired

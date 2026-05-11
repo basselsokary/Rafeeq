@@ -22,10 +22,12 @@ public class NearestTransportation : BaseAuditableEntity
 
     private NearestTransportation() { }
     private NearestTransportation(
+        Guid siteId,
         TransportationType type,
         GeoLocation location,
         double distanceKm)
     {
+        SiteId = siteId;
         Type = type;
         Location = location;
         DistanceKm = distanceKm;
@@ -34,12 +36,14 @@ public class NearestTransportation : BaseAuditableEntity
         HasAccessibility = false;
     }
 
-    internal static Result<NearestTransportation> Create(
+    public static Result<NearestTransportation> Create(
+        Guid siteId,
         TransportationType type,
         GeoLocation location,
         double distanceKm)
     {
         var transportation = new NearestTransportation(
+            siteId,
             type,
             location,
             distanceKm);

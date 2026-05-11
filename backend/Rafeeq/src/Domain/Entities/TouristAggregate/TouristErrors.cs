@@ -43,8 +43,8 @@ public class TouristErrors
     public static Error DurationInvalid
         => Error.Validation("VISITED_SITE_DURATION_INVALID", "Duration must be greater than zero.");
 
-    public static Error DisplayOrderInvalid
-        => Error.Validation("TRIP_SITE_DISPLAY_ORDER_INVALID", "Display order cannot be negative.");
+    public static Error VisitOrderInvalid
+        => Error.Validation("TRIP_SITE_VISIT_ORDER_INVALID", "Visit order cannot be negative.");
 
     public static Error SiteAlreadyVisited
         => Error.Conflict("TOURIST_SITE_ALREADY_VISITED", "Site is already marked as visited.");

@@ -10,8 +10,9 @@ public class City : BaseAuditableEntity, IAggregateRoot
 {
     public GeoLocation CenterLocation { get; private set; } = null!;
     
-    public StorageKey StorageKey { get; private set; } = null!;
-    public string ImageUrl { get; private set; } = null!;
+    public Guid? StoredFileId { get; private set; }
+    public StorageKey? StorageKey { get; private set; }
+    public string? ImageUrl { get; private set; }
     public int TotalSites { get; private set; }
     public int DisplayOrder { get; private set; }
 
@@ -19,8 +20,9 @@ public class City : BaseAuditableEntity, IAggregateRoot
     public IReadOnlyCollection<CityLocalizedContent> LocalizedContents => _localizedContents.AsReadOnly();
 
     private City() { }
-    private City(GeoLocation centerLocation, StorageKey storageKey, string imageUrl, int displayOrder)
+    private City(Guid? storedFileId, GeoLocation centerLocation, StorageKey? storageKey, string? imageUrl, int displayOrder)
     {
+        StoredFileId = storedFileId;
         CenterLocation = centerLocation;
         StorageKey = storageKey;
         ImageUrl = imageUrl;
@@ -30,6 +32,7 @@ public class City : BaseAuditableEntity, IAggregateRoot
     }
 
     public static Result<City> Create(
+        Guid storedFileId,
         string name,
         string description,
         GeoLocation centerLocation,
@@ -37,11 +40,30 @@ public class City : BaseAuditableEntity, IAggregateRoot
         string imageUrl,
         int displayOrder)
     {
-        var city = new City(centerLocation, storageKey, imageUrl, displayOrder);
+        var city = new City(storedFileId, centerLocation, storageKey, imageUrl, displayOrder);
     
         var contentResult = city.AddLocalizedContent(LanguageCode.English, name, description);
         if (contentResult.Failed)
             return contentResult.To<City>();
+        
+        city.RaiseDomainEvent(new CityCreatedEvent(city.Id, name));
+
+        return city;
+    }
+
+    public static Result<City> Create(
+        string name,
+        string description,
+        GeoLocation centerLocation,
+        int displayOrder)
+    {
+        var city = new City(null, centerLocation, null, string.Empty, displayOrder);
+    
+        var contentResult = city.AddLocalizedContent(LanguageCode.English, name, description);
+        if (contentResult.Failed)
+            return contentResult.To<City>();
+        
+        city.RaiseDomainEvent(new CityCreatedEvent(city.Id, name));
 
         return city;
     }
@@ -51,17 +73,20 @@ public class City : BaseAuditableEntity, IAggregateRoot
         if (CenterLocation != location)
         {
             CenterLocation = location;
+            RaiseDomainEvent(new CityUpdatedEvent(Id));
         }
     }
 
-    public Result SetImage(StorageKey storageKey, string imageUrl)
+    public Result SetImage(Guid storedFileId, StorageKey storageKey, string imageUrl)
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
             return CityErrors.ImageUrlRequired;
 
+        StoredFileId = storedFileId;
         StorageKey = storageKey;
         ImageUrl = imageUrl.Trim();
 
+        RaiseDomainEvent(new CityUpdatedEvent(Id));
         return Result.Success();
     }
 
@@ -72,12 +97,14 @@ public class City : BaseAuditableEntity, IAggregateRoot
 
         DisplayOrder = order;
 
+        RaiseDomainEvent(new CityUpdatedEvent(Id));
         return Result.Success();
     }
 
     public void IncrementSiteCount()
     {
         TotalSites++;
+        RaiseDomainEvent(new CityUpdatedEvent(Id));
     }
 
     public void DecrementSiteCount()
@@ -85,6 +112,7 @@ public class City : BaseAuditableEntity, IAggregateRoot
         if (TotalSites > 0)
         {
             TotalSites--;
+            RaiseDomainEvent(new CityUpdatedEvent(Id));
         }
     }
 
@@ -100,6 +128,8 @@ public class City : BaseAuditableEntity, IAggregateRoot
 
         _localizedContents.Add(contentResult.Value);
 
+        RaiseDomainEvent(new CityLocalizedContentUpdatedEvent(Id));
+
         return contentResult.Value;
     }
 
@@ -112,6 +142,8 @@ public class City : BaseAuditableEntity, IAggregateRoot
         var result = existing.Update(name, description);
         if (result.Failed)
             return result;
+
+        RaiseDomainEvent(new CityLocalizedContentUpdatedEvent(Id));
 
         return result.Value;
     }

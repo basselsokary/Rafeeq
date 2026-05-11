@@ -62,7 +62,7 @@ public class Tourist : BaseEntity, IAggregateRoot
             lastName.Trim(),
             nationality?.Trim());
         
-        tourist.RaiseDomainEvent(new UserRegisteredEvent(email, $"{firstName}"));
+        tourist.RaiseDomainEvent(new TouristRegisteredEvent(email, firstName));
 
         return tourist;
     }
@@ -85,6 +85,7 @@ public class Tourist : BaseEntity, IAggregateRoot
         Nationality = nationality.Trim();
 
         UpdateLastModified();
+        RaiseDomainEvent(new TouristProfileUpdatedEvent(Id, firstName, lastName));
 
         return Result.Success();
     }
@@ -137,6 +138,7 @@ public class Tourist : BaseEntity, IAggregateRoot
         _favourites.Add(favoriteResult.Value);
         UpdateLastModified();
 
+        RaiseDomainEvent(new TouristFavoriteAddedEvent(Id, siteId));
         return Result.Success(favoriteResult.Value);
     }
 
@@ -149,6 +151,7 @@ public class Tourist : BaseEntity, IAggregateRoot
         _favourites.Remove(favorite);
         UpdateLastModified();
 
+        RaiseDomainEvent(new TouristFavoriteRemovedEvent(Id, siteId));
         return Result.Success();
     }
 

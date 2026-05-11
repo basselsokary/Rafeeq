@@ -1,5 +1,6 @@
 using Domain.Common;
 using Domain.Common.Interfaces;
+using Domain.Entities.SiteAggregate;
 using Domain.Enums;
 using Shared;
 
@@ -7,7 +8,8 @@ namespace Domain.Entities.ArtifactAggregate;
 
 public class Artifact : BaseAuditableEntity, IAggregateRoot
 {
-    public Guid SiteId { get; private set; }
+    public Guid? SiteId { get; private set; }
+    public Site Site { get; private set; } = null!;
 
     public string? MainImageUrl { get; private set; }
     public int DisplayOrder { get; private set; }
@@ -20,19 +22,29 @@ public class Artifact : BaseAuditableEntity, IAggregateRoot
     public IReadOnlyCollection<ArtifactLocalizedContent> LocalizedContents => _localizedContents.AsReadOnly();
 
     private Artifact() { }
-    private Artifact(Guid siteId, int displayOrder, ArtifactType type = ArtifactType.Other)
+    private Artifact(Guid? siteId, int displayOrder, ArtifactType type = ArtifactType.Other)
     {
         SiteId = siteId;
         DisplayOrder = displayOrder;
         Type = type;
     }
 
-    public static Result<Artifact> Create(Guid siteId, int displayOrder, ArtifactType type)
+    public static Result<Artifact> Create(
+        Guid? siteId,
+        string name,
+        string description,
+        int displayOrder,
+        ArtifactType type)
     {
         if (displayOrder < 0)
             return ArtifactErrors.NegativeDisplayOrder;
         
-        return new Artifact(siteId, displayOrder, type);
+        var artifact = new Artifact(siteId, displayOrder, type);
+        var result = artifact.AddLocalizedContent(LanguageCode.English, name.Trim(), description.Trim());
+        if (result.Failed)
+            return result.To<Artifact>();
+        
+        return artifact;
     }
 
     public Result Update(int displayOrder)
