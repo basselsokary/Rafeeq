@@ -11,8 +11,8 @@ public sealed record AddSiteOpeningHoursCommand(
 
 public sealed record AddSiteOpeningHoursDtoCommand(
     WeekDay Day,
-    TimeSpan StartTime,
-    TimeSpan EndTime,
+    TimeOnly StartTime,
+    TimeOnly EndTime,
     bool IsClosed);
 
 internal sealed class AddSiteOpeningHoursCommandHandler(

@@ -66,12 +66,12 @@ public sealed class SiteCsvRowValidator : AbstractValidator<SiteCsvRowDto>
         // Entry Fee format: "700, 60"
         RuleFor(x => x.EntryFee)
             .Must(BeValidEntryFeeFormat)
-            .When(x => !string.IsNullOrWhiteSpace(x.EntryFee))
+            .When(x => !string.IsNullOrWhiteSpace(x.EntryFee) && !x.EntryFee.Trim().Equals("null", StringComparison.OrdinalIgnoreCase))
             .WithMessage("Entry Fee must be in format 'ForeignerFee, EgyptianFee' (e.g. '700, 60').");
 
         // IsFree=TRUE must not have an Entry Fee
         RuleFor(x => x.EntryFee)
-            .Empty()
+            .Must(x => string.IsNullOrWhiteSpace(x) || x.Equals("null", StringComparison.OrdinalIgnoreCase))
             .When(x => x.IsFree)
             .WithMessage("Entry Fee must be empty when 'Is Free?' is TRUE.");
 
@@ -92,7 +92,6 @@ public sealed class SiteCsvRowValidator : AbstractValidator<SiteCsvRowDto>
         if (string.IsNullOrWhiteSpace(fee)) return true;
         var parts = fee.Split(',');
         return parts.Length == 2
-               && decimal.TryParse(parts[0].Trim(), out var foreigner) && foreigner >= 0
                && decimal.TryParse(parts[1].Trim(), out var egyptian) && egyptian >= 0;
     }
 

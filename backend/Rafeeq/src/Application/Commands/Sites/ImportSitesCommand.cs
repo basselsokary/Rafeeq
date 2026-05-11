@@ -1,6 +1,6 @@
 using Application.Commands.Sites.Validators;
-using CsvHelper;
-using CsvHelper.Configuration;
+using Application.Common.Interfaces.Services;
+using Application.Common.Models;
 using Domain.Common.Interfaces;
 using Domain.Entities.SiteAggregate;
 using Domain.Enums;
@@ -8,7 +8,8 @@ using Domain.ValueObjects;
 
 namespace Application.Commands.Sites;
 
-public record ImportSitesCommand(Stream CsvFile, string FileName) : ICommand<ImportSitesResultDto>;
+public record ImportSitesCommand(Stream CsvFile, string FileName, bool DryRun = true)
+    : ICommand<ImportSitesResultDto>;
 
 public record ImportSitesResultDto(
     int TotalRows,
@@ -22,7 +23,8 @@ public record SiteRowErrorDto(
     List<string> Errors);
 
 public sealed class ImportSitesHandler(
-    IUnitOfWork unitOfWork) : ICommandHandler<ImportSitesCommand, ImportSitesResultDto>
+    IUnitOfWork unitOfWork,
+    ICsvFileParser csvParser) : ICommandHandler<ImportSitesCommand, ImportSitesResultDto>
 {
     private readonly SiteCsvRowValidator _rowValidator = new();
 
@@ -31,7 +33,7 @@ public sealed class ImportSitesHandler(
         List<SiteCsvRowDto> rows;
         try
         {
-            rows = ParseCsv(command.CsvFile);
+            rows = csvParser.ParseCsv<SiteCsvRowDto>(command.CsvFile);
         }
         catch (Exception ex)
         {
@@ -40,13 +42,10 @@ public sealed class ImportSitesHandler(
         }
 
         // Load all cities into a name→Guid dictionary (one DB round-trip)
-        var cities = await unitOfWork.Cities.GetAllAsync(ct);
-        var cityMap = cities.ToDictionary(
-            c => c.LocalizedContents
-                .First(lc => lc.Language == LanguageCode.English)
-                .Name,
-            c => c.Id,
-            StringComparer.OrdinalIgnoreCase);
+        var cities = await unitOfWork.Cities.GetAllWithLocalizedContentsAsync(ct);
+        var cityMap = cities
+            .SelectMany(c => c.LocalizedContents.Where(lc => lc.Language == LanguageCode.English).Select(lc => new { Name = lc.Name, CityId = c.Id }))
+            .ToDictionary(x => x.Name, x => x.CityId, StringComparer.OrdinalIgnoreCase);
 
         var errors = new List<SiteRowErrorDto>();
         var validSites = new List<Site>();
@@ -63,8 +62,15 @@ public sealed class ImportSitesHandler(
                 rowErrors.AddRange(validation.Errors.Select(e => e.ErrorMessage));
 
             // --- City resolution ---
-            if (!cityMap.TryGetValue(row.CityName, out var cityId))
+            if (!cityMap.TryGetValue(row.CityName.Trim(), out var cityId))
+            {
                 rowErrors.Add($"City not found in database: '{row.CityName}'. Check the city name spelling in the sheet.");
+            }
+            else
+            {
+                var city = cities.Single(c => c.Id == cityId);
+                city.IncrementSiteCount(); 
+            }
 
             if (rowErrors.Count > 0)
             {
@@ -85,8 +91,8 @@ public sealed class ImportSitesHandler(
         // Batch insert — only valid rows reach here
         if (validSites.Count == rows.Count)
         {
+            
             await unitOfWork.Sites.AddRangeAsync(validSites, ct);
-            await unitOfWork.SaveChangesAsync(ct);
         }
         else
         {
@@ -101,8 +107,12 @@ public sealed class ImportSitesHandler(
         // if (validSites.Count > 0)
         // {
         //     await unitOfWork.Sites.AddRangeAsync(validSites, ct);
-        //     await unitOfWork.SaveChangesAsync(ct);
         // }
+
+        if (!command.DryRun)
+        {
+            await unitOfWork.SaveChangesAsync(ct);
+        }
 
         return Result.Success(new ImportSitesResultDto(
             TotalRows: rows.Count,
@@ -129,7 +139,8 @@ public sealed class ImportSitesHandler(
         if (addressArResult.Failed) return addressArResult.To<Site>();
 
         // Nullable fields
-        string? entryFeeNote  = NullIfBlank(row.EntryFeeNote);
+        string? entryFeeNoteEn = NullIfBlank(row.EntryFeeNoteEn);
+        string? entryFeeNoteAr = NullIfBlank(row.EntryFeeNoteAr);
         string? contactPhone  = NullIfBlank(row.ContactPhone);
         string? websiteUrl    = NullIfBlank(row.WebsiteUrl);
 
@@ -139,7 +150,7 @@ public sealed class ImportSitesHandler(
             name:                     row.NameEn,
             description:              row.DescriptionEn,
             location:                 locationResult.Value,
-            entryFeeNotes:            entryFeeNote,
+            entryFeeNotes:            entryFeeNoteEn,
             address:                  addressEnResult.Value,
             type:                     type,
             estimatedDurationMinutes: row.EstimatedDurationMinutes,
@@ -156,21 +167,29 @@ public sealed class ImportSitesHandler(
             row.NameAr,
             row.DescriptionAr,
             addressArResult.Value,
-            entryFeeNote);
+            entryFeeNoteAr);
         if (arResult.Failed) return arResult.To<Site>();
 
         // --- Entry fee ---
-        if (!string.IsNullOrWhiteSpace(row.EntryFee))
+        if (!string.IsNullOrWhiteSpace(row.EntryFee) && !row.EntryFee.Trim().Equals("null", StringComparison.OrdinalIgnoreCase))
         {
             var parts      = row.EntryFee.Split(',');
-            var foreignFee = decimal.Parse(parts[0].Trim());
-            var egyptianFee = decimal.Parse(parts[1].Trim());
+            if (parts.Length != 2)
+                return Result.Failure<Site>($"Invalid Entry Fee format: '{row.EntryFee}'. Expected format: 'ForeignerFee, EgyptianFee', e.g. '700,60'.");
+            
+            var foreignFee   = parts[0].Trim();
+            bool hasCurrencySymbol = foreignFee.EndsWith('$');
+            if (hasCurrencySymbol)
+                foreignFee = foreignFee[..^1]; // Remove trailing '$' if present
+            
+            var foreignFeeDecimal = decimal.Parse(foreignFee);
+            var egyptianFeeDecimal = decimal.Parse(parts[1].Trim());
 
             // Ticket.Create(egyptianPrice, foreignerPrice)
-            var egyptianMoneyResult = Money.Create(egyptianFee, "EGP");
+            var egyptianMoneyResult = Money.Create(egyptianFeeDecimal, "EGP");
             if (egyptianMoneyResult.Failed) return egyptianMoneyResult.To<Site>();
 
-            var foreignMoneyResult  = Money.Create(foreignFee, "EGP");
+            var foreignMoneyResult  = Money.Create(foreignFeeDecimal, hasCurrencySymbol ? "USD" : "EGP");
             if (foreignMoneyResult.Failed) return foreignMoneyResult.To<Site>();
 
             var ticketResult = Ticket.Create(egyptianMoneyResult.Value, foreignMoneyResult.Value);
@@ -184,18 +203,8 @@ public sealed class ImportSitesHandler(
             site.RemoveEntryFee(row.IsFree);
         }
 
-        // --- Featured / Hidden Gem ---
-        if (row.IsFeatured)
-        {
-            var featuredResult = site.UpdateStatus(status, false, true);
-            if (featuredResult.Failed) return featuredResult.To<Site>();
-        }
-
-        if (row.IsHiddenGem)
-        {
-            var hiddenGemResult = site.UpdateStatus(status, true, false);
-            if (hiddenGemResult.Failed) return hiddenGemResult.To<Site>();
-        }
+        var statusResult = site.UpdateStatus(status, row.IsHiddenGem, row.IsFeatured);
+        if (statusResult.Failed) return statusResult.To<Site>();
 
         // --- Facilities ---
         if (!string.IsNullOrWhiteSpace(row.Facilities))
@@ -212,22 +221,8 @@ public sealed class ImportSitesHandler(
         return site;
     }
 
-    private static List<SiteCsvRowDto> ParseCsv(Stream file)
-    {
-        using var reader = new StreamReader(file);
-        using var csv    = new CsvReader(reader);
-        csv.Configuration.RegisterClassMap<SiteCsvRowMap>();
-        return csv.GetRecords<SiteCsvRowDto>().ToList();
-    }
-
     private static string? NullIfBlank(string? value) =>
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();
-}
-
-public class ImportErrors
-{
-    public static Error CsvParsingFailed(string message)
-        => Error.Failure("CSV_PARSING_FAILED", $"Failed to parse CSV file: {message}");
 }
 
 public sealed record SiteCsvRowDto
@@ -255,7 +250,8 @@ public sealed record SiteCsvRowDto
 
     // "700,60" → ForeignerFee=700 EGP, EgyptianFee=60 EGP
     public string? EntryFee { get; init; }
-    public string? EntryFeeNote { get; init; }
+    public string? EntryFeeNoteEn { get; init; }
+    public string? EntryFeeNoteAr { get; init; }
     public bool IsFree { get; init; }  // TRUE/FALSE
 
     public int EstimatedDurationMinutes { get; init; }
@@ -270,30 +266,3 @@ public sealed record SiteCsvRowDto
     public string Facilities { get; init; } = string.Empty;
 }
 
-public sealed class SiteCsvRowMap : CsvClassMap<SiteCsvRowDto>
-{
-    public SiteCsvRowMap()
-    {
-        Map(m => m.SiteId).Name("Site ID");
-        Map(m => m.CityName).Name("Parent City ID");
-        Map(m => m.NameEn).Name("Site Name (English)");
-        Map(m => m.NameAr).Name("Site Name (Localized)");
-        Map(m => m.DescriptionEn).Name("Description (English)");
-        Map(m => m.DescriptionAr).Name("Description (Localized)");
-        Map(m => m.AddressEn).Name("Address (English)");
-        Map(m => m.AddressAr).Name("Address (Localized)");
-        Map(m => m.Status).Name("Status");
-        Map(m => m.Type).Name("Type");
-        Map(m => m.Latitude).Name("Latitude");
-        Map(m => m.Longitude).Name("Longitude");
-        Map(m => m.EntryFee).Name("Entry Fee");
-        Map(m => m.EntryFeeNote).Name("Entry Fee Note");
-        Map(m => m.IsFree).Name("Is Free?");
-        Map(m => m.EstimatedDurationMinutes).Name("Estimated Duration Minutes");
-        Map(m => m.WebsiteUrl).Name("Website URL");
-        Map(m => m.ContactPhone).Name("Contact Phone");
-        Map(m => m.IsFeatured).Name("Is Featured?");
-        Map(m => m.IsHiddenGem).Name("Is Hidden Gem?");
-        Map(m => m.Facilities).Name("Facilities");
-    }
-}

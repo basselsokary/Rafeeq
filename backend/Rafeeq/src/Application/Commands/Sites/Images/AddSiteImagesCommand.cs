@@ -1,82 +1,77 @@
 using Application.Common.Interfaces.Services;
+using Application.DTOs.Common;
+using Application.DTOs.Services;
+using Application.Services;
 using Domain.Common.Interfaces;
 using Domain.Entities.SiteAggregate;
 using Domain.ValueObjects;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Commands.Sites.Images;
 
 public sealed record AddSiteImagesCommand(
     Guid Id,
-    List<AddSiteImageDto> Images) : ICommand;
+    List<AddSiteImageDto> Images) : ICommand<BatchUploadResult<ImageMetadata>>;
 
 public sealed record AddSiteImageDto(
-    Stream Stream,
-    string OriginalFileName,
+    FileUploadInput File,
     bool IsMain,
     int DisplayOrder,
     string? Caption = null);
 
 internal sealed class AddSiteImagesCommandHandler(
     IUnitOfWork unitOfWork,
-    IFileStorageService storageService) : ICommandHandler<AddSiteImagesCommand>
+    IFileStorageService storageService,
+    IFileUploadService fileUploadService) : ICommandHandler<AddSiteImagesCommand, BatchUploadResult<ImageMetadata>>
 {
-    public async Task<Result> HandleAsync(AddSiteImagesCommand command, CancellationToken cancellationToken)
+    public async Task<Result<BatchUploadResult<ImageMetadata>>> HandleAsync(AddSiteImagesCommand command, CancellationToken cancellationToken)
     {
         var site = await unitOfWork.Sites.GetWithImagesAsync(command.Id, cancellationToken);
         if (site == null)
             return SiteErrors.NotFound(command.Id);
         
-        var uploadedKeys = new List<StorageKey>();
+        var failedUploadedKeys = new List<StorageKey>();
 
-        foreach (var image in command.Images)
+        var batchUploadResult = await fileUploadService.UploadMultipleAsync(
+            command.Images.Select(i => new UploadImageContext<ImageMetadata>(
+                i.File,
+                new ImageMetadata(i.IsMain, i.DisplayOrder, i.Caption))).ToList(),
+            Guid.Empty,
+            cancellationToken);
+
+        foreach (var successUpload in batchUploadResult.Succeeded)
         {
-            try {
-                var ext = Path.GetExtension(image.OriginalFileName).ToLowerInvariant();
-                var storageKey = StorageKey.ForSiteImages(ext);
+            var storageKey = successUpload.StorageKey;
+            var imageUrl = successUpload.Url;
+            var storedFileId = successUpload.FileId;
 
-                image.Stream.Position = 0;
+            var addImageResult = site.AddImage(
+                storedFileId,
+                storageKey,
+                imageUrl,
+                successUpload.Metadata.IsMain,
+                successUpload.Metadata.DisplayOrder,
+                successUpload.Metadata.Caption);
 
-                var uploadResult = await storageService.UploadAsync(
-                    image.Stream,
-                    storageKey,
-                    cancellationToken);
-
-                if (uploadResult.Failed)
-                {
-                    await FallBackStorageAsync(storageService, uploadedKeys, cancellationToken);
-                    return uploadResult;
-                }
-
-                var addImageResult = site.AddImage(
-                    storageKey,         // Store key (important!)
-                    uploadResult.Url, // URL
-                    image.IsMain,
-                    image.DisplayOrder,
-                    image.Caption);
-
-                if (addImageResult.Failed)
-                {
-                    await FallBackStorageAsync(storageService, uploadedKeys, cancellationToken);
-                    return addImageResult;
-                }
-
-                uploadedKeys.Add(storageKey);
-                await unitOfWork.AddAsync(addImageResult.Value, cancellationToken);
-            }
-            catch
+            if (addImageResult.Failed)
             {
-                await FallBackStorageAsync(storageService, uploadedKeys, cancellationToken);
-                return Result.Failure("An error occurred while uploading the images.");
+                failedUploadedKeys.Add(storageKey);
+                continue;
             }
-            finally
-            {
-                image.Stream.Close();
-            }
+
+            await unitOfWork.AddAsync(addImageResult.Value, cancellationToken);
         }
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-
-        return Result.Success();
+        try
+        {
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+            return Result.Success(batchUploadResult);
+        }
+        catch (Exception ex)
+        {
+            await FallBackStorageAsync(storageService, failedUploadedKeys, cancellationToken);
+            return Result.Failure($"An error occurred while saving changes: {ex.Message}").To<BatchUploadResult<ImageMetadata>>();
+        }
     }
 
     private static async Task FallBackStorageAsync(
@@ -86,23 +81,4 @@ internal sealed class AddSiteImagesCommandHandler(
     {
         await storageService.DeleteAsync(uploadedKeys, cancellationToken);
     }
-
-    // private static async Task<FileHash> ComputeHashAsync(
-    //     Stream stream, CancellationToken ct)
-    // {
-    //     stream.Position = 0;
-    //     var bytes = await SHA256.HashDataAsync(stream, ct);
-    //     stream.Position = 0;
-    //     return FileHash.From(Convert.ToHexString(bytes));
-    // }
-
-    // private static FileUploadResponse MapToResponse(UploadedFile file, string url) =>
-    //     new(
-    //         FileId:      file.Id.ToString(),
-    //         FileName:    file.FileName.Value,
-    //         ContentType: file.ContentType.Value,
-    //         SizeBytes:   file.Size.Bytes,
-    //         Url:         url,
-    //         Hash:        file.Hash.Value,
-    //         UploadedAt:  file.UploadedAt);
 }

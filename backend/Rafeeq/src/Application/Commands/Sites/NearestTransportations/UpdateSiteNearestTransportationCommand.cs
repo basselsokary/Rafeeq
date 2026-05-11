@@ -7,8 +7,8 @@ namespace Application.Commands.Sites.NearestTransportations;
 public sealed record UpdateSiteNearestTransportationCommand(
     Guid SiteId,
     Guid TransportationId,
-    TimeSpan StartOperatingHoursTime,
-    TimeSpan EndOperatingHoursTime,
+    TimeOnly StartOperatingHoursTime,
+    TimeOnly EndOperatingHoursTime,
     bool IsOperational,
     bool HasAccessibility) : ICommand;
 
