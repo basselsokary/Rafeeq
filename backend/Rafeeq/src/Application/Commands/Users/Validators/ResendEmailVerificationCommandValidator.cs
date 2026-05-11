@@ -10,7 +10,7 @@ internal sealed class ResendEmailVerificationCommandValidator : AbstractValidato
     {
         RuleFor(x => x.Email)
             .NotEmpty()
-            .WithMessage(errors[EmailErrors.Empty.Code])
+            .WithMessage(errors[EmailErrors.Required.Code])
             .EmailAddress()
             .WithMessage(x => errors[EmailErrors.InvalidFormat(x.Email).Code]);
     }

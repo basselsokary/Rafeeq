@@ -31,7 +31,7 @@ internal sealed class RegisterCommandValidator : AbstractValidator<RegisterComma
 
         RuleFor(x => x.Email)
             .NotEmpty()
-            .WithMessage(errors[EmailErrors.Empty.Code])
+            .WithMessage(errors[EmailErrors.Required.Code])
             .EmailAddress()
             .WithMessage(x => errors.Format(EmailErrors.InvalidFormat(string.Empty).Code, x.Email))
             .MaximumLength(Email.MaxEmailLength)
