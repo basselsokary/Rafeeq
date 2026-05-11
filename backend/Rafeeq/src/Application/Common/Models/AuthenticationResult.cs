@@ -1,39 +1,43 @@
 namespace Application.Common.Models;
 
-public class AuthenticationResult : Result
+public sealed class AuthenticationResult : Result
 {
-    protected AuthenticationResult(bool succeeded, Error error) : base(succeeded, error)
-    {
-    }
+    public string AccessToken { get; } = null!;
+    public string RefreshToken { get; } = null!;
+    public int AccessTokenExpiresAtInHours { get; }
+    public int RefreshTokenExpiresAtInDays { get; }
+    public Guid UserId { get; }
 
-    protected AuthenticationResult(
+    private AuthenticationResult(bool succeeded, Error error) : base(succeeded, error) { }
+    private AuthenticationResult(
         bool succeeded,
         Error error,
         string accessToken,
         string refreshToken,
+        int accessTokenExpiresAt,
+        int refreshTokenExpiresAt,
         Guid userId) : base(succeeded, error)
     {
         AccessToken = accessToken;
         RefreshToken = refreshToken;
+
+        AccessTokenExpiresAtInHours = accessTokenExpiresAt;
+        RefreshTokenExpiresAtInDays = refreshTokenExpiresAt;
+
         UserId = userId;
     }
 
-    public string? AccessToken { get; }
-    public string? RefreshToken { get; }
-    public Guid? UserId { get; }
+    public static AuthenticationResult Success(
+        string accessToken,
+        string refreshToken,
+        int accessTokenExpiresAtInHours,
+        int refreshTokenExpiresAtInDays,
+        Guid userId)
+            => new(true, Error.None, accessToken, refreshToken, accessTokenExpiresAtInHours, refreshTokenExpiresAtInDays, userId);
 
-    public static AuthenticationResult Success(string accessToken, string refreshToken, Guid userId)
-    {
-        return new AuthenticationResult(true, Error.None, accessToken, refreshToken, userId);
-    }
+    public static new AuthenticationResult Failure(Error error)
+        => new(false, error);
 
-    public new static AuthenticationResult Failure(Error error)
-    {
-        return new AuthenticationResult(false, error);
-    }
-
-    public static AuthenticationResult Failure(object emailNotConfirmed)
-    {
-        throw new NotImplementedException();
-    }
+    public static new AuthenticationResult Failure(string message)
+        => new(false, Error.General(message));
 }
