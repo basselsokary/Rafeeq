@@ -30,5 +30,6 @@ public enum FacilityType
     ReadingRooms = 28,
     BoardRides = 29,
     LocalMarkets = 30,
-    NatureTrails = 31
+    NatureTrails = 31,
+    BoatRides = 32,
 }

@@ -7,8 +7,5 @@ public enum TransportationType
     Taxi = 3,
     Train = 4,
     Tram = 5,
-    Ferry = 6,
-    CarRental = 7,
-    BicycleRental = 8,
-    Walking = 9
+    Ferry = 6
 }
