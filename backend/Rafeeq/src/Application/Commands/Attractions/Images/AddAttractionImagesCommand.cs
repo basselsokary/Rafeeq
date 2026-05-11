@@ -1,4 +1,7 @@
 using Application.Common.Interfaces.Services;
+using Application.DTOs.Common;
+using Application.DTOs.Services;
+using Application.Services;
 using Domain.Common.Interfaces;
 using Domain.Entities.AttractionAggregate;
 using Domain.ValueObjects;
@@ -10,73 +13,64 @@ public sealed record AddAttractionImagesCommand(
     List<AddAttractionImageDto> Images) : ICommand;
 
 public sealed record AddAttractionImageDto(
-    Stream Stream,
-    string OriginalFileName,
+    FileUploadInput File,
     bool IsMain,
     int DisplayOrder,
     string? Caption = null);
 
 internal sealed class AddAttractionImagesCommandHandler(
     IUnitOfWork unitOfWork,
-    IFileStorageService storageService) : ICommandHandler<AddAttractionImagesCommand>
+    IFileStorageService storageService,
+    IFileUploadService fileUploadService) : ICommandHandler<AddAttractionImagesCommand>
 {
     public async Task<Result> HandleAsync(AddAttractionImagesCommand command, CancellationToken cancellationToken)
     {
         var attraction = await unitOfWork.Attractions.GetWithImagesAsync(command.Id, cancellationToken);
         if (attraction == null)
             return AttractionErrors.NotFound(command.Id);
+        
+        var failedUploadedKeys = new List<StorageKey>();
 
-        var uploadedKeys = new List<StorageKey>();
+        var batchUploadResult = await fileUploadService.UploadMultipleAsync(
+            command.Images.Select(i => new UploadImageContext<ImageMetadata>(
+                i.File,
+                new ImageMetadata(i.IsMain, i.DisplayOrder, i.Caption))).ToList(),
+            Guid.Empty,
+            cancellationToken);
 
-        foreach (var image in command.Images)
+        foreach (var success in batchUploadResult.Succeeded)
         {
-            try {
-                var ext = Path.GetExtension(image.OriginalFileName).ToLowerInvariant();
-                var storageKey = StorageKey.ForAttractionImages(ext);
+            var storageKey = success.StorageKey;
+            var imageUrl = success.Url;
+            var storedFileId = success.FileId;
 
-                image.Stream.Position = 0;
+            var addImageResult = attraction.AddImage(
+                storedFileId,
+                storageKey,
+                imageUrl,
+                success.Metadata.IsMain,
+                success.Metadata.DisplayOrder,
+                success.Metadata.Caption);
 
-                var uploadResult = await storageService.UploadAsync(
-                    image.Stream,
-                    storageKey,
-                    cancellationToken);
-
-                if (uploadResult.Failed)
-                {
-                    await FallBackStorageAsync(storageService, uploadedKeys, cancellationToken);
-                    return uploadResult;
-                }
-
-                var addImageResult = attraction.AddImage(
-                    storageKey,         // Store key (important!)
-                    uploadResult.Url, // URL
-                    image.IsMain,
-                    image.DisplayOrder,
-                    image.Caption);
-
-                if (addImageResult.Failed)
-                {
-                    await FallBackStorageAsync(storageService, uploadedKeys, cancellationToken);
-                    return addImageResult;
-                }
-
-                uploadedKeys.Add(storageKey);
-                await unitOfWork.AddAsync(addImageResult.Value, cancellationToken);
-            }
-            catch
+            if (addImageResult.Failed)
             {
-                await FallBackStorageAsync(storageService, uploadedKeys, cancellationToken);
-                return Result.Failure("An error occurred while processing the images.");
+                failedUploadedKeys.Add(storageKey);
+                continue;
             }
-            finally
-            {
-                image.Stream.Close();
-            }
+
+            await unitOfWork.AddAsync(addImageResult.Value, cancellationToken);
         }
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-
-        return Result.Success();
+        try
+        {
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+            return Result.Success(batchUploadResult);
+        }
+        catch (Exception ex)
+        {
+            await FallBackStorageAsync(storageService, failedUploadedKeys, cancellationToken);
+            return Result.Failure($"An error occurred while saving changes: {ex.Message}").To<BatchUploadResult<ImageMetadata>>();
+        }
     }
 
     private static async Task FallBackStorageAsync(

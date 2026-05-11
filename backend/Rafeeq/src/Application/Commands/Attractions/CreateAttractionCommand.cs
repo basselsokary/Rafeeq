@@ -43,7 +43,7 @@ internal sealed class CreateAttractionCommandHandler(
         if (command.Latitude.HasValue && command.Longitude.HasValue)
         {
             var locationResult = GeoLocation.Create(command.Latitude.Value, command.Longitude.Value);
-            if (locationResult.Failed)
+            if (locationResult.Succeeded)
                 location = locationResult.Value;
         }
         
