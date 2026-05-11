@@ -1,12 +1,14 @@
 using Domain.Common;
-using Domain.Common.Interfaces;
+using Infrastructure.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Persistence.Interceptors;
 
 internal sealed class DomainEventDispatcherInterceptor(
-    DomainEventsDispatcher dispatcher) : SaveChangesInterceptor
+    DomainEventsDispatcher dispatcher,
+    ILogger<DomainEventDispatcherInterceptor> logger) : SaveChangesInterceptor
 {
     public override async ValueTask<int> SavedChangesAsync(
         SaveChangesCompletedEventData eventData,
@@ -47,7 +49,17 @@ internal sealed class DomainEventDispatcherInterceptor(
             .SelectMany(x => x.DomainEvents)
             .ToList();
 
-        domainEntities.ForEach(entity => entity.ClearDomainEvents());
+        logger.LogInformation(
+            "Dispatching {Count} domain events from {EntityCount} entities.",
+            domainEvents.Count, domainEntities.Count);
+
+        domainEntities.ForEach(entity =>
+        {
+            logger.LogInformation(
+                "Clearing {EventCount} domain events from entity {EntityType}.",
+                entity.DomainEvents.Count, entity.GetType().Name);
+            entity.ClearDomainEvents();
+        });
 
         await dispatcher.DispatchAsync(domainEvents, cancellationToken);
     }

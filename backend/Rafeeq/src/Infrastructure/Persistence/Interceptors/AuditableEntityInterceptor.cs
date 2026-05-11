@@ -7,8 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace Infrastructure.Persistence.Interceptors;
 
 internal sealed class AuditableEntityInterceptor(
-    CurrentUserService currentUser,
-    ILogger<AuditableEntityInterceptor> logger) : SaveChangesInterceptor
+    CurrentUserService currentUser) : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(
         DbContextEventData eventData,
@@ -31,11 +30,11 @@ internal sealed class AuditableEntityInterceptor(
     {
         if (context == null)
         {
-            logger.LogWarning("DbContext is null in AuditableEntityInterceptor. Skipping audit property updates.");
+            // logger.LogWarning("DbContext is null in AuditableEntityInterceptor. Skipping audit property updates.");
             return;
         }
 
-        logger.LogInformation("Updating auditable entities for user {UserId} ({UserName})", currentUser.UserId, currentUser.UserName);
+        // logger.LogInformation("Updating auditable entities for user {UserId} ({UserName})", currentUser.UserId, currentUser.UserName);
 
         var entries = context.ChangeTracker.Entries<BaseAuditableEntity>();
 
@@ -43,9 +42,9 @@ internal sealed class AuditableEntityInterceptor(
 
         foreach (var entry in entries)
         {
-            logger.LogInformation(
-                "Updating auditable entity with ID {Id} and state {State}",
-                entry.Entity.Id, entry.State);
+            // logger.LogInformation(
+            //     "Updating auditable entity with ID {Id} and state {State}",
+            //     entry.Entity.Id, entry.State);
 
             if (entry.State == EntityState.Added)
             {
