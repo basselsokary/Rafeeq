@@ -2,9 +2,6 @@ using Application.DTOs.Common;
 
 namespace Application.DTOs.Sponsors;
 
-/// <summary>
-/// Sponsor offer DTO
-/// </summary>
 public record SponsorOfferDto(
     Guid Id,
     Guid SponsorId,

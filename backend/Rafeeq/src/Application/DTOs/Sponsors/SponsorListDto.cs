@@ -1,19 +1,18 @@
+using Domain.Enums;
+
 namespace Application.DTOs.Sponsors;
 
-/// <summary>
-/// Sponsor list DTO
-/// </summary>
 public record SponsorListDto(
     Guid Id,
     string Title,
-    string ShortDescription,
-    string Type,
-    string Tier,
+    string Description,
+    SponsorType Type,
     double Latitude,
     double Longitude,
     string? PrimaryImageUrl,
     double AverageRating,
     int TotalReviews,
-    bool IsActive,
+    SponsorStatus Status,
     int ActiveOffersCount,
-    double? DistanceKm);
+    double? DistanceKm,
+    string TypeDisplay = "");

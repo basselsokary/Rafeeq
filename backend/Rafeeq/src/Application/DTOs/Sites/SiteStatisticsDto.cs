@@ -1,8 +1,5 @@
 namespace Application.DTOs.Sites;
 
-/// <summary>
-/// Statistics DTO
-/// </summary>
 public record SiteStatisticsDto(
     Guid SiteId,
     string SiteName,

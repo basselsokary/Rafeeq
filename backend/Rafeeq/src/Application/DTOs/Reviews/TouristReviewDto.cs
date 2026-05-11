@@ -1,17 +1,18 @@
+using Domain.Enums;
+
 namespace Application.DTOs.Reviews;
 
-/// <summary>
-/// Tourist review DTO (reviews by specific user)
-/// </summary>
 public record TouristReviewDto(
     Guid Id,
     Guid SiteId,
     string SiteName,
     string? SiteImageUrl,
-    string SiteType,
+    SiteType SiteType,
     int Rating,
     string Title,
-    string Status,
+    ReviewStatus Status,
     int HelpfulCount,
     DateTime CreatedAt,
-    DateTime? UpdatedAt);
+    DateTime? UpdatedAt,
+    string SiteTypeDisplay = "",
+    string StatusDisplay = "");

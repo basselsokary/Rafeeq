@@ -1,3 +1,5 @@
+using Domain.Enums;
+
 namespace Application.DTOs.Tourists;
 
 public record TouristAdminDetailDto(
@@ -6,11 +8,9 @@ public record TouristAdminDetailDto(
     string LastName,
     string FullName,
     string Email,
-    string Status,
-    string PreferredLanguage,
+    UserStatus Status,
     string? Nationality,
     bool EmailVerified,
-    DateTime? EmailVerifiedAt,
     // int TotalTrips,
     // int CompletedTrips,
     int TotalReviews,
@@ -18,5 +18,5 @@ public record TouristAdminDetailDto(
     bool IsBanned,
     DateTime CreatedAt,
     DateTime? UpdatedAt,
-    DateTime LastLoginAt,
+    DateTime? LastLoginAt,
     int FailedLoginAttempts);

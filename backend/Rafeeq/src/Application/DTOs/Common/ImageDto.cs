@@ -1,11 +1,14 @@
 namespace Application.DTOs.Common;
 
-/// <summary>
-/// Represents an image
-/// </summary>
-public record ImageDto(
+public sealed record ImageDto(
     Guid Id,
+    string StorageKey,
     string Url,
     string? Caption,
     bool IsMain,
     int DisplayOrder);
+
+public sealed record ImageMetadata(
+    bool IsMain,
+    int DisplayOrder,
+    string? Caption);

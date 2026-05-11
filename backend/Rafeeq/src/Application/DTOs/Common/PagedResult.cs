@@ -1,8 +1,5 @@
 namespace Application.DTOs.Common;
 
-/// <summary>
-/// Paged result wrapper
-/// </summary>
 public record PagedResult<T>(
     List<T> Data,
     int TotalCount,

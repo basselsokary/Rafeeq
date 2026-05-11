@@ -1,8 +1,5 @@
 namespace Application.DTOs.Reviews;
 
-/// <summary>
-/// Rating distribution DTO
-/// </summary>
 public record RatingDistributionDto(
     int FiveStars,
     int FourStars,

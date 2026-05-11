@@ -1,8 +1,5 @@
 namespace Application.DTOs.Tourists;
 
-/// <summary>
-/// Tourist statistics DTO
-/// </summary>
 public record TouristStatisticsDto(
     Guid TouristId,
     int TotalTrips,

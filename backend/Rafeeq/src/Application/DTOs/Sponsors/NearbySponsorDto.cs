@@ -1,16 +1,16 @@
+using Domain.Enums;
+
 namespace Application.DTOs.Sponsors;
 
-/// <summary>
-/// Nearby sponsor DTO
-/// </summary>
 public record NearbySponsorDto(
     Guid Id,
     string Name,
-    string Type,
+    SponsorType Type,
     double Latitude,
     double Longitude,
     double DistanceKm,
     string? PrimaryImageUrl,
     double AverageRating,
     bool HasActiveOffers,
-    int ActiveOffersCount);
+    int ActiveOffersCount,
+    string TypeDisplay = "");

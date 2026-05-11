@@ -7,8 +7,10 @@ public record AttractionDetailDto(
     Guid Id,
     string Name,
     string Description,
-    string Type,
+    AttractionType Type,
     LocationDto? Location,
-    HistoricalPeriod HistoricalPeriod,
+    List<HistoricalPeriod> HistoricalPeriods,
     string? LocationDescription,
-    List<ImageDto> Images);
+    List<ImageDto> Images,
+    List<string> HistoricalPeriodDisplay,
+    string TypeDisplay = "");

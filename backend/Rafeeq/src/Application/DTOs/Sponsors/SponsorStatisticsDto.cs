@@ -1,11 +1,8 @@
 namespace Application.DTOs.Sponsors;
 
-/// <summary>
-/// Sponsor statistics DTO
-/// </summary>
 public record SponsorStatisticsDto(
     Guid SponsorId,
-    string SponsorName,
+    string Name,
     int TotalClicks,
     int TotalRedemptions,
     int ActiveOffers,

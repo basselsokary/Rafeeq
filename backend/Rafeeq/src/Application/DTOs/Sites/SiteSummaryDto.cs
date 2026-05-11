@@ -1,14 +1,18 @@
+using Application.DTOs.Common;
+using Domain.Enums;
+
 namespace Application.DTOs.Sites;
 
-/// <summary>
-/// Summary DTO for cards/tiles
-/// </summary>
 public record SiteSummaryDto(
     Guid Id,
     string Name,
-    string Type,
+    string Description,
     string City,
+    SiteType Type,
     string? PrimaryImageUrl,
     double AverageRating,
-    int TotalReviews,
-    bool IsFree);
+    int TotalRating,
+    LocationDto Location,
+    bool IsFree,
+    string? Badge,
+    string TypeDisplay = "");

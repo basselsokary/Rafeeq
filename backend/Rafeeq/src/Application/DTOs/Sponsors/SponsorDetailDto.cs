@@ -1,4 +1,5 @@
 using Application.DTOs.Common;
+using Domain.Enums;
 
 namespace Application.DTOs.Sponsors;
 
@@ -6,21 +7,20 @@ public record SponsorDetailDto(
     Guid Id,
     string Name,
     string Description,
-    string Type,
-    string Tier,
+    SponsorType Type,
     LocationDto Location,
-    AddressDto Address,
-    string ContactPhone,
+    string Address,
+    string? ContactPhone,
     string ContactEmail,
     string? Website,
     double AverageRating,
     int TotalReviews,
     List<ImageDto> Images,
     List<SponsorOfferDto> ActiveOffers,
-    DateTime ContractStartDate,
-    DateTime ContractEndDate,
+    DateRangeDto DateRange,
     bool IsContractValid,
-    bool IsActive,
+    SponsorStatus Status,
     int TotalClicks,
     int TotalRedemptions,
-    double? DistanceKm);
+    double? DistanceKm,
+    string TypeDisplay = "");

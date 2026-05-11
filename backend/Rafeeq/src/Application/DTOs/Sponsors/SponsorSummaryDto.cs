@@ -1,14 +1,15 @@
+using Domain.Enums;
+
 namespace Application.DTOs.Sponsors;
 
-/// <summary>
-/// Sponsor summary for cards
-/// </summary>
 public record SponsorSummaryDto(
     Guid Id,
     string Name,
-    string Type,
-    string Tier,
+    SponsorType Type,
+    SponsorTier Tier,
     string? PrimaryImageUrl,
     double AverageRating,
     int ActiveOffersCount,
-    bool HasActiveOffers);
+    bool HasActiveOffers,
+    string TypeDisplay = "",
+    string TierDisplay = "");

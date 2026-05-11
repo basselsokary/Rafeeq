@@ -12,4 +12,7 @@ public record ContentReportDetailDto(
     DateTime ReportedAt,
     DateTime? ReviewedAt,
     string? ReviewNotes,
-    ModerationAction? ActionTaken);
+    ModerationAction? ActionTaken,
+    string ReasonDisplay = "",
+    string StatusDisplay = "",
+    string? ActionTakenDisplay = "");

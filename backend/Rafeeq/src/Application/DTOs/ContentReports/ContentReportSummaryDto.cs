@@ -9,4 +9,6 @@ public record ContentReportSummaryDto(
     ReportReason Reason,
     string Description,
     ReportStatus Status,
-    DateTime ReportedAt);
+    DateTime ReportedAt,
+    string ReasonDisplay = "",
+    string StatusDisplay = "");

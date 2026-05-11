@@ -1,8 +1,5 @@
 namespace Application.DTOs.Reviews;
 
-/// <summary>
-/// Review statistics for an site
-/// </summary>
 public record SiteReviewStatisticsDto(
     Guid SiteId,
     string SiteName,

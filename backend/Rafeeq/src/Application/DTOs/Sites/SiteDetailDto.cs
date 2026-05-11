@@ -1,23 +1,29 @@
 using Application.DTOs.Common;
+using Domain.Enums;
 
 namespace Application.DTOs.Sites;
 
 public record SiteDetailDto(
     Guid Id,
+    string CityName,
     string Name,
     string Description,
-    string Type,
-    string Status,
+    SiteType Type,
+    SiteStatus Status,
     LocationDto Location,
-    AddressDto Address,
+    string Address,
     string? ContactPhone,
     string? Website,
+    string? MainImageUrl,
     double AverageRating,
-    int TotalReviews,
-    MoneyDto? EntryFee,
+    int TotalRating,
+    TicketDto? EntryTicket,
     List<ImageDto> Images,
-    List<OpeningHoursDto> OpeningHours,
-    List<FacilityDto> Facilities,
+    List<OpeningHourDto> OpeningHours,
+    List<FacilityType> FacilityTypes,
     List<NearestTransportationDto> NearestTransportations,
     bool IsFree,
-    bool IsFeatured);
+    bool IsFeatured,
+    List<string> FacilityTypeDisplays,
+    string TypeDisplay = "",
+    string StatusDisplay = "");

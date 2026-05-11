@@ -7,10 +7,13 @@ public record AttractionAdminDetailDto(
     Guid Id,
     string Name,
     string Description,
-    string Type,
+    AttractionType Type,
     LocationDto? Location,
-    HistoricalPeriod HistoricalPeriod,
+    List<HistoricalPeriod> HistoricalPeriods,
     string? LocationDescription,
+    bool IsFeatured,
     List<ImageDto> Images,
     DateTime CreatedAt,
-    DateTime? UpdatedAt);
+    Guid CreatedBy,
+    DateTime? LastModifiedAt,
+    Guid? LastModifiedBy);

@@ -1,16 +1,17 @@
+using Domain.Enums;
+
 namespace Application.DTOs.Tourists;
 
-/// <summary>
-/// Visited Site DTO
-/// </summary>
 public record VisitedSiteDto(
     Guid Id,
     Guid SiteId,
     string SiteName,
-    string SiteType,
+    SiteType SiteType,
     string? SiteImageUrl,
-    string City,
+    double SiteAverageRating,
     DateTime VisitDate,
     int DurationMinutes,
+    int Rating,
+    bool HasRating,
     string? Notes,
-    bool HasReviewed);
+    string SiteTypeDisplay = "");

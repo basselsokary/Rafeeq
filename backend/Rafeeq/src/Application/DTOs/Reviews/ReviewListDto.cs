@@ -1,8 +1,7 @@
+using Domain.Enums;
+
 namespace Application.DTOs.Reviews;
 
-/// <summary>
-/// Review list DTO
-/// </summary>
 public record ReviewListDto(
     Guid Id,
     Guid SiteId,
@@ -12,8 +11,9 @@ public record ReviewListDto(
     int Rating,
     string Title,
     string Content,
-    string Status,
+    ReviewStatus Status,
     int HelpfulCount,
     int NotHelpfulCount,
     double HelpfulnessScore,
-    DateTime CreatedAt);
+    DateTime CreatedAt,
+    string StatusDisplay = "");
