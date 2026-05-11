@@ -4,6 +4,7 @@ using Infrastructure.Persistence.ApplicationContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,14 +12,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.ApplicationContext.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260501153139_FixingIsClosedInOpeningHoursProblem")]
+    partial class FixingIsClosedInOpeningHoursProblem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("rafeeq")
-                .HasAnnotation("ProductVersion", "10.0.7")
+                .HasAnnotation("ProductVersion", "10.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -332,22 +335,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     b.ToTable((string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.StoredFile", b =>
-                {
-                    b.HasBaseType("Domain.Common.BaseEntity");
-
-                    b.Property<DateTimeOffset>("FirstUploadedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("ReferenceCount")
-                        .HasColumnType("int");
-
-                    b.Property<long>("Size")
-                        .HasColumnType("bigint");
-
-                    b.ToTable("StoredFiles", "rafeeq");
-                });
-
             modelBuilder.Entity("Domain.Entities.TouristAggregate.Tourist", b =>
                 {
                     b.HasBaseType("Domain.Common.BaseEntity");
@@ -369,6 +356,7 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Nationality")
+                        .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
@@ -430,7 +418,7 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
-                    b.Property<Guid?>("SiteId")
+                    b.Property<Guid>("SiteId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Type")
@@ -488,8 +476,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
@@ -566,11 +554,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("StoredFileId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("StoredFileId");
-
                     b.HasIndex("AttractionId", "DisplayOrder")
                         .HasDatabaseName("IX_AttractionImages_AttractionId_DisplayOrder");
 
@@ -589,8 +572,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
@@ -603,9 +586,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
-
-                    b.HasIndex("AttractionId")
-                        .HasDatabaseName("IX_AttractionLocalizedContents_AttractionId");
 
                     b.HasIndex("Name")
                         .HasDatabaseName("IX_AttractionLocalizedContents_Name");
@@ -626,19 +606,15 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
-
-                    b.Property<Guid?>("StoredFileId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("TotalSites")
                         .HasColumnType("int");
 
                     b.HasIndex("DisplayOrder")
                         .HasDatabaseName("IX_Cities_DisplayOrder");
-
-                    b.HasIndex("StoredFileId");
 
                     b.ToTable("Cities", "rafeeq");
                 });
@@ -652,8 +628,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
@@ -662,9 +638,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
-
-                    b.HasIndex("CityId")
-                        .HasDatabaseName("IX_CityLocalizedContents_CityId");
 
                     b.HasIndex("Name")
                         .HasDatabaseName("IX_CityLocalizedContents_Name");
@@ -689,8 +662,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Priority")
                         .HasColumnType("int");
@@ -741,8 +714,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("HelpfulCount")
                         .HasColumnType("int");
@@ -813,8 +786,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     b.HasBaseType("Domain.Common.BaseAuditableEntity");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
@@ -829,9 +802,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.HasIndex("Name")
                         .HasDatabaseName("IX_NearestTransportationLocalizedContents_Name");
-
-                    b.HasIndex("TransportationId")
-                        .HasDatabaseName("IX_NearestTransportationLocalizedContents_TransportationId");
 
                     b.HasIndex("TransportationId", "Language")
                         .IsUnique()
@@ -941,11 +911,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     b.Property<Guid>("SiteId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("StoredFileId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("StoredFileId");
-
                     b.HasIndex("SiteId", "DisplayOrder")
                         .HasDatabaseName("IX_SiteImages_SiteId_DisplayOrder");
 
@@ -961,8 +926,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EntryTicketNotes")
                         .HasMaxLength(2048)
@@ -981,9 +946,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.HasIndex("Name")
                         .HasDatabaseName("IX_SiteLocalizedContents_Name");
-
-                    b.HasIndex("SiteId")
-                        .HasDatabaseName("IX_SiteLocalizedContents_SiteId");
 
                     b.HasIndex("Language", "Name")
                         .HasDatabaseName("IX_SiteLocalizedContents_Language_Name");
@@ -1034,8 +996,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
@@ -1051,9 +1013,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
-
-                    b.HasIndex("OfferId")
-                        .HasDatabaseName("IX_OfferLocalizedContents_OfferId");
 
                     b.HasIndex("Title")
                         .HasDatabaseName("IX_OfferLocalizedContents_Title");
@@ -1124,11 +1083,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     b.Property<Guid>("SponsorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("StoredFileId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("StoredFileId");
-
                     b.HasIndex("SponsorId", "DisplayOrder")
                         .HasDatabaseName("IX_SponsorImages_SponsorId_DisplayOrder");
 
@@ -1144,8 +1098,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
@@ -1157,9 +1111,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
-
-                    b.HasIndex("SponsorId")
-                        .HasDatabaseName("IX_SponsorLocalizedContents_SponsorId");
 
                     b.HasIndex("Title")
                         .HasDatabaseName("IX_SponsorLocalizedContents_Title");
@@ -1233,56 +1184,41 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 {
                     b.HasBaseType("Domain.Common.BaseAuditableEntity");
 
-                    b.Property<TimeOnly>("DailyEndTime")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("DailyStartTime")
-                        .HasColumnType("time");
-
                     b.Property<string>("Description")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("EndDate")
-                        .HasColumnType("date");
-
-                    b.Property<int>("EstimatedTotalDuration")
-                        .HasColumnType("int")
-                        .HasColumnName("EstimatedTotalDurationMinutes");
-
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("date");
-
-                    b.Property<int>("Status")
+                    b.Property<int>("EstimatedTotalDurationMinutes")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int?>("Tolerance")
+                    b.Property<int>("PreferredTransportation")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalSites")
+                    b.Property<int>("ShareCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<Guid>("TouristId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("_preferredSiteTypes")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1024)")
-                        .HasColumnName("PreferredSiteTypes");
+                    b.HasIndex("IsPublic")
+                        .HasDatabaseName("IX_Trips_IsPublic");
 
-                    b.HasIndex("StartDate")
-                        .HasDatabaseName("IX_Trips_StartDate");
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_Trips_Name");
 
                     b.HasIndex("Status")
                         .HasDatabaseName("IX_Trips_Status");
-
-                    b.HasIndex("Title")
-                        .HasDatabaseName("IX_Trips_Name");
 
                     b.HasIndex("TouristId")
                         .HasDatabaseName("IX_Trips_TouristId");
@@ -1290,94 +1226,68 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     b.ToTable("Trips", "rafeeq");
                 });
 
-            modelBuilder.Entity("Domain.Entities.TripAggregate.TripDay", b =>
+            modelBuilder.Entity("Domain.Entities.TripAggregate.TripNote", b =>
                 {
                     b.HasBaseType("Domain.Common.BaseAuditableEntity");
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DayNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EstimatedDayDuration")
-                        .HasColumnType("int")
-                        .HasColumnName("DayTotalDurationMinutes");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)");
-
-                    b.Property<int>("TotalSites")
-                        .HasColumnType("int");
+                    b.Property<string>("Title")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<Guid>("TripId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("Date")
-                        .HasDatabaseName("IX_TripDays_Date");
+                    b.HasIndex("TripId")
+                        .HasDatabaseName("IX_TripNotes_TripId");
 
-                    b.HasIndex("TripId", "Date")
-                        .IsUnique()
-                        .HasDatabaseName("IX_TripDays_TripId_Date")
-                        .HasFilter("[TripId] IS NOT NULL AND [Date] IS NOT NULL");
-
-                    b.ToTable("TripDay", "rafeeq");
+                    b.ToTable("TripNotes", "rafeeq");
                 });
 
             modelBuilder.Entity("Domain.Entities.TripAggregate.TripSite", b =>
                 {
                     b.HasBaseType("Domain.Common.BaseAuditableEntity");
 
+                    b.Property<int?>("ActualDurationMinutes")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("ActualVisitTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CityName")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
 
-                    b.Property<int>("EstimatedDuration")
-                        .HasColumnType("int")
-                        .HasColumnName("EstimatedDurationMinutes");
+                    b.Property<int>("EstimatedDurationMinutes")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsVisited")
                         .HasColumnType("bit");
 
-                    b.Property<TimeOnly>("PlannedArrivalTime")
-                        .HasColumnType("time");
+                    b.Property<string>("Notes")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
 
                     b.Property<Guid>("SiteId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("SiteImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
-
-                    b.Property<string>("SiteName")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<int>("SiteType")
-                        .HasColumnType("int")
-                        .HasColumnName("Type");
-
-                    b.Property<Guid>("TripDayId")
+                    b.Property<Guid>("TripId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("VisitOrder")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("VisitDate")
+                        .HasColumnType("datetime2");
 
                     b.HasIndex("SiteId")
                         .HasDatabaseName("IX_TripSites_SiteId");
 
-                    b.HasIndex("TripDayId", "PlannedArrivalTime")
-                        .HasDatabaseName("IX_TripSites_TripId_PlannedArrivalTime");
-
-                    b.HasIndex("TripDayId", "VisitOrder")
+                    b.HasIndex("TripId", "DisplayOrder")
                         .HasDatabaseName("IX_TripSites_TripId_DisplayOrder");
+
+                    b.HasIndex("TripId", "VisitDate")
+                        .HasDatabaseName("IX_TripSites_TripId_VisitDate");
 
                     b.ToTable("TripSites", "rafeeq");
                 });
@@ -1447,86 +1357,13 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.StoredFile", b =>
-                {
-                    b.OwnsOne("Domain.ValueObjects.StorageKey", "StorageKey", b1 =>
-                        {
-                            b1.Property<Guid>("StoredFileId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)")
-                                .HasColumnName("StorageKey");
-
-                            b1.HasKey("StoredFileId");
-
-                            b1.ToTable("StoredFiles", "rafeeq");
-
-                            b1.WithOwner()
-                                .HasForeignKey("StoredFileId");
-                        });
-
-                    b.OwnsOne("Domain.ValueObjects.FileHash", "Hash", b1 =>
-                        {
-                            b1.Property<Guid>("StoredFileId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(64)
-                                .HasColumnType("nvarchar(64)")
-                                .HasColumnName("Hash");
-
-                            b1.HasKey("StoredFileId");
-
-                            b1.HasIndex("Value")
-                                .HasDatabaseName("IX_StoredFiles_Hash");
-
-                            b1.ToTable("StoredFiles", "rafeeq");
-
-                            b1.WithOwner()
-                                .HasForeignKey("StoredFileId");
-                        });
-
-                    b.OwnsOne("Domain.ValueObjects.ImageContentType", "ContentType", b1 =>
-                        {
-                            b1.Property<Guid>("StoredFileId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(128)
-                                .HasColumnType("nvarchar(128)")
-                                .HasColumnName("ContentType");
-
-                            b1.HasKey("StoredFileId");
-
-                            b1.ToTable("StoredFiles", "rafeeq");
-
-                            b1.WithOwner()
-                                .HasForeignKey("StoredFileId");
-                        });
-
-                    b.Navigation("ContentType")
-                        .IsRequired();
-
-                    b.Navigation("Hash")
-                        .IsRequired();
-
-                    b.Navigation("StorageKey")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Domain.Entities.ArtifactAggregate.Artifact", b =>
                 {
-                    b.HasOne("Domain.Entities.SiteAggregate.Site", "Site")
+                    b.HasOne("Domain.Entities.SiteAggregate.Site", null)
                         .WithMany()
                         .HasForeignKey("SiteId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Site");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.ArtifactAggregate.ArtifactImage", b =>
@@ -1611,12 +1448,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.StoredFile", null)
-                        .WithMany()
-                        .HasForeignKey("StoredFileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.OwnsOne("Domain.ValueObjects.StorageKey", "StorageKey", b1 =>
                         {
                             b1.Property<Guid>("AttractionImageId")
@@ -1651,11 +1482,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
             modelBuilder.Entity("Domain.Entities.CityAggregate.City", b =>
                 {
-                    b.HasOne("Domain.Entities.StoredFile", null)
-                        .WithMany()
-                        .HasForeignKey("StoredFileId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.OwnsOne("Domain.ValueObjects.GeoLocation", "CenterLocation", b1 =>
                         {
                             b1.Property<Guid>("CityId")
@@ -1701,7 +1527,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     b.Navigation("CenterLocation")
                         .IsRequired();
 
-                    b.Navigation("StorageKey");
+                    b.Navigation("StorageKey")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.CityAggregate.CityLocalizedContent", b =>
@@ -1791,11 +1618,11 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                             b1.Property<Guid>("NearestTransportationId")
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.Property<TimeOnly>("EndTime")
+                            b1.Property<TimeSpan>("EndTime")
                                 .HasColumnType("time")
                                 .HasColumnName("EndTime");
 
-                            b1.Property<TimeOnly>("StartTime")
+                            b1.Property<TimeSpan>("StartTime")
                                 .HasColumnType("time")
                                 .HasColumnName("StartTime");
 
@@ -1897,9 +1724,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                             b1.HasKey("Id");
 
-                            b1.HasIndex("SiteId")
-                                .HasDatabaseName("IX_Sites_OpeningHours_SiteId");
-
                             b1.HasIndex("SiteId", "Day")
                                 .IsUnique()
                                 .HasDatabaseName("IX_Sites_OpeningHours_SiteId_DayOfWeek");
@@ -1914,11 +1738,11 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                                     b2.Property<int>("OpeningHourId")
                                         .HasColumnType("int");
 
-                                    b2.Property<TimeOnly>("EndTime")
+                                    b2.Property<TimeSpan>("EndTime")
                                         .HasColumnType("time")
                                         .HasColumnName("EndTime");
 
-                                    b2.Property<TimeOnly>("StartTime")
+                                    b2.Property<TimeSpan>("StartTime")
                                         .HasColumnType("time")
                                         .HasColumnName("StartTime");
 
@@ -2019,12 +1843,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     b.HasOne("Domain.Entities.SiteAggregate.Site", null)
                         .WithMany("Images")
                         .HasForeignKey("SiteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.StoredFile", null)
-                        .WithMany()
-                        .HasForeignKey("StoredFileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2267,12 +2085,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.StoredFile", null)
-                        .WithMany()
-                        .HasForeignKey("StoredFileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.OwnsOne("Domain.ValueObjects.StorageKey", "StorageKey", b1 =>
                         {
                             b1.Property<Guid>("SponsorImageId")
@@ -2402,7 +2214,28 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                                 .HasForeignKey("TripId");
                         });
 
-                    b.OwnsOne("Domain.ValueObjects.Money", "EstimatedTotalBudget", b1 =>
+                    b.OwnsOne("Domain.ValueObjects.DateRange", "DateRange", b1 =>
+                        {
+                            b1.Property<Guid>("TripId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<DateTime>("EndDate")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("EndDate");
+
+                            b1.Property<DateTime>("StartDate")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("StartDate");
+
+                            b1.HasKey("TripId");
+
+                            b1.ToTable("Trips", "rafeeq");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TripId");
+                        });
+
+                    b.OwnsOne("Domain.ValueObjects.Money", "EstimatedBudget", b1 =>
                         {
                             b1.Property<Guid>("TripId")
                                 .HasColumnType("uniqueidentifier");
@@ -2426,73 +2259,21 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                                 .HasForeignKey("TripId");
                         });
 
-                    b.OwnsOne("Domain.ValueObjects.GeoLocation", "UserPosition", b1 =>
-                        {
-                            b1.Property<Guid>("TripId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<double>("Latitude")
-                                .HasPrecision(9, 6)
-                                .HasColumnType("float(9)")
-                                .HasColumnName("UserPosition_Latitude");
-
-                            b1.Property<double>("Longitude")
-                                .HasPrecision(9, 6)
-                                .HasColumnType("float(9)")
-                                .HasColumnName("UserPosition_Longitude");
-
-                            b1.HasKey("TripId");
-
-                            b1.HasIndex("Latitude", "Longitude")
-                                .HasDatabaseName("IX_Trips_UserPosition_LatLng");
-
-                            b1.ToTable("Trips", "rafeeq");
-
-                            b1.WithOwner()
-                                .HasForeignKey("TripId");
-                        });
-
                     b.Navigation("ActualCost");
 
-                    b.Navigation("EstimatedTotalBudget");
-
-                    b.Navigation("UserPosition")
+                    b.Navigation("DateRange")
                         .IsRequired();
+
+                    b.Navigation("EstimatedBudget");
                 });
 
-            modelBuilder.Entity("Domain.Entities.TripAggregate.TripDay", b =>
+            modelBuilder.Entity("Domain.Entities.TripAggregate.TripNote", b =>
                 {
                     b.HasOne("Domain.Entities.TripAggregate.Trip", null)
-                        .WithMany("Days")
+                        .WithMany("Notes")
                         .HasForeignKey("TripId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.OwnsOne("Domain.ValueObjects.Money", "EstimatedDayBudget", b1 =>
-                        {
-                            b1.Property<Guid>("TripDayId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<decimal>("Amount")
-                                .HasPrecision(18, 2)
-                                .HasColumnType("decimal(18,2)")
-                                .HasColumnName("Price_Amount");
-
-                            b1.Property<string>("Currency")
-                                .IsRequired()
-                                .HasMaxLength(3)
-                                .HasColumnType("nvarchar(3)")
-                                .HasColumnName("Price_Currency");
-
-                            b1.HasKey("TripDayId");
-
-                            b1.ToTable("TripDay", "rafeeq");
-
-                            b1.WithOwner()
-                                .HasForeignKey("TripDayId");
-                        });
-
-                    b.Navigation("EstimatedDayBudget");
                 });
 
             modelBuilder.Entity("Domain.Entities.TripAggregate.TripSite", b =>
@@ -2503,27 +2284,24 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.TripAggregate.TripDay", null)
+                    b.HasOne("Domain.Entities.TripAggregate.Trip", null)
                         .WithMany("Sites")
-                        .HasForeignKey("TripDayId")
+                        .HasForeignKey("TripId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Domain.ValueObjects.Money", "EstimatedCost", b1 =>
+                    b.OwnsOne("Domain.ValueObjects.TimeRange", "VisitTimeRange", b1 =>
                         {
                             b1.Property<Guid>("TripSiteId")
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.Property<decimal>("Amount")
-                                .HasPrecision(18, 2)
-                                .HasColumnType("decimal(18,2)")
-                                .HasColumnName("Price_Amount");
+                            b1.Property<TimeSpan>("EndTime")
+                                .HasColumnType("time")
+                                .HasColumnName("EndTime");
 
-                            b1.Property<string>("Currency")
-                                .IsRequired()
-                                .HasMaxLength(3)
-                                .HasColumnType("nvarchar(3)")
-                                .HasColumnName("Price_Currency");
+                            b1.Property<TimeSpan>("StartTime")
+                                .HasColumnType("time")
+                                .HasColumnName("StartTime");
 
                             b1.HasKey("TripSiteId");
 
@@ -2533,37 +2311,7 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                                 .HasForeignKey("TripSiteId");
                         });
 
-                    b.OwnsOne("Domain.ValueObjects.GeoLocation", "SiteLocation", b1 =>
-                        {
-                            b1.Property<Guid>("TripSiteId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<double>("Latitude")
-                                .HasPrecision(9, 6)
-                                .HasColumnType("float(9)")
-                                .HasColumnName("SiteLocation_Latitude");
-
-                            b1.Property<double>("Longitude")
-                                .HasPrecision(9, 6)
-                                .HasColumnType("float(9)")
-                                .HasColumnName("SiteLocation_Longitude");
-
-                            b1.HasKey("TripSiteId");
-
-                            b1.HasIndex("Latitude", "Longitude")
-                                .HasDatabaseName("IX_TripSites_SiteLocation_LatLng");
-
-                            b1.ToTable("TripSites", "rafeeq");
-
-                            b1.WithOwner()
-                                .HasForeignKey("TripSiteId");
-                        });
-
-                    b.Navigation("EstimatedCost")
-                        .IsRequired();
-
-                    b.Navigation("SiteLocation")
-                        .IsRequired();
+                    b.Navigation("VisitTimeRange");
                 });
 
             modelBuilder.Entity("Domain.Entities.TouristAggregate.Tourist", b =>
@@ -2622,11 +2370,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
             modelBuilder.Entity("Domain.Entities.TripAggregate.Trip", b =>
                 {
-                    b.Navigation("Days");
-                });
+                    b.Navigation("Notes");
 
-            modelBuilder.Entity("Domain.Entities.TripAggregate.TripDay", b =>
-                {
                     b.Navigation("Sites");
                 });
 #pragma warning restore 612, 618

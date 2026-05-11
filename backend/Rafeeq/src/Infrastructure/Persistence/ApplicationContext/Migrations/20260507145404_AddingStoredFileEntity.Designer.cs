@@ -4,6 +4,7 @@ using Infrastructure.Persistence.ApplicationContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,14 +12,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.ApplicationContext.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260507145404_AddingStoredFileEntity")]
+    partial class AddingStoredFileEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("rafeeq")
-                .HasAnnotation("ProductVersion", "10.0.7")
+                .HasAnnotation("ProductVersion", "10.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -336,11 +339,13 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 {
                     b.HasBaseType("Domain.Common.BaseEntity");
 
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
                     b.Property<DateTimeOffset>("FirstUploadedAt")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("ReferenceCount")
-                        .HasColumnType("int");
 
                     b.Property<long>("Size")
                         .HasColumnType("bigint");
@@ -488,8 +493,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
@@ -589,8 +594,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
@@ -603,9 +608,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
-
-                    b.HasIndex("AttractionId")
-                        .HasDatabaseName("IX_AttractionLocalizedContents_AttractionId");
 
                     b.HasIndex("Name")
                         .HasDatabaseName("IX_AttractionLocalizedContents_Name");
@@ -652,8 +654,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
@@ -662,9 +664,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
-
-                    b.HasIndex("CityId")
-                        .HasDatabaseName("IX_CityLocalizedContents_CityId");
 
                     b.HasIndex("Name")
                         .HasDatabaseName("IX_CityLocalizedContents_Name");
@@ -689,8 +688,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Priority")
                         .HasColumnType("int");
@@ -741,8 +740,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("HelpfulCount")
                         .HasColumnType("int");
@@ -813,8 +812,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     b.HasBaseType("Domain.Common.BaseAuditableEntity");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
@@ -829,9 +828,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.HasIndex("Name")
                         .HasDatabaseName("IX_NearestTransportationLocalizedContents_Name");
-
-                    b.HasIndex("TransportationId")
-                        .HasDatabaseName("IX_NearestTransportationLocalizedContents_TransportationId");
 
                     b.HasIndex("TransportationId", "Language")
                         .IsUnique()
@@ -961,8 +957,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EntryTicketNotes")
                         .HasMaxLength(2048)
@@ -981,9 +977,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.HasIndex("Name")
                         .HasDatabaseName("IX_SiteLocalizedContents_Name");
-
-                    b.HasIndex("SiteId")
-                        .HasDatabaseName("IX_SiteLocalizedContents_SiteId");
 
                     b.HasIndex("Language", "Name")
                         .HasDatabaseName("IX_SiteLocalizedContents_Language_Name");
@@ -1034,8 +1027,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
@@ -1051,9 +1044,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
-
-                    b.HasIndex("OfferId")
-                        .HasDatabaseName("IX_OfferLocalizedContents_OfferId");
 
                     b.HasIndex("Title")
                         .HasDatabaseName("IX_OfferLocalizedContents_Title");
@@ -1144,8 +1134,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
@@ -1157,9 +1147,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
-
-                    b.HasIndex("SponsorId")
-                        .HasDatabaseName("IX_SponsorLocalizedContents_SponsorId");
 
                     b.HasIndex("Title")
                         .HasDatabaseName("IX_SponsorLocalizedContents_Title");
@@ -1240,8 +1227,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .HasColumnType("time");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateOnly>("EndDate")
                         .HasColumnType("date");
@@ -1489,28 +1476,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("StoredFileId");
                         });
-
-                    b.OwnsOne("Domain.ValueObjects.ImageContentType", "ContentType", b1 =>
-                        {
-                            b1.Property<Guid>("StoredFileId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(128)
-                                .HasColumnType("nvarchar(128)")
-                                .HasColumnName("ContentType");
-
-                            b1.HasKey("StoredFileId");
-
-                            b1.ToTable("StoredFiles", "rafeeq");
-
-                            b1.WithOwner()
-                                .HasForeignKey("StoredFileId");
-                        });
-
-                    b.Navigation("ContentType")
-                        .IsRequired();
 
                     b.Navigation("Hash")
                         .IsRequired();
@@ -1791,11 +1756,11 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                             b1.Property<Guid>("NearestTransportationId")
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.Property<TimeOnly>("EndTime")
+                            b1.Property<TimeSpan>("EndTime")
                                 .HasColumnType("time")
                                 .HasColumnName("EndTime");
 
-                            b1.Property<TimeOnly>("StartTime")
+                            b1.Property<TimeSpan>("StartTime")
                                 .HasColumnType("time")
                                 .HasColumnName("StartTime");
 
@@ -1897,9 +1862,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                             b1.HasKey("Id");
 
-                            b1.HasIndex("SiteId")
-                                .HasDatabaseName("IX_Sites_OpeningHours_SiteId");
-
                             b1.HasIndex("SiteId", "Day")
                                 .IsUnique()
                                 .HasDatabaseName("IX_Sites_OpeningHours_SiteId_DayOfWeek");
@@ -1914,11 +1876,11 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                                     b2.Property<int>("OpeningHourId")
                                         .HasColumnType("int");
 
-                                    b2.Property<TimeOnly>("EndTime")
+                                    b2.Property<TimeSpan>("EndTime")
                                         .HasColumnType("time")
                                         .HasColumnName("EndTime");
 
-                                    b2.Property<TimeOnly>("StartTime")
+                                    b2.Property<TimeSpan>("StartTime")
                                         .HasColumnType("time")
                                         .HasColumnName("StartTime");
 
