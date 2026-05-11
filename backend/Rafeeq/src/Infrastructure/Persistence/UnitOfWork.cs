@@ -19,7 +19,9 @@ internal sealed class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
     private ICityRepository? _cityRepository;
     private IContentReportRepository? _contentReportRepository;
     private IAttractionRepository? _attractionRepository;
+    private IArtifactRepository? _artifactRepository;
     private ITripRepository? _tripRepository;
+    private IStoredFileRepository? _storedFileRepository;
     
     public ITouristRepository Tourists
         => _userRepository ??= new TouristRepository(context);
@@ -35,8 +37,12 @@ internal sealed class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
         => _contentReportRepository ??= new ContentReportRepository(context);
     public IAttractionRepository Attractions
         => _attractionRepository ??= new AttractionRepository(context);
+    public IArtifactRepository Artifacts
+        => _artifactRepository ??= new ArtifactRepository(context);
     public ITripRepository Trips
         => _tripRepository ??= new TripRepository(context);
+    public IStoredFileRepository StoredFiles
+        => _storedFileRepository ??= new StoredFileRepository(context);
 
     public Task UpdateAsync<T>(T entity) where T : BaseEntity
     {

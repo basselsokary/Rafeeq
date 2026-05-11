@@ -2,12 +2,32 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Entities.SiteAggregate;
 using Domain.Repositories;
 using Infrastructure.Persistence.ApplicationContext;
+using Domain.Enums;
 
 namespace Infrastructure.Persistence.Repositories;
 
 internal sealed class SiteRepository(ApplicationDbContext context)
     : BaseRepository<Site>(context), ISiteRepository
 {
+    public async Task AddNearestTransportationAsync(NearestTransportation transportation, CancellationToken cancellationToken = default)
+    {
+        await DbContext.NearestTransportations.AddAsync(transportation, cancellationToken);
+    }
+
+    public async Task AddNearestTransportationsRangeAsync(IEnumerable<NearestTransportation> transportations, CancellationToken cancellationToken = default)
+    {
+        await DbContext.NearestTransportations.AddRangeAsync(transportations, cancellationToken);
+    }
+
+    public async Task<IEnumerable<Site>> GetAllWithOpeningHoursAsync(CancellationToken ct)
+    {
+        return await DbSet
+            .AsSplitQuery()
+            .Include(s => s.LocalizedContents .Where(lc => lc.Language == LanguageCode.English))
+            .Include(s => s.OpeningHours)
+            .ToListAsync(ct);
+    }
+
     public async Task<NearestTransportation?> GetNearestTransportationByIdAsync(Guid tranportationId, CancellationToken cancellationToken = default)
     {
         return await DbContext.NearestTransportations

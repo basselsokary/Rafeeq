@@ -10,4 +10,9 @@ public interface ISiteRepository : IBaseRepository<Site>
     Task<Site?> GetWithLocalizedContentsAsync(Guid id, CancellationToken cancellationToken = default);
     Task<Site?> GetWithOpeningHoursAsync(Guid id, CancellationToken cancellationToken = default);
     Task<NearestTransportation?> GetNearestTransportationByIdAsync(Guid tranportationId, CancellationToken cancellationToken = default);
+    
+    Task<IEnumerable<Site>> GetAllWithOpeningHoursAsync(CancellationToken ct);
+
+    Task AddNearestTransportationAsync(NearestTransportation transportation, CancellationToken cancellationToken = default);
+    Task AddNearestTransportationsRangeAsync(IEnumerable<NearestTransportation> transportations, CancellationToken cancellationToken = default);
 }

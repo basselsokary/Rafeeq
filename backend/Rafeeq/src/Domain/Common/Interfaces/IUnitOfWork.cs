@@ -7,12 +7,14 @@ public interface IUnitOfWork : IDisposable
     /// Repository access
     ISiteRepository Sites { get; }
     IAttractionRepository Attractions { get; }
+    IArtifactRepository Artifacts { get; }
     ICityRepository Cities { get; }
     IContentReportRepository ContentReports { get; }
     IReviewRepository Reviews { get; }
     ISponsorRepository Sponsors { get; }
     ITouristRepository Tourists { get; }
     ITripRepository Trips { get; }
+    IStoredFileRepository StoredFiles { get; }
 
     /// Generic operations
     Task UpdateAsync<T>(T entity) where T : BaseEntity;
