@@ -16,7 +16,6 @@ internal static class TicketConfiguration
         ownerBuilder.OwnsOne(t => t.EgyptianPrice, money =>
         {
             money.Configure("EgyptianPrice");
-
         });
 
         ownerBuilder.OwnsOne(t => t.ForeignerPrice, money =>

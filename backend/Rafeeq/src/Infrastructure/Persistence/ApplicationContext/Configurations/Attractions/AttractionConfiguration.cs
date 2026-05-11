@@ -6,7 +6,7 @@ using Infrastructure.Persistence.ApplicationContext.Configurations.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static Domain.Common.Constants.DomainConstants.Image;
+using static Domain.Common.Constants.DomainConstants.File;
 
 namespace Infrastructure.Persistence.ApplicationContext.Configurations.Attractions;
 

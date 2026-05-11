@@ -27,6 +27,9 @@ internal sealed class SponsorLocalizedContentConfiguration : IEntityTypeConfigur
             .IsUnique()
             .HasDatabaseName("IX_SponsorLocalizedContents_SponsorId_Language");
         
+        builder.HasIndex("SponsorId")
+            .HasDatabaseName("IX_SponsorLocalizedContents_SponsorId");
+
         builder.HasIndex(s => new { s.Language, s.Title })
             .HasDatabaseName("IX_SponsorLocalizedContents_Language_Title");
 

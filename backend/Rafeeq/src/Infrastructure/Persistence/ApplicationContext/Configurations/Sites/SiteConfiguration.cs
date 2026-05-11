@@ -2,7 +2,7 @@ using Domain.Entities.SiteAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static Domain.Common.Constants.DomainConstants.Site;
-using static Domain.Common.Constants.DomainConstants.Image;
+using static Domain.Common.Constants.DomainConstants.File;
 using Infrastructure.Persistence.ApplicationContext.Configurations.ValueObjects;
 using Domain.ValueObjects;
 using System.Text.Json;
@@ -50,6 +50,9 @@ internal sealed class SiteConfiguration : IEntityTypeConfiguration<Site>
             openingHours.HasIndex("SiteId", nameof(OpeningHour.Day))
                 .IsUnique()
                 .HasDatabaseName("IX_Sites_OpeningHours_SiteId_DayOfWeek");
+            
+            openingHours.HasIndex("SiteId")
+                .HasDatabaseName("IX_Sites_OpeningHours_SiteId");
         });
 
         builder.HasMany(s => s.Images)

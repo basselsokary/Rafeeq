@@ -24,6 +24,9 @@ internal sealed class OfferLocalizedContentConfiguration : IEntityTypeConfigurat
         builder.HasIndex("OfferId", nameof(SponsorLocalizedContent.Language))
             .IsUnique()
             .HasDatabaseName("IX_OfferLocalizedContents_OfferId_Language");
+        
+        builder.HasIndex("OfferId")
+            .HasDatabaseName("IX_OfferLocalizedContents_OfferId");
 
         builder.HasIndex(s => s.Title)
             .HasDatabaseName("IX_OfferLocalizedContents_Title");

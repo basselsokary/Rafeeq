@@ -14,11 +14,11 @@ internal sealed class SiteLocalizedContentConfiguration : IEntityTypeConfigurati
         builder.Property(c => c.Name)
             .HasMaxLength(MaxNameLength)
             .IsRequired();
-            
+
         builder.Property(c => c.Description)
             .HasMaxLength(MaxDescriptionLength)
             .IsRequired();
-        
+
         builder.Property(t => t.EntryTicketNotes)
             .HasMaxLength(MaxNotesLength)
             .IsRequired(false);
@@ -31,6 +31,9 @@ internal sealed class SiteLocalizedContentConfiguration : IEntityTypeConfigurati
         builder.HasIndex("SiteId", nameof(SiteLocalizedContent.Language))
             .IsUnique()
             .HasDatabaseName("IX_SiteLocalizedContents_SiteId_Language");
+        
+        builder.HasIndex("SiteId")
+            .HasDatabaseName("IX_SiteLocalizedContents_SiteId");
         
         builder.HasIndex(s => new { s.Language, s.Name })
             .HasDatabaseName("IX_SiteLocalizedContents_Language_Name");

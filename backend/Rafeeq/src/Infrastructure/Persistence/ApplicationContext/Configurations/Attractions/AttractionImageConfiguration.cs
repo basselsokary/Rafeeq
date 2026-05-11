@@ -1,8 +1,9 @@
+using Domain.Entities;
 using Domain.Entities.AttractionAggregate;
 using Infrastructure.Persistence.ApplicationContext.Configurations.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static Domain.Common.Constants.DomainConstants.Image;
+using static Domain.Common.Constants.DomainConstants.File;
 
 namespace Infrastructure.Persistence.ApplicationContext.Configurations.Attractions;
 
@@ -23,6 +24,12 @@ internal sealed class AttractionImageConfiguration : IEntityTypeConfiguration<At
 
         builder.Property(i => i.Caption)
             .HasMaxLength(MaxCaptionLength);
+
+        builder.HasOne<StoredFile>()
+            .WithMany()
+            .HasForeignKey(i => i.StoredFileId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex("AttractionId", nameof(AttractionImage.IsMain))
             .HasDatabaseName("IX_AttractionImages_AttractionId_IsMain");

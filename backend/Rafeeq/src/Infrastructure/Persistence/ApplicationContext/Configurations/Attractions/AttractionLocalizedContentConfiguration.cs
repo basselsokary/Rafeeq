@@ -25,6 +25,9 @@ internal sealed class AttractionLocalizedContentConfiguration : IEntityTypeConfi
             .IsUnique()
             .HasDatabaseName("IX_AttractionLocalizedContents_AttractionId_Language");
         
+        builder.HasIndex("AttractionId")
+            .HasDatabaseName("IX_AttractionLocalizedContents_AttractionId");
+            
         builder.HasIndex(a => a.Name)
             .HasDatabaseName("IX_AttractionLocalizedContents_Name");
     }

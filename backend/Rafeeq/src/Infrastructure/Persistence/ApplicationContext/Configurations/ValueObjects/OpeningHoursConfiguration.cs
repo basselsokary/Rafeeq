@@ -20,5 +20,9 @@ internal static class OpeningHoursConfiguration
         {
             timeRange.Configure();
         });
+
+        builder.Property(oh => oh.IsClosed)
+            .HasColumnName("IsClosed")
+            .IsRequired();
     }
 }

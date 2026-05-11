@@ -2,7 +2,7 @@ using Domain.Entities.ArtifactAggregate;
 using Domain.Entities.SiteAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static Domain.Common.Constants.DomainConstants.Image;
+using static Domain.Common.Constants.DomainConstants.File;
 
 namespace Infrastructure.Persistence.ApplicationContext.Configurations.Artifacts;
 
@@ -25,11 +25,11 @@ internal sealed class ArtifactConfiguration : IEntityTypeConfiguration<Artifact>
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<Site>()
+        builder.HasOne(a => a.Site)
             .WithMany()
             .HasForeignKey(a => a.SiteId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasIndex(a => a.SiteId)
             .HasDatabaseName("IX_Artifacts_SiteId");

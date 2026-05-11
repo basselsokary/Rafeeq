@@ -26,6 +26,9 @@ internal sealed class NearestTransportationLocalizedContentConfiguration : IEnti
         builder.HasIndex("TransportationId", nameof(SiteLocalizedContent.Language))
             .IsUnique()
             .HasDatabaseName("IX_NearestTransportationLocalizedContents_TransportationId_Language");
+        
+        builder.HasIndex("TransportationId")
+            .HasDatabaseName("IX_NearestTransportationLocalizedContents_TransportationId");
 
         builder.HasIndex(s => s.Name)
             .HasDatabaseName("IX_NearestTransportationLocalizedContents_Name");

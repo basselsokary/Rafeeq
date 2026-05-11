@@ -2,7 +2,7 @@ using Domain.Entities.SponsorAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Infrastructure.Persistence.ApplicationContext.Configurations.ValueObjects;
-using static Domain.Common.Constants.DomainConstants.Image;
+using static Domain.Common.Constants.DomainConstants.File;
 
 namespace Infrastructure.Persistence.ApplicationContext.Configurations.Sponsors;
 

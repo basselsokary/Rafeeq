@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.ApplicationContext.Configurations.ValueObjects;
 
-internal static class StorageKeyConfiguration
+internal static class ImageContentTypeConfiguration
 {
     public static void Configure<T>(
-        this OwnedNavigationBuilder<T, StorageKey> builder) where T : class
+        this OwnedNavigationBuilder<T, ImageContentType> builder) where T : class
     {
         builder.Property(k => k.Value)
-            .HasColumnName("StorageKey")
-            .HasMaxLength(Domain.Common.Constants.DomainConstants.File.MaxStorageKeyLength);
+            .HasColumnName("ContentType")
+            .HasMaxLength(Domain.Common.Constants.DomainConstants.File.MaxContentTypeLength);
     }
 }

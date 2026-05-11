@@ -19,7 +19,7 @@ internal sealed class TouristConfiguration : IEntityTypeConfiguration<Tourist>
 
         builder.Property(t => t.Nationality)
             .HasMaxLength(MaxNationalityLength)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.HasMany(t => t.Favourites)
             .WithOne()

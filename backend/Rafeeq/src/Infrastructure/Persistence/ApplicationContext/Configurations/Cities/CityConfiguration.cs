@@ -1,8 +1,9 @@
+using Domain.Entities;
 using Domain.Entities.CityAggregate;
 using Infrastructure.Persistence.ApplicationContext.Configurations.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static Domain.Common.Constants.DomainConstants.Image;
+using static Domain.Common.Constants.DomainConstants.File;
 
 namespace Infrastructure.Persistence.ApplicationContext.Configurations.Cities;
 
@@ -28,6 +29,12 @@ internal sealed class CityConfiguration : IEntityTypeConfiguration<City>
             .HasForeignKey("CityId")
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne<StoredFile>()
+            .WithMany()
+            .HasForeignKey(i => i.StoredFileId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasIndex(c => c.DisplayOrder)
             .HasDatabaseName("IX_Cities_DisplayOrder");
