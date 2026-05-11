@@ -9,6 +9,8 @@ public interface ISiteQueryService
 {
     Task<SiteDetailDto?> GetByIdAsync(
         Guid id, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default);
+    Task<SiteDetailDto?> GetByNameAsync(
+        string name, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default);
     Task<AdminSiteDetailDto?> GetByIdForAdminAsync(
         Guid id, CancellationToken cancellationToken = default);
         
@@ -16,7 +18,7 @@ public interface ISiteQueryService
         double latitude,
         double longitude,
         SiteFilters filters,
-        int radiusKm = 5,
+        int radiusKm = 40,
         int count = 20,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default);
@@ -36,6 +38,11 @@ public interface ISiteQueryService
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default);
 
+    Task<List<SiteListDto>> GetByNamesAsync(
+        List<string> names,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default);
+
     Task<List<SiteSummaryDto>> GetMustVisitAsync(
         int count = 10, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default);
 
@@ -45,7 +52,7 @@ public interface ISiteQueryService
     Task<List<SiteSummaryDto>> GetNearbyAsync(
         double latitude,
         double longitude,
-        double radiusKm = 50,
+        double radiusKm = 40,
         int count = 10,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default);
@@ -61,6 +68,11 @@ public interface ISiteQueryService
         SiteFilters filters,
         PagingParameters paging,
         LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default);
+    
+    Task<List<SiteLookupDto>> SearchAsync(
+        string searchTerm,
+        int count = 10,
         CancellationToken cancellationToken = default);
 
     Task<PagedResult<SiteListDto>> GetAsync(
@@ -105,7 +117,7 @@ public interface ISiteQueryService
     Task<List<SiteMapMarkerDto>> GetNearbyMarkerAsync(
         double latitude,
         double longitude,
-        int radiusKm = 20,
+        int radiusKm = 40,
         int count = 10,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default);

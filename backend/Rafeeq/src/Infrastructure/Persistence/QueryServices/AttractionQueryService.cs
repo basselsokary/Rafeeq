@@ -5,6 +5,7 @@ using Application.DTOs.Common;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.AttractionAggregate;
+using Application.DTOs.Admins;
 
 namespace Infrastructure.Persistence.QueryServices;
 
@@ -28,7 +29,7 @@ internal sealed class AttractionQueryService(
                 a.Type,
                 a.Location,
                 HistoricalPeriods = a.HistoricalPeriods.ToList(),
-                images = a.Images.Select(i => new ImageDto(i.Id, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder)).ToList()
+                images = a.Images.Select(i => new ImageDto(i.Id, i.StorageKey, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder)).ToList()
             })
             .FirstOrDefaultAsync(cancellationToken);
         
@@ -62,7 +63,8 @@ internal sealed class AttractionQueryService(
                 a.Type,
                 a.Location,
                 HistoricalPeriods = a.HistoricalPeriods.ToList(),
-                images = a.Images.Select(i => new ImageDto(i.Id, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder)).ToList(),
+                a.IsFeatured,
+                images = a.Images.Select(i => new ImageDto(i.Id, i.StorageKey, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder)).ToList(),
                 a.CreatedAt,
                 a.CreatedBy,
                 a.LastModifiedAt,
@@ -81,6 +83,7 @@ internal sealed class AttractionQueryService(
             data.Location == null ? null : new LocationDto(data.Location.Latitude, data.Location.Longitude),
             data.HistoricalPeriods,
             data.Localized.LocationDescription,
+            data.IsFeatured,
             data.images,
             data.CreatedAt,
             data.CreatedBy,
@@ -119,7 +122,7 @@ internal sealed class AttractionQueryService(
                     .FirstOrDefault()!,
                 a.Type,
                 a.Location == null ? null : new LocationDto(a.Location.Latitude, a.Location.Longitude),
-                a.Images.Where(i => i.IsMain).Select(i => i.ImageUrl).FirstOrDefault()))
+                a.MainImageUrl))
             .ToListAsync(cancellationToken);
         
         return new PagedResult<AttractionListDto>(items, totalCount, paging.PageNumber, paging.PageSize);
@@ -166,7 +169,7 @@ internal sealed class AttractionQueryService(
         return await Attractions
             .Where(a => a.Id == attractionId)
             .SelectMany(a => a.Images)
-            .Select(i => new ImageDto(i.Id, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder))
+            .Select(i => new ImageDto(i.Id, i.StorageKey, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder))
             .ToListAsync(cancellationToken);
     }
 
@@ -179,7 +182,66 @@ internal sealed class AttractionQueryService(
             .Where(a => a.Id == attractionId)
             .SelectMany(a => a.Images)
             .Where(i => i.Id == imageId)
-            .Select(i => new ImageDto(i.Id, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder))
+            .Select(i => new ImageDto(i.Id, i.StorageKey, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder))
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<PagedResult<AttractionListDto>> GetAllAsync(
+        string? searchTerm,
+        AttractionType? type,
+        PagingParameters paging,
+        CancellationToken cancellationToken)
+    {
+        var query = Attractions;
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            query = query.Where(s =>
+                s.LocalizedContents.Any(lc =>
+                    EF.Functions.Like(lc.Name, $"%{searchTerm}%")));   
+        }
+
+        if (type != null)
+        {
+            query = query.Where(a => a.Type == type);
+        }
+        
+        var totalCount = await query.CountAsync(cancellationToken);
+        var items = await query
+            .OrderByDescending(x => x.IsFeatured == true)
+            .Skip(paging.Skip)
+            .Take(paging.Take)
+            .Select(a => new AttractionListDto(
+                a.Id,
+                a.LocalizedContents.Where(lc => lc.Language == LanguageCode.English)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!,
+                a.LocalizedContents.Where(lc => lc.Language == LanguageCode.English)
+                    .Select(lc => lc.Description)
+                    .FirstOrDefault()!,
+                a.Type,
+                a.Location == null ? null : new LocationDto(a.Location.Latitude, a.Location.Longitude),
+                a.MainImageUrl
+            ))
+            .ToListAsync(cancellationToken);
+
+        return new PagedResult<AttractionListDto>(
+            items,
+            totalCount,
+            paging.PageNumber,
+            paging.PageSize);
+    }
+
+    public async Task<AdminAttractionDashboardDto> GetDashboardAsync(CancellationToken cancellationToken)
+    {
+        var dashboardData = await Attractions
+            .GroupBy(_ => 1)
+            .Select(g => new AdminAttractionDashboardDto(
+                TotalAttractions: g.Count(),
+                FeaturedAttractions: g.Count(s => s.IsFeatured)
+            ))
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        return dashboardData ?? new AdminAttractionDashboardDto(0, 0);
     }
 }

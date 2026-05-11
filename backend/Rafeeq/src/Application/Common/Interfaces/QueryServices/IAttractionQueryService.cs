@@ -1,3 +1,4 @@
+using Application.DTOs.Admins;
 using Application.DTOs.Attractions;
 using Application.DTOs.Common;
 using Domain.Enums;
@@ -30,4 +31,10 @@ public interface IAttractionQueryService
     Task<List<ImageDto>> GetImagesAsync(Guid attractionId, CancellationToken cancellationToken);
 
     Task<ImageDto?> GetImageByIdAsync(Guid attractionId, Guid imageId, CancellationToken cancellationToken);
+    
+    /// Get all attraction from all sites
+    Task<PagedResult<AttractionListDto>> GetAllAsync(
+        string? searchTerm, AttractionType? type, PagingParameters paging, CancellationToken cancellationToken);
+    
+    Task<AdminAttractionDashboardDto> GetDashboardAsync(CancellationToken cancellationToken);
 }

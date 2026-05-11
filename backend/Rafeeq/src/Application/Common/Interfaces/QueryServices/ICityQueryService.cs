@@ -1,3 +1,4 @@
+using Application.DTOs.Admins;
 using Application.DTOs.Cities;
 using Application.DTOs.Common;
 using Domain.Enums;
@@ -23,4 +24,6 @@ public interface ICityQueryService
     
     Task<CityLocalizedContentDto?> GetLocalizedContentByIdAsync(
         Guid cityId, Guid contentId, CancellationToken cancellationToken);
+    
+    Task<AdminCityDashboardDto> GetDashboardAsync(CancellationToken cancellationToken);
 }

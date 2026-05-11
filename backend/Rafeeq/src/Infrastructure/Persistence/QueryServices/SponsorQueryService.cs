@@ -32,6 +32,7 @@ internal sealed class SponsorQueryService(
                 s.ContactEmail,
                 s.WebsiteUrl,
                 s.ContractDate,
+                s.MainImageUrl,
                 s.Status,
                 s.TotalRedemptions,
                 s.CreatedAt,
@@ -54,6 +55,7 @@ internal sealed class SponsorQueryService(
                 data.ContactPhone ?? string.Empty,
                 data.ContactEmail ?? string.Empty,
                 data.WebsiteUrl,
+                data.MainImageUrl,
                 new(data.ContractDate.StartDate, data.ContractDate.EndDate, data.ContractDate.DurationInDays),
                 data.ContractDate.IsWithinRange(now),
                 data.Status,
@@ -198,7 +200,7 @@ internal sealed class SponsorQueryService(
                 0,
                 x.Sponsor.Images
                     .OrderBy(i => i.DisplayOrder)
-                    .Select(i => new ImageDto(i.Id, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder))
+                    .Select(i => new ImageDto(i.Id, i.StorageKey, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder))
                     .ToList(),
                 x.Sponsor.Offers
                     .Where(o => o.IsActive && o.ValidityPeriod.StartDate <= now && o.ValidityPeriod.EndDate >= now)
@@ -364,6 +366,7 @@ internal sealed class SponsorQueryService(
             .OrderBy(i => i.DisplayOrder)
             .Select(i => new ImageDto(
                 i.Id,
+                i.StorageKey,
                 i.ImageUrl,
                 i.Caption,
                 i.IsMain,
@@ -382,6 +385,7 @@ internal sealed class SponsorQueryService(
             .Where(i => i.Id == imageId)
             .Select(i => new ImageDto(
                 i.Id,
+                i.StorageKey,
                 i.ImageUrl,
                 i.Caption,
                 i.IsMain,
@@ -702,7 +706,7 @@ internal sealed class SponsorQueryService(
 
     public async Task<AdminSponsorDashboardDto> GetDashboardAsync(CancellationToken cancellationToken)
     {
-        return await Sponsors
+        var dashboardData = await Sponsors
             .GroupBy(_ => 1)
             .Select(g => new AdminSponsorDashboardDto(
                 TotalSponsors: g.Count(),
@@ -711,6 +715,8 @@ internal sealed class SponsorQueryService(
                 TotalOffers: g.Sum(s => s.Offers.Count),
                 ActiveOffers: g.Sum(s => s.Offers.Count(o => o.IsActive))
             ))
-            .SingleAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        return dashboardData ?? new AdminSponsorDashboardDto(0, 0, 0, 0, 0);
     }
 }

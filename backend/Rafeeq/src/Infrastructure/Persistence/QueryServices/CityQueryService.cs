@@ -5,6 +5,7 @@ using Application.DTOs.Common;
 using Infrastructure.Persistence.ApplicationContext;
 using Domain.Enums;
 using Domain.Entities.CityAggregate;
+using Application.DTOs.Admins;
 
 namespace Infrastructure.Persistence.QueryServices;
 
@@ -42,24 +43,33 @@ internal sealed class CityQueryService(
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
-        return await Cities
+        var data = await Cities
             .Where(c => c.Id == id)
-            .Select(c => new CityAdminDetailDto(
+            .Select(c => new {
                 c.Id,
-                new LocationDto(c.CenterLocation.Latitude, c.CenterLocation.Longitude),
+                Localized = c.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
+                    .Select(lc => new { lc.Name, lc.Description })
+                    .FirstOrDefault()!,
+                Location = new LocationDto(c.CenterLocation.Latitude, c.CenterLocation.Longitude),
                 c.ImageUrl,
                 c.TotalSites,
                 c.DisplayOrder,
                 c.CreatedAt,
-                c.LastModifiedAt,
-                c.LocalizedContents
-                    .Select(lc => new CityLocalizedContentDto(
-                        lc.Id,
-                        lc.Language,
-                        lc.Name,
-                        lc.Description
-                    )).ToList())
+                c.LastModifiedAt
+                }
             ).FirstOrDefaultAsync(cancellationToken);
+        
+        return data == null ? null : new CityAdminDetailDto(
+            data.Id,
+            data.Localized.Name,
+            data.Localized.Description,
+            data.Location,
+            data.ImageUrl,
+            data.TotalSites,
+            data.DisplayOrder,
+            data.CreatedAt,
+            data.LastModifiedAt);
     }
 
     public async Task<List<CitySummaryDto>> GetSummariesAsync(
@@ -131,5 +141,18 @@ internal sealed class CityQueryService(
                 lc.Name,
                 lc.Description
             )).FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<AdminCityDashboardDto> GetDashboardAsync(CancellationToken cancellationToken)
+    {
+        var dashboardData = await Cities
+            .GroupBy(_ => 1)
+            .Select(g => new AdminCityDashboardDto(
+                TotalCities: g.Count(),
+                TotalSites: g.Sum(c => c.TotalSites)
+            ))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return dashboardData ?? new AdminCityDashboardDto(0, 0);
     }
 }

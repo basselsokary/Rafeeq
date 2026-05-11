@@ -108,9 +108,34 @@ internal sealed class SiteQueryService(
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
-        var data = await Sites
-            .AsSplitQuery()
-            .Where(s => s.Id == id)
+        if (id == Guid.Empty)
+            return null;
+        
+        var query = Sites.AsSplitQuery().Where(s => s.Id == id);
+        return await GetSingleAsync(query, language, cancellationToken);
+    }
+
+    public async Task<SiteDetailDto?> GetByNameAsync(
+        string name,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return null;
+        
+        name = name.Trim();
+        var query = Sites.AsSplitQuery().Where(
+                s => s.LocalizedContents.Any(
+                    lc => (lc.Language == language || lc.Language == LanguageCode.English) && lc.Name == name));
+        return await GetSingleAsync(query, language, cancellationToken);
+    }
+
+    private async Task<SiteDetailDto?> GetSingleAsync(
+        IQueryable<Site> query,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
+    {
+        var data = await query
             .Select(s => new {
                 s.Id,
                 CityName = s.City.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
@@ -136,6 +161,7 @@ internal sealed class SiteQueryService(
                     .OrderBy(i => i.DisplayOrder)
                     .Select(i => new ImageDto(
                         default,
+                        i.StorageKey,
                         i.ImageUrl,
                         i.Caption,
                         i.IsMain,
@@ -231,13 +257,27 @@ internal sealed class SiteQueryService(
         var query = Sites;
         query = ApplyFilters(query, filters)
             .OrderByDescending(s => s.AverageRating)
-            .ThenByDescending(s => s.TotalRating);
+            .ThenByDescending(s => s.IsFeatured || s.IsHiddenGem || s.IsPopular);
 
         return await ToPagedResultAsync(
             query,
             paging,
             ConvertSiteToListDto(language),
             cancellationToken);
+    }
+
+    public async Task<List<SiteListDto>> GetByNamesAsync(
+        List<string> names,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
+    {
+        names = names.Select(n => n.Trim()).ToList();
+        var query = Sites;
+        query = Sites
+            .Where(s => s.LocalizedContents
+                .Any(lc => (lc.Language == language || lc.Language == LanguageCode.English) && names.Contains(lc.Name)));
+            
+        return await query.Select(ConvertSiteToListDto(language)).ToListAsync(cancellationToken);
     }
 
     public Task<List<SiteListDto>> GetFeaturedAsync(
@@ -267,7 +307,7 @@ internal sealed class SiteQueryService(
         double latitude,
         double longitude,
         SiteFilters filters,
-        int radiusKm = 5,
+        int radiusKm = 40,
         int count = 20,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
@@ -484,7 +524,7 @@ internal sealed class SiteQueryService(
     public async Task<List<SiteSummaryDto>> GetNearbyAsync(
         double latitude,
         double longitude,
-        double radiusKm = 50,
+        double radiusKm = 40,
         int count = 10,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
@@ -550,7 +590,7 @@ internal sealed class SiteQueryService(
     public async Task<List<SiteMapMarkerDto>> GetNearbyMarkerAsync(
         double latitude,
         double longitude,
-        int radiusKm = 20,
+        int radiusKm = 40,
         int count = 10,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
@@ -619,8 +659,7 @@ internal sealed class SiteQueryService(
         query = query.Where(s =>
             s.LocalizedContents.Any(lc =>
                 lc.Language == language &&
-                (EF.Functions.Like(lc.Name, $"%{term}%") ||
-                    EF.Functions.Like(lc.Description, $"%{term}%"))));
+                EF.Functions.Like(lc.Name, $"%{term}%")));
         
         query = query.OrderByDescending(s => s.IsFeatured)
             .ThenByDescending(s => s.AverageRating)
@@ -631,6 +670,27 @@ internal sealed class SiteQueryService(
             paging,
             ConvertSiteToListDto(language),
             cancellationToken);
+    }
+
+    public Task<List<SiteLookupDto>> SearchAsync(
+        string searchTerm,
+        int count = 10,
+        CancellationToken cancellationToken = default)
+    {
+        var term = searchTerm.Trim();
+        var query = Sites.Where(s =>
+            s.LocalizedContents.Any(lc =>
+                lc.Language == LanguageCode.English &&
+                lc.Name.Contains(term)));
+        
+        return query.Take(count)
+            .Select(s => new SiteLookupDto(
+                s.Id,
+                s.LocalizedContents.Where(lc => lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == LanguageCode.English ? 0 : 1)
+                    .Select(lc => lc.Name)
+                    .FirstOrDefault()!))
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<List<AdminSiteLocalizedContentDto>> GetLocalizedContentsAsync(
@@ -646,6 +706,7 @@ internal sealed class SiteQueryService(
                 lc.Name,
                 lc.Description,
                 lc.Address,
+                lc.EntryTicketNotes,
                 new(
                     lc.CreatedAt,
                     lc.CreatedBy,
@@ -671,6 +732,7 @@ internal sealed class SiteQueryService(
                 lc.Name,
                 lc.Description,
                 lc.Address,
+                lc.EntryTicketNotes,
                 new AuditInfoDto(
                     lc.CreatedAt,
                     lc.CreatedBy,
@@ -842,6 +904,7 @@ internal sealed class SiteQueryService(
             .OrderBy(i => i.DisplayOrder)
             .Select(i => new ImageDto(
                 i.Id,
+                i.StorageKey,
                 i.ImageUrl,
                 i.Caption,
                 i.IsMain,
@@ -860,6 +923,7 @@ internal sealed class SiteQueryService(
             .Where(i => i.Id == imageId)
             .Select(i => new ImageDto(
                 i.Id,
+                i.StorageKey,
                 i.ImageUrl,
                 i.Caption,
                 i.IsMain,
@@ -892,6 +956,9 @@ internal sealed class SiteQueryService(
 
     private static IQueryable<Site> ApplyFilters(IQueryable<Site> query, SiteFilters filters)
     {
+        if (filters is null)
+            return query;
+
         if (filters.Type is not null)
         {
             query = query.Where(s => s.Type == filters.Type);
@@ -966,14 +1033,13 @@ internal sealed class SiteQueryService(
                 oh.Day,
                 oh.OpeningTime.StartTime,
                 oh.OpeningTime.EndTime,
-                oh.IsClosed
-            ))
+                oh.IsClosed))
             .ToListAsync(cancellationToken);
     }
 
     public async Task<AdminSiteDashboardDto> GetDashboardAsync(CancellationToken cancellationToken)
     {
-        return await Sites
+        var dashboardDto = await Sites
             .GroupBy(_ => 1)
             .Select(g => new AdminSiteDashboardDto(
                 TotalSites: g.Count(),
@@ -983,6 +1049,8 @@ internal sealed class SiteQueryService(
                 AverageRating: g.Average(s => s.AverageRating),
                 TotalRating: g.Sum(s => s.TotalRating)
             ))
-            .SingleAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        return dashboardDto ?? new AdminSiteDashboardDto(0, 0, 0, 0, 0, 0);
     }
 }
