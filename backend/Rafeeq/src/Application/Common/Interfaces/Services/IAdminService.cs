@@ -15,4 +15,5 @@ public interface IAdminService
 
     Task<Result> AssignRoleAsync(Guid userId, UserRole role);
     Task<Result> RemoveRoleAsync(Guid userId, UserRole role);
+    Task<Result> DeleteUserAsync(string email);
 }

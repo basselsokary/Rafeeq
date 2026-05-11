@@ -1,29 +1,31 @@
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text.Json;
 using Application.Common.Interfaces.Services;
-using Application.Common.Models;
+using Application.DTOs.Artifacts;
 using Microsoft.Extensions.Logging;
 using Shared;
 
-namespace Infrastructure.ExternalServices.Scanner;
+namespace Infrastructure.ExternalServices.ScannerService;
 
 internal sealed class HttpImageScannerService(
     HttpClient http,
     ImageScannerSettings settings,
     ILogger<HttpImageScannerService> logger) : IImageScannerService
 {
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+    };
 
-    public async Task<Result<ImageResult>> ScanAsync(
+    public async Task<Result<ScanImageResponse>> ScanAsync(
         Stream imageStream,
         string contentType,
         CancellationToken ct = default)
     {
         try
         {
-            logger.LogDebug(
-                "Sending image to analysis service at {BaseUrl}{Endpoint}",
-                settings.BaseUrl, settings.ScanEndpoint);
-
             // Build multipart/form-data content.
             imageStream.Position = 0;
             using var form = new MultipartFormDataContent();
@@ -49,14 +51,14 @@ internal sealed class HttpImageScannerService(
                 return ScannerServiceErrors.ScanFailed;
             }
 
-            var json = await response.Content.ReadAsStringAsync(ct);
-            var result = DeserializeResponse(json);
+            var imageResponse = await response.Content.ReadFromJsonAsync<ScanImageResponse>(JsonOptions, ct);
+            if (imageResponse is null)
+            {
+                logger.LogError("Scanner service returned null response.");
+                return Result.Failure<ScanImageResponse>(ScannerServiceErrors.ScanFailed);
+            }
 
-            logger.LogInformation(
-                "Scanner complete. Confidence: {Confidence  }",
-                result.Value.Description);
-
-            return result.Value;
+            return Result.Success(imageResponse);
         }
         catch (TaskCanceledException) when (!ct.IsCancellationRequested)
         {
@@ -72,33 +74,6 @@ internal sealed class HttpImageScannerService(
                 settings.BaseUrl);
             return ScannerServiceErrors.ScanFailed;
         }
-    }
-
-    private static Result<ImageResult> DeserializeResponse(string json)
-    {
-        var doc = JsonDocument.Parse(json);
-        var root = doc.RootElement;
-
-        var confidence = root.TryGetProperty("confidence", out var confEl)
-            ? confEl.GetSingle()
-            : 0f;
-
-        var label = root.TryGetProperty("label", out var descEl)
-            ? descEl.GetString()
-            : null;
-
-        return new ImageResult(
-            Name: label ?? "Unknown",
-            Description: $"Confidence: {confidence}",
-            SiteName: $"Site: {label ?? "Unknown"}",
-            Images: new List<string>()
-            {
-                // here fake images
-                "https://example.com/image1.jpg",
-                "https://example.com/image2.jpg",
-                "https://example.com/image3.jpg"
-            }
-        );
     }
 }
 

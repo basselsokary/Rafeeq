@@ -1,18 +1,5 @@
 namespace Infrastructure.ExternalServices.CloudinaryService;
 
-public sealed class FileUploadOptions
-{
-    public const string SectionName = "FileUpload";
-
-    public long MaxFileSizeBytes { get; init; } = 10 * 1024 * 1024; // 10 MB default
-    public string[] AllowedExtensions { get; init; } = [".jpg", ".jpeg", ".png", ".webp"];
-    public int MaxFilesPerRequest { get; init; } = 10;
-    public bool EnableDuplicateDetection { get; init; } = true;
-    public bool EnableImageResize { get; init; } = false;
-    public int MaxWidthPx { get; init; } = 2048;
-    public int MaxHeightPx { get; init; } = 2048;
-}
-
 public class CloudinarySettings
 {
     public const string SectionName = "Cloudinary";

@@ -1,5 +1,6 @@
+using System.Text.Json;
 using Application.Common.Interfaces.Services;
-using Application.Common.Models;
+using Application.DTOs.Common;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Domain.ValueObjects;
@@ -35,7 +36,7 @@ internal sealed class CloudinaryStorageService : IFileStorageService
         _cloudinary = new Cloudinary(account) { Api = { Secure = true } };
     }
 
-    public async Task<UploadedFileResult> UploadAsync(
+    public async Task<Result<UploadedFileResponse>> UploadAsync(
         Stream stream,
         StorageKey storageKey,
         CancellationToken ct = default)
@@ -56,17 +57,17 @@ internal sealed class CloudinaryStorageService : IFileStorageService
             if (result.Error != null)
             {
                 _logger.LogError("Upload failed: {Message}", result.Error.Message);
-                return (UploadedFileResult)Result.Failure("Upload failed.");
+                return Result.Failure<UploadedFileResponse>(CloudinaryStorageErrors.UploadFailed);
             }
 
-            _logger.LogInformation("Upload succeeded: {Key} -> {Url}", storageKey, result.SecureUrl);
+            _logger.LogInformation("Upload succeeded: {Key} -> {Url}", storageKey, result.SecureUrl.ToString());
 
-            return UploadedFileResult.Success(storageKey, result.SecureUrl.ToString());
+            return Result.Success(new UploadedFileResponse(storageKey, result.SecureUrl.ToString(), result.Bytes));
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Upload failed for {Key}", storageKey);
-            return (UploadedFileResult)Result.Failure("Upload failed.");
+            return Result.Failure<UploadedFileResponse>(CloudinaryStorageErrors.UploadFailed);
         }
     }
 
@@ -80,7 +81,7 @@ internal sealed class CloudinaryStorageService : IFileStorageService
                 new DeletionParams(publicId));
 
             if (result.Result is not ("ok" or "not found"))
-                return Result.Failure("Delete failed.");
+                return Result.Failure(CloudinaryStorageErrors.DeleteFailed);
             
             _logger.LogInformation("Delete succeeded: {Key}", storageKey);
 
@@ -89,35 +90,58 @@ internal sealed class CloudinaryStorageService : IFileStorageService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Delete failed for {Key}", storageKey);
-            return Result.Failure("Delete failed.");
+            return Result.Failure(CloudinaryStorageErrors.DeleteFailed);
         }
     }
 
     public async Task<Result> DeleteAsync(IEnumerable<StorageKey> storageKeys, CancellationToken ct = default)
     {
+        if (!storageKeys.Any())
+        {
+            _logger.LogWarning("Batch delete called with empty key list");
+            return Result.Success();
+        }
+        
         try
         {
-            var publicIds = storageKeys.Select(BuildPublicId).ToArray();
+            // var publicIds = storageKeys.Select(BuildPublicId).ToArray();
+            // var result = await _cloudinary.DeleteResourcesAsync(ResourceType.Image, publicIds);
+            var publicIds = storageKeys.Select(BuildPublicId).ToList();
 
-            var result = await _cloudinary.DeleteResourcesAsync(publicIds);
+            var deleteParams = new DelResParams
+            {
+                PublicIds = publicIds,
+                ResourceType = ResourceType.Image,
+                Invalidate = true
+            };
 
-            if (result.Deleted.All(kv => kv.Value is "ok" or "not found"))
+            var result = await _cloudinary.DeleteResourcesAsync(deleteParams);
+            Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true }));
+
+            if (result.Deleted.All(kv => kv.Value is "deleted" or "ok"))
             {
                 _logger.LogInformation("Batch delete succeeded: {Keys}", string.Join(", ", storageKeys));
                 return Result.Success();
             }
+            else if (result.Deleted.All(kv => kv.Value is "deleted" or "ok" or "not_found"))
+            {
+                _logger.LogInformation("Batch delete maybe succeeded with some not found: {Keys}", string.Join(", ", storageKeys));
+                return Result.Success();
+            }
             else
             {
-                var failedKeys = result.Deleted.Where(kv => kv.Value != "ok" && kv.Value != "not found")
+                var failedKeys = result.Deleted.Where(kv => kv.Value != "ok" && kv.Value != "not_found")
                     .Select(kv => kv.Key);
-                _logger.LogError("Batch delete partially failed for keys: {Keys}", string.Join(", ", failedKeys));
-                return Result.Failure($"Delete failed for keys: {string.Join(", ", failedKeys)}");
+                
+                _logger.LogError("Batch delete failed for keys: {Keys}", string.Join(", ", failedKeys));
+                
+                return Result.Failure(CloudinaryStorageErrors.BatchDeleteFailedForKeys(failedKeys));
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Batch delete failed for keys: {Keys}", string.Join(", ", storageKeys));
-            return Result.Failure("Batch delete failed.");
+            return Result.Failure(CloudinaryStorageErrors.BatchDeleteFailed);
         }
     }
 
@@ -138,7 +162,7 @@ internal sealed class CloudinaryStorageService : IFileStorageService
         }
     }
 
-    public Task<string> GetUrlAsync(StorageKey storageKey, CancellationToken ct = default)
+    public string GetOptimizedUrl(StorageKey storageKey)
     {
         var publicId = BuildPublicId(storageKey);
 
@@ -148,7 +172,17 @@ internal sealed class CloudinaryStorageService : IFileStorageService
                 .FetchFormat("auto"))
             .BuildUrl(publicId);
 
-        return Task.FromResult(url);
+        return url;
+    }
+    
+    public string GetCleanUrl(StorageKey storageKey)
+    {
+        var publicId = BuildPublicId(storageKey);
+
+        var url = _cloudinary.Api.UrlImgUp
+            .BuildUrl(publicId);
+
+        return url;
     }
 
     private string BuildPublicId(StorageKey key)
@@ -164,4 +198,21 @@ internal sealed class CloudinaryStorageService : IFileStorageService
             ? relativePath
             : $"{_options.UploadFolder}/{relativePath}";
     }
+}
+
+internal static class CloudinaryStorageErrors
+{
+    public static Shared.Error UploadFailed =>
+        Shared.Error.Failure("CLOUDINARY_UPLOAD_FAILED", "Upload failed.");
+
+    public static Shared.Error DeleteFailed =>
+        Shared.Error.Failure("CLOUDINARY_DELETE_FAILED", "Delete failed.");
+
+    public static Shared.Error BatchDeleteFailed =>
+        Shared.Error.Failure("CLOUDINARY_BATCH_DELETE_FAILED", "Batch delete failed.");
+
+    public static Shared.Error BatchDeleteFailedForKeys(IEnumerable<string> failedKeys)
+        => Shared.Error.Failure(
+            "CLOUDINARY_BATCH_DELETE_FAILED_FOR_KEYS",
+            $"Delete failed for keys: {string.Join(", ", failedKeys)}");
 }

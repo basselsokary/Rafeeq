@@ -75,4 +75,19 @@ internal class AdminService(
 
         return Result.Success();
     }
+
+    public async Task<Result> DeleteUserAsync(string email)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        if (user == null)
+            return ApplicationUserErrors.NotFound(email);
+
+        var identityResult = await userManager.DeleteAsync(user);
+        if (!identityResult.Succeeded)
+        {
+            return ValidationError.FromErrors(identityResult.Errors.Select(e => Error.Validation(e.Code, e.Description)));
+        }
+
+        return Result.Success();
+    }
 }

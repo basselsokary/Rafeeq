@@ -1,4 +1,4 @@
-using Application.Common.Models;
+using Application.DTOs.Common;
 using Domain.ValueObjects;
 
 namespace Application.Common.Interfaces.Services;
@@ -9,7 +9,7 @@ public interface IFileStorageService
     /// Uploads a stream to cloud storage under the given storage key.
     /// Returns the public (or SAS) URL for the stored file.
     /// </summary>
-    Task<UploadedFileResult> UploadAsync(
+    Task<Result<UploadedFileResponse>> UploadAsync(
         Stream fileStream,
         StorageKey storageKey,
         CancellationToken ct = default);
@@ -18,6 +18,6 @@ public interface IFileStorageService
     Task<Result> DeleteAsync(IEnumerable<StorageKey> storageKeys, CancellationToken ct = default);
 
     Task<bool> ExistsAsync(StorageKey storageKey, CancellationToken ct = default);
-    
-    Task<string> GetUrlAsync(StorageKey storageKey, CancellationToken ct = default);
+    string GetOptimizedUrl(StorageKey storageKey);
+    string GetCleanUrl(StorageKey storageKey);
 }
