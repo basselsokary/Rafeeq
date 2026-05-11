@@ -1,6 +1,6 @@
 using Domain.Common.Interfaces;
+using Domain.Entities.ReviewAggregate;
 using Domain.Entities.TouristAggregate;
-using Domain.Events;
 using Microsoft.Extensions.Logging;
 
 namespace Application.EventHandlers.Reviews;

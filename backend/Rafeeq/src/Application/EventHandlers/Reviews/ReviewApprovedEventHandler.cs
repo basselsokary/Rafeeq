@@ -1,5 +1,5 @@
 using Domain.Common.Interfaces;
-using Domain.Events;
+using Domain.Entities.ReviewAggregate;
 using Microsoft.Extensions.Logging;
 
 namespace Application.EventHandlers.Reviews;

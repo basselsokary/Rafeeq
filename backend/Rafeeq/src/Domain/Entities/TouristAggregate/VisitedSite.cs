@@ -1,5 +1,4 @@
 using Domain.Common;
-using Domain.Events;
 using Domain.ValueObjects;
 using Shared;
 

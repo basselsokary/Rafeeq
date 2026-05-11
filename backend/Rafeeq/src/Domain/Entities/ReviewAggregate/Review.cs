@@ -2,7 +2,6 @@ using Domain.Common;
 using Domain.Common.Interfaces;
 using Domain.ValueObjects;
 using Domain.Enums;
-using Domain.Events;
 using Domain.Entities.SiteAggregate;
 using Domain.Entities.TouristAggregate;
 using Shared;
