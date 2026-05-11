@@ -137,8 +137,38 @@ internal static class StaticDataSeeder
 
             var transportA = Ensure(GeoLocation.Create(siteDef.Lat + 0.01, siteDef.Lng + 0.01), $"Create {siteDef.NameEn} transport A location");
             var transportB = Ensure(GeoLocation.Create(siteDef.Lat - 0.01, siteDef.Lng - 0.01), $"Create {siteDef.NameEn} transport B location");
-            Ensure(site.AddNearestTransportation(TransportationType.Bus, transportA, 0.6), $"Add {siteDef.NameEn} bus stop");
-            Ensure(site.AddNearestTransportation(TransportationType.Metro, transportB, 1.2), $"Add {siteDef.NameEn} metro stop");
+            var busStop = Ensure(site.AddNearestTransportation(TransportationType.Bus, transportA, 0.6), $"Add {siteDef.NameEn} bus stop");
+            var metroStop = Ensure(site.AddNearestTransportation(TransportationType.Metro, transportB, 1.2), $"Add {siteDef.NameEn} metro stop");
+
+            var busAddressEn = Ensure(Address.Create($"Bus Stop A, {siteDef.AddressEn}"), $"Create {siteDef.NameEn} bus stop English address");
+            var busAddressAr = Ensure(Address.Create($"محطة الحافلات أ، {siteDef.AddressAr}"), $"Create {siteDef.NameEn} bus stop Arabic address");
+            Ensure(busStop.AddLocalizedContent(
+                LanguageCode.English,
+                $"{siteDef.NameEn} Bus Stop",
+                $"Primary bus stop near {siteDef.NameEn}.",
+                busAddressEn),
+                $"Add {siteDef.NameEn} bus stop English content");
+            Ensure(busStop.AddLocalizedContent(
+                LanguageCode.Arabic,
+                $"محطة حافلات {siteDef.NameAr}",
+                $"محطة الحافلات الرئيسية قرب {siteDef.NameAr}.",
+                busAddressAr),
+                $"Add {siteDef.NameEn} bus stop Arabic content");
+
+            var metroAddressEn = Ensure(Address.Create($"Metro Station B, {siteDef.AddressEn}"), $"Create {siteDef.NameEn} metro English address");
+            var metroAddressAr = Ensure(Address.Create($"محطة المترو ب، {siteDef.AddressAr}"), $"Create {siteDef.NameEn} metro Arabic address");
+            Ensure(metroStop.AddLocalizedContent(
+                LanguageCode.English,
+                $"{siteDef.NameEn} Metro",
+                $"Metro access point for {siteDef.NameEn}.",
+                metroAddressEn),
+                $"Add {siteDef.NameEn} metro English content");
+            Ensure(metroStop.AddLocalizedContent(
+                LanguageCode.Arabic,
+                $"مترو {siteDef.NameAr}",
+                $"نقطة وصول المترو إلى {siteDef.NameAr}.",
+                metroAddressAr),
+                $"Add {siteDef.NameEn} metro Arabic content");
 
             Ensure(site.UpdateStatus(SiteStatus.Active, false, false), $"Activate {siteDef.NameEn} site");
 
@@ -216,18 +246,21 @@ internal static class StaticDataSeeder
                 var offer = Ensure(sponsor.AddOffer(discount, null, offerRange, 200 + (j * 50), $"PROMO{i + 1}{j}"), $"Add {sponsorDef.NameEn} offer {j}");
                 Ensure(offer.Activate(), $"Activate {sponsorDef.NameEn} offer {j}");
 
+                var termsEn = $"Valid for {sponsorDef.NameEn}. One use per customer.";
+                var termsAr = $"سارية لدى {sponsorDef.NameAr}. استخدام واحد لكل عميل.";
+
                 Ensure(offer.AddLocalizedContent(
                     LanguageCode.English,
                     $"{sponsorDef.NameEn} Offer {j}",
                     $"Deal {j} for {sponsorDef.NameEn}.",
-                    "Terms apply"),
+                    termsEn),
                     $"Add {sponsorDef.NameEn} offer {j} English content");
 
                 Ensure(offer.AddLocalizedContent(
                     LanguageCode.Arabic,
                     $"عرض {sponsorDef.NameAr} {j}",
                     $"عرض {j} لـ {sponsorDef.NameAr}.",
-                    "تطبق الشروط"),
+                    termsAr),
                     $"Add {sponsorDef.NameEn} offer {j} Arabic content");
             }
 
