@@ -1,5 +1,7 @@
 ﻿using Application.Behaviours;
+using Application.Common.Interfaces.Services;
 using Application.Services;
+using Domain.Common.Interfaces;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +18,7 @@ public static class DependencyInjection
         services.AddDecrotors();
 
         services.AddScoped<ScannerService>();
+        services.AddScoped<IFileUploadService, FileUploadService>();
 
         return services;
     }
@@ -42,6 +45,11 @@ public static class DependencyInjection
                 .AsImplementedInterfaces()
                 .WithScopedLifetime()
             .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)), publicOnly: false)
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
+
+        services.Scan(scan => scan.FromAssembliesOf(typeof(DependencyInjection))
+            .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)), publicOnly: false)
                 .AsImplementedInterfaces()
                 .WithScopedLifetime());
     }
