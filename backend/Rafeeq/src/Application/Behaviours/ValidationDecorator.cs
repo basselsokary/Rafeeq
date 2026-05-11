@@ -17,12 +17,9 @@ internal static class ValidationDecorator
 
             if (validationFailures.Length == 0)
             {
-                Console.WriteLine($"{string.Join(",", validationFailures.Select(f => f.ErrorMessage))}");
                 return await innerHandler.HandleAsync(command, cancellationToken);
             }
 
-            Console.WriteLine($"{string.Join(",", validationFailures.Select(f => f.ErrorMessage))}");
-            
             return Result.Failure<TResponse>(CreateValidationError(validationFailures));
         }
     }
@@ -39,11 +36,8 @@ internal static class ValidationDecorator
 
             if (validationFailures.Length == 0)
             {
-                Console.WriteLine($"{string.Join(",", validationFailures.Select(f => f.ErrorMessage))}");
                 return await innerHandler.HandleAsync(command, cancellationToken);
             }
-
-            Console.WriteLine($"{string.Join(",", validationFailures.Select(f => f.ErrorMessage))}");
 
             return Result.Failure(CreateValidationError(validationFailures));
         }
@@ -61,11 +55,8 @@ internal static class ValidationDecorator
 
             if (validationFailures.Length == 0)
             {
-                Console.WriteLine($"{string.Join(",", validationFailures.Select(f => f.ErrorMessage))}");
                 return await innerHandler.HandleAsync(query, cancellationToken);
             }
-
-            Console.WriteLine($"{string.Join(",", validationFailures.Select(f => f.ErrorMessage))}");
 
             return Result.Failure<TResponse>(CreateValidationError(validationFailures));
         }

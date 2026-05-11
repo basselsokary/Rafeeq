@@ -55,12 +55,6 @@ internal static class LoggingDecorator
         }
     }
 
-    internal sealed class ScannerServiceDecorator(
-        ScannerService innerService,
-        ILogger<ScannerService> logger)
-    {
-    }
-
     private static async Task<Result> ExecuteWithLoggingAsync(
         string operationType,
         string operationName,
