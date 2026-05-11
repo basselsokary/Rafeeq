@@ -23,10 +23,6 @@ internal sealed class UpdateCityCommandValidator : AbstractValidator<UpdateCityC
             .InclusiveBetween(-GeoLocation.BoundLongitude, GeoLocation.BoundLongitude)
             .WithMessage(x =>
                 errors.Format(GeoLocationErrors.InvalidLongitude(x.CenterLongitude).Code, x.CenterLongitude));
-        
-        RuleFor(x => x.Image.Length)
-            .GreaterThan(0)
-            .LessThanOrEqualTo(DomainConstants.Image.MaxFileSizeBytes);
 
         RuleFor(x => x.DisplayOrder)
             .GreaterThanOrEqualTo(0)

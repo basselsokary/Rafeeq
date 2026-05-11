@@ -1,5 +1,3 @@
-using Application.Common.Interfaces.Services;
-using Application.Common.Validators;
 using Domain.Common;
 using Domain.Common.Interfaces;
 using Domain.Entities.CityAggregate;
@@ -9,15 +7,12 @@ namespace Application.Commands.Cities;
 
 public sealed record UpdateCityCommand(
     Guid Id,
-    Stream? Image,
-    string? OriginalFileName,
     double CenterLatitude,
     double CenterLongitude,
     int DisplayOrder) : ICommand;
 
 internal sealed class UpdateCityCommandHandler(
-    IUnitOfWork unitOfWork,
-    IFileStorageService storageService) : ICommandHandler<UpdateCityCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<UpdateCityCommand>
 {
     public async Task<Result> HandleAsync(UpdateCityCommand command, CancellationToken cancellationToken)
     {
@@ -48,31 +43,6 @@ internal sealed class UpdateCityCommandHandler(
             return locationResult;
         
         city.SetCenterLocation(locationResult.Value);
-
-        if (command.Image != null && command.OriginalFileName != null)
-        {
-            var ext = Path.GetExtension(command.OriginalFileName).ToLowerInvariant();
-            if (!FileSignatureValidator.IsValid(command.Image, ext))
-            {
-                return ImageErrors.InvalidSignature;
-            }
-
-            var storageKey = StorageKey.ForCitiesImages(ext);
-
-            command.Image.Position = 0;
-
-            var uploadResult = await storageService.UploadAsync(
-                command.Image,
-                storageKey,
-                cancellationToken);
-
-            if (uploadResult.Failed)
-            {
-                return uploadResult;
-            }
-
-            city.SetImage(storageKey, uploadResult.Url);
-        }
 
         var result = city.SetDisplayOrder(command.DisplayOrder);
         if (result.Failed)

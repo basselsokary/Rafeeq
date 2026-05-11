@@ -5,21 +5,38 @@ using Application.Common.Interfaces.Localization;
 using Application.Common.Validators;
 using Domain.Common.Constants;
 using static Domain.Common.Constants.DomainConstants.City;
+using Microsoft.Extensions.Options;
+using Application.Services;
 
 namespace Application.Commands.Cities.Validators;
 
 internal sealed class CreateCityCommandValidator : AbstractValidator<CreateCityCommand>
 {
-    public CreateCityCommandValidator(IErrorLocalizer errors)
+    public CreateCityCommandValidator(IErrorLocalizer errors, IOptions<FileUploadSettings> options)
     {
-        RuleFor(x => x.OriginalFileName)
+        var opts = options.Value;
+
+        RuleFor(x => x.File).NotNull();
+        
+        RuleFor(x => x.File.OriginalFileName)
             .NotEmpty()
             .WithMessage(errors[CityErrors.ImageUrlRequired.Code])
-            .MaximumLength(DomainConstants.Image.MaxImageUrlLength);
+            .Must(name => opts.AllowedExtensions
+                .Contains(Path.GetExtension(name).ToLowerInvariant()))
+            .WithMessage("File type is not allowed.");
 
-        RuleFor(x => x.Image.Length)
+        RuleFor(x => x.File.Length)
             .GreaterThan(0)
-            .LessThanOrEqualTo(DomainConstants.Image.MaxFileSizeBytes);
+            .LessThanOrEqualTo(DomainConstants.File.MaxFileSizeBytes);
+        
+        RuleFor(x => x)
+            .Must(x =>
+            {
+                var ext = Path.GetExtension(x.File.OriginalFileName);
+                bool valid = FileSignatureValidator.IsValid(x.File.Stream, ext);
+                x.File.Stream.Position = 0; // Reset stream position after validation
+                return valid;
+            });
         
         RuleFor(x => x.Name)
             .NotEmpty()
@@ -32,14 +49,7 @@ internal sealed class CreateCityCommandValidator : AbstractValidator<CreateCityC
             .WithMessage(errors[CityErrors.DescriptionRequired.Code])
             .MaximumLength(MaxDescriptionLength)
             .WithMessage(errors.Format(CityErrors.ExceededDescriptionLength.Code, MaxDescriptionLength));
-        
-        RuleFor(x => x)
-            .Must(x =>
-            {
-                var ext = Path.GetExtension(x.OriginalFileName);
-                return FileSignatureValidator.IsValid(x.Image, ext);
-            });
-            
+
         RuleFor(x => x.CenterLatitude)
             .InclusiveBetween(-GeoLocation.BoundLatitude, GeoLocation.BoundLatitude)
             .WithMessage(x =>
