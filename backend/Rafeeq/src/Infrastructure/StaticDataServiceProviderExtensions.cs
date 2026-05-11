@@ -12,6 +12,7 @@ public static class StaticDataServiceProviderExtensions
         CancellationToken cancellationToken = default)
     {
         bool useStaticData = configuration.GetValue<bool>("StaticData:UseStaticData");
+        
         if (!useStaticData)
         {
             return;

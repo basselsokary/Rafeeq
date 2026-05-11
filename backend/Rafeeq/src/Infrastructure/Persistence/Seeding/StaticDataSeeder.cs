@@ -1,18 +1,16 @@
 using Domain.Entities.AttractionAggregate;
 using Domain.Entities.CityAggregate;
-using Domain.Entities.ContentReportAggregate;
-using Domain.Entities.ReviewAggregate;
 using Domain.Entities.SiteAggregate;
 using Domain.Entities.SponsorAggregate;
 using Domain.Entities.TouristAggregate;
 using Domain.Enums;
 using Domain.ValueObjects;
-using Infrastructure.Identity;
+using Infrastructure.Identity.Entities;
 using Infrastructure.Persistence.ApplicationContext;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Shared.Models;
+using Shared;
 
 namespace Infrastructure.Persistence.Seeding;
 
@@ -28,10 +26,17 @@ internal static class StaticDataSeeder
     public static async Task SeedAsync(IServiceProvider services, CancellationToken cancellationToken)
     {
         var dbContext = services.GetRequiredService<ApplicationDbContext>();
+        
+        // await dbContext.Database.EnsureDeletedAsync(cancellationToken);
+        await dbContext.Database.EnsureCreatedAsync(cancellationToken);
+
+        if (await dbContext.Tourists.AnyAsync(cancellationToken))
+        {
+            return;
+        }
+        
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-
-        await dbContext.Database.EnsureCreatedAsync(cancellationToken);
 
         await EnsureRolesAsync(roleManager);
         await EnsureUserAsync(userManager, TouristUserId, "swagger-tourist", TouristEmail, SeedPassword, UserRole.Tourist);
@@ -39,124 +44,200 @@ internal static class StaticDataSeeder
 
         Tourist tourist = await EnsureTouristAsync(dbContext, TouristUserId, cancellationToken);
 
-        if (await dbContext.Cities.AnyAsync(cancellationToken))
+        var cities = new List<City>
         {
-            return;
+            Ensure(City.Create(
+                "Cairo",
+                "Egypt's capital and cultural hub.",
+                Ensure(GeoLocation.Create(30.0444, 31.2357), "Create Cairo location"),
+                1),
+                "Create Cairo city"),
+            Ensure(City.Create(
+                "Alexandria",
+                "Mediterranean coastal governorate.",
+                Ensure(GeoLocation.Create(31.2001, 29.9187), "Create Alexandria location"),
+                2),
+                "Create Alexandria city"),
+            Ensure(City.Create(
+                "Giza",
+                "Gateway to the western plateau.",
+                Ensure(GeoLocation.Create(30.0131, 31.2089), "Create Giza location"),
+                3),
+                "Create Giza city"),
+            Ensure(City.Create(
+                "Luxor",
+                "Upper Egypt governorate on the Nile.",
+                Ensure(GeoLocation.Create(25.6872, 32.6396), "Create Luxor location"),
+                4),
+                "Create Luxor city"),
+            Ensure(City.Create(
+                "Aswan",
+                "Southern gateway with river islands.",
+                Ensure(GeoLocation.Create(24.0889, 32.8998), "Create Aswan location"),
+                5),
+                "Create Aswan city")
+        };
+
+        Ensure(cities[0].AddLocalizedContent(LanguageCode.Arabic, "القاهرة", "عاصمة مصر ومركزها الثقافي."), "Add Cairo Arabic content");
+        Ensure(cities[1].AddLocalizedContent(LanguageCode.Arabic, "الإسكندرية", "محافظة ساحلية على البحر المتوسط."), "Add Alexandria Arabic content");
+        Ensure(cities[2].AddLocalizedContent(LanguageCode.Arabic, "الجيزة", "بوابة الهضبة الغربية.") , "Add Giza Arabic content");
+        Ensure(cities[3].AddLocalizedContent(LanguageCode.Arabic, "الأقصر", "محافظة بصعيد مصر على النيل."), "Add Luxor Arabic content");
+        Ensure(cities[4].AddLocalizedContent(LanguageCode.Arabic, "أسوان", "بوابة الجنوب مع جزر نيلية."), "Add Aswan Arabic content");
+
+        var weekdayHours = Ensure(TimeRange.Create(new TimeOnly(9, 0, 0), new TimeOnly(17, 0, 0)), "Create weekday hours");
+        var weekendHours = Ensure(TimeRange.Create(new TimeOnly(10, 0, 0), new TimeOnly(18, 0, 0)), "Create weekend hours");
+
+        var siteDefinitions = new[]
+        {
+            new { City = cities[0], NameEn = "Riverfront Plaza", NameAr = "ساحة الواجهة النهرية", DescEn = "Open plaza with river views.", DescAr = "ساحة مفتوحة بإطلالات على النهر.", AddressEn = "Riverfront Street 1, Cairo", AddressAr = "شارع الواجهة النهرية 1، القاهرة", Lat = 30.0511, Lng = 31.2412, Type = SiteType.Walkway, Duration = 90 },
+            new { City = cities[0], NameEn = "Old Market Courtyard", NameAr = "فناء السوق القديم", DescEn = "Historic market with artisan stalls.", DescAr = "سوق تاريخي مع أكشاك حرفية.", AddressEn = "Market Lane 3, Cairo", AddressAr = "حارة السوق 3، القاهرة", Lat = 30.0535, Lng = 31.2360, Type = SiteType.Cultural, Duration = 120 },
+            new { City = cities[0], NameEn = "City Museum Annex", NameAr = "ملحق متحف المدينة", DescEn = "Compact museum gallery.", DescAr = "قاعة متحف مصغرة.", AddressEn = "Museum Avenue 2, Cairo", AddressAr = "شارع المتحف 2، القاهرة", Lat = 30.0470, Lng = 31.2320, Type = SiteType.Museum, Duration = 150 },
+            new { City = cities[0], NameEn = "Central Garden", NameAr = "الحديقة المركزية", DescEn = "Green park for family strolls.", DescAr = "حديقة خضراء لنزهات العائلة.", AddressEn = "Garden Road 5, Cairo", AddressAr = "طريق الحديقة 5، القاهرة", Lat = 30.0565, Lng = 31.2448, Type = SiteType.Park, Duration = 80 },
+            new { City = cities[1], NameEn = "Harbor Walk", NameAr = "ممشى الميناء", DescEn = "Coastal walkway with cafes.", DescAr = "ممشى ساحلي مع مقاهي.", AddressEn = "Harbor Road 8, Alexandria", AddressAr = "طريق الميناء 8، الإسكندرية", Lat = 31.2125, Lng = 29.9022, Type = SiteType.Walkway, Duration = 100 },
+            new { City = cities[1], NameEn = "Sea Fort", NameAr = "حصن البحر", DescEn = "Small fortress overlooking the bay.", DescAr = "حصن صغير يطل على الخليج.", AddressEn = "Fort Street 4, Alexandria", AddressAr = "شارع الحصن 4، الإسكندرية", Lat = 31.2148, Lng = 29.8894, Type = SiteType.Fortress, Duration = 140 },
+            new { City = cities[1], NameEn = "Coastal Beach", NameAr = "شاطئ الساحل", DescEn = "Public beach with calm waters.", DescAr = "شاطئ عام بمياه هادئة.", AddressEn = "Beach Drive 1, Alexandria", AddressAr = "طريق الشاطئ 1، الإسكندرية", Lat = 31.2080, Lng = 29.9150, Type = SiteType.Beach, Duration = 180 },
+            new { City = cities[2], NameEn = "Giza Plateau Park", NameAr = "حديقة هضبة الجيزة", DescEn = "Open park near the plateau.", DescAr = "حديقة مفتوحة قرب الهضبة.", AddressEn = "Plateau Road 2, Giza", AddressAr = "طريق الهضبة 2، الجيزة", Lat = 30.0155, Lng = 31.1310, Type = SiteType.Park, Duration = 110 },
+            new { City = cities[2], NameEn = "Westbank Gate", NameAr = "بوابة الضفة الغربية", DescEn = "Gateway to western trails.", DescAr = "بوابة لمسارات الضفة الغربية.", AddressEn = "Westbank Street 6, Giza", AddressAr = "شارع الضفة الغربية 6، الجيزة", Lat = 30.0100, Lng = 31.2050, Type = SiteType.Gate, Duration = 95 },
+            new { City = cities[2], NameEn = "Heritage Court", NameAr = "ساحة التراث", DescEn = "Cultural courtyard for events.", DescAr = "ساحة ثقافية للفعاليات.", AddressEn = "Heritage Avenue 7, Giza", AddressAr = "شارع التراث 7، الجيزة", Lat = 30.0185, Lng = 31.2005, Type = SiteType.Cultural, Duration = 120 },
+            new { City = cities[3], NameEn = "Temple Walk", NameAr = "ممشى المعبد", DescEn = "Walkway near ancient sites.", DescAr = "ممشى قرب المواقع الأثرية.", AddressEn = "Temple Road 3, Luxor", AddressAr = "طريق المعبد 3، الأقصر", Lat = 25.6990, Lng = 32.6390, Type = SiteType.Walkway, Duration = 90 },
+            new { City = cities[3], NameEn = "Luxor Market", NameAr = "سوق الأقصر", DescEn = "Local market for crafts.", DescAr = "سوق محلي للحرف.", AddressEn = "Market Street 5, Luxor", AddressAr = "شارع السوق 5، الأقصر", Lat = 25.6920, Lng = 32.6405, Type = SiteType.Cultural, Duration = 130 },
+            new { City = cities[3], NameEn = "Nile Heritage Museum", NameAr = "متحف تراث النيل", DescEn = "Museum about river heritage.", DescAr = "متحف عن تراث النهر.", AddressEn = "Museum Avenue 1, Luxor", AddressAr = "شارع المتحف 1، الأقصر", Lat = 25.6870, Lng = 32.6370, Type = SiteType.Museum, Duration = 160 },
+            new { City = cities[4], NameEn = "Island Viewpoint", NameAr = "مطل الجزر", DescEn = "Viewpoint over river islands.", DescAr = "مطل على الجزر النيلية.", AddressEn = "Island Road 4, Aswan", AddressAr = "طريق الجزر 4، أسوان", Lat = 24.0910, Lng = 32.8970, Type = SiteType.Island, Duration = 100 },
+            new { City = cities[4], NameEn = "Aswan Riverside", NameAr = "واجهة أسوان", DescEn = "Riverside promenade.", DescAr = "ممشى على ضفاف النهر.", AddressEn = "Riverside Avenue 8, Aswan", AddressAr = "شارع الواجهة 8، أسوان", Lat = 24.0875, Lng = 32.8990, Type = SiteType.Walkway, Duration = 120 },
+            new { City = cities[4], NameEn = "Granite Plaza", NameAr = "ساحة الجرانيت", DescEn = "Open plaza with granite exhibits.", DescAr = "ساحة مفتوحة مع معروضات الجرانيت.", AddressEn = "Granite Street 9, Aswan", AddressAr = "شارع الجرانيت 9، أسوان", Lat = 24.0850, Lng = 32.9030, Type = SiteType.Cultural, Duration = 110 }
+        };
+
+        var sites = new List<Site>();
+        var attractions = new List<Attraction>();
+
+        for (var i = 0; i < siteDefinitions.Length; i++)
+        {
+            var siteDef = siteDefinitions[i];
+            var addressEn = Ensure(Address.Create(siteDef.AddressEn), $"Create {siteDef.NameEn} English address");
+            var addressAr = Ensure(Address.Create(siteDef.AddressAr), $"Create {siteDef.NameEn} Arabic address");
+            var location = Ensure(GeoLocation.Create(siteDef.Lat, siteDef.Lng), $"Create {siteDef.NameEn} location");
+
+            var site = Ensure(Site.Create(
+                siteDef.City.Id,
+                siteDef.NameEn,
+                siteDef.DescEn,
+                addressEn,
+                null,
+                location,
+                siteDef.Type,
+                siteDef.Duration,
+                $"+2010000000{i + 1:00}",
+                $"https://site-{i + 1}.example.com"),
+                $"Create {siteDef.NameEn} site");
+
+            Ensure(site.AddLocalizedContent(LanguageCode.Arabic, siteDef.NameAr, siteDef.DescAr, addressAr, null), $"Add {siteDef.NameEn} Arabic content");
+            Ensure(site.AddOpeningHour(WeekDay.Monday, weekdayHours, false), $"Add {siteDef.NameEn} Monday hours");
+            Ensure(site.AddOpeningHour(WeekDay.Saturday, weekendHours, false), $"Add {siteDef.NameEn} Saturday hours");
+            Ensure(site.AddFacilities([FacilityType.Parking, FacilityType.Restrooms, FacilityType.InformationCenter]), $"Add {siteDef.NameEn} facilities");
+
+            var transportA = Ensure(GeoLocation.Create(siteDef.Lat + 0.01, siteDef.Lng + 0.01), $"Create {siteDef.NameEn} transport A location");
+            var transportB = Ensure(GeoLocation.Create(siteDef.Lat - 0.01, siteDef.Lng - 0.01), $"Create {siteDef.NameEn} transport B location");
+            Ensure(site.AddNearestTransportation(TransportationType.Bus, transportA, 0.6), $"Add {siteDef.NameEn} bus stop");
+            Ensure(site.AddNearestTransportation(TransportationType.Metro, transportB, 1.2), $"Add {siteDef.NameEn} metro stop");
+
+            Ensure(site.UpdateStatus(SiteStatus.Active, false, false), $"Activate {siteDef.NameEn} site");
+
+            siteDef.City.IncrementSiteCount();
+            sites.Add(site);
+
+            for (var j = 1; j <= 3; j++)
+            {
+                var attraction = Ensure(Attraction.Create(
+                    site.Id,
+                    $"{siteDef.NameEn} Landmark {j}",
+                    $"Highlight {j} near {siteDef.NameEn}.",
+                    $"Zone {j}",
+                    AttractionType.ViewingPoint,
+                    new List<HistoricalPeriod> { HistoricalPeriod.OldKingdom, HistoricalPeriod.NewKingdom }),
+                    $"Create {siteDef.NameEn} attraction {j}");
+
+                Ensure(attraction.AddLocalizedContent(
+                    LanguageCode.Arabic,
+                    $"معلم {siteDef.NameAr} {j}",
+                    $"معلم بارز {j} بالقرب من {siteDef.NameAr}.",
+                    $"منطقة {j}"),
+                    $"Add {siteDef.NameEn} attraction {j} Arabic content");
+
+                attraction.SetLocation(Ensure(
+                    GeoLocation.Create(siteDef.Lat + (0.001 * j), siteDef.Lng + (0.001 * j)),
+                    $"Create {siteDef.NameEn} attraction {j} location"));
+
+                attractions.Add(attraction);
+            }
         }
 
-        City cairo = Ensure(City.Create(
-            "Cairo",
-            "Egypt's capital with iconic historical landmarks.",
-            Ensure(GeoLocation.Create(30.0444, 31.2357), "Create Cairo center location")),
-            "Create Cairo city");
-        Ensure(cairo.SetImage("https://images.unsplash.com/photo-1539650116574-75c0c6d73d4e"), "Set Cairo image");
-        Ensure(cairo.SetDisplayOrder(1), "Set Cairo display order");
-        Ensure(cairo.AddLocalizedContent(LanguageCode.English, "Cairo", "Capital city of Egypt."), "Add Cairo localized content");
+        var sponsorDefinitions = new[]
+        {
+            new { NameEn = "Nile Bistro", NameAr = "بيسترو النيل", DescEn = "Riverside dining and offers.", DescAr = "مطعم على النيل مع عروض.", AddressEn = "Corniche Road 10, Nile Capital", AddressAr = "طريق الكورنيش 10، عاصمة النيل", Lat = 30.0520, Lng = 31.2380, Type = SponsorType.Restaurant, Tier = SponsorTier.Gold },
+            new { NameEn = "Harbor Inn", NameAr = "نزل الميناء", DescEn = "Boutique stay near the bay.", DescAr = "إقامة مميزة قرب الخليج.", AddressEn = "Harbor Street 2, Coastal Vista", AddressAr = "شارع الميناء 2، واجهة الساحل", Lat = 31.2133, Lng = 29.8933, Type = SponsorType.Hotel, Tier = SponsorTier.Silver },
+            new { NameEn = "Desert Trails", NameAr = "مسارات الصحراء", DescEn = "Guided desert experiences.", DescAr = "جولات صحراء موجهة.", AddressEn = "Trail Road 6, Desert Gate", AddressAr = "طريق المسارات 6، بوابة الصحراء", Lat = 29.9845, Lng = 30.9490, Type = SponsorType.Tour, Tier = SponsorTier.Gold },
+            new { NameEn = "City Craft Shop", NameAr = "متجر الحرف", DescEn = "Local crafts and gifts.", DescAr = "حرف محلية وهدايا.", AddressEn = "Market Lane 9, Nile Capital", AddressAr = "حارة السوق 9، عاصمة النيل", Lat = 30.0545, Lng = 31.2375, Type = SponsorType.Shop, Tier = SponsorTier.Bronze },
+            new { NameEn = "Coastline Transit", NameAr = "تنقلات الساحل", DescEn = "Local transport services.", DescAr = "خدمات نقل محلية.", AddressEn = "Transit Blvd 1, Coastal Vista", AddressAr = "بوليفارد النقل 1، واجهة الساحل", Lat = 31.2098, Lng = 29.9100, Type = SponsorType.Transportation, Tier = SponsorTier.Silver },
+            new { NameEn = "Oasis Spa", NameAr = "سبا الواحة", DescEn = "Wellness and relaxation.", DescAr = "عناية واسترخاء.", AddressEn = "Oasis Road 3, Desert Gate", AddressAr = "طريق الواحة 3، بوابة الصحراء", Lat = 29.9735, Lng = 30.9475, Type = SponsorType.Service, Tier = SponsorTier.Platinum },
+            new { NameEn = "Museum Cafe", NameAr = "مقهى المتحف", DescEn = "Cafe for visitors and families.", DescAr = "مقهى للزوار والعائلات.", AddressEn = "Museum Avenue 1, Nile Capital", AddressAr = "شارع المتحف 1، عاصمة النيل", Lat = 30.0465, Lng = 31.2315, Type = SponsorType.Restaurant, Tier = SponsorTier.Gold }
+        };
 
-        City alexandria = Ensure(City.Create(
-            "Alexandria",
-            "Mediterranean coastal city known for heritage and sea views.",
-            Ensure(GeoLocation.Create(31.2001, 29.9187), "Create Alexandria center location")),
-            "Create Alexandria city");
-        Ensure(alexandria.SetImage("https://images.unsplash.com/photo-1568322445389-f64ac2515021"), "Set Alexandria image");
-        Ensure(alexandria.SetDisplayOrder(2), "Set Alexandria display order");
-        Ensure(alexandria.AddLocalizedContent(LanguageCode.English, "Alexandria", "Historic port city on the Mediterranean."), "Add Alexandria localized content");
+        var sponsors = new List<Sponsor>();
 
-        Site pyramidsSite = Ensure(Site.Create(
-            cairo.Id,
-            "Giza Plateau",
-            "Home of the Great Pyramids and the Sphinx.",
-            Ensure(GeoLocation.Create(29.9792, 31.1342), "Create Giza location"),
-            Ensure(Address.Create("Al Haram", "Giza", "Giza Governorate", "12556"), "Create Giza address"),
-            SiteType.Historical),
-            "Create Giza site");
-        pyramidsSite.SetAsFeatured(true);
-        Ensure(pyramidsSite.SetContactInfo("+201000000001", "https://example.com/giza"), "Set Giza contact");
-        pyramidsSite.SetEntryFee(Ensure(Money.Create(200, "EGP"), "Create Giza entry fee"));
-        Ensure(pyramidsSite.AddImage("https://images.unsplash.com/photo-1598970434795-0c54fe7c0642", true, 0, "Great Pyramid"), "Add Giza image");
-        Ensure(pyramidsSite.AddFacility("Parking", "Large public parking area."), "Add Giza facility");
-        Ensure(pyramidsSite.AddLocalizedContent(LanguageCode.English, "Giza Plateau", "Ancient monuments complex."), "Add Giza localized content");
-        Ensure(pyramidsSite.AddOpeningHours(
-            DayOfWeek.Monday,
-            Ensure(TimeRange.Create(new TimeSpan(8, 0, 0), new TimeSpan(17, 0, 0)), "Create Giza opening hours"),
-            false),
-            "Add Giza opening hours");
+        for (var i = 0; i < sponsorDefinitions.Length; i++)
+        {
+            var sponsorDef = sponsorDefinitions[i];
+            var addressEn = Ensure(Address.Create(sponsorDef.AddressEn), $"Create {sponsorDef.NameEn} English address");
+            var addressAr = Ensure(Address.Create(sponsorDef.AddressAr), $"Create {sponsorDef.NameEn} Arabic address");
+            var location = Ensure(GeoLocation.Create(sponsorDef.Lat, sponsorDef.Lng), $"Create {sponsorDef.NameEn} location");
+            var contract = Ensure(DateRange.Create(DateTime.UtcNow.Date.AddDays(-15), DateTime.UtcNow.Date.AddMonths(6)), $"Create {sponsorDef.NameEn} contract");
 
-        Site citadelSite = Ensure(Site.Create(
-            cairo.Id,
-            "Citadel of Saladin",
-            "Historic Islamic-era fortification with city views.",
-            Ensure(GeoLocation.Create(30.0287, 31.2619), "Create Citadel location"),
-            Ensure(Address.Create("Salah Salem", "Cairo", "Cairo Governorate", "11511"), "Create Citadel address"),
-            SiteType.Religious),
-            "Create Citadel site");
-        Ensure(citadelSite.SetContactInfo("+201000000002", "https://example.com/citadel"), "Set Citadel contact");
-        Ensure(citadelSite.AddImage("https://images.unsplash.com/photo-1548013146-72479768bada", true, 0, "Citadel exterior"), "Add Citadel image");
-        Ensure(citadelSite.AddLocalizedContent(LanguageCode.English, "Citadel", "Medieval Islamic citadel in Cairo."), "Add Citadel localized content");
+            var sponsor = Ensure(Sponsor.Create(
+                sponsorDef.NameEn,
+                sponsorDef.DescEn,
+                addressEn,
+                sponsorDef.Type,
+                sponsorDef.Tier,
+                location,
+                contract,
+                $"https://sponsor-{i + 1}.example.com",
+                null,
+                null),
+                $"Create {sponsorDef.NameEn} sponsor");
 
-        cairo.IncrementSiteCount();
-        cairo.IncrementSiteCount();
+            Ensure(sponsor.AddLocalizedContent(LanguageCode.Arabic, sponsorDef.NameAr, sponsorDef.DescAr, addressAr), $"Add {sponsorDef.NameEn} Arabic content");
+            Ensure(sponsor.Activate(), $"Activate {sponsorDef.NameEn} sponsor");
 
-        Attraction sphinx = Ensure(Attraction.Create(
-            pyramidsSite.Id,
-            "Great Sphinx",
-            "Limestone statue with a lion body and human head.",
-            AttractionType.Statue,
-            HistoricalPeriod.OldKingdom),
-            "Create Sphinx attraction");
-        sphinx.SetLocation(Ensure(GeoLocation.Create(29.9753, 31.1376), "Create Sphinx location"), "Near the pyramids entrance");
-        Ensure(sphinx.AddImage("https://images.unsplash.com/photo-1524492412937-b28074a5d7da", true, 0, "Sphinx view"), "Add Sphinx image");
-        Ensure(sphinx.AddLocalizedContent(LanguageCode.English, "Great Sphinx", "Iconic monument on the Giza plateau."), "Add Sphinx localized content");
+            for (var j = 1; j <= 3; j++)
+            {
+                var discount = Ensure(Money.Create(100 + (j * 20), "EGP"), $"Create {sponsorDef.NameEn} offer {j} discount");
+                var offerRange = Ensure(DateRange.Create(DateTime.UtcNow.Date.AddDays(-2), DateTime.UtcNow.Date.AddDays(30 + (j * 10))), $"Create {sponsorDef.NameEn} offer {j} range");
 
-        Sponsor sponsor = Ensure(Sponsor.Create(
-            "Nile View Restaurant",
-            "Popular local restaurant with traveler discounts.",
-            SponsorType.Restaurant,
-            SponsorTier.Gold,
-            Ensure(GeoLocation.Create(30.0426, 31.2389), "Create sponsor location"),
-            Ensure(Address.Create("Corniche El Nil", "Cairo", "Cairo Governorate", "11519"), "Create sponsor address"),
-            DateTime.UtcNow.Date.AddDays(-15),
-            DateTime.UtcNow.Date.AddMonths(6)),
-            "Create sponsor");
-        Ensure(sponsor.Activate(), "Activate sponsor");
-        Ensure(sponsor.AddImage("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4", true, 0, "Restaurant hall"), "Add sponsor image");
-        Ensure(sponsor.AddOffer(
-            "Tourist Combo",
-            "Special meal combo for Rafeeq users.",
-            Ensure(Money.Create(150, "EGP"), "Create offer discount"),
-            null,
-            Ensure(DateRange.Create(DateTime.UtcNow.Date.AddDays(-5), DateTime.UtcNow.Date.AddDays(45)), "Create offer date range"),
-            "Valid for dine-in only",
-            250),
-            "Add sponsor offer");
+                var offer = Ensure(sponsor.AddOffer(discount, null, offerRange, 200 + (j * 50), $"PROMO{i + 1}{j}"), $"Add {sponsorDef.NameEn} offer {j}");
+                Ensure(offer.Activate(), $"Activate {sponsorDef.NameEn} offer {j}");
 
-        Review review = Ensure(Review.Create(
-            tourist.Id,
-            pyramidsSite.Id,
-            Ensure(Rating.Create(5), "Create review rating"),
-            "Amazing experience",
-            "The place is very organized and breathtaking."),
-            "Create review");
-        Ensure(review.Approve(), "Approve review");
-        review.MarkAsHelpful();
-        pyramidsSite.AddRating(Ensure(Rating.Create(5), "Create rating for site aggregate"));
-        tourist.IncrementReviewCount();
+                Ensure(offer.AddLocalizedContent(
+                    LanguageCode.English,
+                    $"{sponsorDef.NameEn} Offer {j}",
+                    $"Deal {j} for {sponsorDef.NameEn}.",
+                    "Terms apply"),
+                    $"Add {sponsorDef.NameEn} offer {j} English content");
 
-        ContentReport report = Ensure(ContentReport.Create(
-            tourist.Id,
-            review.Id,
-            ReportReason.Spam,
-            "Possible duplicate review content."),
-            "Create content report");
+                Ensure(offer.AddLocalizedContent(
+                    LanguageCode.Arabic,
+                    $"عرض {sponsorDef.NameAr} {j}",
+                    $"عرض {j} لـ {sponsorDef.NameAr}.",
+                    "تطبق الشروط"),
+                    $"Add {sponsorDef.NameEn} offer {j} Arabic content");
+            }
 
-        Ensure(tourist.AddFavorite(citadelSite.Id), "Add favorite site");
+            sponsors.Add(sponsor);
+        }
 
-        dbContext.Cities.AddRange(cairo, alexandria);
-        dbContext.Sites.AddRange(pyramidsSite, citadelSite);
-        dbContext.Attractions.Add(sphinx);
-        dbContext.Sponsors.Add(sponsor);
-        dbContext.Reviews.Add(review);
-        dbContext.ContentReports.Add(report);
+        dbContext.Cities.AddRange(cities);
+        dbContext.Sites.AddRange(sites);
+        dbContext.Attractions.AddRange(attractions);
+        dbContext.Sponsors.AddRange(sponsors);
 
         await dbContext.SaveChangesAsync(cancellationToken);
     }
@@ -173,8 +254,8 @@ internal static class StaticDataSeeder
             touristId,
             "Swagger",
             "Tourist",
-            "Egyptian",
-            LanguageCode.English),
+            TouristEmail,
+            "Egyptian"),
             "Create tourist profile");
 
         await dbContext.Tourists.AddAsync(tourist, cancellationToken);
@@ -219,14 +300,33 @@ internal static class StaticDataSeeder
             return;
         }
 
-        ApplicationUser user = Ensure(ApplicationUser.Create(userId, userName, email), $"Create user object for {email}");
-        user.EmailConfirmed = true;
+        if (role == UserRole.Admin)
+        {
+            AdminUser user = Ensure(AdminUser.Create(userId, userName, email, "Sandor", "Clegane", "Sandor The Hound Clegane"), $"Create user object for {email}");
+            user.EmailConfirmed = true;
 
-        IdentityResult createUserResult = await userManager.CreateAsync(user, password);
-        Ensure(createUserResult, $"Create user {email}");
+            IdentityResult createUserResult = await userManager.CreateAsync(user, password);
+            Ensure(createUserResult, $"Create user {email}");
 
-        IdentityResult assignRoleResult = await userManager.AddToRoleAsync(user, role.ToString());
-        Ensure(assignRoleResult, $"Assign role {role} to {email}");
+            IdentityResult assignRoleResult = await userManager.AddToRoleAsync(user, role.ToString());
+            Ensure(assignRoleResult, $"Assign role {role} to {email}");
+        } 
+        else if (role == UserRole.Tourist)
+        {
+            TouristUser user = Ensure(TouristUser.Create(userId, userName, email), $"Create user object for {email}");
+            user.EmailConfirmed = true;
+
+            IdentityResult createUserResult = await userManager.CreateAsync(user, password);
+            Ensure(createUserResult, $"Create user {email}");
+
+            IdentityResult assignRoleResult = await userManager.AddToRoleAsync(user, role.ToString());
+            Ensure(assignRoleResult, $"Assign role {role} to {email}");
+        } 
+        else
+        {
+            throw new InvalidOperationException($"Unsupported role: {role}");
+        }
+
     }
 
     private static T Ensure<T>(Result<T> result, string operation)
