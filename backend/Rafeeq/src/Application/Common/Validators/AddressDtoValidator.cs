@@ -11,24 +11,24 @@ public class AddressDtoValidator : AbstractValidator<AddressDto>
         RuleFor(x => x.Street)
             .NotEmpty()
             .WithMessage("Street cannot be empty.")
-            .MaximumLength(StreetMaxLength)
-            .WithMessage($"Street cannot exceed {StreetMaxLength} characters.");
+            .MaximumLength(MaxStreetLength)
+            .WithMessage($"Street cannot exceed {MaxStreetLength} characters.");
 
         RuleFor(x => x.Region)
             .NotEmpty()
             .WithMessage("District cannot be empty.")
-            .MaximumLength(RegionMaxLength)
-            .WithMessage($"District cannot exceed {RegionMaxLength} characters.");
+            .MaximumLength(MaxRegionLength)
+            .WithMessage($"District cannot exceed {MaxRegionLength} characters.");
 
         RuleFor(x => x.City)
             .NotEmpty()
             .WithMessage("City cannot be empty.")
-            .MaximumLength(CityMaxLength)
-            .WithMessage($"City cannot exceed {CityMaxLength} characters.");
+            .MaximumLength(MaxCityLength)
+            .WithMessage($"City cannot exceed {MaxCityLength} characters.");
 
         RuleFor(x => x.PostalCode)
-            .MaximumLength(PostalCodeMaxLength)
-            .WithMessage($"Zip code cannot exceed {PostalCodeMaxLength} characters.")
+            .MaximumLength(MaxPostalCodeLength)
+            .WithMessage($"Zip code cannot exceed {MaxPostalCodeLength} characters.")
             .When(x => !string.IsNullOrWhiteSpace(x.PostalCode));
     }
 }
