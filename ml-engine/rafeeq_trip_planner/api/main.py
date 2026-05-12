@@ -42,7 +42,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 # ── constants ──────────────────────────────────────────────────────────────────
 MODEL_FILE        = os.path.join(_ROOT, "duration_model.pkl")
 CITY_DATASETS_DIR = os.path.join(_ROOT, "city_datasets")
-API_VERSION       = "1.0.0"
+API_VERSION       = "1.1.0"
 SYSTEM_NAME       = "Rafeeq Trip Planner"
 
 # ── logging ───────────────────────────────────────────────────────────────────
@@ -96,6 +96,24 @@ async def _startup():
         log.warning("city_resolver not found — multi-city support disabled.")
     except Exception as exc:
         log.warning("City resolver init failed: %s", exc)
+
+    port = os.environ.get("PORT", "8000")
+    log.info("=" * 60)
+    log.info(" Rafeeq Trip Planner v%s — starting up", API_VERSION)
+    log.info(" Binding on 0.0.0.0:%s", port)
+    log.info(" Docs available at  http://0.0.0.0:%s/docs", port)
+    log.info("=" * 60)
+
+
+# ── flat /health — used by Railway's healthcheck ──────────────────────────────
+@app.get("/health", tags=["System"], include_in_schema=True)
+async def flat_health():
+    """
+    Minimal liveness probe consumed by Railway's healthcheck.
+    Also useful for uptime monitors.
+    Returns HTTP 200 with `{"status": "ok"}` as soon as the app is ready.
+    """
+    return {"status": "ok"}
 
 
 # ── request-level logging middleware ──────────────────────────────────────────

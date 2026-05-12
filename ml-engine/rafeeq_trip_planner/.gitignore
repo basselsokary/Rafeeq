@@ -1,0 +1,34 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# ── Virtual environments ───────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── Environment files ─────────────────────────────────────────────────────────
+.env
+.env.local
+*.env
+
+# ── OS / IDE ──────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ── Logs / temp ───────────────────────────────────────────────────────────────
+*.log
+*.tmp
+_verify_v2.json
+
+# ── Raw source data (commit city_datasets/ JSONs; skip the source CSVs) ───────
+# The CSVs are large source files — city_datasets/ is the processed runtime data.
+# Keep them locally; DO NOT commit to the repo if > 50 MB.
+# (These are ~600 KB so they're fine either way, but excluded to keep repo clean)
+Rafeeq Data Collection - Sites.csv
+Rafeeq Data Collection - Cities.csv
+cairo_historical_sites_backup.json

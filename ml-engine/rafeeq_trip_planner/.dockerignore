@@ -1,0 +1,41 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# ── Virtual environments ───────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+.env
+
+# ── Dev / local config ────────────────────────────────────────────────────────
+.env.local
+*.env
+
+# ── Raw source data (not needed at runtime — regenerate with generate_city_datasets.py) ──
+Rafeeq Data Collection - Sites.csv
+Rafeeq Data Collection - Cities.csv
+cairo_historical_sites_backup.json
+
+# ── Dev tooling scripts (not needed at runtime) ───────────────────────────────
+generate_city_datasets.py
+train_duration_model.py
+scrape_data.py
+clean_and_enrich.py
+
+# ── Test files ────────────────────────────────────────────────────────────────
+test_api.py
+test_cases.py
+test_multi_day.py
+
+# ── IDE / OS ──────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db
+
+# ── Git ───────────────────────────────────────────────────────────────────────
+.git/
