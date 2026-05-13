@@ -369,6 +369,18 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         return Result.Success();
     }
 
+    public void AddFacility(FacilityType facilityType)
+    {
+        if (_facilities.Contains(facilityType))
+        {
+            return;
+        }
+        
+        _facilities.Add(facilityType);
+
+        RaiseDomainEvent(new SiteUpdatedEvent(Id));
+    }
+
     public Result AddFacilities(List<FacilityType> facilityTypes)
     {
         if (_facilities.Count == facilityTypes.Count &&
