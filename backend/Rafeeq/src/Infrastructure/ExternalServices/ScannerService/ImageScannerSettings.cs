@@ -10,7 +10,7 @@ public sealed class ImageScannerSettings
     /// Endpoint path on the scan service that accepts image uploads.
     /// e.g. "/predict" or "/api/v1/predict"
     /// </summary>
-    public string ScanEndpoint { get; init; } = "/search";
+    public string ScanEndpoint { get; init; } = "/predict";
 
     /// <summary>
     /// The multipart form-data field name the service expects.

@@ -18,21 +18,16 @@ public sealed class ScanImageHandler(
 {
     public async Task<Result<ArtifactDetailsDto>> HandleAsync(ScanImageCommand command, CancellationToken ct)
     {
-        var result = await scannerService.ScanAsync(command.Image, command.ContentType, ct);
+
+        var result = await scannerService.ScanAsyncV2(command.Image, command.ContentType, ct);
         if (result.Failed)
             return result.Error;
         
-        if (result.Value.Results.Count == 0)
-            return Result.Failure<ArtifactDetailsDto>(Error.None);
-        
-        var results = result.Value.Results;
-        var imageResultDto = results.OrderByDescending(r => r.Distance)
-            .FirstOrDefault();
-        
-        if (string.IsNullOrEmpty(imageResultDto?.ArtifactId) || imageResultDto.Distance < 0.8)
+        var label = result.Value.Label;
+        if (string.IsNullOrEmpty(label) || label.Equals("unknown", StringComparison.OrdinalIgnoreCase))
             return ArtifactErrors.NotFound;
-
-        var artifact = await artifactQueryService.GetByNameAsync(imageResultDto.ArtifactId, userContext.Language, ct);
+        
+        var artifact = await artifactQueryService.GetByNameAsync(label, userContext.Language, ct);
         
         if (artifact == null)
             return ArtifactErrors.NotFound;
@@ -41,5 +36,32 @@ public sealed class ScanImageHandler(
         {
             TypeDisplay = enumLocalizer.Localize(artifact.Type)
         });
+    }
+
+    public void aha()
+    {
+        
+        // if (result.Failed)
+        //     return result.Error;
+        
+        // if (result.Value.Results.Count == 0)
+        //     return Result.Failure<ArtifactDetailsDto>(Error.None);
+        
+        // var results = result.Value.Results;
+        // var imageResultDto = results.OrderByDescending(r => r.Distance)
+        //     .FirstOrDefault();
+        
+        // if (string.IsNullOrEmpty(imageResultDto?.ArtifactId) || imageResultDto.Distance < 0.8)
+        //     return ArtifactErrors.NotFound;
+
+        // var artifact = await artifactQueryService.GetByNameAsync(imageResultDto.ArtifactId, userContext.Language, ct);
+        
+        // if (artifact == null)
+        //     return ArtifactErrors.NotFound;
+        
+        // return Result.Success(artifact with
+        // {
+        //     TypeDisplay = enumLocalizer.Localize(artifact.Type)
+        // });
     }
 }
