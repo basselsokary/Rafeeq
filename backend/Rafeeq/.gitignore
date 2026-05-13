@@ -51,6 +51,8 @@ BenchmarkDotNet.Artifacts/
 # .NET
 project.lock.json
 project.fragment.lock.json
+appsettings.Development.json
+ApplicationDbContextFactory.cs 
 .config
 
 # Tye
@@ -60,5 +62,4 @@ project.fragment.lock.json
 ScaffoldingReadMe.txt 
 
 #Temporary
-src/Domain/Events
 src/API/src
