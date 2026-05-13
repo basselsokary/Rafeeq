@@ -13,12 +13,24 @@ public static class StaticDataServiceProviderExtensions
     {
         bool useStaticData = configuration.GetValue<bool>("StaticData:UseStaticData");
         
+        await using var scope = services.CreateAsyncScope();
         if (!useStaticData)
         {
+            var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
+            await seeder.SeedAsync(cancellationToken);
             return;
         }
 
-        using IServiceScope scope = services.CreateScope();
         await StaticDataSeeder.SeedAsync(scope.ServiceProvider, cancellationToken);
+
+    }
+
+    public static async Task SeedAsync(
+        this IServiceProvider services,
+        CancellationToken cancellationToken = default)
+    {
+        await using var scope = services.CreateAsyncScope();
+        var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
+        await seeder.SeedAsync(cancellationToken);
     }
 }

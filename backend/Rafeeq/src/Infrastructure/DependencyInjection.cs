@@ -26,6 +26,7 @@ using Infrastructure.Persistence.Interceptors;
 using Infrastructure.Persistence.QueryServices;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Persistence.Seeding;
+using Infrastructure.Persistence.Seeding.Seeders;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -34,7 +35,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Serilog;
 
 namespace Infrastructure;
 
@@ -61,12 +61,10 @@ public static class DependencyInjection
         services.AddExternalServices(configuration);
 
         // Add Background Jobs
-        // services.AddBackgroundJobs(configuration);
-
-        // Add Logging
-        // services.AddLogging(configuration);
+        services.AddBackgroundJobs(configuration);
 
         services.AddOtherServices(configuration);
+        services.AddSeeding();
 
         return services;
     }
@@ -77,8 +75,6 @@ public static class DependencyInjection
         services.AddScoped<IUserContext, CurrentUserService>();
         services.AddScoped<IModeratorService, ModeratorService>();
         services.AddScoped<IAdminService, AdminService>();
-        services.AddScoped<ICsvFileParser, CsvParser>();
-        services.AddScoped<CsvMapRegistry>();
         services.AddScoped<ICacheService, BaseCache>();
         services.AddScoped<IImageProcessingService, ImageProcessingService>();
         
@@ -150,6 +146,24 @@ public static class DependencyInjection
         return services;
     }
 
+    private static IServiceCollection AddSeeding(this IServiceCollection services)
+    {
+        // ── Infrastructure ────────────────────────────────────────────────
+        services.AddSingleton<CsvMapRegistry>();
+        services.AddScoped<ICsvFileParser, CsvParser>();
+        services.AddScoped<DatabaseSeeder>();
+
+        // ── Seeders (registered in any order — DatabaseSeeder sorts by Order) ──
+        services.AddScoped<IDataSeeder, CitySeeder>();
+        services.AddScoped<IDataSeeder, SiteSeeder>();
+        services.AddScoped<IDataSeeder, OpeningHourSeeder>();
+        services.AddScoped<IDataSeeder, NearestTransportationSeeder>();
+        services.AddScoped<IDataSeeder, AttractionSeeder>();
+        services.AddScoped<IDataSeeder, ArtifactSeeder>();
+
+        return services;
+    }
+
     private static IServiceCollection AddApplicationDbContext(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -170,7 +184,7 @@ public static class DependencyInjection
             else
             {
                 options.UseSqlServer(
-                    configuration.GetConnectionString("SqlServer"),
+                    configuration.GetConnectionString("DefaultSqlServer"),
                     b =>
                     {
                         b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
@@ -284,31 +298,6 @@ public static class DependencyInjection
         return services;
     }
 
-    // private static IServiceCollection AddCachingServices(
-    //     this IServiceCollection services,
-    //     IConfiguration configuration)
-    // {
-    //     var redisConnection = configuration.GetConnectionString("Redis");
-
-    //     if (!string.IsNullOrEmpty(redisConnection))
-    //     {
-    //         services.AddStackExchangeRedisCache(options =>
-    //         {
-    //             options.Configuration = redisConnection;
-    //             options.InstanceName = "RafeeqApp_";
-    //         });
-    //     }
-    //     else
-    //     {
-    //         // Fallback to in-memory cache for development
-    //         services.AddDistributedMemoryCache();
-    //     }
-
-    //     services.AddScoped<ICacheService, CacheService>();
-
-    //     return services;
-    // }
-
     private static IServiceCollection AddExternalServices(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -390,27 +379,6 @@ public static class DependencyInjection
             configuration.GetSection(RefreshTokenCleanupSettings.SectionName));
 
         services.AddHostedService<RefreshTokenCleanupJob>();
-
-        return services;
-    }
-
-    private static IServiceCollection AddLogging(
-        this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(configuration)
-            .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .WriteTo.File(
-                path: "logs/rafeeq-.txt",
-                rollingInterval: RollingInterval.Day)
-            .CreateLogger();
-
-        services.AddLogging(loggingBuilder =>
-        {
-            loggingBuilder.AddSerilog(dispose: true);
-        });
 
         return services;
     }
