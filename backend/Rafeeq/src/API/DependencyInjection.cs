@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using API.Configurations;
 using API.Middlewares;
+using Infrastructure.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace API;
@@ -9,7 +10,7 @@ namespace API;
 public static class DependencyInjection
 {
     public static IServiceCollection AddPresentation(
-        this IServiceCollection services, IConfiguration configuration)
+        this IServiceCollection services, IHostBuilder hostBuilder, IConfiguration configuration)
     {
         // global exception handling and problem details
         services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -31,6 +32,7 @@ public static class DependencyInjection
         services.AddCors();
 
         services.AddRateLimiter(configuration);
+        hostBuilder.ConfigureSerilog(configuration);
 
         services.Configure<RouteOptions>(options =>
         {

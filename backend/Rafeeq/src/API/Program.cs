@@ -1,6 +1,7 @@
 using Infrastructure;
 using Application;
 using System.Globalization;
+using Serilog;
 
 namespace API;
 
@@ -11,13 +12,14 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services
-            .AddPresentation(builder.Configuration)
+            .AddPresentation(builder.Host, builder.Configuration)
             .AddApplication()
             .AddInfrastructure(builder.Configuration);
 
         var app = builder.Build();
 
-        await app.Services.EnsureStaticDataAsync(builder.Configuration);
+        // await app.Services.EnsureStaticDataAsync(builder.Configuration);
+        await app.Services.SeedAsync();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -39,16 +41,15 @@ public class Program
 
         app.UseRateLimiter();
 
-        // With Serilog
-        // app.UseSerilogRequestLogging(opts =>
-        // {
-        //     opts.MessageTemplate = "{RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000}ms";
-        //     opts.EnrichDiagnosticContext = (ctx, httpCtx) =>
-        //     {
-        //         ctx.Set("UserId", httpCtx.User?.FindFirst("sub")?.Value);
-        //         ctx.Set("ClientIP", httpCtx.Connection.RemoteIpAddress);
-        //     };
-        // });
+        app.UseSerilogRequestLogging(opts =>
+        {
+            opts.MessageTemplate = "{RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000}ms";
+            opts.EnrichDiagnosticContext = (ctx, httpCtx) =>
+            {
+                ctx.Set("UserId", httpCtx.User?.FindFirst("sub")?.Value);
+                ctx.Set("ClientIP", httpCtx.Connection.RemoteIpAddress);
+            };
+        });
 
         app.UseRequestLocalization(options =>
         {

@@ -35,10 +35,10 @@ public class AuthController : ApiBaseController
                 Response,
                 result.Value.AccessToken,
                 result.Value.RefreshToken,
-                result.Value.AccessTokenExpiresAtInHours,
-                result.Value.RefreshTokenExpiresAtInDays);
+                result.Value.AccessTokenExpirationInMinutes,
+                result.Value.RefreshTokenExpirationInHours);
 
-            return Ok(new {result.Value.AccessTokenExpiresAtInHours, result.Value.RefreshTokenExpiresAtInDays});
+            return Ok(new {result.Value.AccessTokenExpirationInMinutes, result.Value.RefreshTokenExpirationInHours});
         }
     }
 
@@ -91,17 +91,17 @@ public class AuthController : ApiBaseController
         var result = await commandHandler.HandleAsync(command, cancellationToken);
         if (result.Failed)
         {   
-            return BadRequest(result); // Yellow Flag
+            return BadRequest(result);
         }
 
         SetCookies(
             Response,
             result.Value.AccessToken,
             result.Value.RefreshToken,
-            result.Value.AccessTokenExpiresAtInHours,
-            result.Value.RefreshTokenExpiresAtInDays);
+            result.Value.AccessTokenExpirationInMinutes,
+            result.Value.RefreshTokenExpirationInHours);
 
-        return Ok(new {result.Value.AccessTokenExpiresAtInHours, result.Value.RefreshTokenExpiresAtInDays});
+        return Ok(new {result.Value.AccessTokenExpirationInMinutes, result.Value.RefreshTokenExpirationInHours});
     }
 
     [HttpPost("forgot-password")]
@@ -199,7 +199,7 @@ public class AuthController : ApiBaseController
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Strict,
+            SameSite = SameSiteMode.None, // Allow cross-site for mobile clients
             Expires = DateTime.UtcNow.AddHours(accessTokenExpiresInHours),
             Path = "/"
         };
@@ -208,7 +208,7 @@ public class AuthController : ApiBaseController
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Strict, 
+            SameSite = SameSiteMode.None, // Allow cross-site for mobile clients
             Expires = DateTime.UtcNow.AddDays(refreshTokenExpiresInDays),
             Path = "/api/auth/web/refresh" // Scope it (better security)
         };
