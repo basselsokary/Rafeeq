@@ -12,20 +12,16 @@ internal sealed class CsvMapRegistry
 {
     private readonly Dictionary<Type, Type> _maps = new()
     {
-        { typeof(SiteCsvRowDto), typeof(SitesCsvRowMap) },
-        { typeof(CityCsvRowDto), typeof(CitiesCsvRowMap) },
-        { typeof(AttractionCsvRowDto), typeof(AttractionsCsvRowMap) },
-        { typeof(ArtifactCsvRowDto), typeof(ArtifactsCsvRowMap) },
-        { typeof(NearestTransportationCsvRowDto), typeof(NearestTransportationCsvRowMap) },
-        { typeof(OpeningHourCsvRowDto), typeof(OpeningHourCsvRowMap) },
+        { typeof(CityCsvRowDto),                  typeof(CitiesCsvRowMap)               },
+        { typeof(SiteCsvRowDto),                  typeof(SitesCsvRowMap)                },
+        { typeof(AttractionCsvRowDto),            typeof(AttractionsCsvRowMap)          },
+        { typeof(ArtifactCsvRowDto),              typeof(ArtifactsCsvRowMap)            },
+        { typeof(NearestTransportationCsvRowDto), typeof(NearestTransportationCsvRowMap)},
+        { typeof(OpeningHourCsvRowDto),           typeof(OpeningHourCsvRowMap)          },
     };
 
     public Type? GetMapFor<T>()
-    {
-        return _maps.TryGetValue(typeof(T), out var map)
-            ? map
-            : null;
-    }
+        => _maps.TryGetValue(typeof(T), out var map) ? map : null;
 }
 
 internal sealed class CitiesCsvRowMap : ClassMap<CityCsvRowDto>
@@ -59,9 +55,12 @@ internal sealed class SitesCsvRowMap : ClassMap<SiteCsvRowDto>
         Map(m => m.Type).Name("Type");
         Map(m => m.Latitude).Name("Latitude");
         Map(m => m.Longitude).Name("Longitude");
+
+        // Raw string — parsed by EntryFeeParser. Optional/nullable cell.
         Map(m => m.EntryFee).Name("Entry Fee 'NULLABLE'");
         Map(m => m.EntryFeeNoteEn).Name("Entry Fee Note (English) 'NULLABLE'");
         Map(m => m.EntryFeeNoteAr).Name("Entry Fee Note (Localized) 'NULLABLE'");
+
         Map(m => m.IsFree).Name("Is Free?");
         Map(m => m.EstimatedDurationMinutes).Name("Estimated Duration Minutes");
         Map(m => m.WebsiteUrl).Name("Website URL 'NULLABLE'");
@@ -136,7 +135,7 @@ internal sealed class OpeningHourCsvRowMap : ClassMap<OpeningHourCsvRowDto>
         Map(m => m.OpeningHourId).Name("Opening Hour ID");
         Map(m => m.ParentSiteId).Name("Parent Site ID");
         Map(m => m.SiteName).Name("Site Name");
-        Map(m => m.Day).Name("Day");
+        Map(m => m.Day).Name("Day");             // WeekDay enum name OR "ALLDAYS"
         Map(m => m.StartTime).Name("Start Time");
         Map(m => m.EndTime).Name("End Time");
         Map(m => m.IsOvernight).Name("Is Overnight?");
