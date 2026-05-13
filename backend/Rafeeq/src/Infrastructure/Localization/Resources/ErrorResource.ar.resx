@@ -13,16 +13,32 @@
   <data name="VALIDATION_MINIMUM_LENGTH_NOT_MET" xml:space="preserve"><value>القيمة لا تحقق الحد الأدنى المطلوب للطول.</value></data>
   <data name="VALIDATION_RANGE_INVALID" xml:space="preserve"><value>النطاق المقدم غير صالح.</value></data>
   <data name="VALIDATION_WHITESPACE_NOT_ALLOWED" xml:space="preserve"><value>القيم المكونة من مسافات فقط غير مسموح بها.</value></data>
+
+  <!-- Files and Images -->
+  <data name="FILE_INVALID_ID" xml:space="preserve"><value>معرف الملف يجب ألا يكون فارغا.</value></data>
+  <data name="FILE_INVALID_NAME" xml:space="preserve"><value>اسم الملف غير صالح أو فارغ.</value></data>
+  <data name="FILE_EMPTY" xml:space="preserve"><value>الملف لا يحتوي على بيانات.</value></data>
+  <data name="FILE_INVALID_SIGNATURE" xml:space="preserve"><value>محتوى الملف لا يتطابق مع نوعه المصرح.</value></data>
+  <data name="FILE_TOO_LARGE" xml:space="preserve"><value>حجم الملف يتجاوز الحد الأقصى المسموح به {0} ميغابايت.</value></data>
+  <data name="FILE_UNSUPPORTED_TYPE" xml:space="preserve"><value>نوع الملف '{0}' غير مدعوم.</value></data>
+  <data name="IMAGE_ID_REQUIRED" xml:space="preserve"><value>معرف الصورة مطلوب.</value></data>
+  <data name="IMAGE_INVALID_SIGNATURE" xml:space="preserve"><value>الملف المرفوع ذو توقيع غير صالح وقد لا يكون صورة صالحة.</value></data>
+  <data name="IMAGE_UPLOAD_FAILED" xml:space="preserve"><value>حدث خطأ أثناء رفع الصورة. يرجى المحاولة لاحقا.</value></data>
+  <data name="IMAGE_STORAGE_KEY_REQUIRED" xml:space="preserve"><value>مفتاح التخزين مطلوب.</value></data>
+  <data name="IMAGE_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>ترتيب العرض لا يمكن أن يكون سالبا.</value></data>
+  <data name="IMAGE_URL_REQUIRED" xml:space="preserve"><value>رابط الصورة مطلوب.</value></data>
   
   <!-- Value Objects -->
   <data name="OPENING_HOURS_ALREADY_EXIST" xml:space="preserve"><value>ساعات العمل الخاصة بـ {0} موجودة بالفعل.</value></data>
   <data name="OPENING_HOURS_NOT_FOUND" xml:space="preserve"><value>ساعات العمل الخاصة بـ {0} غير موجودة.</value></data>
   <data name="ADDRESS_STREET_REQUIRED" xml:space="preserve"><value>الشارع مطلوب.</value></data>
   <data name="ADDRESS_CITY_REQUIRED" xml:space="preserve"><value>المدينة مطلوبة.</value></data>
+  <data name="ADDRESS_REQUIRED" xml:space="preserve"><value>العنوان مطلوب.</value></data>
   <data name="ADDRESS_STREET_LENGTH_EXCEEDED" xml:space="preserve"><value>الشارع يتجاوز الحد الأقصى المسموح.</value></data>
   <data name="ADDRESS_CITY_LENGTH_EXCEEDED" xml:space="preserve"><value>المدينة تتجاوز الحد الأقصى المسموح.</value></data>
   <data name="ADDRESS_REGION_LENGTH_EXCEEDED" xml:space="preserve"><value>المنطقة تتجاوز الحد الأقصى المسموح.</value></data>
   <data name="ADDRESS_POSTAL_CODE_LENGTH_EXCEEDED" xml:space="preserve"><value>رمز البريد يتجاوز الحد الأقصى المسموح.</value></data>
+  <data name="ADDRESS_LENGTH_EXCEEDED" xml:space="preserve"><value>طول العنوان لا يمكن أن يتجاوز الحد الأقصى المسموح.</value></data>
   <data name="DATE_RANGE_INVALID" xml:space="preserve"><value>يجب أن يكون تاريخ البداية قبل تاريخ النهاية.</value></data>
   <data name="EMAIL_REQUIRED" xml:space="preserve"><value>البريد الإلكتروني مطلوب.</value></data>
   <data name="EMAIL_TOO_LONG" xml:space="preserve"><value>البريد الإلكتروني طويل جدا.</value></data>
@@ -39,6 +55,15 @@
   <data name="RATING_OUT_OF_RANGE" xml:space="preserve"><value>يجب أن يكون التقييم بين {0} و {1}، ويجب أن تكون القيمة العظمى أكبر من أو تساوي الصغرى.</value></data>
   <data name="RATING_POSITIVE_REQUIRED" xml:space="preserve"><value>يجب أن يكون التقييم عددًا صحيحًا موجبًا.</value></data>
   <data name="TIME_RANGE_INVALID" xml:space="preserve"><value>يجب أن يكون وقت البداية قبل وقت النهاية.</value></data>
+  <data name="TICKET_NOTES_LENGTH_EXCEEDED" xml:space="preserve"><value>طول ملاحظات التذكرة لا يمكن أن يتجاوز الحد الأقصى المسموح.</value></data>
+
+  <!-- Artifact -->
+  <data name="ARTIFACT_NOT_FOUND" xml:space="preserve"><value>القطعة الأثرية غير موجودة.</value></data>
+  <data name="ARTIFACT_NAME_REQUIRED" xml:space="preserve"><value>اسم القطعة الأثرية مطلوب.</value></data>
+  <data name="ARTIFACT_DESCRIPTION_REQUIRED" xml:space="preserve"><value>وصف القطعة الأثرية مطلوب.</value></data>
+  <data name="ARTIFACT_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>ترتيب عرض القطعة الأثرية لا يمكن أن يكون سالبا.</value></data>
+  <data name="ARTIFACT_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>المحتوى المترجم للقطعة الأثرية غير موجود.</value></data>
+  <data name="ARTIFACT_IMAGE_NOT_FOUND" xml:space="preserve"><value>صورة القطعة الأثرية غير موجودة.</value></data>
 
   <!-- Attraction -->
   <data name="ATTRACTION_ID_REQUIRED" xml:space="preserve"><value>معرف المعلم مطلوب.</value></data>
@@ -57,11 +82,14 @@
   <data name="ATTRACTION_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>ترتيب عرض المعلم لا يمكن أن يكون سالبا.</value></data>
   <data name="ATTRACTION_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>المحتوى المترجم للمعلم غير موجود.</value></data>
   <data name="ATTRACTION_LOCATION_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>طول وصف موقع المعلم لا يمكن أن يتجاوز {0}.</value></data>
+  <data name="ATTRACTION_HISTORICAL_PERIOD_ALREADY_EXISTS" xml:space="preserve"><value>المعلم يحتوي بالفعل على الفترة التاريخية المحددة.</value></data>
+  <data name="ATTRACTION_HISTORICAL_PERIOD_REQUIRED" xml:space="preserve"><value>الفترة التاريخية للمعلم مطلوبة.</value></data>
   
   <!-- City -->
   <data name="CITY_ID_REQUIRED" xml:space="preserve"><value>معرف المدينة مطلوب.</value></data>
   <data name="CITY_NOT_FOUND" xml:space="preserve"><value>المدينة ذات المعرف {0} غير موجودة.</value></data>
   <data name="CITY_NAME_REQUIRED" xml:space="preserve"><value>اسم المدينة لا يمكن أن يكون فارغا.</value></data>
+  <data name="CITY_DUPLICATE_NAME" xml:space="preserve"><value>توجد مدينة بالاسم نفسه بالفعل.</value></data>
   <data name="CITY_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>طول اسم المدينة لا يمكن أن يتجاوز {0}.</value></data>
   <data name="CITY_DESCRIPTION_REQUIRED" xml:space="preserve"><value>وصف المدينة لا يمكن أن يكون فارغا.</value></data>
   <data name="CITY_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>طول وصف المدينة لا يمكن أن يتجاوز {0}.</value></data>
@@ -117,6 +145,9 @@
   <data name="SITE_FACILITY_NOT_FOUND" xml:space="preserve"><value>مرفق الموقع غير موجود.</value></data>
   <data name="SITE_NEAREST_TRANSPORTATION_NOT_FOUND" xml:space="preserve"><value>أقرب وسيلة نقل للموقع غير موجودة.</value></data>
   <data name="SITE_NEAREST_TRANSPORTATION_DUPLICATE_LOCATION" xml:space="preserve"><value>يوجد بالفعل وسيلة نقل قريبة بنفس الموقع لهذا الموقع.</value></data>
+  <data name="SITE_OPENING_HOUR_NOT_FOUND" xml:space="preserve"><value>ساعات عمل الموقع غير موجودة.</value></data>
+  <data name="SITE_CANNOT_BE_FEATURED_AND_HIDDEN_GEM" xml:space="preserve"><value>لا يمكن أن يكون الموقع معلمًا مميزا وجوهرة مخفية في الوقت نفسه.</value></data>
+  <data name="SITE_INVALID_ESTIMATED_DURATION" xml:space="preserve"><value>المدة التقديرية يجب أن تكون أكبر من صفر.</value></data>
   <data name="SITE_LOCALIZED_ID_REQUIRED" xml:space="preserve"><value>معرف الترجمة المحلية للموقع مطلوب.</value></data>
   <data name="SITE_INVALID_FACILITY_TYPE" xml:space="preserve"><value>واحد أو أكثر من أنواع المرافق المدخلة غير صالح.</value></data>
   <data name="SITE_FACILITY_ALREADY_EXISTS" xml:space="preserve"><value>يوجد مرفق بالاسم نفسه لهذا الموقع بالفعل.</value></data>
@@ -145,6 +176,7 @@
   <data name="SPONSOR_IMG_URL_REQUIRED" xml:space="preserve"><value>رابط صورة الراعي لا يمكن أن يكون فارغا.</value></data>
   <data name="SPONSOR_IMG_NOT_FOUND" xml:space="preserve"><value>صورة الراعي غير موجودة.</value></data>
   <data name="SPONSOR_CAPTION_REQUIRED" xml:space="preserve"><value>وصف صورة الراعي مطلوب.</value></data>
+  <data name="SPONSOR_EXCEEDED_WEBSITE_URL_LENGTH" xml:space="preserve"><value>رابط موقع الراعي لا يمكن أن يتجاوز الحد الأقصى المسموح.</value></data>
   <data name="SPONSOR_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>ترتيب عرض الراعي لا يمكن أن يكون سالبا.</value></data>
   <data name="SPONSOR_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>المحتوى المترجم للراعي غير موجود.</value></data>
   <data name="SPONSOR_INVALID_DATE" xml:space="preserve"><value>يجب أن يكون تاريخ بداية العقد قبل تاريخ النهاية.</value></data>
@@ -179,25 +211,63 @@
   <data name="TOURIST_LAST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>الاسم الأخير للمستخدم يتجاوز الحد الأقصى المسموح.</value></data>
   <data name="TOURIST_NATIONALITY_REQUIRED" xml:space="preserve"><value>جنسية المستخدم لا يمكن أن تكون فارغة.</value></data>
   <data name="TOURIST_PREFERRED_LANGUAGE_INVALID" xml:space="preserve"><value>اللغة المفضلة غير صالحة.</value></data>
+  <data name="VISITED_SITE_NOT_FOUND" xml:space="preserve"><value>الموقع الذي تمت زيارته غير موجود.</value></data>
+  <data name="TRIP_NOTE_CONTENT_REQUIRED" xml:space="preserve"><value>محتوى ملاحظة الرحلة لا يمكن أن يكون فارغا.</value></data>
+  <data name="VISITED_SITE_DATE_IN_FUTURE" xml:space="preserve"><value>تاريخ الزيارة لا يمكن أن يكون في المستقبل.</value></data>
+  <data name="VISITED_SITE_DURATION_INVALID" xml:space="preserve"><value>المدة يجب أن تكون أكبر من صفر.</value></data>
+  <data name="TRIP_SITE_VISIT_ORDER_INVALID" xml:space="preserve"><value>ترتيب الزيارة لا يمكن أن يكون سالبا.</value></data>
+  <data name="TOURIST_SITE_ALREADY_VISITED" xml:space="preserve"><value>تم وضع علامة على الموقع كمزار من قبل.</value></data>
   <data name="TOURIST_SITE_ALREADY_FAVORITE" xml:space="preserve"><value>الموقع موجود بالفعل في المفضلة.</value></data>
   <data name="USER_ID_REQUIRED" xml:space="preserve"><value>معرف المستخدم مطلوب.</value></data>
   <data name="SITE_ALREADY_FAVORITE" xml:space="preserve"><value>الموقع موجود بالفعل في المفضلة.</value></data>
   <data name="FAVOURITE_NOT_FOUND" xml:space="preserve"><value>المفضلة ذات المعرف '{0}' غير موجودة.</value></data>
   <data name="FAVOURITE_SITE_ID_REQUIRED" xml:space="preserve"><value>معرف الموقع مطلوب.</value></data>
 
+  <!-- Trip -->
+  <data name="TRIP_TOURIST_ID_REQUIRED" xml:space="preserve"><value>معرف السائح مطلوب.</value></data>
+  <data name="TRIP_NOT_FOUND" xml:space="preserve"><value>الرحلة المطلوبة غير موجودة.</value></data>
+  <data name="TRIP_SITE_NOT_FOUND" xml:space="preserve"><value>الموقع المحدد غير موجود في الرحلة.</value></data>
+  <data name="TRIP_DAY_NOT_FOUND" xml:space="preserve"><value>يوم الرحلة المحدد غير موجود.</value></data>
+  <data name="TRIP_NOTE_NOT_FOUND" xml:space="preserve"><value>الملاحظة المحددة غير موجودة في الرحلة.</value></data>
+  <data name="TRIP_NAME_REQUIRED" xml:space="preserve"><value>عنوان الرحلة لا يمكن أن يكون فارغا.</value></data>
+  <data name="TRIP_SITE_NAME_REQUIRED" xml:space="preserve"><value>اسم الموقع لا يمكن أن يكون فارغا.</value></data>
+  <data name="TRIP_CANNOT_BE_COMPLETED" xml:space="preserve"><value>لا يمكن إكمال الرحلة في حالتها الحالية.</value></data>
+  <data name="TRIP_CANNOT_BE_STARTED" xml:space="preserve"><value>لا يمكن بدء الرحلة في حالتها الحالية أو تاريخ البدء في المستقبل.</value></data>
+  <data name="TRIP_CANNOT_BE_CANCELED" xml:space="preserve"><value>لا يمكن إلغاء الرحلات المكتملة.</value></data>
+  <data name="TRIP_CANNOT_BE_PUBLISHED" xml:space="preserve"><value>يمكن نشر الرحلات المسودة فقط.</value></data>
+  <data name="TRIP_SITE_ALREADY_MARKED_AS_VISITED" xml:space="preserve"><value>تم وضع علامة على هذا الموقع كمزار بالفعل.</value></data>
+  <data name="SITE_VISIT_DATE_OUT_OF_RANGE" xml:space="preserve"><value>تاريخ زيارة الموقع يجب أن يكون ضمن نطاق تاريخ الرحلة.</value></data>
+  <data name="INVALID_DURATION_DAYS" xml:space="preserve"><value>مدة الرحلة بالأيام يجب أن تكون أكبر من صفر وأقل من أو تساوي {0}.</value></data>
+  <data name="TRIP_DAY_DATE_OUT_OF_RANGE" xml:space="preserve"><value>تاريخ يوم الرحلة يجب أن يكون ضمن نطاق تاريخ الرحلة.</value></data>
+  <data name="TRIP_DAY_ALREADY_EXISTS" xml:space="preserve"><value>يوجد بالفعل يوم رحلة لهذا التاريخ.</value></data>
+  <data name="SITE_ALREADY_ADDED" xml:space="preserve"><value>تمت إضافة هذا الموقع إلى الرحلة بالفعل.</value></data>
+  <data name="ESTIMATED_DURATION_INVALID" xml:space="preserve"><value>المدة التقديرية يجب أن تكون أكبر من صفر.</value></data>
+  <data name="DISPLAY_ORDER_INVALID" xml:space="preserve"><value>ترتيب العرض يجب أن يكون صفرا أو رقما موجبا.</value></data>
+  <data name="DAY_NUMBER_INVALID" xml:space="preserve"><value>رقم اليوم يجب أن يكون أكبر من صفر.</value></data>
+  <data name="INVALID_BUDGET" xml:space="preserve"><value>قيمة الميزانية غير صالحة.</value></data>
+
   <!-- Identity -->
   <data name="FULL_NAME_REQUIRED" xml:space="preserve"><value>الاسم الكامل مطلوب.</value></data>
   <data name="USERNAME_REQUIRED" xml:space="preserve"><value>اسم المستخدم مطلوب.</value></data>
+  <data name="FIRST_NAME_REQUIRED" xml:space="preserve"><value>الاسم الأول مطلوب.</value></data>
+  <data name="LAST_NAME_REQUIRED" xml:space="preserve"><value>الاسم الأخير مطلوب.</value></data>
   <data name="REFRESH_TOKEN_REQUIRED" xml:space="preserve"><value>يلزم رمز تحديث صالح لتحديث رمز الوصول.</value></data>
   <data name="REFRESH_TOKEN_EXPIRATION_INVALID" xml:space="preserve"><value>رمز التحديث المقدم منتهي الصلاحية.</value></data>
   <data name="INVALID_CREDENTAILS" xml:space="preserve"><value>البريد الإلكتروني أو كلمة المرور غير صحيحة.</value></data>
+  <data name="INVALID_CREDENTIALS" xml:space="preserve"><value>البريد الإلكتروني أو كلمة المرور غير صحيحة.</value></data>
   <data name="EMAIL_ALREADY_IN_USE" xml:space="preserve"><value>يوجد مستخدم بهذا البريد الإلكتروني بالفعل.</value></data>
   <data name="USERNAME_ALREADY_IN_USE" xml:space="preserve"><value>يوجد مستخدم بهذا الاسم بالفعل.</value></data>
   <data name="IN_ACTIVE_USER" xml:space="preserve"><value>الحساب غير مفعل.</value></data>
   <data name="LOCKED_ACCOUNT" xml:space="preserve"><value>تم قفل الحساب.</value></data>
   <data name="INVALID_TOKEN" xml:space="preserve"><value>رمز الوصول غير صالح.</value></data>
+  <data name="TOKEN_REQUIRED" xml:space="preserve"><value>رمز الوصول مطلوب.</value></data>
   <data name="INVALID_REFRESH_TOKEN" xml:space="preserve"><value>رمز التحديث غير صالح أو منتهي الصلاحية.</value></data>
   <data name="INVALID_CLAIMS" xml:space="preserve"><value>مطالبات الرمز غير صالحة.</value></data>
   <data name="EMAIL_NOT_CONFIRMED" xml:space="preserve"><value>عنوان البريد الإلكتروني غير مؤكد.</value></data>
+  <data name="INVALID_INVITATION_STATUS" xml:space="preserve"><value>يمكن قبول الدعوات المعلقة فقط.</value></data>
+  <data name="INVITATION_EXPIRED" xml:space="preserve"><value>انتهت صلاحية هذه الدعوة.</value></data>
+  <data name="CSV_PARSING_FAILED" xml:space="preserve"><value>فشل تحليل ملف CSV: {0}</value></data>
+  <data name="USER_GOOGLE_ID_TOKEN_REQUIRED" xml:space="preserve"><value>رمز معرّف Google مطلوب.</value></data>
+  <data name="USER_INVALID_GOOGLE_ID_TOKEN" xml:space="preserve"><value>رمز معرّف Google المقدم غير صالح.</value></data>
   
 </root>

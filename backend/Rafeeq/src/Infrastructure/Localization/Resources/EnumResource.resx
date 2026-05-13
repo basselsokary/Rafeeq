@@ -3,6 +3,32 @@
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
 
+  <!-- ArtifactType -->
+  <data name="ArtifactType_Other" xml:space="preserve"><value>Other</value></data>
+  <data name="ArtifactType_Statue" xml:space="preserve"><value>Statue</value></data>
+  <data name="ArtifactType_Mask" xml:space="preserve"><value>Mask</value></data>
+  <data name="ArtifactType_Sphinx" xml:space="preserve"><value>Sphinx</value></data>
+  <data name="ArtifactType_Stele" xml:space="preserve"><value>Stele</value></data>
+  <data name="ArtifactType_Bust" xml:space="preserve"><value>Bust</value></data>
+  <data name="ArtifactType_Painting" xml:space="preserve"><value>Painting</value></data>
+  <data name="ArtifactType_Manuscript" xml:space="preserve"><value>Manuscript</value></data>
+  <data name="ArtifactType_Jewelry" xml:space="preserve"><value>Jewelry</value></data>
+  <data name="ArtifactType_Coin" xml:space="preserve"><value>Coin</value></data>
+  <data name="ArtifactType_Vessel" xml:space="preserve"><value>Vessel</value></data>
+  <data name="ArtifactType_Weapon" xml:space="preserve"><value>Weapon</value></data>
+  <data name="ArtifactType_Tool" xml:space="preserve"><value>Tool</value></data>
+  <data name="ArtifactType_Textile" xml:space="preserve"><value>Textile</value></data>
+  <data name="ArtifactType_Furniture" xml:space="preserve"><value>Furniture</value></data>
+  <data name="ArtifactType_MusicalInstrument" xml:space="preserve"><value>Musical Instrument</value></data>
+  <data name="ArtifactType_Ceramic" xml:space="preserve"><value>Ceramic</value></data>
+  <data name="ArtifactType_Pottery" xml:space="preserve"><value>Pottery</value></data>
+  <data name="ArtifactType_Glassware" xml:space="preserve"><value>Glassware</value></data>
+  <data name="ArtifactType_Bone" xml:space="preserve"><value>Bone</value></data>
+  <data name="ArtifactType_Ivory" xml:space="preserve"><value>Ivory</value></data>
+  <data name="ArtifactType_Shell" xml:space="preserve"><value>Shell</value></data>
+  <data name="ArtifactType_Metalwork" xml:space="preserve"><value>Metalwork</value></data>
+  <data name="ArtifactType_Shrine" xml:space="preserve"><value>Shrine</value></data>
+
   <!-- AttractionType -->
   <data name="AttractionType_Other" xml:space="preserve"><value>Other</value></data>
   <data name="AttractionType_Pyramid" xml:space="preserve"><value>Pyramid</value></data>
@@ -43,6 +69,23 @@
   <data name="HistoricalPeriod_ByzantinePeriod" xml:space="preserve"><value>Byzantine Period</value></data>
   <data name="HistoricalPeriod_IslamicPeriod" xml:space="preserve"><value>Islamic Period</value></data>
   <data name="HistoricalPeriod_ModernPeriod" xml:space="preserve"><value>Modern Period</value></data>
+  <data name="HistoricalPeriod_FirstIntermediatePeriod" xml:space="preserve"><value>First Intermediate Period</value></data>
+  <data name="HistoricalPeriod_SecondIntermediatePeriod" xml:space="preserve"><value>Second Intermediate Period</value></data>
+  <data name="HistoricalPeriod_ThirdIntermediatePeriod" xml:space="preserve"><value>Third Intermediate Period</value></data>
+  <data name="HistoricalPeriod_Ptolemaic" xml:space="preserve"><value>Ptolemaic</value></data>
+  <data name="HistoricalPeriod_Roman" xml:space="preserve"><value>Roman</value></data>
+  <data name="HistoricalPeriod_Byzantine" xml:space="preserve"><value>Byzantine</value></data>
+  <data name="HistoricalPeriod_Rashidun" xml:space="preserve"><value>Rashidun</value></data>
+  <data name="HistoricalPeriod_Umayyad" xml:space="preserve"><value>Umayyad</value></data>
+  <data name="HistoricalPeriod_Abbasid" xml:space="preserve"><value>Abbasid</value></data>
+  <data name="HistoricalPeriod_Tulunid" xml:space="preserve"><value>Tulunid</value></data>
+  <data name="HistoricalPeriod_Ikhshidid" xml:space="preserve"><value>Ikhshidid</value></data>
+  <data name="HistoricalPeriod_Fatimid" xml:space="preserve"><value>Fatimid</value></data>
+  <data name="HistoricalPeriod_Ayyubid" xml:space="preserve"><value>Ayyubid</value></data>
+  <data name="HistoricalPeriod_BahriMamluk" xml:space="preserve"><value>Bahri Mamluk</value></data>
+  <data name="HistoricalPeriod_BurjiMamluk" xml:space="preserve"><value>Burji Mamluk</value></data>
+  <data name="HistoricalPeriod_Ottoman" xml:space="preserve"><value>Ottoman</value></data>
+  <data name="HistoricalPeriod_MuhammadAliDynasty" xml:space="preserve"><value>Muhammad Ali Dynasty</value></data>
 
   <!-- LanguageCode -->
   <data name="LanguageCode_Arabic" xml:space="preserve"><value>Arabic</value></data>
@@ -94,6 +137,7 @@
   <data name="SiteStatus_UnderMaintenance" xml:space="preserve"><value>Under Maintenance</value></data>
   <data name="SiteStatus_TemporarilyClosed" xml:space="preserve"><value>Temporarily Closed</value></data>
   <data name="SiteStatus_PermanentlyClosed" xml:space="preserve"><value>Permanently Closed</value></data>
+  <data name="SiteStatus_Inactive" xml:space="preserve"><value>Inactive</value></data>
 
   <!-- SiteType -->
   <data name="SiteType_Other" xml:space="preserve"><value>Other</value></data>
@@ -126,12 +170,22 @@
   <data name="SiteType_Volcano" xml:space="preserve"><value>Volcano</value></data>
   <data name="SiteType_Waterfall" xml:space="preserve"><value>Waterfall</value></data>
   <data name="SiteType_Zoo" xml:space="preserve"><value>Zoo</value></data>
+  <data name="SiteType_Gate" xml:space="preserve"><value>Gate</value></data>
+  <data name="SiteType_Therapeutic" xml:space="preserve"><value>Therapeutic</value></data>
+  <data name="SiteType_DivingSite" xml:space="preserve"><value>Diving Site</value></data>
+  <data name="SiteType_Marina" xml:space="preserve"><value>Marina</value></data>
+  <data name="SiteType_Walkway" xml:space="preserve"><value>Walkway</value></data>
 
   <!-- SponsorTier -->
   <data name="SponsorTier_Bronze" xml:space="preserve"><value>Bronze</value></data>
   <data name="SponsorTier_Silver" xml:space="preserve"><value>Silver</value></data>
   <data name="SponsorTier_Gold" xml:space="preserve"><value>Gold</value></data>
   <data name="SponsorTier_Platinum" xml:space="preserve"><value>Platinum</value></data>
+
+  <!-- SponsorStatus -->
+  <data name="SponsorStatus_Active" xml:space="preserve"><value>Active</value></data>
+  <data name="SponsorStatus_Inactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="SponsorStatus_Expired" xml:space="preserve"><value>Expired</value></data>
 
   <!-- SponsorType -->
   <data name="SponsorType_Restaurant" xml:space="preserve"><value>Restaurant</value></data>
@@ -162,6 +216,7 @@
   <data name="UserRole_Tourist" xml:space="preserve"><value>Tourist</value></data>
   <data name="UserRole_Admin" xml:space="preserve"><value>Administrator</value></data>
   <data name="UserRole_Moderator" xml:space="preserve"><value>Moderator</value></data>
+  <data name="UserRole_SuperAdmin" xml:space="preserve"><value>Super Administrator</value></data>
 
   <!-- UserStatus -->
   <data name="UserStatus_Active" xml:space="preserve"><value>Active</value></data>
@@ -169,6 +224,11 @@
   <data name="UserStatus_Suspended" xml:space="preserve"><value>Suspended</value></data>
   <data name="UserStatus_Banned" xml:space="preserve"><value>Banned</value></data>
   <data name="UserStatus_Deleted" xml:space="preserve"><value>Deleted</value></data>
+
+  <!-- Tolerance -->
+  <data name="Tolerance_Low" xml:space="preserve"><value>Low</value></data>
+  <data name="Tolerance_Medium" xml:space="preserve"><value>Medium</value></data>
+  <data name="Tolerance_High" xml:space="preserve"><value>High</value></data>
 
   <!-- WeekDay -->
   <data name="WeekDay_Saturday" xml:space="preserve"><value>Saturday</value></data>
@@ -209,5 +269,16 @@
   <data name="FacilityType_StrollerAccess" xml:space="preserve"><value>Stroller Access</value></data>
   <data name="FacilityType_WheelchairAccess" xml:space="preserve"><value>Wheelchair Access</value></data>
   <data name="FacilityType_WiFi" xml:space="preserve"><value>Wi-Fi</value></data>
+  <data name="FacilityType_Restrooms" xml:space="preserve"><value>Restrooms</value></data>
+  <data name="FacilityType_Galleries" xml:space="preserve"><value>Galleries</value></data>
+  <data name="FacilityType_Exhibition" xml:space="preserve"><value>Exhibition</value></data>
+  <data name="FacilityType_Theaters" xml:space="preserve"><value>Theaters</value></data>
+  <data name="FacilityType_Gardens" xml:space="preserve"><value>Gardens</value></data>
+  <data name="FacilityType_Library" xml:space="preserve"><value>Library</value></data>
+  <data name="FacilityType_ReadingRooms" xml:space="preserve"><value>Reading Rooms</value></data>
+  <data name="FacilityType_BoardRides" xml:space="preserve"><value>Board Rides</value></data>
+  <data name="FacilityType_LocalMarkets" xml:space="preserve"><value>Local Markets</value></data>
+  <data name="FacilityType_NatureTrails" xml:space="preserve"><value>Nature Trails</value></data>
+  <data name="FacilityType_BoatRides" xml:space="preserve"><value>Boat Rides</value></data>
 
 </root>

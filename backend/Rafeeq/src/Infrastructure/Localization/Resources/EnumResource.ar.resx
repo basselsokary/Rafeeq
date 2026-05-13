@@ -3,6 +3,32 @@
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
 
+  <!-- ArtifactType -->
+  <data name="ArtifactType_Other" xml:space="preserve"><value>أخرى</value></data>
+  <data name="ArtifactType_Statue" xml:space="preserve"><value>تمثال</value></data>
+  <data name="ArtifactType_Mask" xml:space="preserve"><value>قناع</value></data>
+  <data name="ArtifactType_Sphinx" xml:space="preserve"><value>أبو الهول</value></data>
+  <data name="ArtifactType_Stele" xml:space="preserve"><value>لوح حجري</value></data>
+  <data name="ArtifactType_Bust" xml:space="preserve"><value>تمثال نصفي</value></data>
+  <data name="ArtifactType_Painting" xml:space="preserve"><value>لوحة</value></data>
+  <data name="ArtifactType_Manuscript" xml:space="preserve"><value>مخطوط</value></data>
+  <data name="ArtifactType_Jewelry" xml:space="preserve"><value>مجوهرات</value></data>
+  <data name="ArtifactType_Coin" xml:space="preserve"><value>عملة</value></data>
+  <data name="ArtifactType_Vessel" xml:space="preserve"><value>وعاء</value></data>
+  <data name="ArtifactType_Weapon" xml:space="preserve"><value>سلاح</value></data>
+  <data name="ArtifactType_Tool" xml:space="preserve"><value>أداة</value></data>
+  <data name="ArtifactType_Textile" xml:space="preserve"><value>منسوجات</value></data>
+  <data name="ArtifactType_Furniture" xml:space="preserve"><value>أثاث</value></data>
+  <data name="ArtifactType_MusicalInstrument" xml:space="preserve"><value>آلة موسيقية</value></data>
+  <data name="ArtifactType_Ceramic" xml:space="preserve"><value>سيراميك</value></data>
+  <data name="ArtifactType_Pottery" xml:space="preserve"><value>فخار</value></data>
+  <data name="ArtifactType_Glassware" xml:space="preserve"><value>زجاجيات</value></data>
+  <data name="ArtifactType_Bone" xml:space="preserve"><value>عظم</value></data>
+  <data name="ArtifactType_Ivory" xml:space="preserve"><value>عاج</value></data>
+  <data name="ArtifactType_Shell" xml:space="preserve"><value>صدف</value></data>
+  <data name="ArtifactType_Metalwork" xml:space="preserve"><value>مشغولات معدنية</value></data>
+  <data name="ArtifactType_Shrine" xml:space="preserve"><value>مزار</value></data>
+
   <!-- AttractionType -->
   <data name="AttractionType_Other" xml:space="preserve"><value>أخرى</value></data>
   <data name="AttractionType_Pyramid" xml:space="preserve"><value>هرم</value></data>
@@ -43,6 +69,23 @@
   <data name="HistoricalPeriod_ByzantinePeriod" xml:space="preserve"><value>العصر البيزنطي</value></data>
   <data name="HistoricalPeriod_IslamicPeriod" xml:space="preserve"><value>العصر الإسلامي</value></data>
   <data name="HistoricalPeriod_ModernPeriod" xml:space="preserve"><value>العصر الحديث</value></data>
+  <data name="HistoricalPeriod_FirstIntermediatePeriod" xml:space="preserve"><value>العصر الانتقالي الأول</value></data>
+  <data name="HistoricalPeriod_SecondIntermediatePeriod" xml:space="preserve"><value>العصر الانتقالي الثاني</value></data>
+  <data name="HistoricalPeriod_ThirdIntermediatePeriod" xml:space="preserve"><value>العصر الانتقالي الثالث</value></data>
+  <data name="HistoricalPeriod_Ptolemaic" xml:space="preserve"><value>العصر البطلمي</value></data>
+  <data name="HistoricalPeriod_Roman" xml:space="preserve"><value>العصر الروماني</value></data>
+  <data name="HistoricalPeriod_Byzantine" xml:space="preserve"><value>العصر البيزنطي</value></data>
+  <data name="HistoricalPeriod_Rashidun" xml:space="preserve"><value>العصر الراشدي</value></data>
+  <data name="HistoricalPeriod_Umayyad" xml:space="preserve"><value>العصر الأموي</value></data>
+  <data name="HistoricalPeriod_Abbasid" xml:space="preserve"><value>العصر العباسي</value></data>
+  <data name="HistoricalPeriod_Tulunid" xml:space="preserve"><value>الدولة الطولونية</value></data>
+  <data name="HistoricalPeriod_Ikhshidid" xml:space="preserve"><value>الدولة الإخشيدية</value></data>
+  <data name="HistoricalPeriod_Fatimid" xml:space="preserve"><value>الدولة الفاطمية</value></data>
+  <data name="HistoricalPeriod_Ayyubid" xml:space="preserve"><value>الدولة الأيوبية</value></data>
+  <data name="HistoricalPeriod_BahriMamluk" xml:space="preserve"><value>المماليك البحرية</value></data>
+  <data name="HistoricalPeriod_BurjiMamluk" xml:space="preserve"><value>المماليك البرجية</value></data>
+  <data name="HistoricalPeriod_Ottoman" xml:space="preserve"><value>العصر العثماني</value></data>
+  <data name="HistoricalPeriod_MuhammadAliDynasty" xml:space="preserve"><value>أسرة محمد علي</value></data>
 
   <!-- LanguageCode -->
   <data name="LanguageCode_Arabic" xml:space="preserve"><value>العربية</value></data>
@@ -94,6 +137,7 @@
   <data name="SiteStatus_UnderMaintenance" xml:space="preserve"><value>تحت الصيانة</value></data>
   <data name="SiteStatus_TemporarilyClosed" xml:space="preserve"><value>مغلق مؤقتا</value></data>
   <data name="SiteStatus_PermanentlyClosed" xml:space="preserve"><value>مغلق نهائيا</value></data>
+  <data name="SiteStatus_Inactive" xml:space="preserve"><value>غير نشط</value></data>
 
   <!-- SiteType -->
   <data name="SiteType_Other" xml:space="preserve"><value>أخرى</value></data>
@@ -126,12 +170,22 @@
   <data name="SiteType_Volcano" xml:space="preserve"><value>بركان</value></data>
   <data name="SiteType_Waterfall" xml:space="preserve"><value>شلال</value></data>
   <data name="SiteType_Zoo" xml:space="preserve"><value>حديقة حيوان</value></data>
+  <data name="SiteType_Gate" xml:space="preserve"><value>بوابة</value></data>
+  <data name="SiteType_Therapeutic" xml:space="preserve"><value>علاجي</value></data>
+  <data name="SiteType_DivingSite" xml:space="preserve"><value>موقع غوص</value></data>
+  <data name="SiteType_Marina" xml:space="preserve"><value>مرسى</value></data>
+  <data name="SiteType_Walkway" xml:space="preserve"><value>ممشى</value></data>
 
   <!-- SponsorTier -->
   <data name="SponsorTier_Bronze" xml:space="preserve"><value>برونزي</value></data>
   <data name="SponsorTier_Silver" xml:space="preserve"><value>فضي</value></data>
   <data name="SponsorTier_Gold" xml:space="preserve"><value>ذهبي</value></data>
   <data name="SponsorTier_Platinum" xml:space="preserve"><value>بلاتيني</value></data>
+
+  <!-- SponsorStatus -->
+  <data name="SponsorStatus_Active" xml:space="preserve"><value>نشط</value></data>
+  <data name="SponsorStatus_Inactive" xml:space="preserve"><value>غير نشط</value></data>
+  <data name="SponsorStatus_Expired" xml:space="preserve"><value>منتهي</value></data>
 
   <!-- SponsorType -->
   <data name="SponsorType_Restaurant" xml:space="preserve"><value>مطعم</value></data>
@@ -162,6 +216,7 @@
   <data name="UserRole_Tourist" xml:space="preserve"><value>سائح</value></data>
   <data name="UserRole_Admin" xml:space="preserve"><value>مدير النظام</value></data>
   <data name="UserRole_Moderator" xml:space="preserve"><value>مشرف</value></data>
+  <data name="UserRole_SuperAdmin" xml:space="preserve"><value>مدير نظام عام</value></data>
 
   <!-- UserStatus -->
   <data name="UserStatus_Active" xml:space="preserve"><value>نشط</value></data>
@@ -169,6 +224,11 @@
   <data name="UserStatus_Suspended" xml:space="preserve"><value>موقوف</value></data>
   <data name="UserStatus_Banned" xml:space="preserve"><value>محظور</value></data>
   <data name="UserStatus_Deleted" xml:space="preserve"><value>محذوف</value></data>
+
+  <!-- Tolerance -->
+  <data name="Tolerance_Low" xml:space="preserve"><value>منخفض</value></data>
+  <data name="Tolerance_Medium" xml:space="preserve"><value>متوسط</value></data>
+  <data name="Tolerance_High" xml:space="preserve"><value>مرتفع</value></data>
 
   <!-- WeekDay -->
   <data name="WeekDay_Saturday" xml:space="preserve"><value>السبت</value></data>
@@ -209,5 +269,16 @@
   <data name="FacilityType_StrollerAccess" xml:space="preserve"><value>مناسب لعربات الأطفال</value></data>
   <data name="FacilityType_WheelchairAccess" xml:space="preserve"><value>مناسب للكراسي المتحركة</value></data>
   <data name="FacilityType_WiFi" xml:space="preserve"><value>واي فاي</value></data>
+  <data name="FacilityType_Restrooms" xml:space="preserve"><value>دورات مياه</value></data>
+  <data name="FacilityType_Galleries" xml:space="preserve"><value>صالات عرض</value></data>
+  <data name="FacilityType_Exhibition" xml:space="preserve"><value>معرض</value></data>
+  <data name="FacilityType_Theaters" xml:space="preserve"><value>مسارح</value></data>
+  <data name="FacilityType_Gardens" xml:space="preserve"><value>حدائق</value></data>
+  <data name="FacilityType_Library" xml:space="preserve"><value>مكتبة</value></data>
+  <data name="FacilityType_ReadingRooms" xml:space="preserve"><value>غرف قراءة</value></data>
+  <data name="FacilityType_BoardRides" xml:space="preserve"><value>ألعاب ركوب</value></data>
+  <data name="FacilityType_LocalMarkets" xml:space="preserve"><value>أسواق محلية</value></data>
+  <data name="FacilityType_NatureTrails" xml:space="preserve"><value>مسارات طبيعية</value></data>
+  <data name="FacilityType_BoatRides" xml:space="preserve"><value>جولات بالقوارب</value></data>
 
 </root>
