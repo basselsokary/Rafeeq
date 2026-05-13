@@ -252,6 +252,7 @@ internal sealed class TouristQueryService(
                 x.favourite.Id,
                 x.site.Id,
                 x.site.LocalizedContents.Where(c => c.Language == language || c.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(c => c.Name)
                     .FirstOrDefault()!,
                 x.site.Type,
@@ -297,6 +298,7 @@ internal sealed class TouristQueryService(
                 x.visited.Id,
                 x.site.Id,
                 x.site.LocalizedContents.Where(c => c.Language == language || c.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(c => c.Name)
                     .FirstOrDefault()!,
                 x.site.Type,

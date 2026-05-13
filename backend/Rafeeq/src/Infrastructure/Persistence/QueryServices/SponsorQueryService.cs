@@ -94,10 +94,12 @@ internal sealed class SponsorQueryService(
                 Offer = o,
                 SponsorLocalized = o.Sponsor.LocalizedContents
                     .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(lc => new { lc.Title })
                     .FirstOrDefault()!,
                 OfferLocalized = o.LocalizedContents
                     .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(lc => new { lc.Title, lc.Description })
                     .FirstOrDefault()!
             })
@@ -141,6 +143,7 @@ internal sealed class SponsorQueryService(
                 Sponsor = s,
                 Localized = s.LocalizedContents
                     .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(lc => new { lc.Title, lc.Description })
                     .FirstOrDefault()!
             })
@@ -183,6 +186,7 @@ internal sealed class SponsorQueryService(
                 Sponsor = s,
                 Localized = s.LocalizedContents
                     .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(lc => new { lc.Title, lc.Description, Address = lc.Address })
                     .FirstOrDefault()!
             })
@@ -210,6 +214,7 @@ internal sealed class SponsorQueryService(
                         Offer = o,
                         OfferLocalized = o.LocalizedContents
                             .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                            .OrderBy(lc => lc.Language == language ? 0 : 1)
                             .Select(lc => new { lc.Title, lc.Description, lc.TermsAndConditions })
                             .FirstOrDefault()!
                     })
@@ -286,6 +291,7 @@ internal sealed class SponsorQueryService(
             .Select(x => new NearbySponsorDto(
                 x.Sponsor.Id,
                 x.Sponsor.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(lc => lc.Title)
                     .FirstOrDefault()!,
                 x.Sponsor.Type,
@@ -315,9 +321,11 @@ internal sealed class SponsorQueryService(
                 o.Id,
                 SponsorId = o.Sponsor.Id,
                 SponsorName = o.Sponsor.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(lc => lc.Title)
                     .FirstOrDefault(),
                 Localized = o.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(lc => new { lc.Title, lc.Description, lc.TermsAndConditions})
                     .FirstOrDefault(),
                 o.DiscountAmount,
@@ -416,10 +424,12 @@ internal sealed class SponsorQueryService(
                 Offer = o,
                 SponsorLocalized = o.Sponsor.LocalizedContents
                     .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(lc => new { lc.Title })
                     .FirstOrDefault()!,
                 OfferLocalized = o.LocalizedContents
                     .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(lc => new { lc.Title, lc.Description, lc.TermsAndConditions })
                     .FirstOrDefault()!
             })
@@ -495,10 +505,12 @@ internal sealed class SponsorQueryService(
                 Offer = o,
                 SponsorLocalized = o.Sponsor.LocalizedContents
                     .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(lc => new { lc.Title })
                     .FirstOrDefault()!,
                 OfferLocalized = o.LocalizedContents
                     .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(lc => new { lc.Title, lc.Description })
                     .FirstOrDefault()!
             })
@@ -531,6 +543,7 @@ internal sealed class SponsorQueryService(
                 Sponsor = s,
                 Localized = s.LocalizedContents
                     .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                    .OrderBy(lc => lc.Language == language ? 0 : 1)
                     .Select(lc => new { lc.Title, lc.Description })
                     .FirstOrDefault()!
             })

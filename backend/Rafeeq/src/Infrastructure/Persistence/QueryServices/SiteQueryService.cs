@@ -170,12 +170,7 @@ internal sealed class SiteQueryService(
                     .ToList(),
                 
                 OpeningHourDtos = s.OpeningHours
-                    .Select(oh => new OpeningHourDto(
-                        oh.Day,
-                        oh.OpeningTime.StartTime,
-                        oh.OpeningTime.EndTime,
-                        oh.IsClosed
-                    ))
+                    .Select(oh => oh.ToDto())
                     .ToList(),
                 
                 FacilityTypes = s.Facilities.ToList(),
@@ -1031,8 +1026,8 @@ internal sealed class SiteQueryService(
             .SelectMany(s => s.OpeningHours)
             .Select(oh => new AdminSiteOpeningHourDto(
                 oh.Day,
-                oh.OpeningTime.StartTime,
-                oh.OpeningTime.EndTime,
+                oh.OpeningTime == null? null : oh.OpeningTime.StartTime,
+                oh.OpeningTime == null? null : oh.OpeningTime.EndTime,
                 oh.IsClosed))
             .ToListAsync(cancellationToken);
     }
