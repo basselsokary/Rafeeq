@@ -21,9 +21,13 @@ public sealed class RefreshCommandHandler(
         return new RefreshResponse(
             authenticationResult.AccessToken,
             authenticationResult.RefreshToken,
-            authenticationResult.AccessTokenExpiresAtInHours,
-            authenticationResult.RefreshTokenExpiresAtInDays);
+            authenticationResult.AccessTokenExpirationInMinutes,
+            authenticationResult.RefreshTokenExpirationInHours);
     }
 }
 
-public sealed record RefreshResponse(string AccessToken, string RefreshToken, int AccessTokenExpiresAtInHours, int RefreshTokenExpiresAtInDays);
+public sealed record RefreshResponse(
+    string AccessToken,
+    string RefreshToken,
+    int AccessTokenExpirationInMinutes,
+    int RefreshTokenExpirationInHours);

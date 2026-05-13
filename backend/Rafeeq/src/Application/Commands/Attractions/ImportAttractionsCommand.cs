@@ -154,15 +154,13 @@ public sealed class ImportAttractionsHandler(
         var attraction = attractionResult.Value;
 
         // GeoLocation value object
-        bool latParsed = double.TryParse(row.Latitude, out var lat);
-        bool lonParsed = double.TryParse(row.Longitude, out var lon);
         GeoLocation? location = null;
-        if (latParsed && lonParsed)
+        if (row.Latitude.HasValue && row.Longitude.HasValue)
         {
-            var locationResult = GeoLocation.Create(lat, lon);
-            if (locationResult.Succeeded)
-                location = locationResult.Value;
-            
+            var locResult = GeoLocation.Create(row.Latitude.Value, row.Longitude.Value);
+            if (!locResult.Failed)
+                location = locResult.Value;
+
             attraction.SetLocation(location);
         }
 
@@ -202,8 +200,8 @@ public sealed record AttractionCsvRowDto
 
     public string Type { get; init; } = null!;      // AttractionType enum
 
-    public string? Latitude { get; init; }
-    public string? Longitude { get; init; }
+    public double? Latitude { get; init; }
+    public double? Longitude { get; init; }
 
     public bool IsFeatured { get; init; }
 

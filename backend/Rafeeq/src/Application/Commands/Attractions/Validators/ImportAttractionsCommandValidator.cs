@@ -49,15 +49,15 @@ public sealed class AttractionCsvRowValidator : AbstractValidator<AttractionCsvR
             .Must(t => Enum.TryParse<AttractionType>(t, ignoreCase: true, out _))
             .WithMessage(x => $"Unknown Type value: '{x.Type}'. Valid values: {string.Join(", ", Enum.GetNames<AttractionType>())}");
 
-        RuleFor(x => x)
-            .Must(x => 
-            {
-                bool latParsed = double.TryParse(x.Latitude, out var lat);
-                bool lonParsed = double.TryParse(x.Longitude, out var lon);
-                return latParsed && lonParsed && BeValidLocation(lat, lon); // Both present and valid
-            })
-            .When(x => double.TryParse(x.Latitude, out var lat) && double.TryParse(x.Longitude, out var lon))
-            .WithMessage(x => $"Invalid Latitude and/or Longitude values: ({x.Latitude}, {x.Longitude}). Latitude must be between -90 and 90. Longitude must be between -180 and 180.");
+        // RuleFor(x => x)
+        //     .Must(x => 
+        //     {
+        //         bool latParsed = double.TryParse(x.Latitude, out var lat);
+        //         bool lonParsed = double.TryParse(x.Longitude, out var lon);
+        //         return latParsed && lonParsed && BeValidLocation(lat, lon); // Both present and valid
+        //     })
+        //     .When(x => double.TryParse(x.Latitude, out var lat) && double.TryParse(x.Longitude, out var lon))
+        //     .WithMessage(x => $"Invalid Latitude and/or Longitude values: ({x.Latitude}, {x.Longitude}). Latitude must be between -90 and 90. Longitude must be between -180 and 180.");
         
         RuleFor(x => x.HistoricalPeriods)
             .Must(BeValidHistoricalPeriods)

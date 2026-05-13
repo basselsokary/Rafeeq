@@ -40,8 +40,8 @@ internal sealed class LoginWithGoogleCommandHandler(
             return new LoginWithGoogleResponse(
                 authenticationResult.AccessToken,
                 authenticationResult.RefreshToken,
-                authenticationResult.AccessTokenExpiresAtInHours,
-                authenticationResult.RefreshTokenExpiresAtInDays);
+                authenticationResult.AccessTokenExpirationInMinutes,
+                authenticationResult.RefreshTokenExpirationInHours);
         }
         catch
         {

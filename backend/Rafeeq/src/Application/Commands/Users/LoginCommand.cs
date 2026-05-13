@@ -21,9 +21,13 @@ public sealed class LoginCommandHandler(
         return new LoginResponse(
             authenticationResult.AccessToken,
             authenticationResult.RefreshToken,
-            authenticationResult.AccessTokenExpiresAtInHours,
-            authenticationResult.RefreshTokenExpiresAtInDays);
+            authenticationResult.AccessTokenExpirationInMinutes,
+            authenticationResult.RefreshTokenExpirationInHours);
     }
 }
 
-public sealed record LoginResponse(string AccessToken, string RefreshToken, int AccessTokenExpiresAtInHours, int RefreshTokenExpiresAtInDays);
+public sealed record LoginResponse(
+    string AccessToken,
+    string RefreshToken,
+    int AccessTokenExpirationInMinutes,
+    int RefreshTokenExpirationInHours);
