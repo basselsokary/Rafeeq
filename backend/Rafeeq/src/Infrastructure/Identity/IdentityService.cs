@@ -6,6 +6,7 @@ using Infrastructure.Identity.Entities;
 using Infrastructure.Persistence.ApplicationContext;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Shared;
 
 namespace Infrastructure.Identity;
@@ -14,8 +15,11 @@ internal class IdentityService(
     UserManager<ApplicationUser> userManager,
     SignInManager<ApplicationUser> signInManager,
     JwtTokenGenerator jwtTokenGenerator,
+    IOptions<JwtSettings> jwtSettings,
     ApplicationDbContext appContext) : IIdentityService
 {
+    private readonly JwtSettings _jwtSettings = jwtSettings.Value;
+
     public async Task<Result> RegisterAsync(
         Guid userId,
         string userName,
@@ -132,13 +136,18 @@ internal class IdentityService(
         var refreshToken = jwtTokenGenerator.GenerateRefreshToken();
 
         // Save refresh token
-        Result saveTokenResult = await SaveRefreshTokenAsync(user.Id, refreshToken, roles);
+        Result saveTokenResult = await SaveRefreshTokenAsync(user.Id, refreshToken, IsAdmin(roles));
         if (saveTokenResult.Failed)
         {
             return AuthenticationResult.Failure(saveTokenResult.Error);
         }
 
-        return AuthenticationResult.Success(accessToken, refreshToken, jwtTokenGenerator.GetAccessTokenExpiryInHours, jwtTokenGenerator.GetRefreshTokenExpiryInDays, user.Id);
+        return AuthenticationResult.Success(
+            accessToken,
+            refreshToken,
+            IsAdmin(roles) ? _jwtSettings.AccessTokenExpirationForAdminInMinutes : _jwtSettings.AccessTokenExpirationInMinutes,
+            IsAdmin(roles) ? _jwtSettings.RefreshTokenExpirationForAdminInHours : _jwtSettings.RefreshTokenExpirationInHours,
+            user.Id);
     }
 
     public async Task<AuthenticationResult> LoginAsync(string email)
@@ -163,13 +172,18 @@ internal class IdentityService(
         var refreshToken = jwtTokenGenerator.GenerateRefreshToken();
 
         // Save refresh token
-        Result saveTokenResult = await SaveRefreshTokenAsync(user.Id, refreshToken, roles);
+        Result saveTokenResult = await SaveRefreshTokenAsync(user.Id, refreshToken, IsAdmin(roles));
         if (saveTokenResult.Failed)
         {
             return AuthenticationResult.Failure(saveTokenResult.Error);
         }
 
-        return AuthenticationResult.Success(accessToken, refreshToken, jwtTokenGenerator.GetAccessTokenExpiryInHours, jwtTokenGenerator.GetRefreshTokenExpiryInDays, user.Id);
+        return AuthenticationResult.Success(
+            accessToken,
+            refreshToken,
+            IsAdmin(roles) ? _jwtSettings.AccessTokenExpirationForAdminInMinutes : _jwtSettings.AccessTokenExpirationInMinutes,
+            IsAdmin(roles) ? _jwtSettings.RefreshTokenExpirationForAdminInHours : _jwtSettings.RefreshTokenExpirationInHours,
+            user.Id);
     }
 
     public async Task<AuthenticationResult> RefreshTokenAsync(string accessToken, string refreshToken)
@@ -209,9 +223,14 @@ internal class IdentityService(
 
         await appContext.SaveChangesAsync();
 
-        await SaveRefreshTokenAsync(user.Id, newRefreshToken, roles);
+        await SaveRefreshTokenAsync(user.Id, newRefreshToken, IsAdmin(roles));
 
-        return AuthenticationResult.Success(newAccessToken, newRefreshToken, jwtTokenGenerator.GetAccessTokenExpiryInHours, jwtTokenGenerator.GetRefreshTokenExpiryInDays, user.Id);
+        return AuthenticationResult.Success(
+            accessToken,
+            refreshToken,
+            IsAdmin(roles) ? _jwtSettings.AccessTokenExpirationForAdminInMinutes : _jwtSettings.AccessTokenExpirationInMinutes,
+            IsAdmin(roles) ? _jwtSettings.RefreshTokenExpirationForAdminInHours : _jwtSettings.RefreshTokenExpirationInHours,
+            user.Id);
     }
 
     public async Task<Result> RevokeTokenAsync(string refreshToken)
@@ -312,14 +331,19 @@ internal class IdentityService(
         return existingUser;
     }
 
-    private async Task<Result> SaveRefreshTokenAsync(Guid userId, string token, IEnumerable<string> roles)
+    private static bool IsAdmin(IList<string> roles)
+    {
+        return roles.Any(r => r.Equals(UserRole.Admin.ToString(), StringComparison.OrdinalIgnoreCase));
+    }
+
+    private async Task<Result> SaveRefreshTokenAsync(Guid userId, string token, bool isAdmin = false)
     {
         var refreshTokenResult = RefreshToken.Create(
             token,
             userId,
-            roles.Any(r => r.Equals(UserRole.Tourist.ToString(), StringComparison.OrdinalIgnoreCase)) 
-                ? DateTime.UtcNow.AddDays(jwtTokenGenerator.GetRefreshTokenExpiryInDays)
-                : DateTime.UtcNow.AddHours(jwtTokenGenerator.GetRefreshTokenExpirationForAdminInHours)
+            isAdmin  
+                ? DateTime.UtcNow.AddHours(_jwtSettings.RefreshTokenExpirationForAdminInHours)
+                : DateTime.UtcNow.AddHours(_jwtSettings.RefreshTokenExpirationInHours)
         );
 
         if (refreshTokenResult.Failed)
