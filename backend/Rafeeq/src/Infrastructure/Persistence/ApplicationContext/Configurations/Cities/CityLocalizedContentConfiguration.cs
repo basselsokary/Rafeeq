@@ -18,6 +18,7 @@ internal sealed class CityLocalizedContentConfiguration : IEntityTypeConfigurati
             .IsRequired();
 
         builder.HasIndex(c => c.Name)
+            .IsUnique()
             .HasDatabaseName("IX_CityLocalizedContents_Name");
 
         builder.HasIndex("CityId", nameof(CityLocalizedContent.Language))

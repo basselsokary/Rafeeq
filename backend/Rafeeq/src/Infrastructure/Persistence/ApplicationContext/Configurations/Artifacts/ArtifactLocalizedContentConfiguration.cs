@@ -22,6 +22,7 @@ internal sealed class ArtifactLocalizedContentConfiguration : IEntityTypeConfigu
             .HasDatabaseName("IX_ArtifactLocalizedContents_ArtifactId_Language");
         
         builder.HasIndex(a => a.Name)
+            .IsUnique()
             .HasDatabaseName("IX_ArtifactLocalizedContents_Name");
     }
 }

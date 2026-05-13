@@ -15,29 +15,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 name: "rafeeq");
 
             migrationBuilder.CreateTable(
-                name: "Cities",
-                schema: "rafeeq",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Location_Latitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: false),
-                    Location_Longitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    TotalSites = table.Column<int>(type: "int", nullable: false),
-                    DisplayOrder = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cities", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ContentReports",
                 schema: "rafeeq",
                 columns: table => new
@@ -52,7 +29,7 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     ReportedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ContentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Reason = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     ReportedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ReviewedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -113,20 +90,38 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Tier = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     Location_Latitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: false),
                     Location_Longitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MainImageUrl = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    MainImageUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     WebsiteUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     ContactPhone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     ContactEmail = table.Column<string>(type: "nvarchar(254)", maxLength: 254, nullable: true),
-                    TotalRedemptions = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    TotalRedemptions = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sponsors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StoredFiles",
+                schema: "rafeeq",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Hash = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
+                    StorageKey = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Size = table.Column<long>(type: "bigint", nullable: false),
+                    ReferenceCount = table.Column<int>(type: "int", nullable: false),
+                    FirstUploadedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StoredFiles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -137,7 +132,7 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Nationality = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Nationality = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     TotalTrips = table.Column<int>(type: "int", nullable: false),
                     TotalReviews = table.Column<int>(type: "int", nullable: false),
@@ -147,6 +142,42 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tourists", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Trips",
+                schema: "rafeeq",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    TouristId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    EndDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    DailyStartTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    DailyEndTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    UserPosition_Latitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: false),
+                    UserPosition_Longitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: false),
+                    Tolerance = table.Column<int>(type: "int", nullable: true),
+                    EstimatedBudget_Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
+                    EstimatedBudget_Currency = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
+                    ActualCost_Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
+                    ActualCost_Currency = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
+                    EstimatedTotalDurationMinutes = table.Column<int>(type: "int", nullable: false),
+                    TotalSites = table.Column<int>(type: "int", nullable: false),
+                    PreferredSiteTypes = table.Column<string>(type: "nvarchar(1024)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Trips", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -182,77 +213,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CityLocalizedContents",
-                schema: "rafeeq",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Language = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false),
-                    CityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CityLocalizedContents", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CityLocalizedContents_Cities_CityId",
-                        column: x => x.CityId,
-                        principalSchema: "rafeeq",
-                        principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Sites",
-                schema: "rafeeq",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    CityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    Location_Latitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: false),
-                    Location_Longitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: false),
-                    EntryFee_Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
-                    EntryFee_Currency = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
-                    IsFree = table.Column<bool>(type: "bit", nullable: false),
-                    WebsiteUrl = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    MainImageUrl = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ContactPhone = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
-                    AverageRating = table.Column<double>(type: "float", nullable: false),
-                    TotalReviews = table.Column<int>(type: "int", nullable: false),
-                    IsFeatured = table.Column<bool>(type: "bit", nullable: false),
-                    IsHiddenGem = table.Column<bool>(type: "bit", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    Facilities = table.Column<string>(type: "nvarchar(1024)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sites", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Sites_Cities_CityId",
-                        column: x => x.CityId,
-                        principalSchema: "rafeeq",
-                        principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -299,43 +259,13 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     RedemptionCount = table.Column<int>(type: "int", nullable: false),
                     MaxRedemptions = table.Column<int>(type: "int", nullable: true),
-                    PromoCode = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true)
+                    PromoCode = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Offers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Offers_Sponsors_SponsorId",
-                        column: x => x.SponsorId,
-                        principalSchema: "rafeeq",
-                        principalTable: "Sponsors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SponsorImages",
-                schema: "rafeeq",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ImageUrl = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Caption = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    IsMain = table.Column<bool>(type: "bit", nullable: false),
-                    DisplayOrder = table.Column<int>(type: "int", nullable: false),
-                    SponsorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SponsorImages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SponsorImages_Sponsors_SponsorId",
                         column: x => x.SponsorId,
                         principalSchema: "rafeeq",
                         principalTable: "Sponsors",
@@ -357,11 +287,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Language = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false),
-                    Address_Street = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Address_City = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Address_Region = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
-                    Address_PostalCode = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     SponsorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -372,6 +299,110 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         column: x => x.SponsorId,
                         principalSchema: "rafeeq",
                         principalTable: "Sponsors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cities",
+                schema: "rafeeq",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Location_Latitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: false),
+                    Location_Longitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: false),
+                    StoredFileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    StorageKey = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
+                    TotalSites = table.Column<int>(type: "int", nullable: false),
+                    DisplayOrder = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cities_StoredFiles_StoredFileId",
+                        column: x => x.StoredFileId,
+                        principalSchema: "rafeeq",
+                        principalTable: "StoredFiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SponsorImages",
+                schema: "rafeeq",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    StoredFileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StorageKey = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
+                    Caption = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    IsMain = table.Column<bool>(type: "bit", nullable: false),
+                    DisplayOrder = table.Column<int>(type: "int", nullable: false),
+                    SponsorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SponsorImages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SponsorImages_Sponsors_SponsorId",
+                        column: x => x.SponsorId,
+                        principalSchema: "rafeeq",
+                        principalTable: "Sponsors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SponsorImages_StoredFiles_StoredFileId",
+                        column: x => x.StoredFileId,
+                        principalSchema: "rafeeq",
+                        principalTable: "StoredFiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TripDay",
+                schema: "rafeeq",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    DayNumber = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    Price_Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
+                    Price_Currency = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
+                    DayTotalDurationMinutes = table.Column<int>(type: "int", nullable: false),
+                    TotalSites = table.Column<int>(type: "int", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
+                    TripId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TripDay", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TripDay_Trips_TripId",
+                        column: x => x.TripId,
+                        principalSchema: "rafeeq",
+                        principalTable: "Trips",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -471,6 +502,141 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OfferLocalizedContents",
+                schema: "rafeeq",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Language = table.Column<int>(type: "int", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    TermsAndConditions = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
+                    OfferId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OfferLocalizedContents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OfferLocalizedContents_Offers_OfferId",
+                        column: x => x.OfferId,
+                        principalSchema: "rafeeq",
+                        principalTable: "Offers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CityLocalizedContents",
+                schema: "rafeeq",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Language = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    CityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CityLocalizedContents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CityLocalizedContents_Cities_CityId",
+                        column: x => x.CityId,
+                        principalSchema: "rafeeq",
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sites",
+                schema: "rafeeq",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    CityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Location_Latitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: false),
+                    Location_Longitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: false),
+                    EgyptianPrice_Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
+                    EgyptianPrice_Currency = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
+                    ForeignerPrice_Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
+                    ForeignerPrice_Currency = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
+                    TicketExists = table.Column<bool>(type: "bit", nullable: true),
+                    IsFree = table.Column<bool>(type: "bit", nullable: false),
+                    WebsiteUrl = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    MainImageUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
+                    ContactPhone = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
+                    EstimatedDurationMinutes = table.Column<int>(type: "int", nullable: false),
+                    TotalVisits = table.Column<int>(type: "int", nullable: false),
+                    TotalRating = table.Column<int>(type: "int", nullable: false),
+                    AverageRating = table.Column<double>(type: "float", nullable: false),
+                    IsFeatured = table.Column<bool>(type: "bit", nullable: false),
+                    IsHiddenGem = table.Column<bool>(type: "bit", nullable: false),
+                    IsPopular = table.Column<bool>(type: "bit", nullable: false),
+                    Facilities = table.Column<string>(type: "nvarchar(1024)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sites", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sites_Cities_CityId",
+                        column: x => x.CityId,
+                        principalSchema: "rafeeq",
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Artifacts",
+                schema: "rafeeq",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    MainImageUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
+                    DisplayOrder = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Artifacts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Artifacts_Sites_SiteId",
+                        column: x => x.SiteId,
+                        principalSchema: "rafeeq",
+                        principalTable: "Sites",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Attractions",
                 schema: "rafeeq",
                 columns: table => new
@@ -483,12 +649,12 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MainImageUrl = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    HistoricalPeriod = table.Column<int>(type: "int", nullable: false),
+                    IsFeatured = table.Column<bool>(type: "bit", nullable: false),
                     Location_Latitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: true),
                     Location_Longitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: true),
-                    IsFeatured = table.Column<bool>(type: "bit", nullable: false)
+                    MainImageUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
+                    HistoricalPeriods = table.Column<string>(type: "nvarchar(1024)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -515,7 +681,7 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: true),
+                    Notes = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
                     TouristId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -556,8 +722,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     DistanceKm = table.Column<double>(type: "float", nullable: false),
                     IsOperational = table.Column<bool>(type: "bit", nullable: false),
                     HasAccessibility = table.Column<bool>(type: "bit", nullable: false),
-                    StartTime = table.Column<TimeSpan>(type: "time", nullable: true),
-                    EndTime = table.Column<TimeSpan>(type: "time", nullable: true)
+                    StartTime = table.Column<TimeOnly>(type: "time", nullable: true),
+                    EndTime = table.Column<TimeOnly>(type: "time", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -587,7 +753,7 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     TouristId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Rating = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     HelpfulCount = table.Column<int>(type: "int", nullable: false),
                     NotHelpfulCount = table.Column<int>(type: "int", nullable: false),
@@ -620,8 +786,9 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Day = table.Column<int>(type: "int", nullable: false),
-                    StartTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    EndTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    StartTime = table.Column<TimeOnly>(type: "time", nullable: true),
+                    EndTime = table.Column<TimeOnly>(type: "time", nullable: true),
+                    IsClosed = table.Column<bool>(type: "bit", nullable: false),
                     SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -648,7 +815,9 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ImageUrl = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    StoredFileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StorageKey = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
                     Caption = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     IsMain = table.Column<bool>(type: "bit", nullable: false),
                     DisplayOrder = table.Column<int>(type: "int", nullable: false),
@@ -662,6 +831,13 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         column: x => x.SiteId,
                         principalSchema: "rafeeq",
                         principalTable: "Sites",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SiteImages_StoredFiles_StoredFileId",
+                        column: x => x.StoredFileId,
+                        principalSchema: "rafeeq",
+                        principalTable: "StoredFiles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -680,11 +856,9 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Language = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false),
-                    Address_Street = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Address_City = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Address_Region = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
-                    Address_PostalCode = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    EntryTicketNotes = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
                     SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -700,7 +874,123 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OfferLocalizedContents",
+                name: "TripSites",
+                schema: "rafeeq",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SiteName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    SiteImageUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    CityName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    SiteLocation_Latitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: false),
+                    SiteLocation_Longitude = table.Column<double>(type: "float(9)", precision: 9, scale: 6, nullable: false),
+                    Price_Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Price_Currency = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
+                    PlannedArrivalTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    EstimatedDurationMinutes = table.Column<int>(type: "int", nullable: false),
+                    VisitOrder = table.Column<int>(type: "int", nullable: false),
+                    IsVisited = table.Column<bool>(type: "bit", nullable: false),
+                    ActualVisitTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TripDayId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TripSites", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TripSites_Sites_SiteId",
+                        column: x => x.SiteId,
+                        principalSchema: "rafeeq",
+                        principalTable: "Sites",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TripSites_TripDay_TripDayId",
+                        column: x => x.TripDayId,
+                        principalSchema: "rafeeq",
+                        principalTable: "TripDay",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VisitedSites",
+                schema: "rafeeq",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TouristId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DurationMinutes = table.Column<int>(type: "int", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: true),
+                    Notes = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VisitedSites", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VisitedSites_Sites_SiteId",
+                        column: x => x.SiteId,
+                        principalSchema: "rafeeq",
+                        principalTable: "Sites",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_VisitedSites_Tourists_TouristId",
+                        column: x => x.TouristId,
+                        principalSchema: "rafeeq",
+                        principalTable: "Tourists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ArtifactImages",
+                schema: "rafeeq",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    StorageKey = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
+                    Caption = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    IsMain = table.Column<bool>(type: "bit", nullable: false),
+                    DisplayOrder = table.Column<int>(type: "int", nullable: false),
+                    ArtifactId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ArtifactImages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ArtifactImages_Artifacts_ArtifactId",
+                        column: x => x.ArtifactId,
+                        principalSchema: "rafeeq",
+                        principalTable: "Artifacts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ArtifactLocalizedContents",
                 schema: "rafeeq",
                 columns: table => new
                 {
@@ -712,19 +1002,18 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Language = table.Column<int>(type: "int", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false),
-                    TermsAndConditions = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
-                    OfferId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    ArtifactId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OfferLocalizedContents", x => x.Id);
+                    table.PrimaryKey("PK_ArtifactLocalizedContents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OfferLocalizedContents_Offers_OfferId",
-                        column: x => x.OfferId,
+                        name: "FK_ArtifactLocalizedContents_Artifacts_ArtifactId",
+                        column: x => x.ArtifactId,
                         principalSchema: "rafeeq",
-                        principalTable: "Offers",
+                        principalTable: "Artifacts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -741,7 +1030,9 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ImageUrl = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    StoredFileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StorageKey = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
                     Caption = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     IsMain = table.Column<bool>(type: "bit", nullable: false),
                     DisplayOrder = table.Column<int>(type: "int", nullable: false),
@@ -755,6 +1046,13 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         column: x => x.AttractionId,
                         principalSchema: "rafeeq",
                         principalTable: "Attractions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AttractionImages_StoredFiles_StoredFileId",
+                        column: x => x.StoredFileId,
+                        principalSchema: "rafeeq",
+                        principalTable: "StoredFiles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -773,8 +1071,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Language = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false),
-                    LocationDescription = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    LocationDescription = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: true),
                     AttractionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -803,11 +1101,8 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                     LastModifiedByName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Language = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
-                    Address_Street = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Address_City = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
-                    Address_Region = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
-                    Address_PostalCode = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     TransportationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -821,6 +1116,124 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArtifactImages_ArtifactId_DisplayOrder",
+                schema: "rafeeq",
+                table: "ArtifactImages",
+                columns: new[] { "ArtifactId", "DisplayOrder" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArtifactImages_ArtifactId_IsMain",
+                schema: "rafeeq",
+                table: "ArtifactImages",
+                columns: new[] { "ArtifactId", "IsMain" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArtifactImages_CreatedAt",
+                schema: "rafeeq",
+                table: "ArtifactImages",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArtifactImages_CreatedBy",
+                schema: "rafeeq",
+                table: "ArtifactImages",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArtifactImages_LastModifiedAt",
+                schema: "rafeeq",
+                table: "ArtifactImages",
+                column: "LastModifiedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArtifactImages_LastModifiedBy",
+                schema: "rafeeq",
+                table: "ArtifactImages",
+                column: "LastModifiedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArtifactLocalizedContents_ArtifactId_Language",
+                schema: "rafeeq",
+                table: "ArtifactLocalizedContents",
+                columns: new[] { "ArtifactId", "Language" },
+                unique: true,
+                filter: "[ArtifactId] IS NOT NULL AND [Language] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArtifactLocalizedContents_CreatedAt",
+                schema: "rafeeq",
+                table: "ArtifactLocalizedContents",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArtifactLocalizedContents_CreatedBy",
+                schema: "rafeeq",
+                table: "ArtifactLocalizedContents",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArtifactLocalizedContents_LastModifiedAt",
+                schema: "rafeeq",
+                table: "ArtifactLocalizedContents",
+                column: "LastModifiedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArtifactLocalizedContents_LastModifiedBy",
+                schema: "rafeeq",
+                table: "ArtifactLocalizedContents",
+                column: "LastModifiedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArtifactLocalizedContents_Name",
+                schema: "rafeeq",
+                table: "ArtifactLocalizedContents",
+                column: "Name",
+                unique: true,
+                filter: "[Name] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Artifacts_CreatedAt",
+                schema: "rafeeq",
+                table: "Artifacts",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Artifacts_CreatedBy",
+                schema: "rafeeq",
+                table: "Artifacts",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Artifacts_DisplayOrder",
+                schema: "rafeeq",
+                table: "Artifacts",
+                column: "DisplayOrder");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Artifacts_LastModifiedAt",
+                schema: "rafeeq",
+                table: "Artifacts",
+                column: "LastModifiedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Artifacts_LastModifiedBy",
+                schema: "rafeeq",
+                table: "Artifacts",
+                column: "LastModifiedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Artifacts_SiteId",
+                schema: "rafeeq",
+                table: "Artifacts",
+                column: "SiteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Artifacts_Type",
+                schema: "rafeeq",
+                table: "Artifacts",
+                column: "Type");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AttractionImages_AttractionId_DisplayOrder",
@@ -859,6 +1272,18 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 column: "LastModifiedBy");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AttractionImages_StoredFileId",
+                schema: "rafeeq",
+                table: "AttractionImages",
+                column: "StoredFileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AttractionLocalizedContents_AttractionId",
+                schema: "rafeeq",
+                table: "AttractionLocalizedContents",
+                column: "AttractionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AttractionLocalizedContents_AttractionId_Language",
                 schema: "rafeeq",
                 table: "AttractionLocalizedContents",
@@ -894,7 +1319,9 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 name: "IX_AttractionLocalizedContents_Name",
                 schema: "rafeeq",
                 table: "AttractionLocalizedContents",
-                column: "Name");
+                column: "Name",
+                unique: true,
+                filter: "[Name] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attractions_CreatedAt",
@@ -907,12 +1334,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 schema: "rafeeq",
                 table: "Attractions",
                 column: "CreatedBy");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Attractions_HistoricalPeriod",
-                schema: "rafeeq",
-                table: "Attractions",
-                column: "HistoricalPeriod");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attractions_IsFeatured",
@@ -975,6 +1396,18 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 column: "LastModifiedBy");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cities_StoredFileId",
+                schema: "rafeeq",
+                table: "Cities",
+                column: "StoredFileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CityLocalizedContents_CityId",
+                schema: "rafeeq",
+                table: "CityLocalizedContents",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CityLocalizedContents_CityId_Language",
                 schema: "rafeeq",
                 table: "CityLocalizedContents",
@@ -1010,7 +1443,9 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 name: "IX_CityLocalizedContents_Name",
                 schema: "rafeeq",
                 table: "CityLocalizedContents",
-                column: "Name");
+                column: "Name",
+                unique: true,
+                filter: "[Name] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContentReports_ContentId",
@@ -1135,6 +1570,12 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 column: "Name");
 
             migrationBuilder.CreateIndex(
+                name: "IX_NearestTransportationLocalizedContents_TransportationId",
+                schema: "rafeeq",
+                table: "NearestTransportationLocalizedContents",
+                column: "TransportationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_NearestTransportationLocalizedContents_TransportationId_Language",
                 schema: "rafeeq",
                 table: "NearestTransportationLocalizedContents",
@@ -1195,6 +1636,12 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 schema: "rafeeq",
                 table: "OfferLocalizedContents",
                 column: "LastModifiedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OfferLocalizedContents_OfferId",
+                schema: "rafeeq",
+                table: "OfferLocalizedContents",
+                column: "OfferId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OfferLocalizedContents_OfferId_Language",
@@ -1340,6 +1787,12 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Sites_OpeningHours_SiteId",
+                schema: "rafeeq",
+                table: "Site_OpeningHours",
+                column: "SiteId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Sites_OpeningHours_SiteId_DayOfWeek",
                 schema: "rafeeq",
                 table: "Site_OpeningHours",
@@ -1383,6 +1836,12 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 columns: new[] { "SiteId", "IsMain" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_SiteImages_StoredFileId",
+                schema: "rafeeq",
+                table: "SiteImages",
+                column: "StoredFileId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SiteLocalizedContents_CreatedAt",
                 schema: "rafeeq",
                 table: "SiteLocalizedContents",
@@ -1416,7 +1875,15 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 name: "IX_SiteLocalizedContents_Name",
                 schema: "rafeeq",
                 table: "SiteLocalizedContents",
-                column: "Name");
+                column: "Name",
+                unique: true,
+                filter: "[Name] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SiteLocalizedContents_SiteId",
+                schema: "rafeeq",
+                table: "SiteLocalizedContents",
+                column: "SiteId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SiteLocalizedContents_SiteId_Language",
@@ -1455,6 +1922,18 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 schema: "rafeeq",
                 table: "Sites",
                 column: "IsFeatured");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sites_IsHiddenGem",
+                schema: "rafeeq",
+                table: "Sites",
+                column: "IsHiddenGem");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sites_IsPopular",
+                schema: "rafeeq",
+                table: "Sites",
+                column: "IsPopular");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sites_LastModifiedAt",
@@ -1523,6 +2002,12 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 columns: new[] { "SponsorId", "IsMain" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_SponsorImages_StoredFileId",
+                schema: "rafeeq",
+                table: "SponsorImages",
+                column: "StoredFileId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SponsorLocalizedContents_CreatedAt",
                 schema: "rafeeq",
                 table: "SponsorLocalizedContents",
@@ -1553,6 +2038,12 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 column: "LastModifiedBy");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SponsorLocalizedContents_SponsorId",
+                schema: "rafeeq",
+                table: "SponsorLocalizedContents",
+                column: "SponsorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SponsorLocalizedContents_SponsorId_Language",
                 schema: "rafeeq",
                 table: "SponsorLocalizedContents",
@@ -1564,7 +2055,9 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 name: "IX_SponsorLocalizedContents_Title",
                 schema: "rafeeq",
                 table: "SponsorLocalizedContents",
-                column: "Title");
+                column: "Title",
+                unique: true,
+                filter: "[Title] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sponsors_ContactEmail",
@@ -1591,12 +2084,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 column: "CreatedBy");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sponsors_IsActive",
-                schema: "rafeeq",
-                table: "Sponsors",
-                column: "IsActive");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Sponsors_LastModifiedAt",
                 schema: "rafeeq",
                 table: "Sponsors",
@@ -1615,6 +2102,12 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 columns: new[] { "Location_Latitude", "Location_Longitude" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Sponsors_Status",
+                schema: "rafeeq",
+                table: "Sponsors",
+                column: "Status");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Sponsors_Tier",
                 schema: "rafeeq",
                 table: "Sponsors",
@@ -1627,6 +2120,12 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 column: "Type");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StoredFiles_Hash",
+                schema: "rafeeq",
+                table: "StoredFiles",
+                column: "Hash");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tourists_CreatedAt",
                 schema: "rafeeq",
                 table: "Tourists",
@@ -1637,6 +2136,146 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 schema: "rafeeq",
                 table: "Tourists",
                 column: "Status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripDay_CreatedAt",
+                schema: "rafeeq",
+                table: "TripDay",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripDay_CreatedBy",
+                schema: "rafeeq",
+                table: "TripDay",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripDay_LastModifiedAt",
+                schema: "rafeeq",
+                table: "TripDay",
+                column: "LastModifiedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripDay_LastModifiedBy",
+                schema: "rafeeq",
+                table: "TripDay",
+                column: "LastModifiedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripDays_Date",
+                schema: "rafeeq",
+                table: "TripDay",
+                column: "Date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripDays_TripId_Date",
+                schema: "rafeeq",
+                table: "TripDay",
+                columns: new[] { "TripId", "Date" },
+                unique: true,
+                filter: "[TripId] IS NOT NULL AND [Date] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trips_CreatedAt",
+                schema: "rafeeq",
+                table: "Trips",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trips_CreatedBy",
+                schema: "rafeeq",
+                table: "Trips",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trips_LastModifiedAt",
+                schema: "rafeeq",
+                table: "Trips",
+                column: "LastModifiedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trips_LastModifiedBy",
+                schema: "rafeeq",
+                table: "Trips",
+                column: "LastModifiedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trips_Name",
+                schema: "rafeeq",
+                table: "Trips",
+                column: "Title");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trips_StartDate",
+                schema: "rafeeq",
+                table: "Trips",
+                column: "StartDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trips_Status",
+                schema: "rafeeq",
+                table: "Trips",
+                column: "Status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trips_TouristId",
+                schema: "rafeeq",
+                table: "Trips",
+                column: "TouristId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trips_UserPosition_LatLng",
+                schema: "rafeeq",
+                table: "Trips",
+                columns: new[] { "UserPosition_Latitude", "UserPosition_Longitude" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripSites_CreatedAt",
+                schema: "rafeeq",
+                table: "TripSites",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripSites_CreatedBy",
+                schema: "rafeeq",
+                table: "TripSites",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripSites_LastModifiedAt",
+                schema: "rafeeq",
+                table: "TripSites",
+                column: "LastModifiedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripSites_LastModifiedBy",
+                schema: "rafeeq",
+                table: "TripSites",
+                column: "LastModifiedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripSites_SiteId",
+                schema: "rafeeq",
+                table: "TripSites",
+                column: "SiteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripSites_SiteLocation_LatLng",
+                schema: "rafeeq",
+                table: "TripSites",
+                columns: new[] { "SiteLocation_Latitude", "SiteLocation_Longitude" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripSites_TripId_DisplayOrder",
+                schema: "rafeeq",
+                table: "TripSites",
+                columns: new[] { "TripDayId", "VisitOrder" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripSites_TripId_PlannedArrivalTime",
+                schema: "rafeeq",
+                table: "TripSites",
+                columns: new[] { "TripDayId", "PlannedArrivalTime" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserClaims_UserId",
@@ -1669,11 +2308,57 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VisitedSites_CreatedAt",
+                schema: "rafeeq",
+                table: "VisitedSites",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VisitedSites_CreatedBy",
+                schema: "rafeeq",
+                table: "VisitedSites",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VisitedSites_LastModifiedAt",
+                schema: "rafeeq",
+                table: "VisitedSites",
+                column: "LastModifiedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VisitedSites_LastModifiedBy",
+                schema: "rafeeq",
+                table: "VisitedSites",
+                column: "LastModifiedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VisitedSites_SiteId",
+                schema: "rafeeq",
+                table: "VisitedSites",
+                column: "SiteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VisitedSites_TouristId_SiteId",
+                schema: "rafeeq",
+                table: "VisitedSites",
+                columns: new[] { "TouristId", "SiteId" },
+                unique: true,
+                filter: "[TouristId] IS NOT NULL AND [SiteId] IS NOT NULL");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ArtifactImages",
+                schema: "rafeeq");
+
+            migrationBuilder.DropTable(
+                name: "ArtifactLocalizedContents",
+                schema: "rafeeq");
+
             migrationBuilder.DropTable(
                 name: "AttractionImages",
                 schema: "rafeeq");
@@ -1735,6 +2420,10 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 schema: "rafeeq");
 
             migrationBuilder.DropTable(
+                name: "TripSites",
+                schema: "rafeeq");
+
+            migrationBuilder.DropTable(
                 name: "UserClaims",
                 schema: "rafeeq");
 
@@ -1751,6 +2440,14 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 schema: "rafeeq");
 
             migrationBuilder.DropTable(
+                name: "VisitedSites",
+                schema: "rafeeq");
+
+            migrationBuilder.DropTable(
+                name: "Artifacts",
+                schema: "rafeeq");
+
+            migrationBuilder.DropTable(
                 name: "Attractions",
                 schema: "rafeeq");
 
@@ -1763,7 +2460,7 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 schema: "rafeeq");
 
             migrationBuilder.DropTable(
-                name: "Tourists",
+                name: "TripDay",
                 schema: "rafeeq");
 
             migrationBuilder.DropTable(
@@ -1775,6 +2472,10 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 schema: "rafeeq");
 
             migrationBuilder.DropTable(
+                name: "Tourists",
+                schema: "rafeeq");
+
+            migrationBuilder.DropTable(
                 name: "Sites",
                 schema: "rafeeq");
 
@@ -1783,7 +2484,15 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                 schema: "rafeeq");
 
             migrationBuilder.DropTable(
+                name: "Trips",
+                schema: "rafeeq");
+
+            migrationBuilder.DropTable(
                 name: "Cities",
+                schema: "rafeeq");
+
+            migrationBuilder.DropTable(
+                name: "StoredFiles",
                 schema: "rafeeq");
         }
     }

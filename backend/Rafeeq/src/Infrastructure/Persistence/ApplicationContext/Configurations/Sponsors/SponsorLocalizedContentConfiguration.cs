@@ -34,6 +34,7 @@ internal sealed class SponsorLocalizedContentConfiguration : IEntityTypeConfigur
             .HasDatabaseName("IX_SponsorLocalizedContents_Language_Title");
 
         builder.HasIndex(s => s.Title)
+            .IsUnique()
             .HasDatabaseName("IX_SponsorLocalizedContents_Title");
     }
 }

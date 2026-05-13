@@ -39,6 +39,7 @@ internal sealed class SiteLocalizedContentConfiguration : IEntityTypeConfigurati
             .HasDatabaseName("IX_SiteLocalizedContents_Language_Name");
 
         builder.HasIndex(s => s.Name)
+            .IsUnique()
             .HasDatabaseName("IX_SiteLocalizedContents_Name");
     }
 }

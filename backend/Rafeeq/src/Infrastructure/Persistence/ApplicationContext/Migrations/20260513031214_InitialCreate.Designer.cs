@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.ApplicationContext.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260510225007_FixingMaxLengths")]
-    partial class FixingMaxLengths
+    [Migration("20260513031214_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -503,7 +503,9 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .HasColumnType("nvarchar(128)");
 
                     b.HasIndex("Name")
-                        .HasDatabaseName("IX_ArtifactLocalizedContents_Name");
+                        .IsUnique()
+                        .HasDatabaseName("IX_ArtifactLocalizedContents_Name")
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.HasIndex("ArtifactId", "Language")
                         .IsUnique()
@@ -611,7 +613,9 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .HasDatabaseName("IX_AttractionLocalizedContents_AttractionId");
 
                     b.HasIndex("Name")
-                        .HasDatabaseName("IX_AttractionLocalizedContents_Name");
+                        .IsUnique()
+                        .HasDatabaseName("IX_AttractionLocalizedContents_Name")
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.HasIndex("AttractionId", "Language")
                         .IsUnique()
@@ -670,7 +674,9 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .HasDatabaseName("IX_CityLocalizedContents_CityId");
 
                     b.HasIndex("Name")
-                        .HasDatabaseName("IX_CityLocalizedContents_Name");
+                        .IsUnique()
+                        .HasDatabaseName("IX_CityLocalizedContents_Name")
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.HasIndex("CityId", "Language")
                         .IsUnique()
@@ -983,7 +989,9 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasIndex("Name")
-                        .HasDatabaseName("IX_SiteLocalizedContents_Name");
+                        .IsUnique()
+                        .HasDatabaseName("IX_SiteLocalizedContents_Name")
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.HasIndex("SiteId")
                         .HasDatabaseName("IX_SiteLocalizedContents_SiteId");
@@ -1165,7 +1173,9 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .HasDatabaseName("IX_SponsorLocalizedContents_SponsorId");
 
                     b.HasIndex("Title")
-                        .HasDatabaseName("IX_SponsorLocalizedContents_Title");
+                        .IsUnique()
+                        .HasDatabaseName("IX_SponsorLocalizedContents_Title")
+                        .HasFilter("[Title] IS NOT NULL");
 
                     b.HasIndex("Language", "Title")
                         .HasDatabaseName("IX_SponsorLocalizedContents_Language_Title");
@@ -1933,8 +1943,7 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                                         .HasForeignKey("OpeningHourId");
                                 });
 
-                            b1.Navigation("OpeningTime")
-                                .IsRequired();
+                            b1.Navigation("OpeningTime");
                         });
 
                     b.OwnsOne("Domain.ValueObjects.Ticket", "EntryTicket", b1 =>
