@@ -55,8 +55,8 @@ public record AdminSiteNearestTransportationLocalizedContentDto(
 
 public sealed record AdminSiteOpeningHourDto(
     WeekDay Day,
-    TimeOnly OpenTime,
-    TimeOnly CloseTime,
+    TimeOnly? OpenTime,
+    TimeOnly? CloseTime,
     bool IsClosed);
 
 public sealed record AdminSiteDashboardDto(

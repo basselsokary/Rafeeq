@@ -3,27 +3,13 @@ namespace Application.DTOs.Trips;
 public record TripPlanRequest(
     double StartLat,
     double StartLon,
-    // string City = default!,
-    int AvailableHours = default,
+    int Days,
+    decimal TotalBudget = default,
+    int AvailableHoursPerDay = default,
     string StartTime = default!,
     List<string> PreferredCategories = default!,
-    List<string> VisitedSites = default!,
     string WalkingTolerance = default!,
-    decimal BudgetAmount = default!,
     string Currency = default!);
-
-// public class TripPlanApiResponse
-// {
-//     public string Status { get; set; } = default!;
-//     public string System { get; set; } = default!;
-//     public TripPlanData Data { get; set; } = default!;
-// }
-
-// public class TripPlanData
-// {
-//     public List<TripStopDto> Stops { get; set; } = [];
-//     public TripSummaryDto Summary { get; set; } = default!;
-// }
 
 public class TripStopDto
 {
@@ -34,25 +20,29 @@ public class TripStopDto
     public decimal TicketPriceEgp { get; set; }
     public string Category { get; set; } = default!;
     public string Zone { get; set; } = default!;
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
 }
 
-// public class TripSummaryDto
-// {
-//     public int TotalStops { get; set; }
-//     public int TotalTimeMinutes { get; set; }
-//     public decimal TotalTicketCost { get; set; }
-//     public string Currency { get; set; } = default!;
-//     public decimal BudgetLimit { get; set; }
-//     public double BudgetUsedPercentage { get; set; }
-//     public string BudgetStatus { get; set; } = default!;
-//     public string StartTime { get; set; } = default!;
-//     public string EndTime { get; set; } = default!;
-// }
-
-public record TripPlanResponse(
-    List<TripStopDto> Itinerary,
-    string City,
-    double TotalTimeMinutes,
+public sealed record TripPlanSummaryDto(
+    int TotalDays,
+    int TotalSitesVisited,
     decimal TotalTicketCostEgp,
-    decimal BudgetLimitEgp,
+    decimal TotalBudgetEgp,
+    decimal DailyBudgetEgp,
     string Currency);
+
+public sealed record TripPlanDayDto(
+    int Day,
+    string City,
+    List<double> StartLocation,
+    List<TripStopDto> Itinerary,
+    decimal DayTicketCostEgp,
+    decimal DayBudgetEgp,
+    double TotalTimeMinutes,
+    bool FallbackUsed,
+    int FallbackLevel);
+
+public sealed record TripPlanResponse(
+    TripPlanSummaryDto TripSummary,
+    List<TripPlanDayDto> Days);

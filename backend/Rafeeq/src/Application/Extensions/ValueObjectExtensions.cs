@@ -39,8 +39,8 @@ public static class ValueObjectExtensions
 
         return new OpeningHourDto(
             openingHour.Day,
-            openingHour.OpeningTime.StartTime,
-            openingHour.OpeningTime.EndTime,
+            openingHour.OpeningTime?.StartTime,
+            openingHour.OpeningTime?.EndTime,
             openingHour.IsClosed);
     }
 
