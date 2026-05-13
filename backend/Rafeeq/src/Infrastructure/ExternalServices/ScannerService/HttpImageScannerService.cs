@@ -76,7 +76,7 @@ internal sealed class HttpImageScannerService(
         }
     }
 
-    public async Task<Result<ScanImageResponseV2>> ScanV2Async(
+    public async Task<Result<ScanImageResponseV2>> ScanAsyncV2(
         Stream imageStream,
         string contentType,
         CancellationToken ct = default)
