@@ -4,8 +4,8 @@ public sealed class AuthenticationResult : Result
 {
     public string AccessToken { get; } = null!;
     public string RefreshToken { get; } = null!;
-    public int AccessTokenExpiresAtInHours { get; }
-    public int RefreshTokenExpiresAtInDays { get; }
+    public int AccessTokenExpirationInMinutes { get; }
+    public int RefreshTokenExpirationInHours { get; }
     public Guid UserId { get; }
 
     private AuthenticationResult(bool succeeded, Error error) : base(succeeded, error) { }
@@ -14,15 +14,15 @@ public sealed class AuthenticationResult : Result
         Error error,
         string accessToken,
         string refreshToken,
-        int accessTokenExpiresAt,
-        int refreshTokenExpiresAt,
+        int accessTokenExpirationInMinutes,
+        int refreshTokenExpirationInHours,
         Guid userId) : base(succeeded, error)
     {
         AccessToken = accessToken;
         RefreshToken = refreshToken;
 
-        AccessTokenExpiresAtInHours = accessTokenExpiresAt;
-        RefreshTokenExpiresAtInDays = refreshTokenExpiresAt;
+        AccessTokenExpirationInMinutes = accessTokenExpirationInMinutes;
+        RefreshTokenExpirationInHours = refreshTokenExpirationInHours;
 
         UserId = userId;
     }
@@ -30,10 +30,10 @@ public sealed class AuthenticationResult : Result
     public static AuthenticationResult Success(
         string accessToken,
         string refreshToken,
-        int accessTokenExpiresAtInHours,
-        int refreshTokenExpiresAtInDays,
+        int accessTokenExpirationInMinutes,
+        int refreshTokenExpirationInHours,
         Guid userId)
-            => new(true, Error.None, accessToken, refreshToken, accessTokenExpiresAtInHours, refreshTokenExpiresAtInDays, userId);
+            => new(true, Error.None, accessToken, refreshToken, accessTokenExpirationInMinutes, refreshTokenExpirationInHours, userId);
 
     public static new AuthenticationResult Failure(Error error)
         => new(false, error);
