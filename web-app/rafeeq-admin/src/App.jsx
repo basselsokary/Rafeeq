@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastProvider } from './components/common/Toast';
+import DashboardPage from './pages/dashboard/DashboardPage';
 import SitesPage from './pages/sites/SitesPage';
 import SiteDetailPage from './pages/sites/SiteDetailPage';
 import AttractionsPage from './pages/attractions/AttractionsPage';
@@ -9,12 +10,17 @@ import CitiesPage from './pages/cities/CitiesPage';
 import CityDetailPage from './pages/cities/CityDetailPage';
 import SponsorsPage from './pages/sponsors/SponsorsPage';
 import SponsorDetailPage from './pages/sponsors/SponsorDetailPage';
-import DashboardPage from './pages/dashboard/DashboardPage';
+import UsersPage from './pages/users/UsersPage';
+import UserDetailPage from './pages/users/UserDetailPage';
 import './styles/global.css';
 import 'leaflet/dist/leaflet.css';
 import './styles/map.css';
 import LoginPage from './pages/auth/LoginPage';
 import RequireAuth from './components/auth/RequireAuth';
+import Layout from './components/layout/Layout';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import UnauthorizedPage from './pages/auth/UnauthorizedPage';
+import { ROLES } from './utils/constants';
 
 export default function App() {
   return (
@@ -22,17 +28,75 @@ export default function App() {
       <ToastProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/unauthorized" element={<UnauthorizedPage />} />
           <Route element={<RequireAuth />}>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/sites" element={<SitesPage />} />
-            <Route path="/sites/:id" element={<SiteDetailPage />} />
-            <Route path="/attractions" element={<AttractionsPage />} />
-            <Route path="/attractions/:id" element={<AttractionDetailPage />} />
-            <Route path="/cities" element={<CitiesPage />} />
-            <Route path="/cities/:id" element={<CityDetailPage />} />
-            <Route path="/sponsors"     element={<SponsorsPage />} />
-            <Route path="/sponsors/:id" element={<SponsorDetailPage />} />
+
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Layout><DashboardPage /></Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/sites" element={
+              <ProtectedRoute>
+                <Layout><SitesPage /></Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/sites/:id" element={
+              <ProtectedRoute>
+                <Layout><SiteDetailPage /></Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/attractions" element={
+              <ProtectedRoute>
+                <Layout><AttractionsPage /></Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/attractions/:id" element={
+              <ProtectedRoute>
+                <Layout><AttractionDetailPage /></Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/cities" element={
+              <ProtectedRoute>
+                <Layout><CitiesPage /></Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/cities/:id" element={
+              <ProtectedRoute>
+                <Layout><CityDetailPage /></Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/sponsors" element={
+              <ProtectedRoute roles={[ROLES.superAdmin, ROLES.admin]}>
+                <Layout><SponsorsPage /></Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/sponsors/:id" element={
+              <ProtectedRoute roles={[ROLES.superAdmin, ROLES.admin]}>
+                <Layout><SponsorDetailPage /></Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/users" element={
+              <ProtectedRoute roles={[ROLES.superAdmin, ROLES.admin]}>
+                <Layout><UsersPage /></Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/users/:id" element={
+              <ProtectedRoute roles={[ROLES.superAdmin, ROLES.admin]}>
+                <Layout><UserDetailPage /></Layout>
+              </ProtectedRoute>
+            } />
           </Route>
         </Routes>
       </ToastProvider>
