@@ -5,9 +5,9 @@ using Domain.Common;
 
 namespace Application.Queries.Users.Validators;
 
-internal sealed class GetAllUsersQueryValidator : AbstractValidator<GetAllUsersQuery>
+internal sealed class GetUsersQueryValidator : AbstractValidator<GetUsersQuery>
 {
-    public GetAllUsersQueryValidator(IErrorLocalizer errors)
+    public GetUsersQueryValidator(IErrorLocalizer errors)
     {
         RuleFor(x => x.Status)
             .IsInEnum()

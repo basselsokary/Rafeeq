@@ -13,7 +13,7 @@ internal sealed class GetProfileQueryHandler(
 {
     public async Task<Result<TouristProfileDto>> HandleAsync(GetProfileQuery query, CancellationToken cancellationToken)
     {
-        var userProfileDto = await queryService.GetByIdAsync(userContext.Id, cancellationToken);
+        var userProfileDto = await queryService.GetProfileByIdAsync(userContext.Id, cancellationToken);
         if (userProfileDto == null)
             return TouristErrors.NotFound(userContext.Id);
 
