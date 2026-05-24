@@ -9,6 +9,6 @@ public interface IArtifactQueryService
         Guid id, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default);
     Task<ArtifactDetailsDto?> GetByNameAsync(
         string name, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default);
-    Task<List<ArtifactListDto>?> GetByNamesAsync(
+    Task<List<ArtifactListDto>> GetByNamesAsync(
         List<string> names, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default);
 }
