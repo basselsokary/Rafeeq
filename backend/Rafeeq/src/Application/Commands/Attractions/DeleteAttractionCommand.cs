@@ -16,6 +16,8 @@ internal sealed class DeleteAttractionCommandHandler(
         if (attraction == null)
             return AttractionErrors.NotFound(command.Id);
         
+        attraction.Delete();
+
         await _unitOfWork.Attractions.DeleteAsync(attraction, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

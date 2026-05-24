@@ -17,6 +17,8 @@ internal sealed class DeleteSiteCommandHandler(
         var city = await unitOfWork.Cities.GetByIdAsync(site.CityId, cancellationToken);
         city?.DecrementSiteCount();
 
+        site.Delete();
+
         await unitOfWork.Sites.DeleteAsync(site, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

@@ -11,7 +11,7 @@ namespace Application.Commands.Attractions.Images.Validators;
 
 internal sealed class AddAttractionImagesCommandValidator : AbstractValidator<AddAttractionImagesCommand>
 {
-    public AddAttractionImagesCommandValidator(IErrorLocalizer errors, IOptions<FileUploadSettings> options)
+    public AddAttractionImagesCommandValidator(IErrorLocalizer errors, IOptions<FileUploadOptions> options)
     {
         RuleFor(x => x.Id)
             .NotEmpty()
@@ -29,7 +29,7 @@ internal sealed class AddAttractionImagesCommandValidator : AbstractValidator<Ad
 
 internal sealed class AddAttractionImageDtoValidator : AbstractValidator<AddAttractionImageDto>
 {
-    public AddAttractionImageDtoValidator(IErrorLocalizer errors, IOptions<FileUploadSettings> options)
+    public AddAttractionImageDtoValidator(IErrorLocalizer errors, IOptions<FileUploadOptions> options)
     {
         var opts = options.Value;
 

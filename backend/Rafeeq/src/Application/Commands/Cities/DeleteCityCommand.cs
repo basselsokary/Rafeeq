@@ -14,6 +14,8 @@ internal sealed class DeleteCityCommandHandler(IUnitOfWork unitOfWork) : IComman
         var city = await _unitOfWork.Cities.GetByIdAsync(command.Id, cancellationToken);
         if (city == null)
             return CityErrors.NotFound(command.Id);
+        
+        city.Delete();
 
         await _unitOfWork.Cities.DeleteAsync(city, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

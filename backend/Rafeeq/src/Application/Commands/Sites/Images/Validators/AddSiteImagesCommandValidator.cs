@@ -11,7 +11,7 @@ namespace Application.Commands.Sites.Images.Validators;
 
 internal sealed class AddSiteImagesCommandValidator : AbstractValidator<AddSiteImagesCommand>
 {
-    public AddSiteImagesCommandValidator(IErrorLocalizer errors, IOptions<FileUploadSettings> options)
+    public AddSiteImagesCommandValidator(IErrorLocalizer errors, IOptions<FileUploadOptions> options)
     {
         RuleFor(x => x.Id)
             .NotEmpty()
@@ -29,7 +29,7 @@ internal sealed class AddSiteImagesCommandValidator : AbstractValidator<AddSiteI
 
 internal sealed class AddSiteImageDtoValidator : AbstractValidator<AddSiteImageDto>
 {
-    public AddSiteImageDtoValidator(IErrorLocalizer errors, IOptions<FileUploadSettings> options)
+    public AddSiteImageDtoValidator(IErrorLocalizer errors, IOptions<FileUploadOptions> options)
     {
         var opts = options.Value;
 

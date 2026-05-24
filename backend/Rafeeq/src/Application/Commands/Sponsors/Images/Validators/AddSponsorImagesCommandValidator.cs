@@ -11,7 +11,7 @@ namespace Application.Commands.Sponsors.Images.Validators;
 
 internal sealed class AddSponsorImagesCommandValidator : AbstractValidator<AddSponsorImagesCommand>
 {
-    public AddSponsorImagesCommandValidator(IErrorLocalizer errors, IOptions<FileUploadSettings> options)
+    public AddSponsorImagesCommandValidator(IErrorLocalizer errors, IOptions<FileUploadOptions> options)
     {
         RuleFor(x => x.Id)
             .NotEmpty()
@@ -29,7 +29,7 @@ internal sealed class AddSponsorImagesCommandValidator : AbstractValidator<AddSp
 
 internal sealed class AddSponsorImageDtoValidator : AbstractValidator<AddSponsorImageDto>
 {
-    public AddSponsorImageDtoValidator(IErrorLocalizer errors, IOptions<FileUploadSettings> options)
+    public AddSponsorImageDtoValidator(IErrorLocalizer errors, IOptions<FileUploadOptions> options)
     {
         var opts = options.Value;
 

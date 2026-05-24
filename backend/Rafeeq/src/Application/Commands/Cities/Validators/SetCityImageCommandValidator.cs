@@ -10,7 +10,7 @@ namespace Application.Commands.Cities.Validators;
 
 internal sealed class SetCityImageCommandValidator : AbstractValidator<SetCityImageCommand>
 {
-    public SetCityImageCommandValidator(IErrorLocalizer errors, IOptions<FileUploadSettings> options)
+    public SetCityImageCommandValidator(IErrorLocalizer errors, IOptions<FileUploadOptions> options)
     {
         var opts = options.Value;
 

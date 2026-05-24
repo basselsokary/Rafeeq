@@ -1,7 +1,7 @@
 using Application.Common.Interfaces.Authentication;
+using Domain.Common.Constants;
 using Domain.Common.Interfaces;
 using Domain.Entities.ReviewAggregate;
-using Domain.Enums;
 
 namespace Application.Commands.Reviews;
 
@@ -17,7 +17,7 @@ internal sealed class DeleteReviewCommandHandler(
         if (review == null)
             return ReviewErrors.NotFound(command.Id);
 
-        if (!userContext.IsInAnyRole(UserRole.Admin, UserRole.Moderator) && review.TouristId != userContext.Id)
+        if (!userContext.IsInAnyRole(UserRoles.Admin, UserRoles.Moderator) && review.TouristId != userContext.Id)
             return ReviewErrors.Unauthorized;
 
         review.Delete();

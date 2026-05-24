@@ -14,6 +14,8 @@ internal sealed class DeleteSponsorCommandHandler(
         if (sponsor == null)
             return SponsorErrors.NotFound(command.Id);
         
+        sponsor.Delete();
+        
         await unitOfWork.Sponsors.DeleteAsync(sponsor, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

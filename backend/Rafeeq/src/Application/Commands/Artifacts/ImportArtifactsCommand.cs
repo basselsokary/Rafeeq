@@ -47,7 +47,7 @@ public sealed class ImportArtifactsHandler(
         // Load all sites into a name→Guid dictionary (one DB round-trip)
         var sites = await siteQueryService.GetAsync(
             filters: new SiteFilters(null, null, null, null, null),
-            paging: new PagingParameters(PageNumber: 1, PageSize: int.MaxValue),
+            paging: new PagingParameters(Page: 1, PageSize: int.MaxValue),
             cancellationToken: ct);
 
         var siteMap = sites.Data.ToDictionary(

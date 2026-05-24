@@ -50,7 +50,7 @@ public sealed class ImportNearestTransportationsHandler(
         // ── 2. Load all sites (one DB round-trip) ─────────────────────────────
         var sites = await siteQueryService.GetAsync(
             filters: new DTOs.Sites.SiteFilters(null, null, null, null, null),
-            paging: new DTOs.Common.PagingParameters(PageNumber: 1, PageSize: int.MaxValue),
+            paging: new DTOs.Common.PagingParameters(Page: 1, PageSize: int.MaxValue),
             cancellationToken: ct);
 
         var siteMap = sites.Data.ToDictionary(

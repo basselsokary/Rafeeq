@@ -12,7 +12,7 @@ namespace Application.Commands.Cities.Validators;
 
 internal sealed class CreateCityCommandValidator : AbstractValidator<CreateCityCommand>
 {
-    public CreateCityCommandValidator(IErrorLocalizer errors, IOptions<FileUploadSettings> options)
+    public CreateCityCommandValidator(IErrorLocalizer errors, IOptions<FileUploadOptions> options)
     {
         var opts = options.Value;
 
