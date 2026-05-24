@@ -1,30 +1,30 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { logout } from '../../api/authApi';
+import { useAuth } from '../../context/AuthContext.jsx';
+import { useSidebar } from '../../context/SidebarContext';
+import { ROLES } from '../../utils/constants';
 
 const NAV = [
-  { label: 'Dashboard',           to: '/dashboard',     icon: 'M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 7v-2h2v-2h-2v-2h2v2h2v-2h2v2h-2v2h2v2h-4v-2h-2z' },
-  { label: 'Cities Management',   to: '/cities',        icon: 'M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9h1M9 13h1M9 17h1' },
-  { label: 'Sites Management',    to: '/sites',         icon: 'M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z M9 22V12h6v10' },
-  { label: 'Attractions Management',         to: '/attractions',   icon: 'M12 22s8-4.5 8-11.8A8 8 0 0012 2a8 8 0 00-8 8.2C4 17.5 12 22 12 22z M12 13a3 3 0 100-6 3 3 0 000 6z' },
-  { label: 'Sponsors & Offers',   to: '/sponsors',      icon: 'M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z' },
-  { label: 'Users & Tourists',    to: '/users',         icon: 'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2 M9 7a4 4 0 100 8 4 4 0 000-8z M23 21v-2a4 4 0 00-3-3.87 M16 3.13a4 4 0 010 7.75' },
+  { label: 'Dashboard',           to: '/dashboard',      roles: [], icon: 'M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 7v-2h2v-2h-2v-2h2v2h2v-2h2v2h-2v2h2v2h-4v-2h-2z' },
+  { label: 'Cities Management',   to: '/cities',         roles: [], icon: 'M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9h1M9 13h1M9 17h1' },
+  { label: 'Sites Management',    to: '/sites',          roles: [], icon: 'M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z M9 22V12h6v10' },
+  { label: 'Attractions Management',to: '/attractions',  roles: [],   icon: 'M12 22s8-4.5 8-11.8A8 8 0 0012 2a8 8 0 00-8 8.2C4 17.5 12 22 12 22z M12 13a3 3 0 100-6 3 3 0 000 6z' },
+  { label: 'Sponsors & Offers',   to: '/sponsors',       roles: [ROLES.superAdmin, ROLES.admin], icon: 'M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z' },
+  { label: 'Users & Tourists',    to: '/users',          roles: [ROLES.superAdmin, ROLES.admin], icon: 'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2 M9 7a4 4 0 100 8 4 4 0 000-8z M23 21v-2a4 4 0 00-3-3.87 M16 3.13a4 4 0 010 7.75' },
   // { label: 'Reviews & Moderation',to: '/reviews',    icon: 'M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z' },
   // { label: 'Trips & Itineraries', to: '/trips',      icon: 'M12 22s8-4.5 8-11.8A8 8 0 0012 2a8 8 0 00-8 8.2C4 17.5 12 22 12 22z M12 13a3 3 0 100-6 3 3 0 000 6z' },
 ];
 
-function NavIcon({ d }) {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentCo r" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-      {d.split(' M').map((segment, i) => (
-        <path key={i} d={i === 0 ? segment : 'M' + segment} />
-      ))}
-    </svg>
-  );
-}
-
 export default function Sidebar() {
+  const { collapsed, toggle } = useSidebar();
+  const { user, hasAnyRole } = useAuth();
+  const initial  = user?.fullName?.[0]?.toUpperCase() ?? 'R';
   const navigate = useNavigate();
+
+  const visibleNav = NAV.filter(item =>
+    item.roles.length === 0 || hasAnyRole(item.roles)
+  );
 
   const handleSignOut = async () => {
     try {
@@ -34,9 +34,21 @@ export default function Sidebar() {
     }
   };
 
+  function NavIcon({ d }) {
+    return (
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+        {d.split(' M').map((segment, i) => (
+          <path key={i} d={i === 0 ? segment : 'M' + segment} />
+        ))}
+      </svg>
+    );
+  }
+
   return (
     <aside style={{
-      width: 'var(--sidebar-width)',
+      width: collapsed ? 'var(--sidebar-width-collapsed)' : 'var(--sidebar-width)',
+      transition: 'width 0.2s ease',
+      overflow: 'hidden',
       background: 'var(--surface-container-lowest)',
       borderRight: '1px solid rgba(212,196,183,.25)',
       height: '100vh', position: 'fixed', left: 0, top: 0,
@@ -54,6 +66,7 @@ export default function Sidebar() {
               <polygon points="12 2 2 22 22 22"/>
             </svg>
           </div>
+          {!collapsed &&
           <div>
             <div style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: 'var(--text)', lineHeight: 1.1 }}>
               Rafeeq
@@ -61,13 +74,30 @@ export default function Sidebar() {
             <div style={{ fontSize: 9, color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700 }}>
               Egypt's Premier Platform
             </div>
-          </div>
+          </div>}
         </div>
+
+        <button onClick={toggle} style={{
+          marginLeft: 'auto', background: 'none', border: 'none',
+          cursor: 'pointer', color: 'var(--text-muted)', padding: 4,
+          borderRadius: 6, display: 'flex', flexShrink: 0,
+          transition: 'color .15s',
+        }}
+          onMouseOver={e => e.currentTarget.style.color = 'var(--primary)'}
+          onMouseOut={e => e.currentTarget.style.color = 'var(--text-muted)'}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            {collapsed
+              ? <path d="M13 5l7 7-7 7M5 5l7 7-7 7"/>   /* chevrons right = expand */
+              : <path d="M11 5l-7 7 7 7M19 5l-7 7 7 7"/> /* chevrons left  = collapse */
+            }
+          </svg>
+        </button>
       </div>
 
       {/* Nav */}
       <nav style={{ padding: '12px 12px', flex: 1, overflowY: 'auto' }}>
-        {NAV.map((item) => (
+        {visibleNav.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
@@ -89,7 +119,7 @@ export default function Sidebar() {
                 <span style={{ color: isActive ? 'var(--primary)' : 'var(--outline)', display: 'flex' }}>
                   <NavIcon d={item.icon} />
                 </span>
-                {item.label}
+                {!collapsed && item.label}
               </>
             )}
           </NavLink>
@@ -97,7 +127,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div style={{ padding: '12px 16px 20px', borderTop: '1px solid rgba(212,196,183,.2)' }}>
+      {!collapsed && (<div style={{ padding: '12px 16px 20px', borderTop: '1px solid rgba(212,196,183,.2)' }}>
         <div style={{ display: 'flex', gap: 2, marginBottom: 14 }}>
           {[['Help Center', 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 16v-4 M12 8h.01'],
             ['Sign Out', 'M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4 M16 17l5-5-5-5 M21 12H9']
@@ -119,21 +149,20 @@ export default function Sidebar() {
             </button>
           ))}
         </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        
+        {/* User Info */}
+        {/* <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
             width: 34, height: 34, borderRadius: '50%', flexShrink: 0,
             background: 'rgba(124,87,45,0.12)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 13, fontWeight: 700, color: 'var(--primary)',
             border: '2px solid rgba(124,87,45,0.2)',
-          }}>R</div>
-          <div>
-            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text)' }}>Rafeeq Admin</div>
-            <div style={{ fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Administrator</div>
-          </div>
-        </div>
-      </div>
+          }}>{initial}</div>
+            <div style={{ fontSize: 12, fontWeight: 700 }}>{user?.fullName  ?? 'Loading…'}</div>
+            <div style={{ fontSize: 10 }}>{user?.role ?? 'Administrator'}</div>
+        </div> */}
+      </div>)}
     </aside>
   );
 }
