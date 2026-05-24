@@ -5,12 +5,12 @@ using Domain.Entities.SponsorAggregate;
 using Domain.Entities.CityAggregate;
 using Domain.Entities.ContentReportAggregate;
 using Domain.Entities.AttractionAggregate;
-using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Domain.Entities.TouristAggregate;
 using Infrastructure.Identity.Entities;
 using Domain.Entities.ArtifactAggregate;
+using Infrastructure.Authentication;
 
 namespace Infrastructure.Persistence.ApplicationContext;
 

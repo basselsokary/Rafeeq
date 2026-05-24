@@ -1,5 +1,5 @@
 using Domain.Common.Constants;
-using Infrastructure.Identity;
+using Infrastructure.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

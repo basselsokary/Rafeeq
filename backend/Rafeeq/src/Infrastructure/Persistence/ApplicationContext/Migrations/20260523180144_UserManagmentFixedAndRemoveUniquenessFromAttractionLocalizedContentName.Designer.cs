@@ -4,6 +4,7 @@ using Infrastructure.Persistence.ApplicationContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.ApplicationContext.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260523180144_UserManagmentFixedAndRemoveUniquenessFromAttractionLocalizedContentName")]
+    partial class UserManagmentFixedAndRemoveUniquenessFromAttractionLocalizedContentName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1463,16 +1466,16 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
             modelBuilder.Entity("Domain.Entities.StoredFile", b =>
                 {
-                    b.OwnsOne("Domain.ValueObjects.ImageContentType", "ContentType", b1 =>
+                    b.OwnsOne("Domain.ValueObjects.StorageKey", "StorageKey", b1 =>
                         {
                             b1.Property<Guid>("StoredFileId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasMaxLength(128)
-                                .HasColumnType("nvarchar(128)")
-                                .HasColumnName("ContentType");
+                                .HasMaxLength(256)
+                                .HasColumnType("nvarchar(256)")
+                                .HasColumnName("StorageKey");
 
                             b1.HasKey("StoredFileId");
 
@@ -1504,16 +1507,16 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                                 .HasForeignKey("StoredFileId");
                         });
 
-                    b.OwnsOne("Domain.ValueObjects.StorageKey", "StorageKey", b1 =>
+                    b.OwnsOne("Domain.ValueObjects.ImageContentType", "ContentType", b1 =>
                         {
                             b1.Property<Guid>("StoredFileId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)")
-                                .HasColumnName("StorageKey");
+                                .HasMaxLength(128)
+                                .HasColumnType("nvarchar(128)")
+                                .HasColumnName("ContentType");
 
                             b1.HasKey("StoredFileId");
 
@@ -1865,76 +1868,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Domain.ValueObjects.Ticket", "EntryTicket", b1 =>
-                        {
-                            b1.Property<Guid>("SiteId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<bool>("_exists")
-                                .HasColumnType("bit")
-                                .HasColumnName("TicketExists");
-
-                            b1.HasKey("SiteId");
-
-                            b1.ToTable("Sites", "rafeeq");
-
-                            b1.WithOwner()
-                                .HasForeignKey("SiteId");
-
-                            b1.OwnsOne("Domain.ValueObjects.Money", "EgyptianPrice", b2 =>
-                                {
-                                    b2.Property<Guid>("TicketSiteId")
-                                        .HasColumnType("uniqueidentifier");
-
-                                    b2.Property<decimal>("Amount")
-                                        .HasPrecision(18, 2)
-                                        .HasColumnType("decimal(18,2)")
-                                        .HasColumnName("EgyptianPrice_Amount");
-
-                                    b2.Property<string>("Currency")
-                                        .IsRequired()
-                                        .HasMaxLength(3)
-                                        .HasColumnType("nvarchar(3)")
-                                        .HasColumnName("EgyptianPrice_Currency");
-
-                                    b2.HasKey("TicketSiteId");
-
-                                    b2.ToTable("Sites", "rafeeq");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("TicketSiteId");
-                                });
-
-                            b1.OwnsOne("Domain.ValueObjects.Money", "ForeignerPrice", b2 =>
-                                {
-                                    b2.Property<Guid>("TicketSiteId")
-                                        .HasColumnType("uniqueidentifier");
-
-                                    b2.Property<decimal>("Amount")
-                                        .HasPrecision(18, 2)
-                                        .HasColumnType("decimal(18,2)")
-                                        .HasColumnName("ForeignerPrice_Amount");
-
-                                    b2.Property<string>("Currency")
-                                        .IsRequired()
-                                        .HasMaxLength(3)
-                                        .HasColumnType("nvarchar(3)")
-                                        .HasColumnName("ForeignerPrice_Currency");
-
-                                    b2.HasKey("TicketSiteId");
-
-                                    b2.ToTable("Sites", "rafeeq");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("TicketSiteId");
-                                });
-
-                            b1.Navigation("EgyptianPrice")
-                                .IsRequired();
-
-                            b1.Navigation("ForeignerPrice");
-                        });
-
                     b.OwnsOne("Domain.ValueObjects.GeoLocation", "Location", b1 =>
                         {
                             b1.Property<Guid>("SiteId")
@@ -2015,6 +1948,76 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
                                 });
 
                             b1.Navigation("OpeningTime");
+                        });
+
+                    b.OwnsOne("Domain.ValueObjects.Ticket", "EntryTicket", b1 =>
+                        {
+                            b1.Property<Guid>("SiteId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<bool>("_exists")
+                                .HasColumnType("bit")
+                                .HasColumnName("TicketExists");
+
+                            b1.HasKey("SiteId");
+
+                            b1.ToTable("Sites", "rafeeq");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SiteId");
+
+                            b1.OwnsOne("Domain.ValueObjects.Money", "EgyptianPrice", b2 =>
+                                {
+                                    b2.Property<Guid>("TicketSiteId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<decimal>("Amount")
+                                        .HasPrecision(18, 2)
+                                        .HasColumnType("decimal(18,2)")
+                                        .HasColumnName("EgyptianPrice_Amount");
+
+                                    b2.Property<string>("Currency")
+                                        .IsRequired()
+                                        .HasMaxLength(3)
+                                        .HasColumnType("nvarchar(3)")
+                                        .HasColumnName("EgyptianPrice_Currency");
+
+                                    b2.HasKey("TicketSiteId");
+
+                                    b2.ToTable("Sites", "rafeeq");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("TicketSiteId");
+                                });
+
+                            b1.OwnsOne("Domain.ValueObjects.Money", "ForeignerPrice", b2 =>
+                                {
+                                    b2.Property<Guid>("TicketSiteId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<decimal>("Amount")
+                                        .HasPrecision(18, 2)
+                                        .HasColumnType("decimal(18,2)")
+                                        .HasColumnName("ForeignerPrice_Amount");
+
+                                    b2.Property<string>("Currency")
+                                        .IsRequired()
+                                        .HasMaxLength(3)
+                                        .HasColumnType("nvarchar(3)")
+                                        .HasColumnName("ForeignerPrice_Currency");
+
+                                    b2.HasKey("TicketSiteId");
+
+                                    b2.ToTable("Sites", "rafeeq");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("TicketSiteId");
+                                });
+
+                            b1.Navigation("EgyptianPrice")
+                                .IsRequired();
+
+                            b1.Navigation("ForeignerPrice");
                         });
 
                     b.Navigation("City");
@@ -2170,47 +2173,6 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
             modelBuilder.Entity("Domain.Entities.SponsorAggregate.Sponsor", b =>
                 {
-                    b.OwnsOne("Domain.ValueObjects.Email", "ContactEmail", b1 =>
-                        {
-                            b1.Property<Guid>("SponsorId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(254)
-                                .HasColumnType("nvarchar(254)")
-                                .HasColumnName("ContactEmail");
-
-                            b1.HasKey("SponsorId");
-
-                            b1.HasIndex("Value")
-                                .HasDatabaseName("IX_Sponsors_ContactEmail");
-
-                            b1.ToTable("Sponsors", "rafeeq");
-
-                            b1.WithOwner()
-                                .HasForeignKey("SponsorId");
-                        });
-
-                    b.OwnsOne("Domain.ValueObjects.PhoneNumber", "ContactPhone", b1 =>
-                        {
-                            b1.Property<Guid>("SponsorId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("nvarchar(20)")
-                                .HasColumnName("ContactPhone");
-
-                            b1.HasKey("SponsorId");
-
-                            b1.ToTable("Sponsors", "rafeeq");
-
-                            b1.WithOwner()
-                                .HasForeignKey("SponsorId");
-                        });
-
                     b.OwnsOne("Domain.ValueObjects.DateRange", "ContractDate", b1 =>
                         {
                             b1.Property<Guid>("SponsorId")
@@ -2254,6 +2216,47 @@ namespace Infrastructure.Persistence.ApplicationContext.Migrations
 
                             b1.HasIndex("Latitude", "Longitude")
                                 .HasDatabaseName("IX_Sponsors_Location_Latitude_Longitude");
+
+                            b1.ToTable("Sponsors", "rafeeq");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SponsorId");
+                        });
+
+                    b.OwnsOne("Domain.ValueObjects.Email", "ContactEmail", b1 =>
+                        {
+                            b1.Property<Guid>("SponsorId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(254)
+                                .HasColumnType("nvarchar(254)")
+                                .HasColumnName("ContactEmail");
+
+                            b1.HasKey("SponsorId");
+
+                            b1.HasIndex("Value")
+                                .HasDatabaseName("IX_Sponsors_ContactEmail");
+
+                            b1.ToTable("Sponsors", "rafeeq");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SponsorId");
+                        });
+
+                    b.OwnsOne("Domain.ValueObjects.PhoneNumber", "ContactPhone", b1 =>
+                        {
+                            b1.Property<Guid>("SponsorId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("nvarchar(20)")
+                                .HasColumnName("ContactPhone");
+
+                            b1.HasKey("SponsorId");
 
                             b1.ToTable("Sponsors", "rafeeq");
 
