@@ -1,18 +1,15 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getDashboardStats, getSites } from '../../api/sitesApi';
-import Sidebar from '../../components/layout/Sidebar';
 import Spinner from '../../components/common/Spinner';
 import { useToast } from '../../components/common/Toast';
-import EgyptTourismMap from '../../components/map/EgyptTourismMap';
-
 import { MapContainer, TileLayer, Marker, Tooltip, GeoJSON, Polygon, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-
 import egyptGeoJson from '../../assets/egypt.json';
+
+import { getDashboardStats } from '../../api/dashboardApi';
 import { getCities } from '../../api/citiesApi';
 
 // Fix default marker icons for Vite builds
@@ -25,14 +22,15 @@ L.Icon.Default.mergeOptions({
 
 const EGYPT_POSITION = [26.8206, 30.8025];
 
-const normName = (v) => (v || '').toString().trim().toLowerCase();
-
 function FitToBounds({ bounds }) {
   const map = useMap();
 
   useEffect(() => {
     if (!bounds) return;
-    map.fitBounds(bounds, { padding: [20, 20] });
+    const minZoom = Math.max(4, map.getBoundsZoom(bounds, true) - 1);
+    map.setMinZoom(minZoom);
+    map.setMaxBounds(bounds);
+    map.fitBounds(bounds, { padding: [20, 20], maxZoom: minZoom });
   }, [map, bounds]);
 
   return null;
@@ -82,72 +80,32 @@ function KpiCard({ label, value, sub, tag, icon, accent, loading, barPercent }) 
   );
 }
 
-/* ══ Top rated list ══ */
-function TopRatedList({ sites, loading }) {
-  const top = [...sites]
-    .filter(s => s.averageRating > 0)
-    .sort((a, b) => b.averageRating - a.averageRating)
-    .slice(0, 5);
-
-  const max = top[0]?.averageRating || 5;
-
-  return (
-    <div style={{
-      background: 'var(--surface-container-lowest)',
-      borderRadius: 16, padding: '22px 22px',
-      boxShadow: '0 2px 12px rgba(29,27,23,.06)',
-    }}>
-      <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 20 }}>
-        Top 5 Rated Sites
-      </h3>
-      {loading ? <Spinner center /> : top.length === 0 ? (
-        <div style={{ color: 'var(--outline)', fontSize: 13, textAlign: 'center', padding: '20px 0' }}>No rated sites yet.</div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {top.map((s, i) => (
-            <div key={s.id}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 5 }}>
-                <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)', maxWidth: '75%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {i + 1}. {s.name}
-                </span>
-                <span style={{ fontSize: 12, fontWeight: 800, color: 'var(--primary)', flexShrink: 0 }}>
-                  {s.averageRating.toFixed(1)}/5
-                </span>
-              </div>
-              <div style={{ height: 5, background: 'var(--surface-container-high)', borderRadius: 3, overflow: 'hidden' }}>
-                <div style={{
-                  height: '100%',
-                  width: `${(s.averageRating / max) * 100}%`,
-                  background: i === 0
-                    ? 'linear-gradient(90deg, var(--primary), var(--primary-container))'
-                    : 'var(--primary-fixed-dim)',
-                  borderRadius: 3,
-                  transition: 'width 1s ease',
-                }} />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
 /* ══════════════════════════════════════════════════════
   EGYPT MAP COMPONENT (Leaflet)
   Shows Egypt-only view with city markers.
   Tooltip on hover shows total sites.
 ═══════════════════════════════════════════════════════ */
-function EgyptMap({ sites, cities, loading }) {
-  const siteCountsByCityName = useMemo(() => {
-    const map = {};
-    for (const s of sites) {
-      const k = normName(s.cityName);
-      if (!k) continue;
-      map[k] = (map[k] || 0) + 1;
-    }
-    return map;
-  }, [sites]);
+function EgyptMap({ cities, loading }) {
+  const primaryMarkerIcon = useMemo(() => (
+    L.divIcon({
+      className: 'primary-marker-icon',
+      html: `
+        <div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 6px 12px rgba(29,27,23,.35));">
+            <path d="M12 21s6-6 6-10a6 6 0 10-12 0c0 4 6 10 6 10z" fill="var(--primary)" stroke="var(--surface-container-lowest)" stroke-width="1.6"/>
+            <circle cx="12" cy="11" r="2.8" fill="var(--surface-container-lowest)"/>
+          </svg>
+        </div>
+      `,
+      iconSize: [40, 40],
+      iconAnchor: [20, 38],
+      popupAnchor: [0, -34],
+    })
+  ), []);
+
+  const totalSites = useMemo(() => (
+    (Array.isArray(cities) ? cities : []).reduce((sum, c) => sum + Number(c?.totalSites ?? 0), 0)
+  ), [cities]);
 
   const cityMarkers = useMemo(() => {
     const list = Array.isArray(cities) ? cities : [];
@@ -158,7 +116,7 @@ function EgyptMap({ sites, cities, loading }) {
         if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
 
         const name = c?.name || 'Unknown';
-        const count = Number(c?.totalSites ?? siteCountsByCityName[normName(name)] ?? 0);
+        const count = Number(c?.totalSites ?? 0);
         return {
           id: c?.id ?? name,
           name,
@@ -168,7 +126,7 @@ function EgyptMap({ sites, cities, loading }) {
         };
       })
       .filter(Boolean);
-  }, [cities, siteCountsByCityName]);
+  }, [cities]);
 
   const egyptBounds = useMemo(() => {
     try {
@@ -180,7 +138,7 @@ function EgyptMap({ sites, cities, loading }) {
 
   const maxBounds = useMemo(() => {
     if (!egyptBounds) return null;
-    return egyptBounds.pad(0.08);
+    return egyptBounds.pad(0.25);
   }, [egyptBounds]);
 
   const egyptHoles = useMemo(() => {
@@ -218,31 +176,39 @@ function EgyptMap({ sites, cities, loading }) {
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10,
         padding: '16px 20px',
-        background: 'rgba(255,248,240,0.9)', backdropFilter: 'blur(8px)',
-        borderBottom: '1px solid rgba(212,196,183,.2)',
+        background: 'var(--topbar-bg)', backdropFilter: 'blur(8px)',
+        borderBottom: '1px solid var(--topbar-border)',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         <div>
           <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>Sites Across Egypt</div>
           <div style={{ fontSize: 11, color: 'var(--outline)', marginTop: 1 }}>
-            {loading ? 'Loading…' : `${sites.length} sites across ${cityMarkers.length} cities`}
+            {loading ? 'Loading…' : `${totalSites} sites across ${cityMarkers.length} cities`}
           </div>
         </div>
       </div>
 
       <div style={{ paddingTop: 60, height: '100%', position: 'relative' }}>
+        <div style={{ position: 'relative', zIndex: 1 }}>
         <MapContainer
           center={EGYPT_POSITION}
           zoom={6}
           zoomControl={false}
+          dragging={true}
+          scrollWheelZoom={true}
+          doubleClickZoom={true}
+          touchZoom={true}
+          boxZoom={false}
+          keyboard={true}
+          inertia={false}
           maxBounds={maxBounds || undefined}
           maxBoundsViscosity={1.0}
-          minZoom={6}
-          maxZoom={9}
+          minZoom={5}
+          maxZoom={10}
           worldCopyJump={false}
-          style={{ height: 400, width: '100%', backgroundColor: 'transparent' }}
+          style={{ height: 400, width: '100%', backgroundColor: 'transparent', zIndex: 1 }}
         >
-          {egyptBounds ? <FitToBounds bounds={egyptBounds} /> : null}
+          {maxBounds ? <FitToBounds bounds={maxBounds} /> : null}
           <TileLayer
             url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
           />
@@ -284,25 +250,46 @@ function EgyptMap({ sites, cities, loading }) {
             <Marker
               key={city.id}
               position={[city.lat, city.lng]}
+              icon={primaryMarkerIcon}
             >
-              <Tooltip direction="top" offset={[0, -10]} opacity={1} sticky>
-                <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--text)' }}>{city.name}</div>
-                <div style={{ fontSize: 11, color: 'var(--text-2)' }}>
-                  {city.count} site{city.count !== 1 ? 's' : ''}
-                </div>
+              <Tooltip direction="top" offset={[0, -10]} opacity={1} sticky className="map-tooltip">
+                <div className="map-tooltip-title">{city.name}</div>
+                <div className="map-tooltip-sub">{city.count} site{city.count !== 1 ? 's' : ''}</div>
               </Tooltip>
             </Marker>
           ))}
         </MapContainer>
+        </div>
 
         {loading && (
           <div style={{
             position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: 'rgba(255,248,240,.7)', backdropFilter: 'blur(4px)', zIndex: 20,
+            background: 'var(--topbar-bg)', backdropFilter: 'blur(4px)', zIndex: 20,
           }}>
             <Spinner size={32} />
           </div>
         )}
+
+        <div style={{
+          position: 'absolute', bottom: 16, left: 14, zIndex: 999,
+          background: 'var(--surface-container-lowest)',
+          border: '1px solid var(--border-solid)',
+          borderRadius: 10, padding: '8px 10px',
+          boxShadow: 'var(--shadow-sm)',
+          pointerEvents: 'auto',
+        }}>
+          <div style={{ fontSize: 9, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700, marginBottom: 6 }}>
+            Legend
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" style={{ flexShrink: 0 }}>
+              <path d="M12 21s6-6 6-10a6 6 0 10-12 0c0 4 6 10 6 10z" />
+              <circle cx="12" cy="11" r="2.5" fill="var(--primary)" stroke="none" />
+            </svg>
+            <span style={{ fontSize: 11, color: 'var(--text)' }}>Location marker</span>
+          </div>
+          <div style={{ marginTop: 6, fontSize: 10, color: 'var(--text-2)' }}>Scroll to zoom</div>
+        </div>
       </div>
     </div>
   );
@@ -316,10 +303,8 @@ export default function DashboardPage() {
   const toast    = useToast();
 
   const [stats,        setStats]        = useState(null);
-  const [sites,        setSites]        = useState([]);
   const [cities,       setCities]       = useState([]);
   const [statsLoading, setStatsLoading] = useState(true);
-  const [sitesLoading, setSitesLoading] = useState(true);
   const [citiesLoading, setCitiesLoading] = useState(true);
 
   /* ── Fetch dashboard KPIs ── */
@@ -329,31 +314,13 @@ export default function DashboardPage() {
       const res = await getDashboardStats();
       const d   = res.data?.value ?? res.data?.data ?? res.data;
       setStats({
-        totalSites:     Number(d?.totalSites    ?? 0),
-        activeSites:    Number(d?.activeSites   ?? 0),
-        featuredSites:  Number(d?.featuredSites  ?? 0),
-        hiddenGemSites: Number(d?.hiddenGemSites ?? 0),
-        averageRating:  Number(d?.averageRating  ?? 0),
-        totalRating:    Number(d?.totalRating    ?? 0),
+        totalCities:   Number(d?.totalCities   ?? 0),
+        totalSites:    Number(d?.totalSites    ?? 0),
+        totalSponsors: Number(d?.totalSponsors ?? 0),
+        totalUsers:    Number(d?.totalUsers    ?? 0),
       });
     } catch { toast('Failed to load dashboard stats', 'error'); }
     finally   { setStatsLoading(false); }
-  }, []);
-
-  /* ── Fetch all sites for the map (no page limit) ── */
-  const loadSites = useCallback(async () => {
-    try {
-      setSitesLoading(true);
-      const res  = await getSites({ pageSize: 99 });
-      const d    = res.data;
-      const arr  = Array.isArray(d) ? d
-                 : Array.isArray(d?.data)  ? d.data
-                 : Array.isArray(d?.value) ? d.value
-                 : Array.isArray(d?.items) ? d.items
-                 : [];
-      setSites(arr);
-    } catch { toast('Failed to load sites', 'error'); }
-    finally   { setSitesLoading(false); }
   }, []);
 
   /* ── Fetch cities for marker coordinates ── */
@@ -371,95 +338,10 @@ export default function DashboardPage() {
     }
   }, []);
 
-  useEffect(() => { loadStats(); loadSites(); loadCities(); }, [loadStats, loadSites, loadCities]);
-
-  /* ── Derived stats ── */
-  const activePercent = stats
-    ? Math.round((stats.activeSites / Math.max(stats.totalSites, 1)) * 100)
-    : 0;
-
-  const now = new Date();
-  const timeStr = now.toLocaleTimeString('en-EG', { hour: '2-digit', minute: '2-digit' });
-  const dateStr = now.toLocaleDateString('en-EG', { month: 'short', day: 'numeric' });
+  useEffect(() => { loadStats(); loadCities(); }, [loadStats, loadCities]);
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--background)', fontFamily: 'var(--font-body)' }}>
-      <Sidebar />
-
-      <div style={{ marginLeft: 'var(--sidebar-width)', flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-
-        {/* ── Top bar ── */}
-        <header style={{
-          background: 'rgba(255,248,240,0.92)', backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(212,196,183,.2)',
-          padding: '0 32px', height: 64,
-          display: 'flex', alignItems: 'center', gap: 20,
-          position: 'sticky', top: 0, zIndex: 50,
-        }}>
-          <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.01em' }}>
-            Rafeeq Admin
-          </div>
-
-          {/* Search pill */}
-          <div style={{ flex: 1, maxWidth: 440, position: 'relative' }}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--outline)" strokeWidth="2"
-              style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-              <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-            </svg>
-            <input placeholder="Search Sites, Users, Reviews, Trips..." style={{
-              width: '100%', padding: '8px 14px 8px 38px',
-              background: 'var(--surface-container-low)',
-              border: 'none', borderRadius: 999, fontSize: 13,
-              color: 'var(--text)', outline: 'none',
-            }} />
-          </div>
-
-          <div style={{ flex: 1 }} />
-
-          {/* Nav links */}
-          <nav style={{ display: 'flex', gap: 24 }}>
-            <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, color: 'var(--primary)', borderBottom: '2px solid var(--primary)', paddingBottom: 2 }}>
-              Platform Overview
-            </button>
-          </nav>
-
-          {/* Right actions */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, borderLeft: '1px solid rgba(212,196,183,.4)', paddingLeft: 16 }}>
-            {/* Notification bell */}
-            <button style={{ position: 'relative', background: 'none', border: 'none', cursor: 'pointer', padding: 6, borderRadius: 20 }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--on-surface-variant)" strokeWidth="2">
-                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/>
-              </svg>
-              <span style={{
-                position: 'absolute', top: 4, right: 4,
-                width: 14, height: 14, borderRadius: '50%',
-                background: 'var(--error)', color: '#fff',
-                fontSize: 8, fontWeight: 800,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                border: '2px solid white',
-              }}>12</span>
-            </button>
-
-            {/* Clock */}
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--text)' }}>Cairo, EG</div>
-              <div style={{ fontSize: 10, color: 'var(--outline)' }}>{timeStr} • {dateStr}</div>
-            </div>
-
-            {/* Avatar */}
-            <div style={{
-              width: 36, height: 36, borderRadius: '50%',
-              background: 'linear-gradient(135deg, var(--primary), var(--primary-container))',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#fff', fontSize: 14, fontWeight: 800,
-              border: '2px solid var(--primary-fixed)',
-              flexShrink: 0,
-            }}>R</div>
-          </div>
-        </header>
-
-        {/* ── Body ── */}
-        <div style={{ padding: '28px 32px 60px', flex: 1 }}>
+    <div style={{ padding: '28px 32px 60px', fontFamily: 'var(--font-body)' }}>
 
           {/* Breadcrumb */}
           <div style={{ fontSize: 12, color: 'var(--outline)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -471,13 +353,11 @@ export default function DashboardPage() {
           {/* KPI cards */}
           <div style={{ display: 'flex', gap: 16, marginBottom: 28, flexWrap: 'wrap' }}>
             <KpiCard
-              label="Total Sites"
-              value={stats?.totalSites}
+              label="Total Cities"
+              value={stats?.totalCities}
               loading={statsLoading}
-              sub={`${activePercent}% currently active`}
-              tag="+12%"
+              sub="Active destinations managed"
               accent="var(--primary)"
-              barPercent={activePercent}
               icon={
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
@@ -486,10 +366,10 @@ export default function DashboardPage() {
               }
             />
             <KpiCard
-              label="Active Sites"
-              value={stats?.activeSites}
+              label="Total Sites"
+              value={stats?.totalSites}
               loading={statsLoading}
-              sub="Currently accepting visitors"
+              sub="Sites listed across cities"
               accent="#386a20"
               icon={
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -499,11 +379,10 @@ export default function DashboardPage() {
               }
             />
             <KpiCard
-              label="Featured Sites"
-              value={stats?.featuredSites}
+              label="Total Sponsors"
+              value={stats?.totalSponsors}
               loading={statsLoading}
-              sub={`+ ${stats?.hiddenGemSites ?? '…'} hidden gems`}
-              tag="Promoted"
+              sub="Active brand partners"
               accent="#d97706"
               icon={
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
@@ -512,10 +391,10 @@ export default function DashboardPage() {
               }
             />
             <KpiCard
-              label="Avg Rating"
-              value={stats ? (stats.averageRating > 0 ? stats.averageRating.toFixed(1) : '—') : null}
+              label="Total Users"
+              value={stats?.totalUsers}
               loading={statsLoading}
-              sub={`Across ${stats?.totalRating?.toLocaleString() ?? '…'} total ratings`}
+              sub="Registered platform users"
               accent="var(--primary-container)"
               icon={
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
@@ -532,9 +411,8 @@ export default function DashboardPage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 20, alignItems: 'start' }}>
             {/* Map */}
             <EgyptMap
-              sites={sites}
               cities={cities}
-              loading={sitesLoading || citiesLoading}
+              loading={citiesLoading}
             />
 
             {/* Right column */}
@@ -548,20 +426,22 @@ export default function DashboardPage() {
                 <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 14 }}>
                   Sites by City
                 </h3>
-                {sitesLoading ? <Spinner center /> : (() => {
-                  const byCity = {};
-                  sites.forEach(s => {
-                    const c = s.cityName || 'Unknown';
-                    byCity[c] = (byCity[c] || 0) + 1;
-                  });
-                  const sorted = Object.entries(byCity).sort((a, b) => b[1] - a[1]).slice(0, 6);
-                  const max = sorted[0]?.[1] || 1;
+                {citiesLoading ? <Spinner center /> : (() => {
+                  const list = Array.isArray(cities) ? cities : [];
+                  const sorted = [...list]
+                    .map((c) => ({
+                      name: c?.name || 'Unknown',
+                      count: Number(c?.totalSites ?? 0),
+                    }))
+                    .sort((a, b) => b.count - a.count)
+                    .slice(0, 6);
+                  const max = sorted[0]?.count || 1;
                   return (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                      {sorted.map(([city, count]) => (
-                        <div key={city} style={{ cursor: 'pointer' }} onClick={() => navigate(`/sites?city=${encodeURIComponent(city)}`)}>
+                      {sorted.map(({ name, count }) => (
+                        <div key={name} style={{ cursor: 'pointer' }} onClick={() => navigate(`/sites?city=${encodeURIComponent(name)}`)}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 4 }}>
-                            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>{city}</span>
+                            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>{name}</span>
                             <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--primary)' }}>{count}</span>
                           </div>
                           <div style={{ height: 5, background: 'var(--surface-container-high)', borderRadius: 3, overflow: 'hidden' }}>
@@ -580,13 +460,8 @@ export default function DashboardPage() {
               </div>
 
               {/* Top rated */}
-              <TopRatedList sites={sites} loading={sitesLoading} />
-
-              
             </div>
           </div>
-        </div>
-      </div>
     </div>
   );
 }
