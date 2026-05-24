@@ -8,8 +8,8 @@ public sealed class PhoneNumber : ValueObject
 {
     public const int MaxPhoneNumberLength = 20;
     
-    // +201234567890 | 01234567890 | 12345
-    private static readonly Regex PhoneRegex = new(@"^((\+201|01)[0-9]\d{8}|\d{5})$");
+    // +201234567890 | 201234567890 | 01234567890 | 12345 | +2012345 | 2012345
+    // private static readonly Regex PhoneRegex = new(@"^((\+201|201|01)[0-9]\d{8}|\d{5}|(\+20|20)[0-9]\d{4})$");
 
     public string Value { get; } = null!;
 
@@ -26,8 +26,8 @@ public sealed class PhoneNumber : ValueObject
 
         var normalizedNumber = NormalizeNumber(value.Trim());
 
-        if (!PhoneRegex.IsMatch(normalizedNumber))
-            return PhoneNumberErrors.InvalidFormat(value);
+        // if (!PhoneRegex.IsMatch(normalizedNumber))
+        //     return PhoneNumberErrors.InvalidFormat(value);
 
         return new PhoneNumber(normalizedNumber);
     }
@@ -39,7 +39,7 @@ public sealed class PhoneNumber : ValueObject
 
         phone = phone.Replace(" ", "").Replace("-", "");
 
-        if (phone.StartsWith("20") && !phone.StartsWith("+"))
+        if (phone.StartsWith("20") && !phone.StartsWith('+'))
             phone = "+" + phone;
 
         if (phone.StartsWith("01"))
