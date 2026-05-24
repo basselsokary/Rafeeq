@@ -11,15 +11,15 @@ using Application.Queries.Attractions;
 using Application.Queries.Attractions.Images;
 using Application.Queries.Attractions.LocalizedContents;
 using Application.Services;
-using Domain.Common.Constants;
 using Domain.Enums;
+using Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Admins;
 
 [Route("api/admins/attractions/")]
-[Authorize(Roles = UserRoles.Admin)]
+[Authorize(Policy = Policies.CanManageAttractions)]
 public class AdminAttractionsController : ApiBaseController
 {
 	#region Basic CRUD Operations
@@ -262,7 +262,7 @@ public class AdminAttractionsController : ApiBaseController
 	#endregion
 
 	[HttpPost("import")]
-    // [Authorize(Policy = "SuperAdminOnly")]
+    [Authorize(Policy = Policies.CanImportData)]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ImportAttractionsResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

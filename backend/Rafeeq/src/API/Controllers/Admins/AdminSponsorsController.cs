@@ -1,6 +1,5 @@
 using API.Controllers.Base;
 using API.DTOs;
-using Application.Commands.Attractions.Images;
 using Application.Commands.Sponsors;
 using Application.Commands.Sponsors.Images;
 using Application.Commands.Sponsors.LocalizedContents;
@@ -14,15 +13,15 @@ using Application.Queries.Sponsors.Images;
 using Application.Queries.Sponsors.LocalizedContents;
 using Application.Queries.Sponsors.Offers;
 using Application.Services;
-using Domain.Common.Constants;
 using Domain.Enums;
+using Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Admins;
 
 [Route("api/admins/sponsors/")]
-[Authorize(Roles = UserRoles.Admin)]
+[Authorize(Policy = Policies.CanManageSponsors)]
 public class AdminSponsorsController : ApiBaseController
 {
 	#region Basic CRUD Operations

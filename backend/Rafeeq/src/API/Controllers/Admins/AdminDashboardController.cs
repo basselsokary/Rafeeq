@@ -1,26 +1,25 @@
 using API.Controllers.Base;
-using Domain.Common.Constants;
+using Application.Common.Interfaces.Messaging;
+using Application.DTOs;
+using Application.Queries.Dashboard;
+using Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Admins;
 
 [Route("api/admins/dashboard/")]
-[Authorize(Roles = UserRoles.Admin)]
+[Authorize(Policy = Policies.CanViewAnalytics)]
 public class AdminDashboardController : ApiBaseController
 {
     [HttpGet("stats")]
-    public IActionResult GetStats()
+    public async Task<ActionResult<DashboardStatsDto>> GetStats(
+        [FromServices] IQueryHandler<GetDashboardStatsQuery, DashboardStatsDto> queryHandler,
+        CancellationToken cancellationToken = default)
     {
-        var stats = new
-        {
-            TotalUsers = 1000,
-            ActiveUsers = 800,
-            TotalOrders = 500,
-            Revenue = 100000
-        };
+        var result = await queryHandler.HandleAsync(new GetDashboardStatsQuery(), cancellationToken);
 
-        return Ok(stats);
+        return HandleResult(result);
     }
 	
 }

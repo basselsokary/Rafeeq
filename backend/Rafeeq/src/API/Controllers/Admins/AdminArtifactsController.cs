@@ -1,16 +1,18 @@
 using API.Controllers.Base;
 using Application.Commands.Artifacts;
 using Application.Common.Interfaces.Messaging;
+using Infrastructure.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Admins;
 
 [Route("api/admins/artifacts/")]
-// [Authorize(Roles = UserRoles.Admin)]
+[Authorize(Policy = Policies.CanManageAttractions)]
 public class AdminArtifactsController : ApiBaseController
 {
 	[HttpPost("import")]
-    // [Authorize(Policy = "SuperAdminOnly")]
+    [Authorize(Policy = Policies.CanImportData)]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ImportArtifactsResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

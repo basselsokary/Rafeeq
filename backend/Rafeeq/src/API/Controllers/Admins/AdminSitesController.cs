@@ -17,16 +17,18 @@ using Application.Queries.Sites.LocalizedContents;
 using Application.Queries.Sites.NearestTransportations;
 using Application.Queries.Sites.OpeningHours;
 using Application.Services;
-using Domain.Common.Constants;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Commands.Sites.NearestTransportations;
+using Infrastructure.Authorization;
+using Application.Commands.Sponsors.Offers;
+using Application.Commands.Sponsors;
 
 namespace API.Controllers.Admins;
 
 [Route("api/admins/sites/")]
-[Authorize(Roles = UserRoles.Admin)]
+[Authorize(Policy = Policies.CanManageSites)]
 public class AdminSitesController : ApiBaseController
 {
     #region Basic CRUD Operations
@@ -349,7 +351,7 @@ public class AdminSitesController : ApiBaseController
     }
 
     [HttpPost("nearest-transportations/import")]
-    // [Authorize(Policy = "SuperAdminOnly")]
+    [Authorize(Policy = Policies.CanImportData)]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ImportNearestTransportationsResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -464,7 +466,7 @@ public class AdminSitesController : ApiBaseController
     }
 
     [HttpPost("opening-hours/import")]
-    // [Authorize(Policy = "SuperAdminOnly")]
+    [Authorize(Policy = Policies.CanImportData)]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ImportOpeningHoursResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -495,7 +497,7 @@ public class AdminSitesController : ApiBaseController
     #endregion
 
     [HttpPost("import")]
-    // [Authorize(Policy = "SuperAdminOnly")]
+    [Authorize(Policy = Policies.CanImportData)]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ImportSitesResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

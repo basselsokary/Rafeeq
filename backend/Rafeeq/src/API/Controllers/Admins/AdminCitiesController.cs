@@ -8,14 +8,14 @@ using Application.DTOs.Cities;
 using Application.Queries.Cities;
 using Application.Queries.Cities.LocalizedContents;
 using Application.Services;
-using Domain.Common.Constants;
+using Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Admins;
 
 [Route("api/admins/cities/")]
-[Authorize(Roles = UserRoles.Admin)]
+[Authorize(Policy = Policies.CanManageCities)]
 public class AdminCitiesController : ApiBaseController
 {
 	#region Basic CRUD Operations
@@ -160,7 +160,7 @@ public class AdminCitiesController : ApiBaseController
 	#endregion
 
 	[HttpPost("import")]
-    // [Authorize(Policy = "SuperAdminOnly")]
+    [Authorize(Policy = Policies.CanImportData)]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ImportCitiesResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
