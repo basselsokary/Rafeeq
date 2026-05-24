@@ -39,8 +39,6 @@ public class Program
         
         app.UseExceptionHandler();
 
-        app.UseRateLimiter();
-
         app.UseSerilogRequestLogging(opts =>
         {
             opts.MessageTemplate = "{RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000}ms";
@@ -71,15 +69,15 @@ public class Program
             options.AddSupportedUICultures(supportedCultures);
         });
 
-        app.UseCors();
-
         app.UseRouting();
+        
+        app.UseCors();
 
         app.UseAuthentication();
 
         app.UseAuthorization();
-
-        app.MapControllers();
+        
+        app.UseRateLimiter();
 
         // Here is an endpoint to test the localization of error messages in validators
         app.Use(async (context, next) =>
@@ -91,6 +89,7 @@ public class Program
             }
         );
 
+        app.MapControllers();
         #endregion
 
         app.Run();

@@ -41,8 +41,8 @@ internal class GlobalExceptionHandler : IExceptionHandler
                 Status = StatusCodes.Status500InternalServerError,
                 Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1",
                 Title = "Server failure",
-                // Detail = "An unexpected error occurred. Please try again later."
-                Detail = exception.Message // Include exception message for better debugging, consider removing in production for security reasons
+                Detail = "An unexpected error occurred. Please try again later."
+                // Detail = exception.Message // Include exception message for better debugging, consider removing in production for security reasons
             };
 
             httpContext.Response.StatusCode = problemDetails.Status.Value;

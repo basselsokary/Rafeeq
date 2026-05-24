@@ -54,6 +54,20 @@ public static class RateLimitingExtensions
                     });
             });
 
+            limiter.AddPolicy(RateLimiterPolicies.ScanImagePolicy, context =>
+            {
+                var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+                return RateLimitPartition.GetFixedWindowLimiter(ip, _ =>
+                    new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit        = options.ScanImagePolicy.PermitLimit,
+                        Window             = options.ScanImagePolicy.Window,
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit         = 0
+                    });
+            });
+
             // Uniform 429 response
             limiter.OnRejected = async (ctx, ct) =>
             {
@@ -96,6 +110,11 @@ public sealed class RateLimiterSettings
         PermitLimit = 60,
         Window = TimeSpan.FromMinutes(1)
     };
+    public WindowPolicy ScanImagePolicy { get; init; } = new()
+    {
+        PermitLimit = 10,
+        Window = TimeSpan.FromMinutes(1)
+    };
 
     public sealed class WindowPolicy
     {
@@ -109,4 +128,5 @@ public static class RateLimiterPolicies
     public const string Auth      = "fixed-auth";
     public const string AuthPerIp = "fixed-auth-per-ip";
     public const string Global    = "fixed-global";
+    public const string ScanImagePolicy = "fixed-scan-image";
 }

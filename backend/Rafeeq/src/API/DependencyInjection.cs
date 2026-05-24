@@ -118,7 +118,8 @@ public static class DependencyInjection
                 policy.WithOrigins(
                     "http://localhost:5173", // Frontend URL
                     "http://localhost:5143",
-                    "https://rafeeq-inky.vercel.app"
+                    "https://rafeeq-inky.vercel.app",
+                    "https://admin.rafeeq.live"
                 )
                 .AllowAnyHeader()
                 .AllowAnyMethod()
