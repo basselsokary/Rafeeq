@@ -2,7 +2,7 @@
     border-radius: 16px !important;
     overflow: hidden !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border: 1px solid #EEDFCC;
+    border: 1px solid var(--border-solid);
 }
 
 .leaflet-control-attribution {
@@ -16,4 +16,33 @@
 
 .map-dark-filter {
     filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%) !important;
+}
+
+.leaflet-tooltip,
+.leaflet-tooltip.map-tooltip {
+    background: var(--surface-container-lowest) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border-solid) !important;
+    box-shadow: var(--shadow-sm) !important;
+    border-radius: 8px !important;
+    padding: 6px 8px !important;
+}
+
+.leaflet-tooltip::before,
+.leaflet-tooltip.map-tooltip::before {
+    border-top-color: var(--surface-container-lowest) !important;
+    border-bottom-color: var(--surface-container-lowest) !important;
+    border-left-color: var(--surface-container-lowest) !important;
+    border-right-color: var(--surface-container-lowest) !important;
+}
+
+.map-tooltip-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.map-tooltip-sub {
+    font-size: 11px;
+    color: var(--text-2);
 }

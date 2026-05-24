@@ -60,6 +60,12 @@ export const STATUS_LABELS = {
   permanentlyClosed:  'Permanently Closed',
 };
 
+export const ROLES = {
+  superAdmin: 'SuperAdmin',
+  admin:     'Admin',
+  moderator: 'Moderator',
+};
+
 export const formatEnum = (val) =>
   val
     ? val.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase())
