@@ -6,9 +6,13 @@ using Application.Common.Interfaces.Localization;
 using Application.Common.Interfaces.QueryServices;
 using Application.Common.Interfaces.Services;
 using CloudinaryDotNet;
+using Domain.Common.Constants;
 using Domain.Common.Interfaces;
 using Domain.Repositories;
 using Infrastructure.Authentication;
+using Infrastructure.Authorization;
+using Infrastructure.Authorization.Handlers;
+using Infrastructure.Authorization.Requirements;
 using Infrastructure.BackgroundJobs;
 using Infrastructure.Caching;
 using Infrastructure.Emails;
@@ -29,6 +33,7 @@ using Infrastructure.Persistence.Seeding;
 using Infrastructure.Persistence.Seeding.Seeders;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -50,9 +55,10 @@ public static class DependencyInjection
         services.AddRepositories();
         services.AddQueryServices();
 
-        // Add Identity & Authentication
+        // Add Identity & Authentication & Authorization
         services.AddIdentity(configuration)
-            .AddJwtAuthentication(configuration);
+            .AddJwtAuthentication(configuration)
+            .AddAuthorization();
 
         services.AddLocalization();
 
@@ -73,17 +79,16 @@ public static class DependencyInjection
     {
         services.AddScoped<CurrentUserService>();
         services.AddScoped<IUserContext, CurrentUserService>();
-        services.AddScoped<IModeratorService, ModeratorService>();
-        services.AddScoped<IAdminService, AdminService>();
+        services.AddScoped<IUserManagementService, UserManagementService>();
+        services.Decorate<IUserManagementService, CachedUserManagementService>();
         services.AddScoped<ICacheService, BaseCache>();
         services.AddScoped<IImageProcessingService, ImageProcessingService>();
         
         // Add email service
-        services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+        services.Configure<EmailOptions>(configuration.GetSection("EmailOptions"));
         services.AddSingleton<IEmailService, EmailService>();
 
-        services.AddSingleton<IPasswordGenerator, TemporaryPasswordGenerator>();
-        services.AddScoped<IEmailGeneratorService, EmailGeneratorService>();
+        services.AddScoped<IUserCredentialService, UserCredentialService>();
         services.AddScoped<IExternalIdentityService, ExternalIdentityService>();
 
         services.AddScoped<DomainEventsDispatcher>();
@@ -109,24 +114,27 @@ public static class DependencyInjection
 
     private static IServiceCollection AddQueryServices(this IServiceCollection services)
     {
+        services.AddScoped<ICityQueryService, CityQueryService>();
         services.AddScoped<IArtifactQueryService, ArtifactQueryService>();
         services.AddScoped<IAttractionQueryService, AttractionQueryService>();
         services.AddScoped<ISiteQueryService, SiteQueryService>();
+        services.AddScoped<ISponsorQueryService, SponsorQueryService>();
         services.AddScoped<ITouristQueryService, TouristQueryService>();
         services.AddScoped<IReviewQueryService, ReviewQueryService>();
-        services.AddScoped<ISponsorQueryService, SponsorQueryService>();
-        services.AddScoped<ICityQueryService, CityQueryService>();
         services.AddScoped<IContentReportQueryService, ContentReportQueryService>();
         services.AddScoped<ITripQueryService, TripQueryService>();
+        services.AddScoped<IDashboardQueryService, DashboardQueryService>();
 
+        services.Decorate<ICityQueryService, CachedCityQueryService>();
+        services.Decorate<IArtifactQueryService, CachedArtifactQueryService>();
         services.Decorate<IAttractionQueryService, CachedAttractionQueryService>();
         services.Decorate<ISiteQueryService, CachedSiteQueryService>();
+        services.Decorate<ISponsorQueryService, CachedSponsorQueryService>();
         services.Decorate<ITouristQueryService, CachedTouristQueryService>();
         services.Decorate<IReviewQueryService, CachedReviewQueryService>();
-        services.Decorate<ISponsorQueryService, CachedSponsorQueryService>();
-        services.Decorate<ICityQueryService, CachedCityQueryService>();
         services.Decorate<IContentReportQueryService, CachedContentReportQueryService>();
         services.Decorate<ITripQueryService, CachedTripQueryService>();
+        services.Decorate<IDashboardQueryService, CachedDashboardQueryService>();
 
         return services;
     }
@@ -160,6 +168,8 @@ public static class DependencyInjection
         services.AddScoped<IDataSeeder, NearestTransportationSeeder>();
         services.AddScoped<IDataSeeder, AttractionSeeder>();
         services.AddScoped<IDataSeeder, ArtifactSeeder>();
+        services.AddScoped<IDataSeeder, SponsorSeeder>();
+        services.AddScoped<IDataSeeder, OfferSeeder>();
 
         return services;
     }
@@ -169,6 +179,9 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         bool useStaticData = configuration.GetValue<bool>("StaticData:InMemory");
+
+        services.AddScoped<AuditableEntityInterceptor>();
+        services.AddScoped<DomainEventDispatcherInterceptor>();
 
         services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
         {
@@ -198,9 +211,6 @@ public static class DependencyInjection
             options.EnableSensitiveDataLogging(false);
             options.EnableDetailedErrors(false);
         });
-
-        services.AddScoped<AuditableEntityInterceptor>();
-        services.AddScoped<DomainEventDispatcherInterceptor>();
 
         return services;
     }
@@ -238,9 +248,9 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<JwtSettings>(configuration.GetSection(nameof(JwtSettings)));
+        services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
 
-        var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>()!;
+        var jwtSettings = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>()!;
 
         services.Configure<DataProtectionTokenProviderOptions>(options =>
             options.TokenLifespan = TimeSpan.FromHours(jwtSettings.TokenLifespanHours));
@@ -290,10 +300,84 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddAuthorization(
-        this IServiceCollection services)
+    private static IServiceCollection AddAuthorization(this IServiceCollection services)
     {
-        services.AddAuthorization();
+        services.AddScoped<IAuthorizationHandler, RolesHandler>();
+        services.AddScoped<IAuthorizationHandler, EmailVerifiedHandler>();
+        services.AddScoped<IAuthorizationHandler, AccountActiveHandler>();
+        services.AddScoped<IAuthorizationHandler, ResourceOwnerHandler>();
+
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(Policies.SuperAdminOnly, policy =>
+                policy.AddRequirements(new RolesRequirement(UserRoles.SuperAdmin)));
+            
+            options.AddPolicy(Policies.AdminOnly, policy =>
+                policy.AddRequirements(new RolesRequirement(UserRoles.SuperAdmin, UserRoles.Admin)));
+
+            options.AddPolicy(Policies.ModeratorOrAdmin, policy =>
+                policy.AddRequirements(new RolesRequirement(UserRoles.SuperAdmin, UserRoles.Moderator, UserRoles.Admin)));
+
+            options.AddPolicy(Policies.TouristOnly, policy =>
+                policy.AddRequirements(new RolesRequirement(UserRoles.Tourist)));
+
+            options.AddPolicy(Policies.CanManageUsers, policy =>
+                policy.AddRequirements(new RolesRequirement(UserRoles.SuperAdmin, UserRoles.Admin)));
+
+            options.AddPolicy(Policies.CanManageCities, policy =>
+                policy.AddRequirements(new RolesRequirement(UserRoles.SuperAdmin, UserRoles.Admin, UserRoles.Moderator)));
+            
+            options.AddPolicy(Policies.CanManageSites, policy =>
+                policy.AddRequirements(new RolesRequirement(UserRoles.SuperAdmin, UserRoles.Admin, UserRoles.Moderator)));
+            
+            options.AddPolicy(Policies.CanManageArtifacts, policy =>
+                policy.AddRequirements(new RolesRequirement(UserRoles.SuperAdmin, UserRoles.Admin, UserRoles.Moderator)));
+            
+            options.AddPolicy(Policies.CanManageAttractions, policy =>
+                policy.AddRequirements(new RolesRequirement(UserRoles.SuperAdmin, UserRoles.Admin, UserRoles.Moderator)));
+
+            options.AddPolicy(Policies.CanManageSponsors, policy =>
+                policy.AddRequirements(new RolesRequirement(UserRoles.SuperAdmin, UserRoles.Admin)));
+
+            options.AddPolicy(Policies.CanModerateContent, policy =>
+                policy.AddRequirements(new RolesRequirement(UserRoles.SuperAdmin, UserRoles.Admin, UserRoles.Moderator)));
+
+            options.AddPolicy(Policies.CanViewAnalytics, policy =>
+                policy.AddRequirements(new RolesRequirement(UserRoles.SuperAdmin, UserRoles.Admin, UserRoles.Moderator)));
+            
+            options.AddPolicy(Policies.CanImportData, policy =>
+                policy.AddRequirements(new RolesRequirement(UserRoles.SuperAdmin)));
+
+            // Tourists can manage their own trips
+            // (resource ownership is checked separately via IAuthorizationService)
+            options.AddPolicy(Policies.CanManageOwnTrips, policy =>
+                policy
+                    .AddRequirements(new RolesRequirement(UserRoles.Tourist))
+                    .AddRequirements(new AccountActiveRequirement()));
+
+            options.AddPolicy(Policies.CanWriteReviews, policy =>
+                policy
+                    .AddRequirements(new RolesRequirement(UserRoles.Tourist))
+                    .AddRequirements(new EmailVerifiedRequirement())
+                    .AddRequirements(new AccountActiveRequirement()));
+
+            options.AddPolicy(Policies.CanReportContent, policy =>
+                policy
+                    .RequireAuthenticatedUser()
+                    .AddRequirements(new AccountActiveRequirement()));
+
+            // Resource-owner policy (used with IAuthorizationService directly, not via [Authorize])
+            options.AddPolicy(Policies.ResourceOwner, policy =>
+                policy.AddRequirements(new ResourceOwnerRequirement(allowAdminOverride: true)));
+
+            // Any endpoint with [Authorize] but no policy requires authentication
+            options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+
+            // Endpoints with [AllowAnonymous] are not affected
+            options.FallbackPolicy = null;
+        });
 
         return services;
     }
@@ -312,13 +396,11 @@ public static class DependencyInjection
     private static IServiceCollection AddTripPlannerService(this IServiceCollection services, IConfiguration configuration)
     {
         var tripPlannerSettings = configuration
-           .GetSection(TripPlannerSettings.SectionName)
-           .Get<TripPlannerSettings>()!;
+           .GetSection(TripPlannerOptions.SectionName)
+           .Get<TripPlannerOptions>()!;
 
         services.AddSingleton(tripPlannerSettings);
 
-        // Named HttpClient — BaseUrl and timeout set here, not inside the service.
-        // This keeps HttpClient lifecycle management in DI where it belongs.
         services.AddHttpClient<ITripPlannerService, HttpTripPlannerService>(client =>
         {
             client.BaseAddress = new Uri(tripPlannerSettings.BaseUrl);
@@ -331,17 +413,14 @@ public static class DependencyInjection
     private static IServiceCollection AddScannerService(this IServiceCollection services, IConfiguration configuration)
     {
         var scanSettings = configuration
-           .GetSection(ImageScannerSettings.SectionName)
-           .Get<ImageScannerSettings>()!;
+           .GetSection(ImageScannerOptions.SectionName)
+           .Get<ImageScannerOptions>()!;
 
         services.AddSingleton(scanSettings);
 
-        // Named HttpClient — BaseUrl and timeout set here, not inside the service.
-        // This keeps HttpClient lifecycle management in DI where it belongs.
         services.AddHttpClient<IImageScannerService, HttpImageScannerService>(client =>
         {
             client.BaseAddress = new Uri(scanSettings.BaseUrl);
-            // client.Timeout = TimeSpan.FromSeconds(120);
             client.Timeout = TimeSpan.FromSeconds(scanSettings.TimeoutSeconds);
         });
 
@@ -350,12 +429,12 @@ public static class DependencyInjection
 
     private static IServiceCollection AddCloudinary(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<CloudinarySettings>(
+        services.Configure<CloudinaryOptions>(
             configuration.GetSection("Cloudinary"));
 
         services.AddSingleton(sp =>
         {
-            var settings = sp.GetRequiredService<IOptions<CloudinarySettings>>().Value;
+            var settings = sp.GetRequiredService<IOptions<CloudinaryOptions>>().Value;
 
             var account = new Account(
                 settings.CloudName,

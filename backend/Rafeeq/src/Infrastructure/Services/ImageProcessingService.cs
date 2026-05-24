@@ -15,10 +15,10 @@ using SixLabors.ImageSharp.Processing;
 namespace Infrastructure.Services;
 
 internal class ImageProcessingService(
-    IOptions<FileUploadSettings> options,
+    IOptions<FileUploadOptions> options,
     ILogger<ImageProcessingService> logger) : IImageProcessingService
 {
-    private readonly FileUploadSettings _options = options.Value;
+    private readonly FileUploadOptions _options = options.Value;
 
     public async Task<Result<ProcessedImage>> ProcessAsync(
         Stream imageStream,
@@ -39,9 +39,6 @@ internal class ImageProcessingService(
                     Size = new Size(_options.MaxWidthPx, _options.MaxHeightPx),
                     Mode = ResizeMode.Max,
                 }));
-                logger.LogInformation(
-                    "Resized image {Before} → {After}", before,
-                    $"{image.Width}x{image.Height}");
             }
 
             // Strip EXIF — prevents GPS, device serial, timestamps leaking out
