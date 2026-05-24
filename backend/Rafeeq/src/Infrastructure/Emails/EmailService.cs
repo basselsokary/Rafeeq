@@ -1,5 +1,6 @@
 using Application.Common.Interfaces.Email;
 using Application.DTOs.Email;
+using Infrastructure.Authentication;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
@@ -9,10 +10,12 @@ using MimeKit;
 namespace Infrastructure.Emails;
 
 internal class EmailService(
-    IOptions<EmailSettings> settings,
+    IOptions<EmailOptions> emailOptions,
+    IOptions<JwtOptions> jwtOptions,
     ILogger<EmailService> logger) : IEmailService
 {
-    private readonly EmailSettings _settings = settings.Value;
+    private readonly EmailOptions _options = emailOptions.Value;
+    private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
     public async Task SendPasswordResetEmailAsync(
         string email,
@@ -20,8 +23,8 @@ internal class EmailService(
         string userName,
         CancellationToken cancellationToken = default)
     {
-        var resetLink = $"{_settings.ApplicationUrl}/reset-password?token={resetToken}";
-        var template = EmailTemplates.PasswordReset(userName, resetLink);
+        var resetLink = $"{_options.ApplicationUrl}/reset-password?token={resetToken}";
+        var template = EmailTemplates.PasswordReset(userName, resetLink, _jwtOptions.TokenLifespanHours);
         
         await SendEmailAsync(email, userName, template.Subject, template.HtmlBody, template.TextBody, cancellationToken);
         
@@ -34,8 +37,8 @@ internal class EmailService(
         string userName,
         CancellationToken cancellationToken = default)
     {
-        var verificationLink = $"{_settings.ApplicationUrl}/verify-email?token={verificationToken}";
-        var template = EmailTemplates.EmailVerification(userName, verificationLink);
+        var verificationLink = $"{_options.ApplicationUrl}/verify-email?token={verificationToken}";
+        var template = EmailTemplates.EmailVerification(userName, verificationLink, _jwtOptions.TokenLifespanHours);
         
         await SendEmailAsync(email, userName, template.Subject, template.HtmlBody, template.TextBody, cancellationToken);
         
@@ -116,7 +119,7 @@ internal class EmailService(
         {
             var message = new MimeMessage();
             
-            message.From.Add(new MailboxAddress(_settings.FromName, _settings.FromEmail));
+            message.From.Add(new MailboxAddress(_options.FromName, _options.FromEmail));
             message.To.Add(new MailboxAddress(toName, toEmail));
             message.Subject = subject;
             
@@ -134,17 +137,17 @@ internal class EmailService(
             // client.ServerCertificateValidationCallback = (s,c,h,e) => true;
             
             await client.ConnectAsync(
-                _settings.SmtpHost,
-                _settings.SmtpPort,
+                _options.SmtpHost,
+                _options.SmtpPort,
                 false, // For now
                 cancellationToken);
 
             // Authenticate (if credentials provided)
-            if (!string.IsNullOrEmpty(_settings.SmtpUsername))
+            if (!string.IsNullOrEmpty(_options.SmtpUsername))
             {
                 await client.AuthenticateAsync(
-                    _settings.SmtpUsername,
-                    _settings.SmtpPassword,
+                    _options.SmtpUsername,
+                    _options.SmtpPassword,
                     cancellationToken);
             }
 

@@ -1,6 +1,6 @@
 namespace Infrastructure.Emails;
 
-public class EmailSettings
+public class EmailOptions
 {
     public string SmtpHost { get; set; } = null!;
     public int SmtpPort { get; set; }
