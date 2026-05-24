@@ -72,24 +72,13 @@ internal class RatingRemovedEventHandler(
 }
 
 internal class UserRegisteredEventHandler(
-    IEmailService emailService, IIdentityService identityService, ILogger<UserRegisteredEventHandler> logger) : IDomainEventHandler<TouristRegisteredEvent>
+    IEmailService emailService) : IDomainEventHandler<TouristRegisteredEvent>
 {
     public async Task HandleAsync(TouristRegisteredEvent domainEvent, CancellationToken cancellationToken = default)
     {
-        Result<(string ResetToken, string UserName)> result = await identityService.GenerateEmailConfirmationTokenAsync(domainEvent.Email);
-        if (result.Failed)
-        {
-            logger.LogError(
-                "Failed to generate email confirmation token for user {Email}: {Error}",
-                domainEvent.Email,
-                result.Error.Message);
-
-            return;
-        }
-
         await emailService.SendEmailVerificationAsync(
             domainEvent.Email,
-            result.Value.ResetToken,
+            domainEvent.Token,
             domainEvent.FirstName,
             cancellationToken);
     }

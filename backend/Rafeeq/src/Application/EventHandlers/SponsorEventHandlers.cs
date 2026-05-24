@@ -27,6 +27,18 @@ internal class SponsorUpdatedEventHandler(
     }
 }
 
+internal class SponsorDeletedEventHandler(
+    ICacheService cacheService) : IDomainEventHandler<SponsorDeletedEvent>
+{
+    public async Task HandleAsync(SponsorDeletedEvent domainEvent, CancellationToken cancellationToken = default)
+    {
+        await Task.WhenAll(
+            cacheService.RemoveByIdAsync("sponsor", domainEvent.SponsorId.ToString()),
+            cacheService.RemoveByPrefixAsync("sponsor:list"),
+            cacheService.RemoveByPrefixAsync("sponsor:dashboard"));
+    }
+}
+
 internal class SponsorTierChangedEventHandler(
     ICacheService cacheService) : IDomainEventHandler<SponsorTierChangedEvent>
 {
