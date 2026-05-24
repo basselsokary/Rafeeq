@@ -258,6 +258,23 @@
   <data name="EMAIL_ALREADY_IN_USE" xml:space="preserve"><value>يوجد مستخدم بهذا البريد الإلكتروني بالفعل.</value></data>
   <data name="USERNAME_ALREADY_IN_USE" xml:space="preserve"><value>يوجد مستخدم بهذا الاسم بالفعل.</value></data>
   <data name="IN_ACTIVE_USER" xml:space="preserve"><value>الحساب غير مفعل.</value></data>
+  <data name="USER_ROLES_REQUIRED" xml:space="preserve"><value>مطلوب دور واحد على الأقل.</value></data>
+  <data name="USER_ALREADY_ADMIN" xml:space="preserve"><value>المستخدم بالفعل مشرف.</value></data>
+  <data name="USER_NOT_MODERATOR" xml:space="preserve"><value>يجب أن يكون المستخدم مشرفا قبل ترقيته إلى مشرف عام.</value></data>
+  <data name="USER_NOT_ADMIN" xml:space="preserve"><value>المستخدم ليس مشرفا.</value></data>
+  <data name="USER_ADMIN_LOCK_FORBIDDEN" xml:space="preserve"><value>لا يمكن قفل حسابات المشرفين.</value></data>
+  <data name="USER_ADMIN_DELETE_FORBIDDEN" xml:space="preserve"><value>لا يمكن حذف حسابات المشرفين. قم بتخفيضه إلى مشرف أولا.</value></data>
+  <data name="USER_DELETE_CONFIRM_REQUIRED" xml:space="preserve"><value>تأكيد الحذف مطلوب.</value></data>
+  <data name="USER_PROMOTION_FAILED" xml:space="preserve"><value>فشل ترقية المستخدم: {0}</value></data>
+  <data name="USER_DEMOTION_FAILED" xml:space="preserve"><value>فشل تخفيض المستخدم: {0}</value></data>
+  <data name="USER_REMOVE_ROLES_FAILED" xml:space="preserve"><value>فشل إزالة الأدوار: {0}</value></data>
+  <data name="USER_ADD_ROLES_FAILED" xml:space="preserve"><value>فشل إضافة الأدوار: {0}</value></data>
+  <data name="USER_LOCK_FAILED" xml:space="preserve"><value>فشل قفل الحساب: {0}</value></data>
+  <data name="USER_UNLOCK_FAILED" xml:space="preserve"><value>فشل فتح قفل الحساب: {0}</value></data>
+  <data name="USER_SUSPEND_FAILED" xml:space="preserve"><value>فشل تعليق الحساب: {0}</value></data>
+  <data name="USER_REACTIVATE_FAILED" xml:space="preserve"><value>فشل إعادة تفعيل الحساب: {0}</value></data>
+  <data name="USER_DELETE_FAILED" xml:space="preserve"><value>فشل حذف المستخدم: {0}</value></data>
+  <data name="USER_PERMANENT_DELETE_FAILED" xml:space="preserve"><value>فشل حذف المستخدم: {0}</value></data>
   <data name="LOCKED_ACCOUNT" xml:space="preserve"><value>تم قفل الحساب.</value></data>
   <data name="INVALID_TOKEN" xml:space="preserve"><value>رمز الوصول غير صالح.</value></data>
   <data name="TOKEN_REQUIRED" xml:space="preserve"><value>رمز الوصول مطلوب.</value></data>

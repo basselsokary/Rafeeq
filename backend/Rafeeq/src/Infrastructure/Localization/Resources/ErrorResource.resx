@@ -258,6 +258,23 @@
   <data name="EMAIL_ALREADY_IN_USE" xml:space="preserve"><value>User with this email already exists.</value></data>
   <data name="USERNAME_ALREADY_IN_USE" xml:space="preserve"><value>User with this username already exists.</value></data>
   <data name="IN_ACTIVE_USER" xml:space="preserve"><value>Account is deactivated.</value></data>
+  <data name="USER_ROLES_REQUIRED" xml:space="preserve"><value>At least one role is required.</value></data>
+  <data name="USER_ALREADY_ADMIN" xml:space="preserve"><value>User is already an admin.</value></data>
+  <data name="USER_NOT_MODERATOR" xml:space="preserve"><value>User must be a moderator before being promoted to admin.</value></data>
+  <data name="USER_NOT_ADMIN" xml:space="preserve"><value>User is not an admin.</value></data>
+  <data name="USER_ADMIN_LOCK_FORBIDDEN" xml:space="preserve"><value>Cannot lock admin accounts.</value></data>
+  <data name="USER_ADMIN_DELETE_FORBIDDEN" xml:space="preserve"><value>Cannot delete admin accounts. Demote to moderator first.</value></data>
+  <data name="USER_DELETE_CONFIRM_REQUIRED" xml:space="preserve"><value>Deletion confirmation is required.</value></data>
+  <data name="USER_PROMOTION_FAILED" xml:space="preserve"><value>Failed to promote user: {0}</value></data>
+  <data name="USER_DEMOTION_FAILED" xml:space="preserve"><value>Failed to demote user: {0}</value></data>
+  <data name="USER_REMOVE_ROLES_FAILED" xml:space="preserve"><value>Failed to remove roles: {0}</value></data>
+  <data name="USER_ADD_ROLES_FAILED" xml:space="preserve"><value>Failed to add roles: {0}</value></data>
+  <data name="USER_LOCK_FAILED" xml:space="preserve"><value>Failed to lock account: {0}</value></data>
+  <data name="USER_UNLOCK_FAILED" xml:space="preserve"><value>Failed to unlock account: {0}</value></data>
+  <data name="USER_SUSPEND_FAILED" xml:space="preserve"><value>Failed to suspend account: {0}</value></data>
+  <data name="USER_REACTIVATE_FAILED" xml:space="preserve"><value>Failed to reactivate account: {0}</value></data>
+  <data name="USER_DELETE_FAILED" xml:space="preserve"><value>Failed to delete user: {0}</value></data>
+  <data name="USER_PERMANENT_DELETE_FAILED" xml:space="preserve"><value>Failed to delete user: {0}</value></data>
   <data name="LOCKED_ACCOUNT" xml:space="preserve"><value>Account is locked out.</value></data>
   <data name="INVALID_TOKEN" xml:space="preserve"><value>Invalid access token.</value></data>
   <data name="TOKEN_REQUIRED" xml:space="preserve"><value>Access token is required.</value></data>
