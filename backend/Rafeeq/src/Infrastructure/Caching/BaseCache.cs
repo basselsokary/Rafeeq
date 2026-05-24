@@ -18,23 +18,23 @@ internal class BaseCache : ICacheService
     protected readonly TimeSpan LongTtl40_Minutes = TimeSpan.FromMinutes(40);
     protected readonly TimeSpan LongTtl2_Hours = TimeSpan.FromHours(2);
     protected readonly TimeSpan LongTtl6_Hours = TimeSpan.FromHours(6);
-    private readonly IMemoryCache cache = null!;
+    private readonly IMemoryCache _cache;
 
     public BaseCache(IMemoryCache cache)
     {
-        this.cache = cache;
+        _cache = cache;
     }
     
     protected BaseCache(string prefix, IMemoryCache cache)
     {
-        this.cache = cache;
+        _cache = cache;
         Prefix = prefix;
     }
 
     protected async Task<T> GetOrCreateAsync<T>(string key, TimeSpan ttl, Func<Task<T>> factory)
         where T : notnull
     {
-        var result = await cache.GetOrCreateAsync(key, async entry =>
+        var result = await _cache.GetOrCreateAsync(key, async entry =>
         {
             CachedKeys.TryAdd(key, true);
             entry.AbsoluteExpirationRelativeToNow = ttl;
@@ -46,7 +46,7 @@ internal class BaseCache : ICacheService
 
     protected async Task<T?> GetOrCreateNullableAsync<T>(string key, TimeSpan ttl, Func<Task<T?>> factory)
     {
-        return await cache.GetOrCreateAsync(key, async entry =>
+        return await _cache.GetOrCreateAsync(key, async entry =>
         {
             CachedKeys.TryAdd(key, true);
             entry.AbsoluteExpirationRelativeToNow = ttl;
@@ -56,7 +56,7 @@ internal class BaseCache : ICacheService
 
     protected static string FormatPaging(PagingParameters paging)
     {
-        return $"p{paging.PageNumber}:s{paging.PageSize}";
+        return $"p{paging.Page}:s{paging.PageSize}";
     }
 
     public Task RemoveAsync(string key)
@@ -64,7 +64,7 @@ internal class BaseCache : ICacheService
         if (string.IsNullOrWhiteSpace(key))
             return Task.CompletedTask;
 
-        cache.Remove(key);
+        _cache.Remove(key);
         CachedKeys.TryRemove(key, out _);
 
         return Task.CompletedTask;
@@ -81,7 +81,7 @@ internal class BaseCache : ICacheService
 
         foreach (var key in matchingKeys)
         {
-            cache.Remove(key);
+            _cache.Remove(key);
             CachedKeys.TryRemove(key, out _);
         }
 
@@ -106,7 +106,7 @@ internal class BaseCache : ICacheService
 
         foreach (var key in matchingKeys)
         {
-            cache.Remove(key);
+            _cache.Remove(key);
             CachedKeys.TryRemove(key, out _);
         }
 
