@@ -10,7 +10,7 @@ namespace Infrastructure.ExternalServices.ScannerService;
 
 internal sealed class HttpImageScannerService(
     HttpClient http,
-    ImageScannerSettings settings,
+    ImageScannerOptions settings,
     ILogger<HttpImageScannerService> logger) : IImageScannerService
 {
     private static readonly JsonSerializerOptions JsonOptions = new()

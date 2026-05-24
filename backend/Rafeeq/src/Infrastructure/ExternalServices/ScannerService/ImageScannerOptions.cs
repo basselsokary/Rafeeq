@@ -1,6 +1,6 @@
 namespace Infrastructure.ExternalServices.ScannerService;
 
-public sealed class ImageScannerSettings
+public sealed class ImageScannerOptions
 {
     public const string SectionName = "ImageScannerService";
 
