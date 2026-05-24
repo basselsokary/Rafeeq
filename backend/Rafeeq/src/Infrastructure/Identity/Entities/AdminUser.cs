@@ -7,7 +7,7 @@ public sealed class AdminUser : StaffUser
 {
     private AdminUser() : base() {}
     private AdminUser(Guid userId, string userName, string email, string firstName, string lastName, string fullName)
-        : base(userId, userName, email, UserRole.Admin, firstName, lastName, fullName)
+        : base(userId, userName, email, firstName, lastName, fullName)
     {
     }
 

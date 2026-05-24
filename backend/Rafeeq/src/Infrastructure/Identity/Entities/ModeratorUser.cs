@@ -7,7 +7,7 @@ public sealed class ModeratorUser : StaffUser
 {
     private ModeratorUser() : base() { }
     private ModeratorUser(Guid userId, string userName, string email, string firstName, string lastName, string fullName)
-        : base(userId, userName, email, UserRole.Moderator, firstName, lastName, fullName)
+        : base(userId, userName, email, firstName, lastName, fullName)
     {
     }
 

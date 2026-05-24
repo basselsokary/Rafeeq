@@ -1,7 +1,7 @@
-using System.Security.Claims;
 using Application.Common.Interfaces.Authentication;
 using Application.Common.Models;
-using Domain.Enums;
+using Domain.Common.Constants;
+using Infrastructure.Authentication;
 using Infrastructure.Identity.Entities;
 using Infrastructure.Persistence.ApplicationContext;
 using Microsoft.AspNetCore.Identity;
@@ -15,221 +15,197 @@ internal class IdentityService(
     UserManager<ApplicationUser> userManager,
     SignInManager<ApplicationUser> signInManager,
     JwtTokenGenerator jwtTokenGenerator,
-    IOptions<JwtSettings> jwtSettings,
+    IOptions<JwtOptions> jwtSettings,
     ApplicationDbContext appContext) : IIdentityService
 {
-    private readonly JwtSettings _jwtSettings = jwtSettings.Value;
+    private readonly JwtOptions _jwtSettings = jwtSettings.Value;
 
-    public async Task<Result> RegisterAsync(
-        Guid userId,
-        string userName,
-        string email,
-        string password)
+    public async Task<Result<string>> RegisterAsync(Guid userId, string userName, string email, string role, string password)
     {
-        var touristResult = TouristUser.Create(userId, userName, email);
+        var touristResult = await RegisterCoreAsync(userId, userName, email, role, password);
         if (touristResult.Failed)
-            return touristResult;
+            return touristResult.Error;
 
-        string normalizedUserName = userManager.NormalizeName(userName);
-        var existingUser = await userManager.Users.AnyAsync(u => u.NormalizedUserName == normalizedUserName);
-        if (existingUser)
-            return ApplicationUserErrors.UserNameAlreadyInUse;
-
-        string normalizedEmail = userManager.NormalizeEmail(email);
-        existingUser = await userManager.Users.AnyAsync(u => u.NormalizedEmail == normalizedEmail);
-        if (existingUser)
-            return ApplicationUserErrors.EmailAlreadyInUse;
-
-        TouristUser tourist = touristResult.Value;
-
-        var result = await userManager.CreateAsync(tourist, password);
-        if (!result.Succeeded)
-        {
-            return ValidationError.FromErrors(result.Errors.Select(e => Error.Validation(e.Code, e.Description)));
-        }
-        
-        var identityResult = await userManager.AddToRoleAsync(tourist, tourist.Role.ToString());
-        if (!identityResult.Succeeded)
-        {
-            // Rollback user creation if role assignment fails
-            await userManager.DeleteAsync(tourist);
-            return ValidationError.FromErrors(identityResult.Errors.Select(e => Error.Validation(e.Code, e.Description)));
-        }
-        
-        return Result.Success();
+        var resetToken = await userManager.GenerateEmailConfirmationTokenAsync(touristResult.Value);
+        return Result.Success(resetToken);
     }
 
-    public async Task<Result> RegisterAsync(
-        Guid userId,
-        string userName,
-        string email)
+    public async Task<Result> RegisterAsync(Guid userId, string userName, string email, string role)
+    {
+        return await RegisterCoreAsync(userId, userName, email, role, password: null);
+    }
+
+    private async Task<Result<TouristUser>> RegisterCoreAsync(Guid userId, string userName, string email, string role, string? password)
     {
         var touristResult = TouristUser.Create(userId, userName, email);
         if (touristResult.Failed)
             return touristResult;
 
         string normalizedUserName = userManager.NormalizeName(userName);
-        var existingUser = await userManager.Users.AnyAsync(u => u.NormalizedUserName == normalizedUserName);
-        if (existingUser)
+        if (await userManager.Users.AnyAsync(u => u.NormalizedUserName == normalizedUserName))
             return ApplicationUserErrors.UserNameAlreadyInUse;
 
         string normalizedEmail = userManager.NormalizeEmail(email);
-        existingUser = await userManager.Users.AnyAsync(u => u.NormalizedEmail == normalizedEmail);
-        if (existingUser)
+        if (await userManager.Users.AnyAsync(u => u.NormalizedEmail == normalizedEmail))
             return ApplicationUserErrors.EmailAlreadyInUse;
 
         TouristUser tourist = touristResult.Value;
 
-        var result = await userManager.CreateAsync(tourist);
+        var result = password is not null
+            ? await userManager.CreateAsync(tourist, password)
+            : await userManager.CreateAsync(tourist);
+
         if (!result.Succeeded)
-        {
             return ValidationError.FromErrors(result.Errors.Select(e => Error.Validation(e.Code, e.Description)));
-        }
-        
-        var identityResult = await userManager.AddToRoleAsync(tourist, tourist.Role.ToString());
+
+        var identityResult = await userManager.AddToRoleAsync(tourist, role);
         if (!identityResult.Succeeded)
         {
-            // Rollback user creation if role assignment fails
             await userManager.DeleteAsync(tourist);
             return ValidationError.FromErrors(identityResult.Errors.Select(e => Error.Validation(e.Code, e.Description)));
         }
-        
-        return Result.Success();
+
+        return Result.Success(tourist);
     }
 
     public async Task<AuthenticationResult> LoginAsync(string email, string password)
     {
-        var user = await userManager.FindByEmailAsync(email);
-        if (user == null)
-        {
-            return AuthenticationResult.Failure(ApplicationUserErrors.InvalidCredentials);
-        }
-
-        if (!user.IsActive)
-        {
-            return AuthenticationResult.Failure(ApplicationUserErrors.InActiveUser);
-        }
-
-        // if (!await userManager.IsEmailConfirmedAsync(user))
-        // {
-        //     return AuthenticationResult.Failure(ApplicationUserErrors.EmailNotConfirmed);
-        // }
-
-        var result = await signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: true);
-
-        if (!result.Succeeded)
-        {
-            if (result.IsLockedOut)
-            {
-                return AuthenticationResult.Failure(ApplicationUserErrors.LockedAccount);
-            }
-
-            return AuthenticationResult.Failure(ApplicationUserErrors.InvalidCredentials);
-        }
-
-        // Update last login
-        user.RecordLastLogin();
-        await userManager.UpdateAsync(user);
-
-        var roles = await userManager.GetRolesAsync(user);
-        var accessToken = jwtTokenGenerator.GenerateAccessToken(user, roles);
-        var refreshToken = jwtTokenGenerator.GenerateRefreshToken();
-
-        // Save refresh token
-        Result saveTokenResult = await SaveRefreshTokenAsync(user.Id, refreshToken, IsAdmin(roles));
-        if (saveTokenResult.Failed)
-        {
-            return AuthenticationResult.Failure(saveTokenResult.Error);
-        }
-
-        return AuthenticationResult.Success(
-            accessToken,
-            refreshToken,
-            IsAdmin(roles) ? _jwtSettings.AccessTokenExpirationForAdminInMinutes : _jwtSettings.AccessTokenExpirationInMinutes,
-            IsAdmin(roles) ? _jwtSettings.RefreshTokenExpirationForAdminInHours : _jwtSettings.RefreshTokenExpirationInHours,
-            user.Id);
+        return await LoginCoreAsync(email, password);
     }
 
     public async Task<AuthenticationResult> LoginAsync(string email)
     {
+        return await LoginCoreAsync(email, password: null);
+    }
+
+    private async Task<AuthenticationResult> LoginCoreAsync(string email, string? password)
+    {
         var user = await userManager.FindByEmailAsync(email);
-        if (user == null)
-        {
+        if (user is null)
             return AuthenticationResult.Failure(ApplicationUserErrors.InvalidCredentials);
-        }
 
         if (!user.IsActive)
-        {
             return AuthenticationResult.Failure(ApplicationUserErrors.InActiveUser);
+
+        if (user.MustChangePassword)
+            return AuthenticationResult.Failure(ApplicationUserErrors.MustChangePassword);
+
+        if (password is not null)
+        {
+            // if (!await userManager.IsEmailConfirmedAsync(user))
+            // {
+            //     return AuthenticationResult.Failure(ApplicationUserErrors.EmailNotConfirmed);
+            // }
+
+            var signInResult = await signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: true);
+            if (!signInResult.Succeeded)
+            {
+                return AuthenticationResult.Failure(signInResult.IsLockedOut
+                    ? ApplicationUserErrors.LockedAccount
+                    : ApplicationUserErrors.InvalidCredentials);
+            }
         }
 
-        // Update last login
         user.RecordLastLogin();
         await userManager.UpdateAsync(user);
 
         var roles = await userManager.GetRolesAsync(user);
+        bool isAdmin = IsAdmin(roles);
+
         var accessToken = jwtTokenGenerator.GenerateAccessToken(user, roles);
         var refreshToken = jwtTokenGenerator.GenerateRefreshToken();
 
-        // Save refresh token
-        Result saveTokenResult = await SaveRefreshTokenAsync(user.Id, refreshToken, IsAdmin(roles));
+        var saveTokenResult = await SaveRefreshTokenAsync(user.Id, refreshToken, isAdmin);
         if (saveTokenResult.Failed)
-        {
             return AuthenticationResult.Failure(saveTokenResult.Error);
-        }
 
         return AuthenticationResult.Success(
             accessToken,
             refreshToken,
-            IsAdmin(roles) ? _jwtSettings.AccessTokenExpirationForAdminInMinutes : _jwtSettings.AccessTokenExpirationInMinutes,
-            IsAdmin(roles) ? _jwtSettings.RefreshTokenExpirationForAdminInHours : _jwtSettings.RefreshTokenExpirationInHours,
+            isAdmin ? _jwtSettings.AccessTokenExpirationForAdminInMinutes : _jwtSettings.AccessTokenExpirationInMinutes,
+            isAdmin ? _jwtSettings.RefreshTokenExpirationForAdminInHours : _jwtSettings.RefreshTokenExpirationInHours,
             user.Id);
     }
 
-    public async Task<AuthenticationResult> RefreshTokenAsync(string accessToken, string refreshToken)
+    public async Task<AuthenticationResult> AdminLoginAsync(string email, string password)
     {
-        var principal = jwtTokenGenerator.GetPrincipalFromExpiredToken(accessToken);
-        if (principal == null)
-        {
-            return AuthenticationResult.Failure(ApplicationUserErrors.InvalidToken);
-        }
+        var user = await userManager.FindByEmailAsync(email);
+        if (user is null)
+            return AuthenticationResult.Failure(ApplicationUserErrors.InvalidCredentials);
 
-        var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
-        {
-            return AuthenticationResult.Failure(ApplicationUserErrors.InvalidClaims);
-        }
-
-        var user = await userManager.FindByIdAsync(userId.ToString());
-        if (user == null || !user.IsActive)
-        {
+        if (!user.IsActive)
             return AuthenticationResult.Failure(ApplicationUserErrors.InActiveUser);
+
+        // if (user.MustChangePassword)
+        //     return AuthenticationResult.Failure(ApplicationUserErrors.MustChangePassword);
+
+        var roles = await userManager.GetRolesAsync(user);
+        if (!IsAdmin(roles))
+            return AuthenticationResult.Failure(ApplicationUserErrors.InvalidCredentials);
+
+        if (password is not null)
+        {
+            var signInResult = await signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: true);
+            if (!signInResult.Succeeded)
+            {
+                return AuthenticationResult.Failure(signInResult.IsLockedOut
+                    ? ApplicationUserErrors.LockedAccount
+                    : ApplicationUserErrors.InvalidCredentials);
+            }
         }
 
+        user.RecordLastLogin();
+        await userManager.UpdateAsync(user);
+
+        var accessToken = jwtTokenGenerator.GenerateAccessToken(user, roles);
+        var refreshToken = jwtTokenGenerator.GenerateRefreshToken();
+
+        var saveTokenResult = await SaveRefreshTokenAsync(user.Id, refreshToken, true);
+        if (saveTokenResult.Failed)
+            return AuthenticationResult.Failure(saveTokenResult.Error);
+
+        return AuthenticationResult.Success(
+            accessToken,
+            refreshToken,
+            _jwtSettings.AccessTokenExpirationForAdminInMinutes,
+            _jwtSettings.RefreshTokenExpirationForAdminInHours,
+            user.Id);
+    }
+
+    public async Task<AuthenticationResult> RefreshTokenAsync(string refreshToken)
+    {
         var storedRefreshToken = await appContext.RefreshTokens
-            .FirstOrDefaultAsync(rt => rt.Token == refreshToken && rt.UserId == userId);
+            .FirstOrDefaultAsync(rt => rt.Token == refreshToken);
 
         if (storedRefreshToken == null || !storedRefreshToken.IsActive)
         {
             return AuthenticationResult.Failure(ApplicationUserErrors.InvalidRefreshToken);
         }
 
+        var user = await userManager.FindByIdAsync(storedRefreshToken.UserId.ToString());
+        if (user == null || !user.IsActive)
+        {
+            return AuthenticationResult.Failure(ApplicationUserErrors.InActiveUser);
+        }
+
         // Revoke old refresh token
         storedRefreshToken.Revoke();
 
         var roles = await userManager.GetRolesAsync(user);
+        bool isAdmin = IsAdmin(roles);
+
         var newAccessToken = jwtTokenGenerator.GenerateAccessToken(user, roles);
         var newRefreshToken = jwtTokenGenerator.GenerateRefreshToken();
 
         await appContext.SaveChangesAsync();
 
-        await SaveRefreshTokenAsync(user.Id, newRefreshToken, IsAdmin(roles));
+        await SaveRefreshTokenAsync(user.Id, newRefreshToken, isAdmin);
 
         return AuthenticationResult.Success(
-            accessToken,
-            refreshToken,
-            IsAdmin(roles) ? _jwtSettings.AccessTokenExpirationForAdminInMinutes : _jwtSettings.AccessTokenExpirationInMinutes,
-            IsAdmin(roles) ? _jwtSettings.RefreshTokenExpirationForAdminInHours : _jwtSettings.RefreshTokenExpirationInHours,
+            newAccessToken,
+            newRefreshToken,
+            isAdmin ? _jwtSettings.AccessTokenExpirationForAdminInMinutes : _jwtSettings.AccessTokenExpirationInMinutes,
+            isAdmin ? _jwtSettings.RefreshTokenExpirationForAdminInHours : _jwtSettings.RefreshTokenExpirationInHours,
             user.Id);
     }
 
@@ -333,7 +309,7 @@ internal class IdentityService(
 
     private static bool IsAdmin(IList<string> roles)
     {
-        return roles.Any(r => r.Equals(UserRole.Admin.ToString(), StringComparison.OrdinalIgnoreCase));
+        return !roles.Contains(UserRoles.Tourist, StringComparer.OrdinalIgnoreCase);
     }
 
     private async Task<Result> SaveRefreshTokenAsync(Guid userId, string token, bool isAdmin = false)

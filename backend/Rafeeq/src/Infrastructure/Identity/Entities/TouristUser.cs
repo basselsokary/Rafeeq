@@ -7,7 +7,7 @@ public sealed class TouristUser : ApplicationUser
 {
     private TouristUser() : base() { }
     private TouristUser(Guid userId, string userName, string email)
-        : base(userId, userName, email, UserRole.Tourist) { }
+        : base(userId, userName, email) { }
 
     public static Result<TouristUser> Create(Guid userId, string userName, string email)
     {

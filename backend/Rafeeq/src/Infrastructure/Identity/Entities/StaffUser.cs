@@ -6,8 +6,8 @@ namespace Infrastructure.Identity.Entities;
 public abstract class StaffUser : ApplicationUser
 {
     protected StaffUser() : base() { }
-    protected StaffUser(Guid userId, string userName, string email, UserRole role, string firstName, string lastName, string fullName)
-        : base(userId, userName, email, role)
+    protected StaffUser(Guid userId, string userName, string email, string firstName, string lastName, string fullName)
+        : base(userId, userName, email, true)
     {
         FirstName = firstName;
         LastName = lastName;
