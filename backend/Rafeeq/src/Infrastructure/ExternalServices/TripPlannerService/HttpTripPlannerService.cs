@@ -9,7 +9,7 @@ namespace Infrastructure.ExternalServices.TripPlannerService;
 
 public class HttpTripPlannerService(
     HttpClient http,
-    TripPlannerSettings settings,
+    TripPlannerOptions settings,
     ILogger<HttpTripPlannerService> logger) : ITripPlannerService
 {
     private static readonly JsonSerializerOptions JsonOptions = new()

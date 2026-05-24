@@ -1,6 +1,6 @@
 namespace Infrastructure.ExternalServices.TripPlannerService;
 
-public class TripPlannerSettings
+public class TripPlannerOptions
 {
     public const string SectionName = "TripPlannerService";
 
