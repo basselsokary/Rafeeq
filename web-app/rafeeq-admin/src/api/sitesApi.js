@@ -6,7 +6,7 @@ const BASE = '/api/admins/sites';
 
 // ─── Dashboard ─────────────────────────────────────────────────────
 
-export const getDashboardStats = () =>
+export const getSiteDashboardStats = () =>
   api.get(`${BASE}/dashboard`);
 
 // ─── Core CRUD ─────────────────────────────────────────────────────────────

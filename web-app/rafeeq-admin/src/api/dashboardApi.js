@@ -1,6 +1,6 @@
 import api from './axiosInstance';
 
-const BASE = '/api/dashboard';
+const BASE = '/api/admins/dashboard';
 
 
 export const getDashboardStats = () =>

@@ -1,10 +1,10 @@
 import api, { refreshTokens } from './axiosInstance';
 import { clearTokenExpirations, persistTokenExpirations } from '../utils/tokenExpiry';
 
-const BASE = import.meta.env.VITE_AUTH_BASE_PATH || 'api/auth';
+const BASE = import.meta.env.VITE_AUTH_BASE_PATH;
 
 export const login = (body) =>
-  api.post(`${BASE}/login`, body).then((res) => {
+  api.post(`${BASE}/admins/login`, body).then((res) => {
     persistTokenExpirations(res?.data?.value ?? res?.data);
     return res;
   });
@@ -19,3 +19,6 @@ export const refresh = () =>
     persistTokenExpirations(res?.data?.value ?? res?.data);
     return res;
   });
+
+
+export const getMe = () => api.get(`${BASE}/me`);

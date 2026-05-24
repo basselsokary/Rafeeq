@@ -2,7 +2,7 @@ import axios from 'axios';
 import { setAuthState } from '../auth/authState';
 import { clearTokenExpirations, persistTokenExpirations } from '../utils/tokenExpiry';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5143';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Dedicated client for refresh (no interceptors to avoid loops)
 const refreshClient = axios.create({
@@ -17,8 +17,8 @@ const refreshClient = axios.create({
 let refreshPromise = null;
 
 export const refreshTokens = () => {
-  const authBase = import.meta.env.VITE_AUTH_BASE_PATH || '/api/auth';
-  return refreshClient.post(`${authBase}/web/refresh`).then((res) => {
+  const authBase = import.meta.env.VITE_AUTH_BASE_PATH;
+  return refreshClient.post(`${authBase}/admins/refresh`).then((res) => {
     persistTokenExpirations(res?.data?.value ?? res?.data);
     return res;
   });
@@ -64,6 +64,7 @@ api.interceptors.response.use(
 
       setAuthState({ isAuthenticated: false, hasChecked: true });
       clearTokenExpirations();
+      window.dispatchEvent(new Event('auth:logout'));
       window.location.href = '/login';
       return Promise.reject(refreshErr);
     }
