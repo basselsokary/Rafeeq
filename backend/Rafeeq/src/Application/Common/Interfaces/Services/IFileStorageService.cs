@@ -12,6 +12,7 @@ public interface IFileStorageService
     Task<Result<UploadedFileResponse>> UploadAsync(
         Stream fileStream,
         StorageKey storageKey,
+        string hash,
         CancellationToken ct = default);
 
     Task<Result> DeleteAsync(StorageKey storageKey, CancellationToken ct = default);

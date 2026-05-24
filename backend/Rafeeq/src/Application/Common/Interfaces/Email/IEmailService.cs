@@ -15,7 +15,7 @@ public interface IEmailService
         CancellationToken cancellationToken = default);
 
     Task SendWelcomeEmailAsync(
-        string email, 
+        string email,
         string userName,
         CancellationToken cancellationToken = default);
 

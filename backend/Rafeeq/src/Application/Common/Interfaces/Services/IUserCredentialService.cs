@@ -1,8 +1,8 @@
 namespace Application.Common.Interfaces.Services;
 
-public interface IEmailGeneratorService
+public interface IUserCredentialService
 {
-    Task<string> GenerateModeratorEmailAsync(string firstName, string lastName, CancellationToken cancellationToken);
     Task<string> GenerateUniqueUsernameAsync(string firstName, string lastName, CancellationToken cancellationToken);
+    string GenerateTemporaryPassword();
 }
 
