@@ -3,7 +3,6 @@ using Application.Common.Interfaces.Messaging;
 using Application.DTOs.Common;
 using Application.DTOs.Sites;
 using Application.Queries.Sites;
-using Domain.Common.Constants;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [Route("api/[controller]")]
-[Authorize(Roles = UserRoles.Tourist)]
 public class SitesController : ApiBaseController
 {
     [HttpGet]
-    [AllowAnonymous]
     public async Task<ActionResult<PagedResult<SiteListDto>>> GetAll(
         [FromQuery] string? searchTerm,
         [FromQuery] SiteType? type,
@@ -38,7 +35,6 @@ public class SitesController : ApiBaseController
     }
 
     [HttpGet("{id:guid}")]
-    [AllowAnonymous]
     public async Task<ActionResult<SiteDetailDto>> GetById(
         [FromRoute] Guid id,
         [FromServices] IQueryHandler<GetSiteByIdQuery, SiteDetailDto> queryHandler,
@@ -51,7 +47,6 @@ public class SitesController : ApiBaseController
     }
 
     [HttpGet("featured")]
-    [AllowAnonymous]
     public async Task<ActionResult<List<SiteListDto>>> GetFeatured(
         [FromQuery] Guid? city,
         [FromServices] IQueryHandler<GetFeaturedSitesQuery, List<SiteListDto>> queryHandler,

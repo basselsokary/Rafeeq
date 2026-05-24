@@ -4,14 +4,14 @@ using Application.Common.Interfaces.Messaging;
 using Application.DTOs.Common;
 using Application.DTOs.Trips;
 using Application.Queries.Trips;
-using Domain.Common.Constants;
+using Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 [Route("api/trips")]
-[Authorize(Roles = UserRoles.Tourist)]
+[Authorize(Policy = Policies.TouristOnly)]
 public class TripsController : ApiBaseController
 {
     #region CRUD Operations

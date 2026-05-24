@@ -1,8 +1,8 @@
 using API.Configurations;
 using API.Controllers.Base;
-using Application.Commands.Users;
-using Application.Commands.Users.Tourists;
+using Application.Commands.Auth;
 using Application.Common.Interfaces.Messaging;
+using Application.Queries.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -13,6 +13,17 @@ namespace API.Controllers;
 [EnableRateLimiting(RateLimiterPolicies.AuthPerIp)]
 public class AuthController : ApiBaseController
 {
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<ActionResult<CurrentUserResponse>> GetCurrentUser(
+        [FromServices] IQueryHandler<GetCurrentUserQuery, CurrentUserResponse> queryHandler,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await queryHandler.HandleAsync(new GetCurrentUserQuery(), cancellationToken);
+
+        return HandleResult(result);
+    }
+
     [HttpPost("login")]
     public async Task<ActionResult<LoginResponse>> Login(
         [FromBody] LoginCommand command,
@@ -20,26 +31,30 @@ public class AuthController : ApiBaseController
         CancellationToken cancellationToken = default)
     {
         var result = await commandHandler.HandleAsync(command, cancellationToken);
+
+        return HandleResult(result);
+    }
+
+    [HttpPost("admins/login")]
+    public async Task<ActionResult<AdminLoginResponse>> AdminLogin(
+        [FromBody] AdminLoginCommand command,
+        [FromServices] ICommandHandler<AdminLoginCommand, AdminLoginResponse> commandHandler,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await commandHandler.HandleAsync(command, cancellationToken);
         if (result.Failed)
         {
             return HandleResult(result);
         }
+        
+        SetCookies(
+            Response,
+            result.Value.AccessToken,
+            result.Value.RefreshToken,
+            result.Value.AccessTokenExpirationInMinutes,
+            result.Value.RefreshTokenExpirationInHours);
 
-        if (IsMobileClient(Request))
-        {
-            return HandleResult(result);
-        }
-        else
-        {
-            SetCookies(
-                Response,
-                result.Value.AccessToken,
-                result.Value.RefreshToken,
-                result.Value.AccessTokenExpirationInMinutes,
-                result.Value.RefreshTokenExpirationInHours);
-
-            return Ok(new {result.Value.AccessTokenExpirationInMinutes, result.Value.RefreshTokenExpirationInHours});
-        }
+        return Ok(new {result.Value.AccessTokenExpirationInMinutes, result.Value.RefreshTokenExpirationInHours});
     }
 
     [HttpPost("login-google")]
@@ -75,23 +90,22 @@ public class AuthController : ApiBaseController
         return HandleResult(result);
     }
 
-    [HttpPost("web/refresh")]
-    public async Task<IActionResult> RefreshWeb(
+    [HttpPost("admins/refresh")]
+    public async Task<IActionResult> AdminRefresh(
         [FromServices] ICommandHandler<RefreshCommand, RefreshResponse> commandHandler,
         CancellationToken cancellationToken = default)
     {
-        var accessToken = Request.Cookies["access_token"];
         var refreshToken = Request.Cookies["refresh_token"];
-        if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
+        if (string.IsNullOrEmpty(refreshToken))
         {
             return Unauthorized(new { Message = "Tokens are missing in cookies." });
         }
 
-        var command = new RefreshCommand(accessToken, refreshToken);
+        var command = new RefreshCommand(refreshToken);
         var result = await commandHandler.HandleAsync(command, cancellationToken);
         if (result.Failed)
         {   
-            return BadRequest(result);
+            return HandleResult(result.Error);
         }
 
         SetCookies(
@@ -169,38 +183,19 @@ public class AuthController : ApiBaseController
         return Ok();
     }
 
-    private static bool IsMobileClient(HttpRequest request)
-    {
-        if (request.Headers.ContainsKey("Authorization"))
-            return true;
-        
-        var userAgent = request.Headers.UserAgent.ToString();
-
-        // Primary detection (Flutter / Dart)
-        if (userAgent.Contains("Dart", StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        // Secondary fallback (if needed later)
-        if (userAgent.Contains("Android", StringComparison.OrdinalIgnoreCase) ||
-            userAgent.Contains("iPhone", StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        return false;
-    }
-
     private static void SetCookies(
         HttpResponse response,
         string accessToken,
         string refreshToken,
-        int accessTokenExpiresInHours,
-        int refreshTokenExpiresInDays)
+        int AccessTokenExpirationInMinutes,
+        int RefreshTokenExpirationInHours)
     {
         var accessTokenOptions = new CookieOptions
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.None, // Allow cross-site for mobile clients
-            Expires = DateTime.UtcNow.AddHours(accessTokenExpiresInHours),
+            SameSite = SameSiteMode.Lax,
+            Expires = DateTime.UtcNow.AddMinutes(AccessTokenExpirationInMinutes),
             Path = "/"
         };
 
@@ -208,9 +203,9 @@ public class AuthController : ApiBaseController
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.None, // Allow cross-site for mobile clients
-            Expires = DateTime.UtcNow.AddDays(refreshTokenExpiresInDays),
-            Path = "/api/auth/web/refresh" // Scope it (better security)
+            SameSite = SameSiteMode.Lax,
+            Expires = DateTime.UtcNow.AddHours(RefreshTokenExpirationInHours),
+            Path = "/api/auth/web/refresh" // Better security by restricting the refresh token to a specific endpoint
         };
 
         response.Cookies.Delete("access_token");

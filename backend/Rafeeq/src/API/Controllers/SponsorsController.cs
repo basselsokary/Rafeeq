@@ -5,8 +5,8 @@ using Application.DTOs.Common;
 using Application.DTOs.Sponsors;
 using Application.Queries.Sponsors;
 using Application.Queries.Sponsors.Offers;
-using Domain.Common.Constants;
 using Domain.Enums;
+using Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,7 +47,7 @@ public class SponsorsController : ApiBaseController
 	}
 
 	[HttpGet("nearby")]
-	[Authorize(Roles = UserRoles.Tourist)]
+	[Authorize(Policy = Policies.TouristOnly)]
 	public async Task<ActionResult<List<NearbySponsorDto>>> GetNearby(
 		[FromQuery] double latitude,
 		[FromQuery] double longitude,
@@ -109,7 +109,7 @@ public class SponsorsController : ApiBaseController
 	}
 
 	[HttpPut("{id:guid}/offers/{offerId:guid}/redeem")]
-	[Authorize(Roles = UserRoles.Tourist)]
+	[Authorize(Policy = Policies.TouristOnly)]
 	public async Task<IActionResult> RedeemOffer(
 		[FromRoute] Guid id,
 		[FromRoute] Guid offerId,

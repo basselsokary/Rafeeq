@@ -1,15 +1,17 @@
+using API.Configurations;
 using API.Controllers.Base;
 using Application.Commands.Artifacts;
 using Application.Common.Interfaces.Messaging;
 using Application.DTOs.Artifacts;
-using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace API.Controllers;
 
 [Route("api/[controller]")]
 [Authorize]
+[EnableRateLimiting(RateLimiterPolicies.ScanImagePolicy)]
 public class ScannerController : ApiBaseController
 {
     [HttpPost("scan-image")]

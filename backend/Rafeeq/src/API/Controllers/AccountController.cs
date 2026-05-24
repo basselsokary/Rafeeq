@@ -6,13 +6,14 @@ using Application.Common.Interfaces.Messaging;
 using Application.DTOs.Common;
 using Application.DTOs.Tourists;
 using Application.Queries.Users.Tourists;
+using Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 [Route("api/[controller]")]
-[Authorize]
+[Authorize(Policy = Policies.TouristOnly)]
 public class AccountController : ApiBaseController
 {
     [HttpGet("profile")]
