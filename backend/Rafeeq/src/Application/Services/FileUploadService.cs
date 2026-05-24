@@ -24,12 +24,12 @@ public sealed record UploadImageContext<TMetadata>(
 public sealed class FileUploadService(
     IFileStorageService storage,
     IImageProcessingService imageProcessor,
-    IOptions<FileUploadSettings> options,
+    IOptions<FileUploadOptions> options,
     ILogger<FileUploadService> logger,
     IUnitOfWork unitOfWork,
     IErrorLocalizer errorLocalizer) : IFileUploadService
 {
-    private readonly FileUploadSettings options = options.Value;
+    private readonly FileUploadOptions options = options.Value;
 
     private sealed record PreparedUpload<T>(
         UploadImageContext<T> Context,
@@ -313,7 +313,7 @@ public sealed class FileUploadService(
                 DateTimeOffset.UtcNow);
         }
 
-        var uploadResult = await storage.UploadAsync(processedResult.Value.Stream, storageKey, ct);
+        var uploadResult = await storage.UploadAsync(processedResult.Value.Stream, storageKey, hash.Value, ct);
         if (uploadResult.Failed)
         {
             logger.LogError(
@@ -383,7 +383,7 @@ public sealed class FileUploadService(
             Metadata: metadata);
 }
 
-public sealed class FileUploadSettings
+public sealed class FileUploadOptions
 {
     public const string SectionName = "FileUpload";
 
