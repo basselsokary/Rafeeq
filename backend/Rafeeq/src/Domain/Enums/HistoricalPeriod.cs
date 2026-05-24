@@ -143,5 +143,27 @@ public enum HistoricalPeriod
     /// 1805 – 1952 AD
     /// Muhammad Ali Dynasty; modernization of Egypt.
     /// </summary>
-    MuhammadAliDynasty = 23
+    MuhammadAliDynasty = 23,
+    
+    /// <summary>
+    /// 250 – 450 AD
+    /// Late Antique/Early Coptic period.
+    /// </summary>
+    LateAntiqueEarlyCoptic = 24,
+    /// <summary>
+    /// 1952 – 1956 AD
+    /// Contemporary period.
+    /// </summary>
+    Contemporary = 25,
+    /// <summary>
+    /// 1956 – 1971 AD
+    /// Modern Era.
+    /// </summary>
+    ModernEra = 26,
+    /// <summary>
+    /// 1867 – 1956 AD
+    /// Khedivial era.
+    /// </summary>
+    KhedivialEra = 27,
+    Islamic = 28, // General category for attractions spanning multiple Islamic periods.
 }

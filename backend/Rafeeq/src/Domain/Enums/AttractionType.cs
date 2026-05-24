@@ -29,13 +29,21 @@ public enum AttractionType
     Courtyard = 19,
 
     Cave = 20,
-    RockCutStructure = 21,
+    Well = 21,
+    RockCutStructure = 22,
+    
 
-    ArchaeologicalStructure = 22,
+    ArchaeologicalStructure = 23,
 
-    HistoricBuilding = 23,
+    HistoricBuilding = 24,
 
-    ViewingPoint = 24,
+    ViewingPoint = 25,
 
-    CulturalExhibit = 25
+    CulturalExhibit = 26,
+    Waterfall = 27,
+    Entertainment = 28,
+    Historical = 29,
+    Religious = 30,
+    Nature = 31,
+    Dining = 32
 }
