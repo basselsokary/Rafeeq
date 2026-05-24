@@ -1,3 +1,3 @@
 namespace Application.DTOs.Users;
 
-public record UserDto(Guid Id, string UserName, string Email);
+public record UserDto(Guid Id, string UserName, string Email, List<string> Roles);

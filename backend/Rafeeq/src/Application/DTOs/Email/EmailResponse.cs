@@ -4,7 +4,7 @@ public record EmailResponse(string Subject, string HtmlBody, string TextBody);
 
 public static class EmailTemplates
 {
-    public static EmailResponse PasswordReset(string userName, string resetLink)
+    public static EmailResponse PasswordReset(string userName, string resetLink, int expiresInHours)
     {
         return new EmailResponse(
             Subject: "Reset Your Rafeeq Password",
@@ -14,7 +14,7 @@ public static class EmailTemplates
                 <p>You requested to reset your password for your Rafeeq account.</p>
                 <p>Click the link below to reset your password:</p>
                 <p><a href='{resetLink}'>Reset Password</a></p>
-                <p>This link will expire in 24 hours.</p>
+                <p>This link will expire in {expiresInHours} hours.
                 <p>If you didn't request this, please ignore this email.</p>
                 <p>Best regards,<br/>The Rafeeq Team</p>
             ",
@@ -28,7 +28,7 @@ public static class EmailTemplates
                 Click the link below to reset your password:
                 {resetLink}
                 
-                This link will expire in 24 hours.
+                This link will expire in {expiresInHours} hours.
                 
                 If you didn't request this, please ignore this email.
                 
@@ -37,7 +37,7 @@ public static class EmailTemplates
             ");
     }
 
-    public static EmailResponse EmailVerification(string userName, string verificationLink)
+    public static EmailResponse EmailVerification(string userName, string verificationLink, int expiresInHours)
     {
         return new EmailResponse(
             Subject: "Verify Your Rafeeq Email",
@@ -47,7 +47,7 @@ public static class EmailTemplates
                 <p>Welcome to Rafeeq! Please verify your email address.</p>
                 <p>Click the link below to verify:</p>
                 <p><a href='{verificationLink}'>Verify Email</a></p>
-                <p>This link will expire in 48 hours.</p>
+                <p>This link will expire in {expiresInHours} hours.</p>
                 <p>Best regards,<br/>The Rafeeq Team</p>
             ",
             TextBody: $@"
@@ -60,7 +60,7 @@ public static class EmailTemplates
                 Click the link below to verify:
                 {verificationLink}
                 
-                This link will expire in 48 hours.
+                This link will expire in {expiresInHours} hours.
                 
                 Best regards,
                 The Rafeeq Team
@@ -97,11 +97,17 @@ public static class EmailTemplates
         return new EmailResponse(
             Subject: "Welcome to Rafeeq Moderator Team!",
             HtmlBody: $@"
-                <h2>Welcome to Rafeeq!</h2>
+                <h2>Welcome to Rafeeq Moderator Team!</h2>
                 <p>Hello {firstName},</p>
-                <p>You have been promoted to a moderator on Rafeeq!</p>
-                <p>As a moderator, you will help maintain the quality and integrity of our community.</p>
-                <p>Best regards,<br/>The Rafeeq Team</p>
+                <p>Congratulations! You have been added as a moderator to the Rafeeq platform.</p>
+                <p>Your login credentials:</p>
+                <ul>
+                    <li><strong>Email:</strong> {email}</li>
+                    <li><strong>Temporary Password:</strong> {tempPassword}</li>
+                </ul>
+                <p><strong>IMPORTANT:</strong> You must change your password on first login.</p>
+                <p>Login here: <a href='https://admin.rafeeq.com/login'>https://admin.rafeeq.com/login</a></p>
+                <p>If you did not expect this email, please contact: <a href='mailto:admin@rafeeq.live'>admin@rafeeq.live</a></p>
             ",
             TextBody: $@"
                 Your login credentials:
@@ -110,9 +116,9 @@ public static class EmailTemplates
 
                 IMPORTANT: You must change your password on first login.
 
-                Login here: https://admin.rafeeq.com/login
+                Login here: https://admin.rafeeq.live/login
 
-                If you did not expect this email, please contact: admin@rafeeq.com
+                If you did not expect this email, please contact: admin@rafeeq.live
 
                 Best regards,
                 Rafeeq Admin Team
