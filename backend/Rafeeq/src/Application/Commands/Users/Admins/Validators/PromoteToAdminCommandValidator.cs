@@ -4,16 +4,12 @@ using FluentValidation;
 
 namespace Application.Commands.Users.Admins.Validators;
 
-internal sealed class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
+internal sealed class PromoteToAdminCommandValidator : AbstractValidator<PromoteToAdminCommand>
 {
-    public DeleteUserCommandValidator(IErrorLocalizer errors)
+    public PromoteToAdminCommandValidator(IErrorLocalizer errors)
     {
         RuleFor(x => x.UserId)
             .NotEmpty()
             .WithMessage(errors[UserErrors.IdRequired.Code]);
-
-        RuleFor(x => x.Reason)
-            .NotEmpty()
-            .WithMessage(errors[ValidationErrors.ValueRequired.Code]);
     }
 }

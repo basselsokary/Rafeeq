@@ -4,16 +4,12 @@ using FluentValidation;
 
 namespace Application.Commands.Users.Admins.Validators;
 
-internal sealed class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
+internal sealed class RequirePasswordChangeCommandValidator : AbstractValidator<RequirePasswordChangeCommand>
 {
-    public DeleteUserCommandValidator(IErrorLocalizer errors)
+    public RequirePasswordChangeCommandValidator(IErrorLocalizer errors)
     {
         RuleFor(x => x.UserId)
             .NotEmpty()
             .WithMessage(errors[UserErrors.IdRequired.Code]);
-
-        RuleFor(x => x.Reason)
-            .NotEmpty()
-            .WithMessage(errors[ValidationErrors.ValueRequired.Code]);
     }
 }

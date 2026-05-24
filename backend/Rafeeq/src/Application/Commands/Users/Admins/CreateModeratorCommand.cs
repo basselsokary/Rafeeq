@@ -1,40 +1,39 @@
-using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.Email;
 using Application.Common.Interfaces.Services;
+using Application.DTOs.Users;
 
 namespace Application.Commands.Users.Admins;
 
-public sealed record CreateModeratorCommand(
+public record CreateModeratorCommand(
     string FirstName,
     string LastName,
-    string FullName) : ICommand;
+    string FullName,
+    string Email) : ICommand<UserDetailsDto>;
 
 internal sealed class CreateModeratorCommandHandler(
-    IAdminService adminService,
-    IEmailGeneratorService emailGenerator,
-    IPasswordGenerator passwordGenerator,
-    IEmailService emailService) : ICommandHandler<CreateModeratorCommand>
+    IUserManagementService userManagementService,
+    IUserCredentialService userCredentialService,
+    IEmailService emailService) : ICommandHandler<CreateModeratorCommand, UserDetailsDto>
 {
-    public async Task<Result> HandleAsync(CreateModeratorCommand command, CancellationToken cancellationToken)
+    public async Task<Result<UserDetailsDto>> HandleAsync(CreateModeratorCommand command, CancellationToken cancellationToken)
     {
-        var userName = await emailGenerator.GenerateUniqueUsernameAsync(command.FirstName, command.LastName, cancellationToken);
-        var email = await emailGenerator.GenerateModeratorEmailAsync(command.FirstName, command.LastName, cancellationToken);
-        var password = passwordGenerator.GenerateTemporaryPassword();
+        var userName = await userCredentialService.GenerateUniqueUsernameAsync(command.FirstName, command.LastName, cancellationToken);
+        var password = userCredentialService.GenerateTemporaryPassword();
 
-        Result result = await adminService.AddModeratorAsync(
+        Result<UserDetailsDto> result = await userManagementService.CreateModeratorAsync(
             userName,
             command.FirstName,
             command.LastName,
             command.FullName,
-            email,
+            command.Email,
             password,
             cancellationToken);
         
         if (result.Failed)
-            return result;
+            return Result.Failure<UserDetailsDto>(result.Error);
         
-        await emailService.SendWelcomeModeratorAsync(command.FirstName, email, password, cancellationToken);
+        await emailService.SendWelcomeModeratorAsync(command.FirstName, command.Email, password, cancellationToken);
         
-        return Result.Success();
+        return result;
     }
 }

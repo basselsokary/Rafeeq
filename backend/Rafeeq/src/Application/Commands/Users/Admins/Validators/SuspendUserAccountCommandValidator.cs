@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace Application.Commands.Users.Admins.Validators;
 
-internal sealed class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
+internal sealed class SuspendUserAccountCommandValidator : AbstractValidator<SuspendUserAccountCommand>
 {
-    public DeleteUserCommandValidator(IErrorLocalizer errors)
+    public SuspendUserAccountCommandValidator(IErrorLocalizer errors)
     {
         RuleFor(x => x.UserId)
             .NotEmpty()
@@ -15,5 +15,9 @@ internal sealed class DeleteUserCommandValidator : AbstractValidator<DeleteUserC
         RuleFor(x => x.Reason)
             .NotEmpty()
             .WithMessage(errors[ValidationErrors.ValueRequired.Code]);
+
+        RuleFor(x => x.SuspendUntil)
+            .Must(date => date > DateTime.UtcNow)
+            .WithMessage(errors[ValidationErrors.RangeInvalid.Code]);
     }
 }

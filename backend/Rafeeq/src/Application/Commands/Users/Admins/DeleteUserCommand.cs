@@ -2,17 +2,16 @@ using Application.Common.Interfaces.Services;
 
 namespace Application.Commands.Users.Admins;
 
-public sealed record DeleteUserCommand(string Email) : ICommand;
+public record DeleteUserCommand(
+    Guid UserId,
+    string Reason,
+    bool NotifyUser = true) : ICommand;
 
-internal sealed class DeleteUserCommandHandler(
-    IAdminService adminService) : ICommandHandler<DeleteUserCommand>
+internal sealed class DeleteUserCommandHandler(IUserManagementService userManagementService)
+    : ICommandHandler<DeleteUserCommand>
 {
-    public async Task<Result> HandleAsync(DeleteUserCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(DeleteUserCommand command, CancellationToken cancellationToken)
     {
-        var result = await adminService.DeleteUserAsync(command.Email);
-        if (result.Failed)
-            return result;
-
-        return Result.Success();
+        return await userManagementService.DeleteUserAsync(command.UserId, command.Reason, command.NotifyUser, cancellationToken);
     }
 }
