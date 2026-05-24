@@ -1,5 +1,5 @@
 using Domain.Common;
-using Infrastructure.Identity;
+using Infrastructure.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;

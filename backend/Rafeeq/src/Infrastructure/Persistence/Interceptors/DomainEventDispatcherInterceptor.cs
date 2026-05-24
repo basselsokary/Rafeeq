@@ -2,42 +2,37 @@ using Domain.Common;
 using Infrastructure.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Persistence.Interceptors;
 
 internal sealed class DomainEventDispatcherInterceptor(
-    DomainEventsDispatcher dispatcher,
-    ILogger<DomainEventDispatcherInterceptor> logger) : SaveChangesInterceptor
+    DomainEventsDispatcher dispatcher) : SaveChangesInterceptor
 {
+    private List<BaseEvent> _domainEvents = [];
+
+    public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
+        DbContextEventData eventData,
+        InterceptionResult<int> result,
+        CancellationToken cancellationToken = default)
+    {
+        if (eventData.Context is not null)
+            _domainEvents = GetDomainEvents(eventData.Context);
+
+        return await base.SavingChangesAsync(eventData, result, cancellationToken);
+    }
+
     public override async ValueTask<int> SavedChangesAsync(
         SaveChangesCompletedEventData eventData,
         int result,
         CancellationToken cancellationToken = default)
     {
-        if (eventData.Context != null)
-        {
-            await DispatchDomainEventsAsync(eventData.Context, cancellationToken);
-        }
+        await dispatcher.DispatchAsync(_domainEvents, cancellationToken);
+        _domainEvents = [];
 
         return await base.SavedChangesAsync(eventData, result, cancellationToken);
     }
 
-    public override int SavedChanges(
-        SaveChangesCompletedEventData eventData,
-        int result)
-    {
-        if (eventData.Context != null)
-        {
-            DispatchDomainEventsAsync(eventData.Context, CancellationToken.None).GetAwaiter().GetResult();
-        }
-
-        return base.SavedChanges(eventData, result);
-    }
-
-    private async Task DispatchDomainEventsAsync(
-        DbContext context,
-        CancellationToken cancellationToken)
+    private static List<BaseEvent> GetDomainEvents(DbContext context)
     {
         var domainEntities = context.ChangeTracker
             .Entries<BaseEntity>()
@@ -49,18 +44,12 @@ internal sealed class DomainEventDispatcherInterceptor(
             .SelectMany(x => x.DomainEvents)
             .ToList();
 
-        logger.LogInformation(
-            "Dispatching {Count} domain events from {EntityCount} entities.",
-            domainEvents.Count, domainEntities.Count);
-
         domainEntities.ForEach(entity =>
         {
-            logger.LogInformation(
-                "Clearing {EventCount} domain events from entity {EntityType}.",
-                entity.DomainEvents.Count, entity.GetType().Name);
             entity.ClearDomainEvents();
         });
 
-        await dispatcher.DispatchAsync(domainEvents, cancellationToken);
+        return domainEvents;
     }
+
 }
