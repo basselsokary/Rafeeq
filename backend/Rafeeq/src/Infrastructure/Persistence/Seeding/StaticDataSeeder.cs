@@ -1,3 +1,4 @@
+using Domain.Common.Constants;
 using Domain.Entities.AttractionAggregate;
 using Domain.Entities.CityAggregate;
 using Domain.Entities.SiteAggregate;
@@ -39,8 +40,8 @@ internal static class StaticDataSeeder
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
         await EnsureRolesAsync(roleManager);
-        await EnsureUserAsync(userManager, TouristUserId, "swagger-tourist", TouristEmail, SeedPassword, UserRole.Tourist);
-        await EnsureUserAsync(userManager, AdminUserId, "swagger-admin", AdminEmail, SeedPassword, UserRole.Admin);
+        await EnsureUserAsync(userManager, TouristUserId, "swagger-tourist", TouristEmail, SeedPassword, UserRoles.Tourist);
+        await EnsureUserAsync(userManager, AdminUserId, "swagger-admin", AdminEmail, SeedPassword, UserRoles.Admin);
 
         Tourist tourist = await EnsureTouristAsync(dbContext, TouristUserId, cancellationToken);
 
@@ -206,7 +207,6 @@ internal static class StaticDataSeeder
             new { NameEn = "Nile Bistro", NameAr = "بيسترو النيل", DescEn = "Riverside dining and offers.", DescAr = "مطعم على النيل مع عروض.", AddressEn = "Corniche Road 10, Nile Capital", AddressAr = "طريق الكورنيش 10، عاصمة النيل", Lat = 30.0520, Lng = 31.2380, Type = SponsorType.Restaurant, Tier = SponsorTier.Gold },
             new { NameEn = "Harbor Inn", NameAr = "نزل الميناء", DescEn = "Boutique stay near the bay.", DescAr = "إقامة مميزة قرب الخليج.", AddressEn = "Harbor Street 2, Coastal Vista", AddressAr = "شارع الميناء 2، واجهة الساحل", Lat = 31.2133, Lng = 29.8933, Type = SponsorType.Hotel, Tier = SponsorTier.Silver },
             new { NameEn = "Desert Trails", NameAr = "مسارات الصحراء", DescEn = "Guided desert experiences.", DescAr = "جولات صحراء موجهة.", AddressEn = "Trail Road 6, Desert Gate", AddressAr = "طريق المسارات 6، بوابة الصحراء", Lat = 29.9845, Lng = 30.9490, Type = SponsorType.Tour, Tier = SponsorTier.Gold },
-            new { NameEn = "City Craft Shop", NameAr = "متجر الحرف", DescEn = "Local crafts and gifts.", DescAr = "حرف محلية وهدايا.", AddressEn = "Market Lane 9, Nile Capital", AddressAr = "حارة السوق 9، عاصمة النيل", Lat = 30.0545, Lng = 31.2375, Type = SponsorType.Shop, Tier = SponsorTier.Bronze },
             new { NameEn = "Coastline Transit", NameAr = "تنقلات الساحل", DescEn = "Local transport services.", DescAr = "خدمات نقل محلية.", AddressEn = "Transit Blvd 1, Coastal Vista", AddressAr = "بوليفارد النقل 1، واجهة الساحل", Lat = 31.2098, Lng = 29.9100, Type = SponsorType.Transportation, Tier = SponsorTier.Silver },
             new { NameEn = "Oasis Spa", NameAr = "سبا الواحة", DescEn = "Wellness and relaxation.", DescAr = "عناية واسترخاء.", AddressEn = "Oasis Road 3, Desert Gate", AddressAr = "طريق الواحة 3، بوابة الصحراء", Lat = 29.9735, Lng = 30.9475, Type = SponsorType.Service, Tier = SponsorTier.Platinum },
             new { NameEn = "Museum Cafe", NameAr = "مقهى المتحف", DescEn = "Cafe for visitors and families.", DescAr = "مقهى للزوار والعائلات.", AddressEn = "Museum Avenue 1, Nile Capital", AddressAr = "شارع المتحف 1، عاصمة النيل", Lat = 30.0465, Lng = 31.2315, Type = SponsorType.Restaurant, Tier = SponsorTier.Gold }
@@ -287,7 +287,6 @@ internal static class StaticDataSeeder
             touristId,
             "Swagger",
             "Tourist",
-            TouristEmail,
             "Egyptian"),
             "Create tourist profile");
 
@@ -299,7 +298,7 @@ internal static class StaticDataSeeder
 
     private static async Task EnsureRolesAsync(RoleManager<IdentityRole<Guid>> roleManager)
     {
-        string[] roles = [nameof(UserRole.Tourist), nameof(UserRole.Admin), nameof(UserRole.Moderator)];
+        string[] roles = UserRoles.AllRoles;
 
         foreach (string roleName in roles)
         {
@@ -318,22 +317,22 @@ internal static class StaticDataSeeder
         string userName,
         string email,
         string password,
-        UserRole role)
+        string role)
     {
         ApplicationUser? existingUser = await userManager.FindByEmailAsync(email);
         if (existingUser is not null)
         {
-            bool hasRole = await userManager.IsInRoleAsync(existingUser, role.ToString());
+            bool hasRole = await userManager.IsInRoleAsync(existingUser, role);
             if (!hasRole)
             {
-                IdentityResult addRoleResult = await userManager.AddToRoleAsync(existingUser, role.ToString());
+                IdentityResult addRoleResult = await userManager.AddToRoleAsync(existingUser, role);
                 Ensure(addRoleResult, $"Assign role {role} to {email}");
             }
 
             return;
         }
 
-        if (role == UserRole.Admin)
+        if (role == UserRoles.Admin)
         {
             AdminUser user = Ensure(AdminUser.Create(userId, userName, email, "Sandor", "Clegane", "Sandor The Hound Clegane"), $"Create user object for {email}");
             user.EmailConfirmed = true;
@@ -341,10 +340,10 @@ internal static class StaticDataSeeder
             IdentityResult createUserResult = await userManager.CreateAsync(user, password);
             Ensure(createUserResult, $"Create user {email}");
 
-            IdentityResult assignRoleResult = await userManager.AddToRoleAsync(user, role.ToString());
+            IdentityResult assignRoleResult = await userManager.AddToRoleAsync(user, role);
             Ensure(assignRoleResult, $"Assign role {role} to {email}");
         } 
-        else if (role == UserRole.Tourist)
+        else if (role == UserRoles.Tourist)
         {
             TouristUser user = Ensure(TouristUser.Create(userId, userName, email), $"Create user object for {email}");
             user.EmailConfirmed = true;
@@ -352,7 +351,7 @@ internal static class StaticDataSeeder
             IdentityResult createUserResult = await userManager.CreateAsync(user, password);
             Ensure(createUserResult, $"Create user {email}");
 
-            IdentityResult assignRoleResult = await userManager.AddToRoleAsync(user, role.ToString());
+            IdentityResult assignRoleResult = await userManager.AddToRoleAsync(user, role);
             Ensure(assignRoleResult, $"Assign role {role} to {email}");
         } 
         else

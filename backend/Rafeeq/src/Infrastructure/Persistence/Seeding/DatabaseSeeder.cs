@@ -25,14 +25,17 @@ internal sealed class DatabaseSeeder(
     {
         context.Database.Migrate();
         
-        if (await context.Cities.AnyAsync(cancellationToken))
-        {
-            logger.LogInformation("Database already contains data; skipping seeding.");
-            return;
-        }
+        // if (await context.Cities.AnyAsync(cancellationToken))
+        // {
+        //     logger.LogInformation("Database already contains data; skipping seeding.");
+        //     return;
+        // }
 
-        await EnsureRolesAsync(roleManager);
-        await SeedInitialAdminAsync(userManager, configuration);
+        if (!roleManager.Roles.Any())
+        {
+            await EnsureRolesAsync(roleManager);
+            await SeedInitialAdminAsync(userManager, configuration);
+        }
 
         var ordered = seeders
             .OrderBy(s => s.Order)
@@ -61,10 +64,11 @@ internal sealed class DatabaseSeeder(
 
     private static async Task EnsureRolesAsync(RoleManager<IdentityRole<Guid>> roleManager)
     {
-        string[] roles = [UserRole.Admin.ToString(), UserRole.Moderator.ToString(), UserRole.Tourist.ToString()];
-        foreach (string roleName in roles)
+        var existingRoles = await roleManager.Roles.Select(r => r.Name).ToListAsync();
+        
+        foreach (string roleName in UserRoles.AllRoles)
         {
-            bool exists = await roleManager.RoleExistsAsync(roleName);
+            bool exists = existingRoles.Contains(roleName);
             if (!exists)
             {
                 IdentityResult createRoleResult = await roleManager.CreateAsync(new IdentityRole<Guid>(roleName));
@@ -76,6 +80,7 @@ internal sealed class DatabaseSeeder(
             }
         }
     }
+
     private static async Task SeedInitialAdminAsync(
         UserManager<ApplicationUser> userManager,
         IConfiguration configuration)
@@ -112,7 +117,7 @@ internal sealed class DatabaseSeeder(
         if (result.Succeeded)
         {
             // 4. Assign Admin role
-            await userManager.AddToRoleAsync(adminUserResult.Value, UserRole.Admin.ToString());
+            await userManager.AddToRoleAsync(adminUserResult.Value, UserRoles.SuperAdmin);
             
             Console.WriteLine($"✅ Initial admin account created: {adminEmail}");
         }

@@ -1,8 +1,8 @@
 using Application.Commands.Cities;
 using Application.Common.Interfaces.Services;
 using Domain.Entities.CityAggregate;
-using Domain.ValueObjects;
 using Domain.Enums;
+using Domain.ValueObjects;
 using Infrastructure.Persistence.ApplicationContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -42,7 +42,7 @@ internal sealed class CitySeeder(
             .ToHashSetAsync(StringComparer.OrdinalIgnoreCase, cancellationToken);
 
         var toSeed = rows
-            .Where(r => !existingNames.Contains(r.NameEn))
+            .Where(r => !existingNames.Contains(r.NameEn.Trim()))
             .ToList();
 
         if (toSeed.Count == 0)

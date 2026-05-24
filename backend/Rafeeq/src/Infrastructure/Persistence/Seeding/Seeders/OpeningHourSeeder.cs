@@ -1,8 +1,8 @@
 using Application.Commands.Sites.OpeningHours;
 using Application.Common.Interfaces.Services;
-using Domain.ValueObjects;
 using Domain.Entities.SiteAggregate;
 using Domain.Enums;
+using Domain.ValueObjects;
 using Infrastructure.Persistence.ApplicationContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -44,6 +44,7 @@ internal sealed class OpeningHourSeeder(
         // is a human-readable identifier (matches SiteId column of Sites.csv).
         // We resolve via SiteName as a fallback.
         var sites = await dbContext.Sites
+            .AsSplitQuery()
             .Include(s => s.LocalizedContents.Where(lc => lc.Language == LanguageCode.English))
             .Include(s => s.OpeningHours)
             .ToListAsync(cancellationToken);
@@ -77,19 +78,21 @@ internal sealed class OpeningHourSeeder(
 
             foreach (var row in group)
             {
+                
                 // ── ALLDAYS shorthand ────────────────────────────────────────
                 // A row with Day = "ALLDAYS" applies the same schedule to every
                 // weekday that does not already have an entry for this site.
                 if (string.Equals(row.Day, "ALLDAYS", StringComparison.OrdinalIgnoreCase))
                 {
-                    var timeRangeForAll = BuildTimeRange(row, siteName);
 
                     foreach (var weekDay in allWeekDays)
                     {
                         if (site.OpeningHours.Any(oh => oh.Day == weekDay))
                             continue; // Specific entry already exists — don't overwrite.
 
-                        if (timeRangeForAll is null)
+                        var timeRangeForAll = BuildTimeRange(row, siteName);
+                        
+                        if (timeRangeForAll is null && !row.IsClosed)
                         {
                             logger.LogWarning(
                                 "{Seeder}: ALLDAYS row for site '{Site}' has an invalid time range — day '{Day}' skipped.",
@@ -116,17 +119,8 @@ internal sealed class OpeningHourSeeder(
                 if (site.OpeningHours.Any(oh => oh.Day == singleDay))
                     continue;
 
-                if (row.IsClosed)
-                {
-                    // For closed days we still need a TimeRange — use midnight sentinel.
-                    var midnight = TimeRange.Create(TimeOnly.MinValue, TimeOnly.MinValue, true).Value;
-                    site.AddOpeningHour(singleDay, midnight, isClosed: true);
-                    addedCount++;
-                    continue;
-                }
-
                 var timeRange = BuildTimeRange(row, siteName);
-                if (timeRange is null)
+                if (timeRange is null && !row.IsClosed)
                     continue;
 
                 site.AddOpeningHour(singleDay, timeRange, isClosed: false);
@@ -148,7 +142,7 @@ internal sealed class OpeningHourSeeder(
     private TimeRange? BuildTimeRange(OpeningHourCsvRowDto row, string siteName)
     {
         if (row.IsClosed)
-            return TimeRange.Create(TimeOnly.MinValue, TimeOnly.MinValue, true).Value;
+            return null;
 
         if (!TimeOnly.TryParseExact(row.StartTime, "HH:mm", out var start) ||
             !TimeOnly.TryParseExact(row.EndTime, "HH:mm", out var end))

@@ -1,11 +1,12 @@
+using Application.Commands.Sites.NearestTransportations;
+using Application.Commands.Sponsors.Offers;
 using Application.Common.Interfaces.Services;
-using Domain.ValueObjects;
 using Domain.Entities.SiteAggregate;
 using Domain.Enums;
+using Domain.ValueObjects;
 using Infrastructure.Persistence.ApplicationContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Application.Commands.Sites.NearestTransportations;
 
 namespace Infrastructure.Persistence.Seeding.Seeders;
 
@@ -37,6 +38,7 @@ internal sealed class NearestTransportationSeeder(
         }
 
         var sites = await dbContext.Sites
+            .AsSplitQuery()
             .Include(s => s.LocalizedContents.Where(lc => lc.Language == LanguageCode.English))
             .Include(s => s.NearestTransportations)
                 .ThenInclude(t => t.LocalizedContents.Where(lc => lc.Language == LanguageCode.English))
@@ -68,7 +70,7 @@ internal sealed class NearestTransportationSeeder(
             bool alreadyExists = site.NearestTransportations
                 .Any(t => t.LocalizedContents
                     .Any(lc => lc.Language == LanguageCode.English &&
-                               string.Equals(lc.Name, row.NameEn, StringComparison.OrdinalIgnoreCase)));
+                               string.Equals(lc.Name, row.NameEn.Trim(), StringComparison.OrdinalIgnoreCase)));
 
             if (alreadyExists)
                 continue;
@@ -147,6 +149,8 @@ internal sealed class NearestTransportationSeeder(
 
                 transportation.AddLocalizedContent(LanguageCode.Arabic, row.NameAr, row.DescriptionAr, addressAr);
             }
+
+            await dbContext.AddAsync(transportation, cancellationToken);
 
             addedCount++;
         }

@@ -1,7 +1,7 @@
 using Domain.ValueObjects;
 using Shared;
 
-namespace Infrastructure.Persistence.Seeding;
+namespace Infrastructure.Persistence.Seeding.Parsers;
 
 /// <summary>
 /// Parses the CSV entry-fee cell into a <see cref="Ticket"/> value object.

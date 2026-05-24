@@ -38,6 +38,7 @@ internal sealed class AttractionSeeder(
 
         // Site name → Site lookup (English name as key).
         var sites = await dbContext.Sites
+            .AsSplitQuery()
             .Include(s => s.LocalizedContents.Where(lc => lc.Language == LanguageCode.English))
             .ToListAsync(cancellationToken);
 
@@ -76,7 +77,7 @@ internal sealed class AttractionSeeder(
             }
 
             // ── Idempotency ─────────────────────────────────────────────────
-            if (existingSet.Contains((site.Id, row.NameEn.ToUpperInvariant())))
+            if (existingSet.Contains((site.Id, row.NameEn.Trim().ToUpperInvariant())))
                 continue;
 
             // ── AttractionType ──────────────────────────────────────────────
@@ -96,7 +97,11 @@ internal sealed class AttractionSeeder(
                 foreach (var periodName in row.HistoricalPeriods
                     .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
                 {
-                    if (Enum.TryParse<HistoricalPeriod>(periodName, ignoreCase: true, out var period))
+                    if (Enum.TryParse<HistoricalPeriod>(
+                        periodName.Replace(" ", ""), // Allow spaces in CSV (e.g. "Early Islamic" → EarlyIslamic)
+                        ignoreCase: true,
+                        out var period))
+                        
                         historicalPeriods.Add(period);
                     else
                         logger.LogWarning(

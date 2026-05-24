@@ -38,6 +38,7 @@ internal sealed class ArtifactSeeder(
         // Site name → Site ID lookup (English name as key).
         // Artifacts may have a null SiteId (standalone/museum-level artifact).
         var sites = await dbContext.Sites
+            .AsSplitQuery()
             .Include(s => s.LocalizedContents.Where(lc => lc.Language == LanguageCode.English))
             .ToListAsync(cancellationToken);
 
@@ -59,7 +60,7 @@ internal sealed class ArtifactSeeder(
             .ToListAsync(cancellationToken);
 
         var existingSet = existingArtifacts
-            .Select(x => (x.SiteId, x.Name.ToUpperInvariant()))
+            .Select(x => (x.SiteId, x.Name.Trim().ToUpperInvariant()))
             .ToHashSet();
 
         int addedCount = 0;
@@ -86,7 +87,7 @@ internal sealed class ArtifactSeeder(
             }
 
             // ── Idempotency ─────────────────────────────────────────────────
-            var idempotencyKey = (siteId ?? Guid.Empty, row.NameEn.ToUpperInvariant());
+            var idempotencyKey = (siteId ?? Guid.Empty, row.NameEn.Trim().ToUpperInvariant());
             if (existingSet.Contains(idempotencyKey))
                 continue;
 

@@ -1,12 +1,13 @@
-using Domain.Entities.CityAggregate;
-using Domain.ValueObjects;
+using Application.Commands.Sites;
+using Application.Commands.Sponsors;
+using Application.Common.Interfaces.Services;
 using Domain.Entities.SiteAggregate;
 using Domain.Enums;
+using Domain.ValueObjects;
+using Infrastructure.Persistence.ApplicationContext;
+using Infrastructure.Persistence.Seeding.Parsers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Application.Common.Interfaces.Services;
-using Infrastructure.Persistence.ApplicationContext;
-using Application.Commands.Sites;
 
 namespace Infrastructure.Persistence.Seeding.Seeders;
 
@@ -64,7 +65,7 @@ internal sealed class SiteSeeder(
             .ToHashSetAsync(StringComparer.OrdinalIgnoreCase, cancellationToken);
 
         var toSeed = rows
-            .Where(r => !existingNames.Contains(r.NameEn))
+            .Where(r => !existingNames.Contains(r.NameEn.Trim()))
             .ToList();
 
         if (toSeed.Count == 0)
