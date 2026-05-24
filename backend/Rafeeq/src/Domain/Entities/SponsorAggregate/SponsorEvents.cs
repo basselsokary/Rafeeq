@@ -15,6 +15,11 @@ public class SponsorUpdatedEvent(Guid SponsorId) : BaseEvent
     public Guid SponsorId { get; } = SponsorId;
 }
 
+public class SponsorDeletedEvent(Guid sponsorId) : BaseEvent
+{
+    public Guid SponsorId { get; } = sponsorId;
+}
+
 public class SponsorTierChangedEvent(Guid SponsorId, SponsorTier NewTier) : BaseEvent
 {
     public Guid SponsorId { get; } = SponsorId;

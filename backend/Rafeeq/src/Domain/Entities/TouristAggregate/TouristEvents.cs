@@ -33,10 +33,11 @@ public sealed class RatingRemovedEvent(Guid VisitedSiteId, Guid SiteId, Rating R
     public Rating Rating { get; } = Rating;
 }
 
-public sealed class TouristRegisteredEvent(string Email, string FirstName) : BaseEvent
+public sealed class TouristRegisteredEvent(string Email, string FirstName, string Token) : BaseEvent
 {
     public string Email { get; } = Email;
     public string FirstName { get; } = FirstName;
+    public string Token { get; } = Token;
 }
 
 public sealed class TouristFavoriteAddedEvent(Guid TouristId, Guid SiteId) : BaseEvent

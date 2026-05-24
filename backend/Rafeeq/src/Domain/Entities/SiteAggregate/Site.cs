@@ -240,7 +240,7 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         return Result.Success();
     }
 
-    public Result<OpeningHour> AddOpeningHour(WeekDay day, TimeRange openingTime, bool isClosed)
+    public Result<OpeningHour> AddOpeningHour(WeekDay day, TimeRange? openingTime, bool isClosed)
     {
         var newOpeningHours = OpeningHour.Create(day, openingTime, isClosed);
 
@@ -423,5 +423,10 @@ public class Site : BaseAuditableEntity, IAggregateRoot
         {
             MainImageUrl = imageUrl;
         }
+    }
+
+    public void Delete()
+    {
+        RaiseDomainEvent(new SiteDeletedEvent(Id));
     }
 }

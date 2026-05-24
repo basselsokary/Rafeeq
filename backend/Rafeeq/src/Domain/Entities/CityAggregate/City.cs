@@ -147,4 +147,9 @@ public class City : BaseAuditableEntity, IAggregateRoot
 
         return result.Value;
     }
+
+    public void Delete()
+    {
+        RaiseDomainEvent(new CityDeletedEvent(Id));
+    }
 }

@@ -339,4 +339,10 @@ public partial class Sponsor : BaseAuditableEntity, IAggregateRoot
             MainImageUrl = imageUrl;
         }
     }
+
+    public void Delete()
+    {
+        RaiseDomainEvent(new SponsorDeletedEvent(Id));
+    }
 }
+

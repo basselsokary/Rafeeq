@@ -14,7 +14,7 @@ public class Tourist : BaseEntity, IAggregateRoot
     public UserStatus Status { get; private set; }
     
     public int TotalTrips { get; private set; }
-    public int TotalReviews { get; private set; }
+    public int TotalRatings { get; private set; }
 
     public DateTime CreatedAt { get; protected set; }
     public DateTime? LastModifiedAt { get; protected set; }
@@ -38,7 +38,7 @@ public class Tourist : BaseEntity, IAggregateRoot
 
         Status = UserStatus.Active;
         TotalTrips = 0;
-        TotalReviews = 0;
+        TotalRatings = 0;
 
         CreatedAt = DateTime.UtcNow;
     }
@@ -47,7 +47,6 @@ public class Tourist : BaseEntity, IAggregateRoot
         Guid TouristId,
         string firstName,
         string lastName,
-        string email,
         string? nationality = null)
     {
         if (string.IsNullOrWhiteSpace(firstName))
@@ -61,8 +60,6 @@ public class Tourist : BaseEntity, IAggregateRoot
             firstName.Trim(),
             lastName.Trim(),
             nationality?.Trim());
-        
-        tourist.RaiseDomainEvent(new TouristRegisteredEvent(email, firstName));
 
         return tourist;
     }
@@ -163,15 +160,15 @@ public class Tourist : BaseEntity, IAggregateRoot
 
     public void IncrementReviewCount()
     {
-        TotalReviews++;
+        TotalRatings++;
         UpdateLastModified();
     }
 
     public void DecrementReviewCount()
     {
-        if (TotalReviews > 0)
+        if (TotalRatings > 0)
         {
-            TotalReviews--;
+            TotalRatings--;
             UpdateLastModified();
         }
     }

@@ -218,4 +218,9 @@ public class Attraction : BaseAuditableEntity, IAggregateRoot
             MainImageUrl = imageUrl;
         }
     }
+
+    public void Delete()
+    {
+        RaiseDomainEvent(new AttractionDeletedEvent(Id));
+    }
 }
