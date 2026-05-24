@@ -20,7 +20,7 @@ internal sealed class RefreshTokenCleanupJob(
             _options.Interval);
 
         // Delay the first run slightly so the app finishes startup
-        await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+        await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested)
         {
