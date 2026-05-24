@@ -1,6 +1,6 @@
 namespace Infrastructure.ExternalServices.CloudinaryService;
 
-public class CloudinarySettings
+public class CloudinaryOptions
 {
     public const string SectionName = "Cloudinary";
 

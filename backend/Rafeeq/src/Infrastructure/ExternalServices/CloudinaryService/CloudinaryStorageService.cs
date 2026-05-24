@@ -22,11 +22,11 @@ namespace Infrastructure.ExternalServices.CloudinaryService;
 internal sealed class CloudinaryStorageService : IFileStorageService
 {
     private readonly Cloudinary _cloudinary;
-    private readonly CloudinarySettings _options;
+    private readonly CloudinaryOptions _options;
     private readonly ILogger<CloudinaryStorageService> _logger;
 
     public CloudinaryStorageService(
-        IOptions<CloudinarySettings> options,
+        IOptions<CloudinaryOptions> options,
         ILogger<CloudinaryStorageService> logger)
     {
         _options = options.Value;
@@ -39,6 +39,7 @@ internal sealed class CloudinaryStorageService : IFileStorageService
     public async Task<Result<UploadedFileResponse>> UploadAsync(
         Stream stream,
         StorageKey storageKey,
+        string hash,
         CancellationToken ct = default)
     {
         try
@@ -50,6 +51,10 @@ internal sealed class CloudinaryStorageService : IFileStorageService
                 PublicId = publicId,
                 File = new FileDescription(storageKey, stream),
                 Overwrite = false,
+                Context = new StringDictionary
+                {
+                    { "sha256", hash },
+                },
             };
 
             var result = await _cloudinary.UploadAsync(uploadParams, ct);
