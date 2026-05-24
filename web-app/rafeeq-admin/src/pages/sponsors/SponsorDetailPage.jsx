@@ -308,8 +308,7 @@ export default function SponsorDetailPage() {
   return (
     <div style={{ minHeight:'100vh', background:'var(--background)', fontFamily:'var(--font-body)', display:'flex', flexDirection:'column' }}>
 
-      {/* Top bar */}
-      <header style={{ background:'rgba(255,248,240,0.95)', backdropFilter:'blur(12px)', borderBottom:'1px solid rgba(212,196,183,.2)', padding:'0 32px', height:64, display:'flex', alignItems:'center', gap:20, position:'sticky', top:0, zIndex:50 }}>
+      <div style={{ padding:'24px 32px 0', display:'flex', alignItems:'center', gap:20, flexWrap:'wrap' }}>
         <button onClick={() => navigate('/sponsors')} style={{ display:'flex', alignItems:'center', gap:6, background:'none', border:'none', cursor:'pointer', color:'var(--text-2)', fontSize:13, fontWeight:500, padding:0 }}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Back to Sponsors
@@ -330,10 +329,10 @@ export default function SponsorDetailPage() {
             Edit
           </Btn>
         </div>
-      </header>
+      </div>
 
       {/* Tab bar */}
-      <div style={{ background:'rgba(255,248,240,0.95)', backdropFilter:'blur(12px)', borderBottom:'1px solid rgba(212,196,183,.2)', padding:'0 32px', display:'flex', gap:2, position:'sticky', top:64, zIndex:49 }}>
+      <div style={{ background:'var(--topbar-bg)', backdropFilter:'blur(12px)', borderBottom:'1px solid var(--topbar-border)', padding:'0 32px', display:'flex', gap:2, position:'sticky', top:64, zIndex:49 }}>
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)} style={{ padding:'13px 16px', border:'none', background:'none', cursor:'pointer', fontSize:13, fontWeight:tab===t.id?700:500, color:tab===t.id?'var(--primary)':'var(--text-2)', borderBottom:`2px solid ${tab===t.id?'var(--primary)':'transparent'}`, marginBottom:-1, transition:'all .15s' }}>
             {t.label}

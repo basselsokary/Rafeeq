@@ -256,14 +256,7 @@ export default function CityDetailPage() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--background)', fontFamily: 'var(--font-body)', display: 'flex', flexDirection: 'column' }}>
 
-      {/* Top bar */}
-      <header style={{
-        background: 'rgba(255,248,240,0.95)', backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid rgba(212,196,183,.2)',
-        padding: '0 32px', height: 64,
-        display: 'flex', alignItems: 'center', gap: 20,
-        position: 'sticky', top: 0, zIndex: 50,
-      }}>
+      <div style={{ padding: '24px 32px 0', display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
         <button onClick={() => navigate('/cities')} style={{
           display: 'flex', alignItems: 'center', gap: 6,
           background: 'none', border: 'none', cursor: 'pointer',
@@ -293,12 +286,12 @@ export default function CityDetailPage() {
         <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
           <Btn variant="danger" size="sm" onClick={() => setDelOpen(true)}>Delete</Btn>
         </div>
-      </header>
+      </div>
 
       {/* Tab bar */}
       <div style={{
-        background: 'rgba(255,248,240,0.95)', backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid rgba(212,196,183,.2)',
+        background: 'var(--topbar-bg)', backdropFilter: 'blur(12px)',
+        borderBottom: '1px solid var(--topbar-border)',
         padding: '0 32px', display: 'flex', gap: 2,
         position: 'sticky', top: 64, zIndex: 49,
       }}>

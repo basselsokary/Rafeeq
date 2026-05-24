@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAttractions, createAttraction, getDashboardStats } from '../../api/attractionsApi';
 import { getSites } from '../../api/sitesApi';
-import Sidebar from '../../components/layout/Sidebar';
 import Modal from '../../components/common/Modal';
 import Spinner from '../../components/common/Spinner';
 import AttractionForm from './components/AttractionForm';
@@ -267,29 +266,14 @@ export default function AttractionsPage() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--background)', fontFamily: 'var(--font-body)' }}>
-      <Sidebar />
+    <div style={{ padding: '28px 32px 80px', fontFamily: 'var(--font-body)' }}>
 
-      <div style={{ marginLeft: 'var(--sidebar-width)', flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-
-        {/* Top bar */}
-        <header style={{
-          background: 'rgba(255,248,240,0.92)', backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(212,196,183,.2)',
-          padding: '0 32px', height: 64,
-          display: 'flex', alignItems: 'center', gap: 14,
-          position: 'sticky', top: 0, zIndex: 50,
-        }} />
-
-        {/* Body */}
-        <div style={{ padding: '28px 32px 80px', flex: 1 }}>
-
-          {/* Breadcrumb */}
-          <div style={{ fontSize: 12, color: 'var(--outline)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ cursor: 'pointer', color: 'var(--text-2)' }} onClick={() => navigate('/')}>Dashboard</span>
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
-            <span>Attractions Management</span>
-          </div>
+      {/* Breadcrumb */}
+      <div style={{ fontSize: 12, color: 'var(--outline)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+        <span style={{ cursor: 'pointer', color: 'var(--text-2)' }} onClick={() => navigate('/')}>Dashboard</span>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        <span>Attractions Management</span>
+      </div>
 
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
@@ -433,9 +417,6 @@ export default function AttractionsPage() {
               </div>
             </div>
           )}
-        </div>
-      </div>
-
       <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Create Attraction" width={680}>
         <AttractionForm onSubmit={handleCreate} loading={creating} onCancel={() => setCreateOpen(false)} />
       </Modal>

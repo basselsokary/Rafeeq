@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getSites, createSite, getDashboardStats } from '../../api/sitesApi';
+import { getSites, createSite, getSiteDashboardStats } from '../../api/sitesApi';
 import { getCities } from '../../api/citiesApi';
-import Sidebar from '../../components/layout/Sidebar';
 import Modal from '../../components/common/Modal';
 import Spinner from '../../components/common/Spinner';
 import SiteForm from './components/SiteForm';
@@ -152,7 +151,7 @@ export default function SitesPage() {
   const loadStats = useCallback(async () => {
     try {
       setStatsLoading(true);
-      const res = await getDashboardStats();
+      const res = await getSiteDashboardStats();
       const d = res.data?.value ?? res.data?.data ?? res.data;
       setStats({
         totalSites:    Number(d?.totalSites    ?? 0),
@@ -233,263 +232,246 @@ export default function SitesPage() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--background)', fontFamily: 'var(--font-body)' }}>
-      <Sidebar />
+    <div style={{ padding: '28px 32px 80px', fontFamily: 'var(--font-body)' }}>
+      {/* Breadcrumb */}
+      <div style={{ fontSize: 12, color: 'var(--outline)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+        <span style={{ cursor: 'pointer', color: 'var(--text-2)' }}>Dashboard</span>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        <span>Sites Management</span>
+      </div>
 
-      <div style={{ marginLeft: 'var(--sidebar-width)', flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, color: 'var(--text)', display: 'flex', alignItems: 'baseline', gap: 10, margin: 0 }}>
+          Sites Management
+          <span style={{ fontSize: 18, fontWeight: 400, color: 'var(--outline)' }}>• {sites.length} Total</span>
+        </h1>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={() => setCreateOpen(true)} style={{
+            display: 'flex', alignItems: 'center', gap: 7, padding: '9px 18px', borderRadius: 10,
+            background: 'linear-gradient(135deg, var(--primary), var(--primary-container))',
+            color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+            boxShadow: '0 2px 10px rgba(124,87,45,0.25)',
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            Add New Site
+          </button>
+        </div>
+      </div>
 
-        {/* Top bar */}
-        <header style={{
-          background: 'rgba(255,248,240,0.92)', backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(212,196,183,.2)',
-          padding: '0 32px', height: 64,
-          display: 'flex', alignItems: 'center', gap: 14,
-          position: 'sticky', top: 0, zIndex: 50,
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginBottom: 28 }}>
+        <StatCard
+          label="Total Active Sites" value={stats.activeSites} loading={statsLoading}
+          sub={<span>of {stats.totalSites} total • <span style={{ color: 'var(--green)', fontWeight: 600 }}>Across Egypt</span></span>}
+          icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>}
+        />
+        <StatCard
+          label="Featured Sites" value={stats.featuredSites} loading={statsLoading}
+          sub={`Hidden Gems: ${stats.hiddenGemSites}`}
+          icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="var(--primary)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>}
+        />
+        <StatCard
+          label="Avg Rating" loading={statsLoading}
+          value={<span>{stats.averageRating > 0 ? stats.averageRating.toFixed(1) : '—'} <span style={{ fontSize: 18, color: 'var(--primary-container)' }}>★★★★½</span></span>}
+          sub="Overall satisfaction"
+          icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="var(--primary)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>}
+        />
+      </div>
+
+      {/* Filter pills */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+        {(activeFilter !== 'All' || topSearch || typeFilter || cityFilter || statusFilter) && (
+          <button onClick={clearFilters} style={{
+            background: 'none', border: 'none', fontSize: 13, color: 'var(--primary)', cursor: 'pointer', fontWeight: 600,
+          }}>Clear Filters</button>
+        )}
+      </div>
+
+      {/* Search + filters row */}
+      <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
+        <div style={{ flex: 2, minWidth: 220, position: 'relative' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--outline)" strokeWidth="2"
+            style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input
+            value={topSearch}
+            onChange={e => setTopSearch(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && applyFilters()}
+            placeholder="Global search input..."
+            style={{
+              width: '100%', padding: '9px 14px 9px 34px',
+              background: 'var(--surface-container-lowest)',
+              border: '1px solid rgba(212,196,183,.3)',
+              borderRadius: 10, fontSize: 13, color: 'var(--text)', outline: 'none',
+            }}
+          />
+        </div>
+
+        <select value={cityFilter} onChange={e => setCityFilter(e.target.value)} style={selectStyle}>
+          <option value="">City</option>
+          {cities.map(c => <option key={c.id} value={c.id}>{c.name || c.id}</option>)}
+        </select>
+
+        <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} style={selectStyle}>
+          <option value="">Site Type</option>
+          {SITE_TYPES.map(t => <option key={t} value={t}>{formatEnum(t)}</option>)}
+        </select>
+
+        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={selectStyle}>
+          <option value="">Status</option>
+          {SITE_STATUSES.map(s => <option key={s} value={s}>{formatEnum(s)}</option>)}
+        </select>
+
+        <button onClick={applyFilters} style={{
+          padding: '9px 20px', borderRadius: 10,
+          background: 'linear-gradient(135deg, var(--primary), var(--primary-container))',
+          color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+          boxShadow: '0 2px 8px rgba(124,87,45,.25)', whiteSpace: 'nowrap',
+        }}>Apply Filters</button>
+      </div>
+
+      {/* Table */}
+      <div style={{
+        background: 'var(--surface-container-lowest)',
+        borderRadius: 16, overflow: 'hidden',
+        boxShadow: '0 1px 4px rgba(29,27,23,.06)',
+      }}>
+        {/* Header */}
+        <div style={{
+          display: 'grid', gridTemplateColumns: GRID,
+          padding: '10px 20px',
+          background: 'var(--surface-container-low)',
+          borderBottom: '1px solid rgba(212,196,183,.25)',
         }}>
-        </header>
+          {['SITE', 'TYPE', 'STATUS', 'FEE', 'STATS', 'FEATURES'].map(h => (
+            <div key={h} style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', color: 'var(--outline)', textTransform: 'uppercase' }}>{h}</div>
+          ))}
+        </div>
 
-        {/* Body */}
-        <div style={{ padding: '28px 32px 80px', flex: 1 }}>
-
-          {/* Breadcrumb */}
-          <div style={{ fontSize: 12, color: 'var(--outline)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ cursor: 'pointer', color: 'var(--text-2)' }}>Dashboard</span>
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
-            <span>Sites Management</span>
+        {loading ? (
+          <div style={{ padding: 56 }}><Spinner center /></div>
+        ) : filtered.length === 0 ? (
+          <div style={{ padding: '56px 20px', textAlign: 'center', color: 'var(--outline)', fontSize: 14 }}>
+            No sites found.{' '}
+            {sites.length === 0 && <button onClick={() => setCreateOpen(true)} style={{ color: 'var(--primary)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 14 }}>Create the first one.</button>}
           </div>
-
-          {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, color: 'var(--text)', display: 'flex', alignItems: 'baseline', gap: 10, margin: 0 }}>
-              Sites Management
-              <span style={{ fontSize: 18, fontWeight: 400, color: 'var(--outline)' }}>• {sites.length} Total</span>
-            </h1>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <button onClick={() => setCreateOpen(true)} style={{
-                display: 'flex', alignItems: 'center', gap: 7, padding: '9px 18px', borderRadius: 10,
-                background: 'linear-gradient(135deg, var(--primary), var(--primary-container))',
-                color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer',
-                boxShadow: '0 2px 10px rgba(124,87,45,0.25)',
+        ) : filtered.map((site, i) => (
+          <div
+            key={site.id}
+            onClick={() => navigate(`/sites/${site.id}`)}
+            style={{
+              display: 'grid', gridTemplateColumns: GRID,
+              padding: '13px 20px', alignItems: 'center',
+              borderBottom: i < filtered.length - 1 ? '1px solid rgba(212,196,183,.2)' : 'none',
+              cursor: 'pointer', transition: 'background .1s',
+            }}
+            onMouseOver={e => e.currentTarget.style.background = 'var(--surface-container-low)'}
+            onMouseOut={e => e.currentTarget.style.background = 'transparent'}
+          >
+            {/* Site */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{
+                width: 44, height: 44, borderRadius: 10, flexShrink: 0,
+                background: 'rgba(212,165,116,.2)',
+                overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
               }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
-                Add New Site
+                {site.primaryImageUrl
+                  ? <img src={site.primaryImageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display = 'none'} />
+                  : '🏛️'
+                }
+              </div>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>
+                  {site.name || 'Untitled Site'}
+                </div>
+                <div style={{ fontSize: 11, color: 'var(--outline)', display: 'flex', alignItems: 'center', gap: 3 }}>
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  {site.cityName || 'Egypt'}
+                </div>
+              </div>
+            </div>
+
+            {/* Type */}
+            <div><TypeBadge type={site.type} /></div>
+
+            {/* Status */}
+            <div onClick={e => e.stopPropagation()}><StatusDot status={site.status} /></div>
+
+            {/* Fee */}
+            <div>
+              {site.isFree
+                ? <span style={{ fontSize: 12, color: 'var(--green)', fontWeight: 700 }}>Free</span>
+                : <div>
+                    <div style={{ fontSize: 9, color: 'var(--outline)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>EGP</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>
+                      {site.entryTicket?.egyptianTicketPrice?.amount ?? '—'}
+                    </div>
+                  </div>
+              }
+            </div>
+
+            {/* Stats */}
+            <div>
+              {site.averageRating
+                ? <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <span style={{ color: 'var(--primary-container)', fontWeight: 700 }}>★</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>{site.averageRating.toFixed(1)}</span>
+                    </div>
+                    {site.totalRatings > 0 && (
+                      <div style={{ fontSize: 11, color: 'var(--outline)' }}>{site.totalRatings.toLocaleString()} reviews</div>
+                    )}
+                  </div>
+                : <span style={{ color: 'var(--outline)', fontSize: 12 }}>—</span>
+              }
+            </div>
+
+            {/* Features */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              {site.isFeatured && (
+                <span title="Featured" style={{
+                  width: 24, height: 24, borderRadius: '50%',
+                  background: 'rgba(212,165,116,.15)', border: '1px solid rgba(212,165,116,.4)',
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11,
+                }}>⭐</span>
+              )}
+              {site.isHiddenGem && (
+                <span title="Hidden Gem" style={{
+                  width: 24, height: 24, borderRadius: '50%',
+                  background: 'rgba(37,99,235,.08)', border: '1px solid rgba(37,99,235,.2)',
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11,
+                }}>💎</span>
+              )}
+              <button
+                onClick={e => { e.stopPropagation(); navigate(`/sites/${site.id}`); }}
+                style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--outline)', display: 'flex', padding: 4 }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
               </button>
             </div>
           </div>
+        ))}
+      </div>
 
-          {/* Stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginBottom: 28 }}>
-            <StatCard
-              label="Total Active Sites" value={stats.activeSites} loading={statsLoading}
-              sub={<span>of {stats.totalSites} total • <span style={{ color: 'var(--green)', fontWeight: 600 }}>Across Egypt</span></span>}
-              icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>}
-            />
-            <StatCard
-              label="Featured Sites" value={stats.featuredSites} loading={statsLoading}
-              sub={`Hidden Gems: ${stats.hiddenGemSites}`}
-              icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="var(--primary)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>}
-            />
-            <StatCard
-              label="Avg Rating" loading={statsLoading}
-              value={<span>{stats.averageRating > 0 ? stats.averageRating.toFixed(1) : '—'} <span style={{ fontSize: 18, color: 'var(--primary-container)' }}>★★★★½</span></span>}
-              sub="Overall satisfaction"
-              icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="var(--primary)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>}
-            />
-          </div>
-
-          {/* Filter pills */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            {(activeFilter !== 'All' || topSearch || typeFilter || cityFilter || statusFilter) && (
-              <button onClick={clearFilters} style={{
-                background: 'none', border: 'none', fontSize: 13, color: 'var(--primary)', cursor: 'pointer', fontWeight: 600,
-              }}>Clear Filters</button>
-            )}
-          </div>
-
-          {/* Search + filters row */}
-          <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
-            <div style={{ flex: 2, minWidth: 220, position: 'relative' }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--outline)" strokeWidth="2"
-                style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-              </svg>
-              <input
-                value={topSearch}
-                onChange={e => setTopSearch(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && applyFilters()}
-                placeholder="Global search input..."
-                style={{
-                  width: '100%', padding: '9px 14px 9px 34px',
-                  background: 'var(--surface-container-lowest)',
-                  border: '1px solid rgba(212,196,183,.3)',
-                  borderRadius: 10, fontSize: 13, color: 'var(--text)', outline: 'none',
-                }}
-              />
-            </div>
-
-            <select value={cityFilter} onChange={e => setCityFilter(e.target.value)} style={selectStyle}>
-              <option value="">City</option>
-              {cities.map(c => <option key={c.id} value={c.id}>{c.name || c.id}</option>)}
-            </select>
-
-            <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} style={selectStyle}>
-              <option value="">Site Type</option>
-              {SITE_TYPES.map(t => <option key={t} value={t}>{formatEnum(t)}</option>)}
-            </select>
-
-            <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={selectStyle}>
-              <option value="">Status</option>
-              {SITE_STATUSES.map(s => <option key={s} value={s}>{formatEnum(s)}</option>)}
-            </select>
-
-            <button onClick={applyFilters} style={{
-              padding: '9px 20px', borderRadius: 10,
-              background: 'linear-gradient(135deg, var(--primary), var(--primary-container))',
-              color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(124,87,45,.25)', whiteSpace: 'nowrap',
-            }}>Apply Filters</button>
-          </div>
-
-          {/* Table */}
-          <div style={{
-            background: 'var(--surface-container-lowest)',
-            borderRadius: 16, overflow: 'hidden',
-            boxShadow: '0 1px 4px rgba(29,27,23,.06)',
-          }}>
-            {/* Header */}
-            <div style={{
-              display: 'grid', gridTemplateColumns: GRID,
-              padding: '10px 20px',
-              background: 'var(--surface-container-low)',
-              borderBottom: '1px solid rgba(212,196,183,.25)',
-            }}>
-              {['SITE', 'TYPE', 'STATUS', 'FEE', 'STATS', 'FEATURES'].map(h => (
-                <div key={h} style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', color: 'var(--outline)', textTransform: 'uppercase' }}>{h}</div>
-              ))}
-            </div>
-
-            {loading ? (
-              <div style={{ padding: 56 }}><Spinner center /></div>
-            ) : filtered.length === 0 ? (
-              <div style={{ padding: '56px 20px', textAlign: 'center', color: 'var(--outline)', fontSize: 14 }}>
-                No sites found.{' '}
-                {sites.length === 0 && <button onClick={() => setCreateOpen(true)} style={{ color: 'var(--primary)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 14 }}>Create the first one.</button>}
-              </div>
-            ) : filtered.map((site, i) => (
-              <div
-                key={site.id}
-                onClick={() => navigate(`/sites/${site.id}`)}
-                style={{
-                  display: 'grid', gridTemplateColumns: GRID,
-                  padding: '13px 20px', alignItems: 'center',
-                  borderBottom: i < filtered.length - 1 ? '1px solid rgba(212,196,183,.2)' : 'none',
-                  cursor: 'pointer', transition: 'background .1s',
-                }}
-                onMouseOver={e => e.currentTarget.style.background = 'var(--surface-container-low)'}
-                onMouseOut={e => e.currentTarget.style.background = 'transparent'}
-              >
-                {/* Site */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{
-                    width: 44, height: 44, borderRadius: 10, flexShrink: 0,
-                    background: 'rgba(212,165,116,.2)',
-                    overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
-                  }}>
-                    {site.primaryImageUrl
-                      ? <img src={site.primaryImageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display = 'none'} />
-                      : '🏛️'
-                    }
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: 13, marginBottom: 2 }}>{site.name || '(unnamed)'}</div>
-                    <div style={{ fontSize: 11, color: 'var(--outline)', display: 'flex', alignItems: 'center', gap: 3 }}>
-                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                      {site.cityName || 'Egypt'}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Type */}
-                <div><TypeBadge type={site.type} /></div>
-
-                {/* Status */}
-                <div onClick={e => e.stopPropagation()}><StatusDot status={site.status} /></div>
-
-                {/* Fee */}
-                <div>
-                  {site.isFree
-                    ? <span style={{ fontSize: 12, color: 'var(--green)', fontWeight: 700 }}>Free</span>
-                    : <div>
-                        <div style={{ fontSize: 9, color: 'var(--outline)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>EGP</div>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>
-                          {site.entryTicket?.egyptianTicketPrice?.amount ?? '—'}
-                        </div>
-                      </div>
-                  }
-                </div>
-
-                {/* Stats */}
-                <div>
-                  {site.averageRating
-                    ? <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                          <span style={{ color: 'var(--primary-container)', fontWeight: 700 }}>★</span>
-                          <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>{site.averageRating.toFixed(1)}</span>
-                        </div>
-                        {site.totalRatings > 0 && (
-                          <div style={{ fontSize: 11, color: 'var(--outline)' }}>{site.totalRatings.toLocaleString()} reviews</div>
-                        )}
-                      </div>
-                    : <span style={{ color: 'var(--outline)', fontSize: 12 }}>—</span>
-                  }
-                </div>
-
-                {/* Features */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                  {site.isFeatured && (
-                    <span title="Featured" style={{
-                      width: 24, height: 24, borderRadius: '50%',
-                      background: 'rgba(212,165,116,.15)', border: '1px solid rgba(212,165,116,.4)',
-                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11,
-                    }}>⭐</span>
-                  )}
-                  {site.isHiddenGem && (
-                    <span title="Hidden Gem" style={{
-                      width: 24, height: 24, borderRadius: '50%',
-                      background: 'rgba(37,99,235,.08)', border: '1px solid rgba(37,99,235,.2)',
-                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11,
-                    }}>💎</span>
-                  )}
-                  <button
-                    onClick={e => { e.stopPropagation(); navigate(`/sites/${site.id}`); }}
-                    style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--outline)', display: 'flex', padding: 4 }}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Pagination */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 18 }}>
-            <div style={{ fontSize: 12, color: 'var(--outline)', display: 'flex', alignItems: 'center', gap: 10 }}>
-              Showing {filtered.length === 0 ? 0 : (page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, filtered.length)} of {filtered.length}
-            </div>
-            <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-              <PaginationBtn onClick={() => handlePageChange(Math.max(1, page - 1))} disabled={page === 1}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
-              </PaginationBtn>
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map(p => (
-                <PaginationBtn key={p} active={p === page} onClick={() => handlePageChange(p)}>{p}</PaginationBtn>
-              ))}
-              {totalPages > 5 && <span style={{ color: 'var(--outline)', padding: '0 4px' }}>…</span>}
-              {totalPages > 5 && <PaginationBtn onClick={() => handlePageChange(totalPages)}>{totalPages}</PaginationBtn>}
-              <PaginationBtn onClick={() => handlePageChange(Math.min(totalPages, page + 1))} disabled={page === totalPages}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
-              </PaginationBtn>
-            </div>
-          </div>
+      {/* Pagination */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 18 }}>
+        <div style={{ fontSize: 12, color: 'var(--outline)', display: 'flex', alignItems: 'center', gap: 10 }}>
+          Showing {filtered.length === 0 ? 0 : (page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, filtered.length)} of {filtered.length}
+        </div>
+        <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+          <PaginationBtn onClick={() => handlePageChange(Math.max(1, page - 1))} disabled={page === 1}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+          </PaginationBtn>
+          {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map(p => (
+            <PaginationBtn key={p} active={p === page} onClick={() => handlePageChange(p)}>{p}</PaginationBtn>
+          ))}
+          {totalPages > 5 && <span style={{ color: 'var(--outline)', padding: '0 4px' }}>…</span>}
+          {totalPages > 5 && <PaginationBtn onClick={() => handlePageChange(totalPages)}>{totalPages}</PaginationBtn>}
+          <PaginationBtn onClick={() => handlePageChange(Math.min(totalPages, page + 1))} disabled={page === totalPages}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+          </PaginationBtn>
         </div>
       </div>
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCities, getDashboardStats, createCity } from '../../api/citiesApi';
-import Sidebar from '../../components/layout/Sidebar';
 import Modal from '../../components/common/Modal';
 import Spinner from '../../components/common/Spinner';
 import CityForm from './components/CityForm';
@@ -245,136 +244,118 @@ export default function CitiesPage() {
   const sorted = [...filtered].sort((a, b) => (a.displayOrder ?? 999) - (b.displayOrder ?? 999));
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--background)', fontFamily: 'var(--font-body)' }}>
-      <Sidebar />
+    <div style={{ padding: '28px 32px 80px', fontFamily: 'var(--font-body)' }}>
+      {/* Breadcrumb */}
+      <div style={{ fontSize: 12, color: 'var(--outline)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+        <span style={{ cursor: 'pointer', color: 'var(--text-2)' }} onClick={() => navigate('/')}>Dashboard</span>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        <span>Cities</span>
+      </div>
 
-      <div style={{ marginLeft: 'var(--sidebar-width)', flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-
-        {/* Top bar */}
-        <header style={{
-          background: 'rgba(255,248,240,0.92)', backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(212,196,183,.2)',
-          padding: '0 32px', height: 64,
-          display: 'flex', alignItems: 'center', gap: 14,
-          position: 'sticky', top: 0, zIndex: 50,
-        }} />
-
-        {/* Body */}
-        <div style={{ padding: '28px 32px 80px', flex: 1 }}>
-
-          {/* Breadcrumb */}
-          <div style={{ fontSize: 12, color: 'var(--outline)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ cursor: 'pointer', color: 'var(--text-2)' }} onClick={() => navigate('/')}>Dashboard</span>
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
-            <span>Cities</span>
-          </div>
-
-          {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, color: 'var(--text)', display: 'flex', alignItems: 'baseline', gap: 10, margin: 0 }}>
-              Cities Management
-              <span style={{
-                padding: '3px 12px', borderRadius: 20,
-                background: 'rgba(124,87,45,.08)', color: 'var(--primary)',
-                fontSize: 12, fontWeight: 700,
-              }}>
-                {cities.length} Cities
-              </span>
-            </h1>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <button onClick={() => setCreateOpen(true)} style={{
-                display: 'flex', alignItems: 'center', gap: 7, padding: '9px 18px', borderRadius: 10,
-                background: 'linear-gradient(135deg, var(--primary), var(--primary-container))',
-                color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer',
-                boxShadow: '0 2px 10px rgba(124,87,45,0.25)',
-              }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
-                Add New City
-              </button>
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16, marginBottom: 28 }}>
-            <StatCard
-              label="Total Cities" value={stats.totalCities} loading={statsLoading}
-              sub="Across Egypt"
-              icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>}
-            />
-            <StatCard
-              label="Total Sites" value={stats.totalSites} loading={statsLoading}
-              sub="Tourist destinations"
-              icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>}
-            />
-          </div>
-
-          {/* Search */}
-          <div style={{ display: 'flex', gap: 10, marginBottom: 24 }}>
-            <div style={{ flex: 1, maxWidth: 400, position: 'relative' }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--outline)" strokeWidth="2"
-                style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-              </svg>
-              <input
-                value={topSearch}
-                onChange={e => setTopSearch(e.target.value)}
-                placeholder="Search by name or GPS..."
-                style={{
-                  width: '100%', padding: '9px 14px 9px 34px',
-                  background: 'var(--surface-container-lowest)',
-                  border: '1px solid rgba(212,196,183,.3)',
-                  borderRadius: 10, fontSize: 13, color: 'var(--text)', outline: 'none',
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Card Grid */}
-          {loading ? (
-            <div style={{ padding: 80 }}><Spinner center /></div>
-          ) : sorted.length === 0 ? (
-            <div style={{ padding: '80px 20px', textAlign: 'center', color: 'var(--outline)', fontSize: 14 }}>
-              No cities found.{' '}
-              <button onClick={() => setCreateOpen(true)} style={{ color: 'var(--primary)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 14 }}>
-                Create the first one.
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 24 }}>
-              {sorted.map((city, i) => (
-                <CityCard
-                  key={city.id}
-                  city={city}
-                  index={i}
-                  onClick={() => navigate(`/cities/${city.id}`)}
-                />
-              ))}
-              {/* Add new card placeholder */}
-              <button
-                onClick={() => setCreateOpen(true)}
-                style={{
-                  border: '2px dashed rgba(212,196,183,.4)', borderRadius: 16,
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                  minHeight: 380, background: 'transparent', cursor: 'pointer',
-                  transition: 'all .2s',
-                }}
-                onMouseOver={e => { e.currentTarget.style.borderColor = 'rgba(124,87,45,.4)'; e.currentTarget.style.background = 'rgba(124,87,45,.03)'; }}
-                onMouseOut={e => { e.currentTarget.style.borderColor = 'rgba(212,196,183,.4)'; e.currentTarget.style.background = 'transparent'; }}
-              >
-                <div style={{
-                  width: 56, height: 56, borderRadius: '50%',
-                  background: 'var(--surface-container-high)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12,
-                }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--outline)" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
-                </div>
-                <span style={{ fontWeight: 700, color: 'var(--text-2)', fontSize: 14 }}>New City</span>
-                <span style={{ fontSize: 11, color: 'var(--outline)', marginTop: 4 }}>Add to Egypt's network</span>
-              </button>
-            </div>
-          )}
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, color: 'var(--text)', display: 'flex', alignItems: 'baseline', gap: 10, margin: 0 }}>
+          Cities Management
+          <span style={{
+            padding: '3px 12px', borderRadius: 20,
+            background: 'rgba(124,87,45,.08)', color: 'var(--primary)',
+            fontSize: 12, fontWeight: 700,
+          }}>
+            {cities.length} Cities
+          </span>
+        </h1>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={() => setCreateOpen(true)} style={{
+            display: 'flex', alignItems: 'center', gap: 7, padding: '9px 18px', borderRadius: 10,
+            background: 'linear-gradient(135deg, var(--primary), var(--primary-container))',
+            color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+            boxShadow: '0 2px 10px rgba(124,87,45,0.25)',
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            Add New City
+          </button>
         </div>
       </div>
+
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16, marginBottom: 28 }}>
+        <StatCard
+          label="Total Cities" value={stats.totalCities} loading={statsLoading}
+          sub="Across Egypt"
+          icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>}
+        />
+        <StatCard
+          label="Total Sites" value={stats.totalSites} loading={statsLoading}
+          sub="Tourist destinations"
+          icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>}
+        />
+      </div>
+
+      {/* Search */}
+      <div style={{ display: 'flex', gap: 10, marginBottom: 24 }}>
+        <div style={{ flex: 1, maxWidth: 400, position: 'relative' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--outline)" strokeWidth="2"
+            style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input
+            value={topSearch}
+            onChange={e => setTopSearch(e.target.value)}
+            placeholder="Search by name or GPS..."
+            style={{
+              width: '100%', padding: '9px 14px 9px 34px',
+              background: 'var(--surface-container-lowest)',
+              border: '1px solid rgba(212,196,183,.3)',
+              borderRadius: 10, fontSize: 13, color: 'var(--text)', outline: 'none',
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Card Grid */}
+      {loading ? (
+        <div style={{ padding: 80 }}><Spinner center /></div>
+      ) : sorted.length === 0 ? (
+        <div style={{ padding: '80px 20px', textAlign: 'center', color: 'var(--outline)', fontSize: 14 }}>
+          No cities found.{' '}
+          <button onClick={() => setCreateOpen(true)} style={{ color: 'var(--primary)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 14 }}>
+            Create the first one.
+          </button>
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 24 }}>
+          {sorted.map((city, i) => (
+            <CityCard
+              key={city.id}
+              city={city}
+              index={i}
+              onClick={() => navigate(`/cities/${city.id}`)}
+            />
+          ))}
+          {/* Add new card placeholder */}
+          <button
+            onClick={() => setCreateOpen(true)}
+            style={{
+              border: '2px dashed rgba(212,196,183,.4)', borderRadius: 16,
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+              minHeight: 380, background: 'transparent', cursor: 'pointer',
+              transition: 'all .2s',
+            }}
+            onMouseOver={e => { e.currentTarget.style.borderColor = 'rgba(124,87,45,.4)'; e.currentTarget.style.background = 'rgba(124,87,45,.03)'; }}
+            onMouseOut={e => { e.currentTarget.style.borderColor = 'rgba(212,196,183,.4)'; e.currentTarget.style.background = 'transparent'; }}
+          >
+            <div style={{
+              width: 56, height: 56, borderRadius: '50%',
+              background: 'var(--surface-container-high)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12,
+            }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--outline)" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
+            </div>
+            <span style={{ fontWeight: 700, color: 'var(--text-2)', fontSize: 14 }}>New City</span>
+            <span style={{ fontSize: 11, color: 'var(--outline)', marginTop: 4 }}>Add to Egypt's network</span>
+          </button>
+        </div>
+      )}
 
       <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Create New City" width={640}>
         <CityForm onSubmit={handleCreate} loading={creating} onCancel={() => setCreateOpen(false)} />
