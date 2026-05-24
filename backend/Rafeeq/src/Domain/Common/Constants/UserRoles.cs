@@ -2,8 +2,11 @@
 
 public class UserRoles
 {
-    public const string Admin = nameof(Admin);
-    public const string Tourist = nameof(Tourist);
-    public const string Moderator = nameof(Moderator);
-    // public const string Guide = nameof(Guide);
+    public static readonly string[] AllRoles = [SuperAdmin, Admin, Moderator, Tourist];
+    
+    public const string SuperAdmin = "SuperAdmin";
+    public const string Admin = "Admin";
+    public const string Moderator = "Moderator";
+    public const string Tourist = "Tourist";
+    // public const string Guide = "Guide";
 }
