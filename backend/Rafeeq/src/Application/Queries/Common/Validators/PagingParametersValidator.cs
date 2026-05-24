@@ -9,7 +9,7 @@ internal sealed class PagingParametersValidator : AbstractValidator<PagingParame
 {
     public PagingParametersValidator(IErrorLocalizer errors)
     {
-        RuleFor(x => x.PageNumber)
+        RuleFor(x => x.Page)
             .GreaterThan(0)
             .WithMessage(errors[ValidationErrors.NumberMustBeGreaterThanZero.Code]);
 

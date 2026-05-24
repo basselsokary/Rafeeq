@@ -11,8 +11,6 @@ internal sealed class GetCityDashboardQueryHandler(
     public async Task<Result<AdminCityDashboardDto>> HandleAsync(GetCityDashboardQuery query, CancellationToken cancellationToken)
     {
         var dashboard = await queryService.GetDashboardAsync(cancellationToken);
-        if (dashboard == null)
-            return Result.Failure<AdminCityDashboardDto>("Failed to retrieve city dashboard data.");
 
         return Result.Success(dashboard);
     }
