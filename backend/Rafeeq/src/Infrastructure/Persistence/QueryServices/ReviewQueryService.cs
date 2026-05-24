@@ -234,7 +234,7 @@ internal sealed class ReviewQueryService(
         return new PagedResult<T>(
             items,
             totalCount,
-            paging.PageNumber,
+            paging.Page,
             paging.PageSize);
     }
 

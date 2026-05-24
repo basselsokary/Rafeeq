@@ -252,7 +252,8 @@ internal sealed class SiteQueryService(
         var query = Sites;
         query = ApplyFilters(query, filters)
             .OrderByDescending(s => s.AverageRating)
-            .ThenByDescending(s => s.IsFeatured || s.IsHiddenGem || s.IsPopular);
+            .ThenByDescending(s => s.IsPopular)
+            .ThenByDescending(s => s.IsFeatured);
 
         return await ToPagedResultAsync(
             query,
@@ -382,7 +383,7 @@ internal sealed class SiteQueryService(
         {
             return [];
         }
-        
+
         return await Sites
             .Where(s =>
                 s.Id != seed.Id &&
@@ -451,6 +452,7 @@ internal sealed class SiteQueryService(
                 s.AverageRating >= 4.5)
             .OrderByDescending(s => s.IsFeatured)
             .ThenByDescending(s => s.AverageRating)
+            .ThenByDescending(s => s.IsPopular)
             .Take(count)
             .Select(s => new SiteSummaryDto(
                 s.Id,
@@ -590,21 +592,8 @@ internal sealed class SiteQueryService(
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
-        var latDelta = radiusKm / 111.0;
-        var lonDelta = radiusKm / (111.0 * Math.Cos(latitude * Math.PI / 180.0));
-
-        var minLat = latitude - latDelta;
-        var maxLat = latitude + latDelta;
-        var minLon = longitude - lonDelta;
-        var maxLon = longitude + lonDelta;
-
         var sites = Sites
             .Where(a => a.Status == SiteStatus.Active)
-            // .Where(s => 
-            //     s.Location.Latitude >= minLat &&
-            //     s.Location.Latitude <= maxLat &&
-            //     s.Location.Longitude >= minLon &&
-            //     s.Location.Longitude <= maxLon)
             .Select(s => new
             {
                 Site = s,
@@ -617,7 +606,6 @@ internal sealed class SiteQueryService(
                     )
                 )
             })
-            // .Where(x => x.Distance <= radiusKm)
             .OrderBy(x => x.Distance);
         
         return await sites
@@ -679,6 +667,7 @@ internal sealed class SiteQueryService(
                 lc.Name.Contains(term)));
         
         return query.Take(count)
+            .OrderByDescending(s => s.AverageRating)
             .Select(s => new SiteLookupDto(
                 s.Id,
                 s.LocalizedContents.Where(lc => lc.Language == LanguageCode.English)
@@ -945,7 +934,7 @@ internal sealed class SiteQueryService(
         return new PagedResult<T>(
             items,
             totalCount,
-            paging.PageNumber,
+            paging.Page,
             paging.PageSize);
     }
 

@@ -188,7 +188,7 @@ internal sealed class TripQueryService(
         return new PagedResult<TripListDto>(
             dtos,
             totalCount,
-            paging.PageNumber,
+            paging.Page,
             paging.PageSize);
     }
 }

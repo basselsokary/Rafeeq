@@ -125,7 +125,7 @@ internal sealed class AttractionQueryService(
                 a.MainImageUrl))
             .ToListAsync(cancellationToken);
         
-        return new PagedResult<AttractionListDto>(items, totalCount, paging.PageNumber, paging.PageSize);
+        return new PagedResult<AttractionListDto>(items, totalCount, paging.Page, paging.PageSize);
     }
 
     public async Task<List<AttractionLocalizedContentDto>> GetLocalizedContentsAsync(
@@ -228,7 +228,7 @@ internal sealed class AttractionQueryService(
         return new PagedResult<AttractionListDto>(
             items,
             totalCount,
-            paging.PageNumber,
+            paging.Page,
             paging.PageSize);
     }
 

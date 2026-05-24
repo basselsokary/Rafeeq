@@ -85,7 +85,7 @@ internal sealed class ArtifactQueryService(
         );
     }
 
-    public async Task<List<ArtifactListDto>?> GetByNamesAsync(List<string> names, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default)
+    public async Task<List<ArtifactListDto>> GetByNamesAsync(List<string> names, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default)
     {
         if (names == null || names.Count == 0)
             return [];

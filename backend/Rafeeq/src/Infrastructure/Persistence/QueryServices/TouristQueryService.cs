@@ -58,7 +58,7 @@ internal sealed class TouristQueryService(
                 x.tourist.FirstName + " " + x.tourist.LastName,
                 x.user.Email!,
                 x.tourist.TotalTrips,
-                x.tourist.TotalReviews));
+                x.tourist.TotalRatings));
 
         var totalCount = await queryPaging.CountAsync(cancellationToken);
         var items = await queryPaging
@@ -69,7 +69,7 @@ internal sealed class TouristQueryService(
         return new PagedResult<TouristListDto>(
             items,
             totalCount,
-            paging.PageNumber,
+            paging.Page,
             paging.PageSize);
     }
 
@@ -97,7 +97,7 @@ internal sealed class TouristQueryService(
                 x.user.Email!,
                 x.tourist.Nationality,
                 x.tourist.TotalTrips,
-                x.tourist.TotalReviews,
+                x.tourist.TotalRatings,
                 x.tourist.CreatedAt,
                 x.user.LastLoginAt))
             .FirstOrDefaultAsync(cancellationToken);
@@ -133,7 +133,7 @@ internal sealed class TouristQueryService(
                 x.tourist.Status,
                 x.tourist.Nationality,
                 x.user.EmailConfirmed,
-                x.tourist.TotalReviews,
+                x.tourist.TotalRatings,
                 x.TotalFavorites,
                 x.tourist.Status == UserStatus.Banned,
                 x.tourist.CreatedAt,
@@ -143,7 +143,7 @@ internal sealed class TouristQueryService(
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<TouristProfileDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<TouristProfileDto?> GetProfileByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await Tourists
             .Join(
@@ -165,7 +165,7 @@ internal sealed class TouristQueryService(
                 x.user.Email!,
                 x.tourist.Nationality,
                 x.tourist.TotalTrips,
-                x.tourist.TotalReviews,
+                x.tourist.TotalRatings,
                 x.tourist.CreatedAt,
                 x.user.LastLoginAt))
             .FirstOrDefaultAsync(cancellationToken);
@@ -206,7 +206,7 @@ internal sealed class TouristQueryService(
             model.tourist.Status,
             model.tourist.Nationality,
             model.user.EmailConfirmed,
-            model.tourist.TotalReviews,
+            model.tourist.TotalRatings,
             model.TotalFavorites,
             model.tourist.Status == UserStatus.Banned,
             model.tourist.CreatedAt,
@@ -270,7 +270,7 @@ internal sealed class TouristQueryService(
         return new PagedResult<FavoriteSiteDto>(
             items,
             totalCount,
-            paging.PageNumber,
+            paging.Page,
             paging.PageSize);
     }
 
@@ -320,7 +320,7 @@ internal sealed class TouristQueryService(
         return new PagedResult<VisitedSiteDto>(
             items,
             totalCount,
-            paging.PageNumber,
+            paging.Page,
             paging.PageSize);
     }
 

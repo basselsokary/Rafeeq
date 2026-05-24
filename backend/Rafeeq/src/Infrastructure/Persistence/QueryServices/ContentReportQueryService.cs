@@ -74,7 +74,7 @@ internal sealed class ContentReportQueryService(
         return new PagedResult<ContentReportListDto>(
             items,
             totalCount,
-            paging.PageNumber,
+            paging.Page,
             paging.PageSize);
     }
 

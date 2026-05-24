@@ -127,7 +127,7 @@ internal sealed class SponsorQueryService(
         return new PagedResult<SponsorOfferListDto>(
             items,
             totalCount,
-            paging.PageNumber,
+            paging.Page,
             paging.PageSize);
     }
 
@@ -168,7 +168,7 @@ internal sealed class SponsorQueryService(
                 null))
             .ToListAsync(cancellationToken);
 
-        return new PagedResult<SponsorListDto>(items, totalCount, paging.PageNumber, paging.PageSize);
+        return new PagedResult<SponsorListDto>(items, totalCount, paging.Page, paging.PageSize);
     }
 
     public async Task<SponsorDetailDto?> GetByIdAsync(
@@ -571,7 +571,7 @@ internal sealed class SponsorQueryService(
             .Take(paging.Take)
             .ToListAsync(cancellationToken);
 
-        return new PagedResult<SponsorListDto>(items, totalCount, paging.PageNumber, paging.PageSize);
+        return new PagedResult<SponsorListDto>(items, totalCount, paging.Page, paging.PageSize);
     }
 
     private static IQueryable<Sponsor> ApplyFilters(IQueryable<Sponsor> query, SponsorFilters filters)
