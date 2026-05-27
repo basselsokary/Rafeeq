@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <data name="VALIDATION_GENERAL" xml:space="preserve"><value>1つ以上の検証エラーが発生しました。</value></data>
+  <data name="VALIDATION_VALUE_REQUIRED" xml:space="preserve"><value>値は必須です。</value></data>
+  <data name="VALIDATION_COLLECTION_REQUIRED" xml:space="preserve"><value>少なくとも1つのアイテムが必要です。</value></data>
+  <data name="VALIDATION_INVALID_ENUM_VALUE" xml:space="preserve"><value>無効な値が提供されました：{0}。</value></data>
+  <data name="VALIDATION_NUMBER_GREATER_THAN_ZERO_REQUIRED" xml:space="preserve"><value>値はゼロより大きくなければなりません。</value></data>
+  <data name="VALIDATION_MAXIMUM_LENGTH_EXCEEDED" xml:space="preserve"><value>値が許可された最大長を超えています。</value></data>
+  <data name="VALIDATION_MINIMUM_LENGTH_NOT_MET" xml:space="preserve"><value>値が必要な最小長を満たしていません。</value></data>
+  <data name="VALIDATION_RANGE_INVALID" xml:space="preserve"><value>提供された範囲は無効です。</value></data>
+  <data name="VALIDATION_WHITESPACE_NOT_ALLOWED" xml:space="preserve"><value>空白のみの値は許可されていません。</value></data>
+
+  <data name="FILE_INVALID_ID" xml:space="preserve"><value>ファイルIDを空にすることはできません。</value></data>
+  <data name="FILE_INVALID_NAME" xml:space="preserve"><value>ファイル名が無効か空です。</value></data>
+  <data name="FILE_EMPTY" xml:space="preserve"><value>ファイルにデータが含まれていません。</value></data>
+  <data name="FILE_INVALID_SIGNATURE" xml:space="preserve"><value>ファイルの内容が宣言されたタイプと一致しません。</value></data>
+  <data name="FILE_TOO_LARGE" xml:space="preserve"><value>ファイルが許可された最大サイズ {0} MB を超えています。</value></data>
+  <data name="FILE_UNSUPPORTED_TYPE" xml:space="preserve"><value>ファイルタイプ '{0}' はサポートされていません。</value></data>
+  <data name="IMAGE_ID_REQUIRED" xml:space="preserve"><value>画像IDは必須です。</value></data>
+  <data name="IMAGE_INVALID_SIGNATURE" xml:space="preserve"><value>アップロードされたファイルには無効な署名があり、有効な画像ではない可能性があります。</value></data>
+  <data name="IMAGE_UPLOAD_FAILED" xml:space="preserve"><value>画像のアップロード中にエラーが発生しました。後でもう一度お試しください。</value></data>
+  <data name="IMAGE_STORAGE_KEY_REQUIRED" xml:space="preserve"><value>ストレージキーは必須です。</value></data>
+  <data name="IMAGE_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>表示順を負にすることはできません。</value></data>
+  <data name="IMAGE_URL_REQUIRED" xml:space="preserve"><value>画像URLは必須です。</value></data>
+
+  <data name="OPENING_HOURS_ALREADY_EXIST" xml:space="preserve"><value>{0} の営業時間はすでに存在します。</value></data>
+  <data name="OPENING_HOURS_NOT_FOUND" xml:space="preserve"><value>{0} の営業時間は存在しません。</value></data>
+  <data name="ADDRESS_STREET_REQUIRED" xml:space="preserve"><value>通り（ストリート）は必須です。</value></data>
+  <data name="ADDRESS_CITY_REQUIRED" xml:space="preserve"><value>市区町村は必須です。</value></data>
+  <data name="ADDRESS_REQUIRED" xml:space="preserve"><value>住所は必須です。</value></data>
+  <data name="ADDRESS_STREET_LENGTH_EXCEEDED" xml:space="preserve"><value>通り（ストリート）が許可された最大長を超えています。</value></data>
+  <data name="ADDRESS_CITY_LENGTH_EXCEEDED" xml:space="preserve"><value>市区町村が許可された最大長を超えています。</value></data>
+  <data name="ADDRESS_REGION_LENGTH_EXCEEDED" xml:space="preserve"><value>地域が許可された最大長を超えています。</value></data>
+  <data name="ADDRESS_POSTAL_CODE_LENGTH_EXCEEDED" xml:space="preserve"><value>郵便番号が許可された最大長を超えています。</value></data>
+  <data name="ADDRESS_LENGTH_EXCEEDED" xml:space="preserve"><value>住所の長さは定義された最大値を超えることはできません。</value></data>
+  <data name="DATE_RANGE_INVALID" xml:space="preserve"><value>開始日は終了日より前である必要があります。</value></data>
+  <data name="EMAIL_REQUIRED" xml:space="preserve"><value>メールアドレスは必須です。</value></data>
+  <data name="EMAIL_TOO_LONG" xml:space="preserve"><value>メールアドレスが長すぎます。</value></data>
+  <data name="EMAIL_INVALID_FORMAT" xml:space="preserve"><value>'{0}' は有効なメールアドレスではありません。</value></data>
+  <data name="GEOLOCATION_INVALID_LATITUDE" xml:space="preserve"><value>緯度は-90度から90度の間である必要があります。受信：{0}。</value></data>
+  <data name="GEOLOCATION_INVALID_LONGITUDE" xml:space="preserve"><value>経度は-180度から180度の間である必要があります。受信：{0}。</value></data>
+  <data name="MONEY_NEGATIVE_AMOUNT" xml:space="preserve"><value>金額を負にすることはできません。</value></data>
+  <data name="MONEY_CURRENCY_REQUIRED" xml:space="preserve"><value>通貨は必須です。</value></data>
+  <data name="MONEY_INVALID_CURRENCY_FORMAT" xml:space="preserve"><value>通貨は3文字のISOコードである必要があります。</value></data>
+  <data name="MONEY_CURRENCY_MISMATCH" xml:space="preserve"><value>異なる通貨で操作することはできません。</value></data>
+  <data name="MONEY_DIVISION_BY_ZERO" xml:space="preserve"><value>ゼロで除算することはできません。</value></data>
+  <data name="PHONE_NUMBER_REQUIRED" xml:space="preserve"><value>電話番号は必須です。</value></data>
+  <data name="PHONENUMBER_INVALID_FORMAT" xml:space="preserve"><value>'{0}' は有効な電話番号ではありません。</value></data>
+  <data name="RATING_OUT_OF_RANGE" xml:space="preserve"><value>評価は {0} から {1} の間であり、最大評価は最小評価以上である必要があります。</value></data>
+  <data name="RATING_POSITIVE_REQUIRED" xml:space="preserve"><value>評価は正の整数である必要があります。</value></data>
+  <data name="TIME_RANGE_INVALID" xml:space="preserve"><value>開始時間は終了時間より前である必要があります。</value></data>
+  <data name="TICKET_NOTES_LENGTH_EXCEEDED" xml:space="preserve"><value>チケットのメモの長さは定義された最大値を超えることはできません。</value></data>
+
+  <data name="ARTIFACT_NOT_FOUND" xml:space="preserve"><value>アーティファクトが見つかりません。</value></data>
+  <data name="ARTIFACT_NAME_REQUIRED" xml:space="preserve"><value>名前は必須です。</value></data>
+  <data name="ARTIFACT_DESCRIPTION_REQUIRED" xml:space="preserve"><value>説明は必須です。</value></data>
+  <data name="ARTIFACT_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>表示順を負にすることはできません。</value></data>
+  <data name="ARTIFACT_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>指定された言語のローカライズされたコンテンツが見つかりません。</value></data>
+  <data name="ARTIFACT_IMAGE_NOT_FOUND" xml:space="preserve"><value>画像が見つかりません。</value></data>
+
+  <data name="ATTRACTION_ID_REQUIRED" xml:space="preserve"><value>アトラクションIDは必須です。</value></data>
+  <data name="ATTRACTION_SITE_ID_REQUIRED" xml:space="preserve"><value>サイトIDは必須です。</value></data>
+  <data name="ATTRACTION_CONTENT_ID_REQUIRED" xml:space="preserve"><value>コンテンツIDは必須です。</value></data>
+  <data name="ATTRACTION_NOT_FOUND" xml:space="preserve"><value>ID {0} のアトラクションは存在しません。</value></data>
+  <data name="ATTRACTION_NAME_REQUIRED" xml:space="preserve"><value>アトラクション名を空にすることはできません。</value></data>
+  <data name="ATTRACTION_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>アトラクション名の長さは {0} を超えることはできません。</value></data>
+  <data name="ATTRACTION_DESCRIPTION_REQUIRED" xml:space="preserve"><value>アトラクションの説明を空にすることはできません。</value></data>
+  <data name="ATTRACTION_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>アトラクションの説明の長さは {0} を超えることはできません。</value></data>
+  <data name="ATTRACTION_IMAGE_CAPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>アトラクションのキャプションの長さは {0} を超えることはできません。</value></data>
+  <data name="ATTRACTION_IMAGE_URL_REQUIRED" xml:space="preserve"><value>アトラクションの画像URLは必須です。</value></data>
+  <data name="ATTRACTION_IMAGE_NOT_FOUND" xml:space="preserve"><value>アトラクションの画像は存在しません。</value></data>
+  <data name="ATTRACTION_IMAGE_CAPTION_REQUIRED" xml:space="preserve"><value>アトラクションの画像キャプションは必須です。</value></data>
+  <data name="ATTRACTION_CAPTION_REQUIRED" xml:space="preserve"><value>アトラクションのキャプションは必須です。</value></data>
+  <data name="ATTRACTION_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>アトラクションの表示順を負にすることはできません。</value></data>
+  <data name="ATTRACTION_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>アトラクションのローカライズされたコンテンツは存在しません。</value></data>
+  <data name="ATTRACTION_LOCATION_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>アトラクションの場所の説明の長さは {0} を超えることはできません。</value></data>
+  <data name="ATTRACTION_HISTORICAL_PERIOD_ALREADY_EXISTS" xml:space="preserve"><value>アトラクションにはすでに指定された歴史的期間があります。</value></data>
+  <data name="ATTRACTION_HISTORICAL_PERIOD_REQUIRED" xml:space="preserve"><value>アトラクションの歴史的期間は必須です。</value></data>
+  
+  <data name="CITY_ID_REQUIRED" xml:space="preserve"><value>都市IDは必須です。</value></data>
+  <data name="CITY_NOT_FOUND" xml:space="preserve"><value>ID {0} の都市は存在しません。</value></data>
+  <data name="CITY_NAME_REQUIRED" xml:space="preserve"><value>都市名を空にすることはできません。</value></data>
+  <data name="CITY_DUPLICATE_NAME" xml:space="preserve"><value>同じ名前の都市がすでに存在します。</value></data>
+  <data name="CITY_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>都市名の長さは {0} を超えることはできません。</value></data>
+  <data name="CITY_DESCRIPTION_REQUIRED" xml:space="preserve"><value>都市の説明を空にすることはできません。</value></data>
+  <data name="CITY_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>都市の説明の長さは {0} を超えることはできません。</value></data>
+  <data name="CITY_IMAGE_URL_REQUIRED" xml:space="preserve"><value>都市の画像URLは必須です。</value></data>
+  <data name="CITY_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>都市の表示順を負にすることはできません。</value></data>
+  <data name="CITY_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>都市のローカライズされたコンテンツは存在しません。</value></data>
+
+  <data name="REPORT_ID_REQUIRED" xml:space="preserve"><value>レポートIDは必須です。</value></data>
+  <data name="REPORTED_ENTITY_ID_REQUIRED" xml:space="preserve"><value>報告されたエンティティIDは必須です。</value></data>
+  <data name="REPORT_NOT_FOUND" xml:space="preserve"><value>ID {0} のコンテンツレポートは存在しません。</value></data>
+  <data name="REPORT_DESCRIPTION_REQUIRED" xml:space="preserve"><value>レポートの説明を空にすることはできません。</value></data>
+  <data name="REPORT_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>レポートの説明の長さは {0} を超えることはできません。</value></data>
+  <data name="REPORT_REASON_REQUIRED" xml:space="preserve"><value>レポートの理由は空にできません。</value></data>
+  <data name="REPORT_REASON_LENGTH_EXCEEDED" xml:space="preserve"><value>レポートの理由の長さは {0} を超えることはできません。</value></data>
+  <data name="REPORT_CANNOT_BE_RESOLVED" xml:space="preserve"><value>理由またはアクションのいずれかを提供する必要がありますが、両方は提供できません。</value></data>
+  <data name="REPORT_CANNOT_BE_REVIEWED" xml:space="preserve"><value>保留中またはレビュー中のレポートのみをレビューできます。</value></data>
+  <data name="REPORT_CANNOT_BE_MARKED_UNDER_REVIEW" xml:space="preserve"><value>保留中のレポートのみをレビュー中としてマークできます。</value></data>
+  <data name="REPORT_CANNOT_BE_DISMISSED" xml:space="preserve"><value>却下理由は必須です。</value></data>
+
+  <data name="REVIEW_NOT_FOUND" xml:space="preserve"><value>ID {0} のレビューは見つかりませんでした。</value></data>
+  <data name="REVIEW_INVALID_STATUS" xml:space="preserve"><value>レビューステータス {0} は無効です。</value></data>
+  <data name="REVIEW_ID_REQUIRED" xml:space="preserve"><value>レビューIDは必須です。</value></data>
+  <data name="REVIEW_SITE_ID_REQUIRED" xml:space="preserve"><value>サイトIDは必須です。</value></data>
+  <data name="REVIEW_USER_ID_REQUIRED" xml:space="preserve"><value>ユーザーIDは必須です。</value></data>
+  <data name="REVIEW_TITLE_REQUIRED" xml:space="preserve"><value>レビューのタイトルは空にできません。</value></data>
+  <data name="REVIEW_TITLE_EXCEEDED_LENGTH" xml:space="preserve"><value>レビューのタイトルが許可された最大長を超えています。</value></data>
+  <data name="REVIEW_CONTENT_REQUIRED" xml:space="preserve"><value>レビューの内容は空にできません。</value></data>
+  <data name="REVIEW_CONTENT_EXCEEDED_LENGTH" xml:space="preserve"><value>レビューの内容が許可された最大長を超えています。</value></data>
+  <data name="REVIEW_IMAGE_URL_REQUIRED" xml:space="preserve"><value>レビューの画像URLは必須です。</value></data>
+  <data name="REVIEW_IMAGE_NOT_FOUND" xml:space="preserve"><value>レビューの画像は存在しません。</value></data>
+  <data name="REVIEW_REJECTION_REASON_REQUIRED" xml:space="preserve"><value>拒否理由は必須です。</value></data>
+  <data name="REVIEW_USER_ALREADY_REVIEWED_SITE" xml:space="preserve"><value>ユーザーはすでにこのサイトをレビューしています。</value></data>
+  <data name="REVIEW_UNAUTHORIZED" xml:space="preserve"><value>この操作を実行する権限がありません。</value></data>
+
+  <data name="SITE_NOT_FOUND" xml:space="preserve"><value>ID {0} のサイトは存在しません。</value></data>
+  <data name="SITE_ID_REQUIRED" xml:space="preserve"><value>サイトIDは必須です。</value></data>
+  <data name="SITE_LOCALIZED_ID_REQUIRED" xml:space="preserve"><value>サイトのローカライズIDは必須です。</value></data>
+  <data name="SITE_CITY_ID_REQUIRED" xml:space="preserve"><value>都市IDは必須です。</value></data>
+  <data name="SITE_NAME_REQUIRED" xml:space="preserve"><value>サイト名を空にすることはできません。</value></data>
+  <data name="NEAREST_TRANSPORTATION_NAME_REQUIRED" xml:space="preserve"><value>最寄りの交通機関名は空にできません。</value></data>
+  <data name="SITE_INVALID_FACILITY_TYPE" xml:space="preserve"><value>提供された施設タイプの1つ以上が無効です。</value></data>
+  <data name="SITE_FACILITY_ALREADY_EXISTS" xml:space="preserve"><value>このサイトには同じ名前の施設がすでに存在します。</value></data>
+  <data name="SITE_NAME_EXCEEDED_LENGTH" xml:space="preserve"><value>サイト名は {0} 文字を超えることはできません。</value></data>
+  <data name="SITE_DESCRIPTION_REQUIRED" xml:space="preserve"><value>サイトの説明は空にできません。</value></data>
+  <data name="FACILITY_DESCRIPTION_REQUIRED" xml:space="preserve"><value>施設の説明は空にできません。</value></data>
+  <data name="SITE_DESCRIPTION_EXCEEDED_LENGTH" xml:space="preserve"><value>サイトの説明は {0} 文字を超えることはできません。</value></data>
+  <data name="SITE_CONTACT_PHONE_REQUIRED" xml:space="preserve"><value>サイトの連絡先電話番号は空にできません。</value></data>
+  <data name="SITE_IMAGE_ID_REQUIRED" xml:space="preserve"><value>サイト画像IDは必須です。</value></data>
+  <data name="SITE_IMAGE_EXCEEDED_LENGTH" xml:space="preserve"><value>サイト画像のURLは最大長を超えることはできません。</value></data>
+  <data name="SITE_IMAGE_URL_REQUIRED" xml:space="preserve"><value>サイト画像URLは必須です。</value></data>
+  <data name="SITE_IMAGE_NOT_FOUND" xml:space="preserve"><value>サイト画像が存在しません。</value></data>
+  <data name="SITE_CAPTION_REQUIRED" xml:space="preserve"><value>サイト画像のキャプションは必須です。</value></data>
+  <data name="SITE_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>サイトの表示順を負にすることはできません。</value></data>
+  <data name="SITE_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>サイトのローカライズされたコンテンツは存在しません。</value></data>
+  <data name="FACILITY_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>施設のローカライズされたコンテンツは存在しません。</value></data>
+  <data name="NEAREST_TRANSPORTATION_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>最寄りの交通機関のローカライズされたコンテンツは存在しません。</value></data>
+  <data name="SITE_FACILITY_ID_REQUIRED" xml:space="preserve"><value>サイト施設IDは必須です。</value></data>
+  <data name="SITE_FACILITY_NOT_FOUND" xml:space="preserve"><value>サイトの施設は存在しません。</value></data>
+  <data name="SITE_NEAREST_TRANSPORTATION_NOT_FOUND" xml:space="preserve"><value>サイトの最寄り交通機関が存在しません。</value></data>
+  <data name="SITE_NEAREST_TRANSPORTATION_DUPLICATE_LOCATION" xml:space="preserve"><value>同じ場所の最寄り交通機関がこのサイトにすでに存在します。</value></data>
+  <data name="SITE_OPENING_HOUR_NOT_FOUND" xml:space="preserve"><value>サイトの営業時間は存在しません。</value></data>
+  <data name="SITE_CANNOT_BE_FEATURED_AND_HIDDEN_GEM" xml:space="preserve"><value>サイトを注目のアトラクションと隠れた名所の両方にすることはできません。</value></data>
+  <data name="SITE_INVALID_ESTIMATED_DURATION" xml:space="preserve"><value>推定所要時間はゼロより大きくなければなりません。</value></data>
+
+  <data name="SPONSOR_NOT_FOUND" xml:space="preserve"><value>ID {0} のスポンサーは存在しません。</value></data>
+  <data name="SPONSOR_ID_REQUIRED" xml:space="preserve"><value>スポンサーIDは必須です。</value></data>
+  <data name="SPONSOR_OFFER_ID_REQUIRED" xml:space="preserve"><value>スポンサーのオファーIDは必須です。</value></data>
+  <data name="SPONSOR_OFFER_NOT_FOUND" xml:space="preserve"><value>ID {0} のオファーは存在しません。</value></data>
+  <data name="SPONSOR_TITLE_REQUIRED" xml:space="preserve"><value>スポンサーのタイトルは空にできません。</value></data>
+  <data name="SPONSOR_EXCEEDED_TITLE_LENGTH" xml:space="preserve"><value>スポンサーのタイトルは {0} 文字を超えることはできません。</value></data>
+  <data name="SPONSOR_DESCRIPTION_REQUIRED" xml:space="preserve"><value>スポンサーの説明は必須です。</value></data>
+  <data name="SPONSOR_EXCEEDED_DESCRIPTION_LENGTH" xml:space="preserve"><value>スポンサーの説明は {0} 文字を超えることはできません。</value></data>
+  <data name="SPONSOR_PROMO_CODE_REQUIRED" xml:space="preserve"><value>プロモコードは空にできません。</value></data>
+  <data name="SPONSOR_DISCOUNT_REQUIRED" xml:space="preserve"><value>割引額またはパーセンテージのいずれかを提供する必要があります。</value></data>
+  <data name="SPONSOR_DISCOUNT_PCT_INVALID" xml:space="preserve"><value>割引のパーセンテージは0から100の間である必要があります。</value></data>
+  <data name="SPONSOR_OFFER_INACTIVE" xml:space="preserve"><value>非アクティブなオファーを引き換えることはできません。</value></data>
+  <data name="SPONSOR_OFFER_EXPIRED" xml:space="preserve"><value>期限切れのオファーを引き換えることはできません。</value></data>
+  <data name="SPONSOR_EXPIRED_CONTRACT" xml:space="preserve"><value>契約が終了したスポンサーをアクティブにすることはできません。</value></data>
+  <data name="SPONSOR_OFFER_MAX_REDEMPTIONS_REACHED" xml:space="preserve"><value>このオファーの最大引き換え回数に達しました。</value></data>
+  <data name="SPONSOR_NEGATIVE_REDEMPTIONS" xml:space="preserve"><value>引き換え回数を負にすることはできません。</value></data>
+  <data name="SPONSOR_IMAGE_ID_REQUIRED" xml:space="preserve"><value>スポンサー画像IDは必須です。</value></data>
+  <data name="SPONSOR_IMG_URL_REQUIRED" xml:space="preserve"><value>スポンサーの画像URLは空にできません。</value></data>
+  <data name="SPONSOR_IMG_NOT_FOUND" xml:space="preserve"><value>スポンサーの画像は存在しません。</value></data>
+  <data name="SPONSOR_EXCEEDED_IMAGE_LENGTH" xml:space="preserve"><value>スポンサーの画像の長さが許可された最大値を超えています。</value></data>
+  <data name="SPONSOR_CAPTION_REQUIRED" xml:space="preserve"><value>スポンサー画像のキャプションは必須です。</value></data>
+  <data name="SPONSOR_EXCEEDED_WEBSITE_URL_LENGTH" xml:space="preserve"><value>スポンサーのウェブサイトURLは許可された最大値を超えることはできません。</value></data>
+  <data name="SPONSOR_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>スポンサーの表示順を負にすることはできません。</value></data>
+  <data name="SPONSOR_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>スポンサーのローカライズされたコンテンツは存在しません。</value></data>
+  <data name="SPONSOR_INVALID_DATE" xml:space="preserve"><value>契約の開始日は終了日より前である必要があります。</value></data>
+  <data name="SPONSOR_INVALID_EXTEND_DATE" xml:space="preserve"><value>新しい終了日は現在の終了日より後である必要があります。</value></data>
+  <data name="SPONSOR_INVALID_AVERAGE_RATING" xml:space="preserve"><value>平均評価は0から {0} の間である必要があります。</value></data>
+  <data name="SPONSOR_INVALID_NEW_DATE" xml:space="preserve"><value>新しい終了日は現在の終了日より後である必要があります。</value></data>
+  <data name="SPONSOR_CONTENT_ID_REQUIRED" xml:space="preserve"><value>コンテンツIDは必須です。</value></data>
+
+  <data name="USER_UNAUTHORIZED" xml:space="preserve"><value>ID '{0}' のユーザーは権限がありません。</value></data>
+  <data name="USER_NOT_FOUND" xml:space="preserve"><value>ユーザーが見つかりませんでした。</value></data>
+  <data name="FAVOURITE_NOT_FOUND" xml:space="preserve"><value>ID '{0}' のお気に入りが見つかりませんでした。</value></data>
+  <data name="TOURIST_NOT_FOUND" xml:space="preserve"><value>ID '{0}' のユーザーが見つかりませんでした。</value></data>
+  <data name="USER_FIRST_NAME_REQUIRED" xml:space="preserve"><value>ユーザーの名は空にできません。</value></data>
+  <data name="USER_FIRST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>ユーザーの名が許可された最大長を超えています。</value></data>
+  <data name="TOURIST_FIRST_NAME_REQUIRED" xml:space="preserve"><value>ユーザーの名は空にできません。</value></data>
+  <data name="TOURIST_FIRST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>ユーザーの名が許可された最大長を超えています。</value></data>
+  <data name="USER_LAST_NAME_REQUIRED" xml:space="preserve"><value>ユーザーの姓は空にできません。</value></data>
+  <data name="USER_LAST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>ユーザーの姓が許可された最大長を超えています。</value></data>
+  <data name="TOURIST_LAST_NAME_REQUIRED" xml:space="preserve"><value>ユーザーの姓は空にできません。</value></data>
+  <data name="TOURIST_LAST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>ユーザーの姓が許可された最大長を超えています。</value></data>
+  <data name="USER_NATIONALITY_REQUIRED" xml:space="preserve"><value>ユーザーの国籍は空にできません。</value></data>
+  <data name="TOURIST_NATIONALITY_REQUIRED" xml:space="preserve"><value>ユーザーの国籍は空にできません。</value></data>
+  <data name="VISITED_SITE_NOT_FOUND" xml:space="preserve"><value>訪問したサイトが見つかりませんでした。</value></data>
+  <data name="TRIP_NOTE_CONTENT_REQUIRED" xml:space="preserve"><value>旅行のメモの内容は空にできません。</value></data>
+  <data name="VISITED_SITE_DATE_IN_FUTURE" xml:space="preserve"><value>訪問日を未来にすることはできません。</value></data>
+  <data name="VISITED_SITE_DURATION_INVALID" xml:space="preserve"><value>滞在時間はゼロより大きくなければなりません。</value></data>
+  <data name="TRIP_SITE_VISIT_ORDER_INVALID" xml:space="preserve"><value>訪問順を負にすることはできません。</value></data>
+  <data name="TOURIST_SITE_ALREADY_VISITED" xml:space="preserve"><value>サイトはすでに訪問済みとしてマークされています。</value></data>
+  <data name="USER_USERNAME_REQUIRED" xml:space="preserve"><value>ユーザー名は必須です。</value></data>
+  <data name="USER_USERNAME_LENGTH_EXCEEDED" xml:space="preserve"><value>ユーザー名が許可された最大長を超えています。</value></data>
+  <data name="USER_PASSWORD_REQUIRED" xml:space="preserve"><value>パスワードは必須です。</value></data>
+  <data name="USER_PASSWORD_TOO_SHORT" xml:space="preserve"><value>パスワードが必要な最小長を満たしていません。</value></data>
+  <data name="USER_PASSWORD_TOO_LONG" xml:space="preserve"><value>パスワードが許可された最大長を超えています。</value></data>
+  <data name="USER_PREFERRED_LANGUAGE_INVALID" xml:space="preserve"><value>希望する言語は無効です。</value></data>
+  <data name="TOURIST_PREFERRED_LANGUAGE_INVALID" xml:space="preserve"><value>希望する言語は無効です。</value></data>
+  <data name="USER_FULL_NAME_REQUIRED" xml:space="preserve"><value>フルネームは必須です。</value></data>
+  <data name="USER_ROLE_INVALID" xml:space="preserve"><value>選択した役割は無効です。</value></data>
+  <data name="SITE_ALREADY_FAVORITE" xml:space="preserve"><value>サイトはすでにお気に入りにあります。</value></data>
+  <data name="TOURIST_SITE_ALREADY_FAVORITE" xml:space="preserve"><value>サイトはすでにお気に入りにあります。</value></data>
+  <data name="USER_ID_REQUIRED" xml:space="preserve"><value>ユーザーIDは必須です。</value></data>
+  <data name="FAVOURITE_SITE_ID_REQUIRED" xml:space="preserve"><value>サイトIDは必須です。</value></data>
+
+  <data name="TRIP_TOURIST_ID_REQUIRED" xml:space="preserve"><value>旅行者のIDは必須です。</value></data>
+  <data name="TRIP_NOT_FOUND" xml:space="preserve"><value>指定された旅行が見つかりませんでした。</value></data>
+  <data name="TRIP_SITE_NOT_FOUND" xml:space="preserve"><value>指定されたサイトが旅行内に見つかりませんでした。</value></data>
+  <data name="TRIP_DAY_NOT_FOUND" xml:space="preserve"><value>指定された旅行日が旅行内に見つかりませんでした。</value></data>
+  <data name="TRIP_NOTE_NOT_FOUND" xml:space="preserve"><value>指定されたメモが旅行内に見つかりませんでした。</value></data>
+  <data name="TRIP_NAME_REQUIRED" xml:space="preserve"><value>旅行のタイトルは空にできません。</value></data>
+  <data name="TRIP_SITE_NAME_REQUIRED" xml:space="preserve"><value>サイト名は空にできません。</value></data>
+  <data name="TRIP_CANNOT_BE_COMPLETED" xml:space="preserve"><value>旅行は現在の状態では完了できません。</value></data>
+  <data name="TRIP_CANNOT_BE_STARTED" xml:space="preserve"><value>旅行は現在の状態では開始できないか、開始日が未来です。</value></data>
+  <data name="TRIP_CANNOT_BE_CANCELED" xml:space="preserve"><value>完了した旅行はキャンセルできません。</value></data>
+  <data name="TRIP_CANNOT_BE_PUBLISHED" xml:space="preserve"><value>下書きの旅行のみ公開できます。</value></data>
+  <data name="TRIP_SITE_ALREADY_MARKED_AS_VISITED" xml:space="preserve"><value>このサイトはすでに訪問済みとしてマークされています。</value></data>
+  <data name="SITE_VISIT_DATE_OUT_OF_RANGE" xml:space="preserve"><value>サイトの訪問日は旅行日の範囲内である必要があります。</value></data>
+  <data name="INVALID_DURATION_DAYS" xml:space="preserve"><value>旅行の日数はゼロより大きく、{0} 以下である必要があります。</value></data>
+  <data name="TRIP_DAY_DATE_OUT_OF_RANGE" xml:space="preserve"><value>旅行日の日付は旅行日の範囲内である必要があります。</value></data>
+  <data name="TRIP_DAY_ALREADY_EXISTS" xml:space="preserve"><value>この日付の旅行日はすでに存在します。</value></data>
+  <data name="SITE_ALREADY_ADDED" xml:space="preserve"><value>このサイトはすでに旅行に追加されています。</value></data>
+  <data name="ESTIMATED_DURATION_INVALID" xml:space="preserve"><value>推定所要時間はゼロより大きくなければなりません。</value></data>
+  <data name="DISPLAY_ORDER_INVALID" xml:space="preserve"><value>表示順はゼロまたは正の数である必要があります。</value></data>
+  <data name="DAY_NUMBER_INVALID" xml:space="preserve"><value>日数はゼロより大きくなければなりません。</value></data>
+  <data name="INVALID_BUDGET" xml:space="preserve"><value>無効な予算値です。</value></data>
+
+  <data name="FULL_NAME_REQUIRED" xml:space="preserve"><value>フルネームは必須です。</value></data>
+  <data name="USERNAME_REQUIRED" xml:space="preserve"><value>ユーザー名は必須です。</value></data>
+  <data name="FIRST_NAME_REQUIRED" xml:space="preserve"><value>名は必須です。</value></data>
+  <data name="LAST_NAME_REQUIRED" xml:space="preserve"><value>姓は必須です。</value></data>
+  <data name="REFRESH_TOKEN_REQUIRED" xml:space="preserve"><value>アクセストークンを更新するには、有効なリフレッシュトークンが必要です。</value></data>
+  <data name="REFRESH_TOKEN_EXPIRATION_INVALID" xml:space="preserve"><value>提供されたリフレッシュトークンは有効期限が切れています。</value></data>
+  <data name="INVALID_CREDENTAILS" xml:space="preserve"><value>メールアドレスまたはパスワードが間違っています。</value></data>
+  <data name="INVALID_CREDENTIALS" xml:space="preserve"><value>メールアドレスまたはパスワードが間違っています。</value></data>
+  <data name="EMAIL_ALREADY_IN_USE" xml:space="preserve"><value>このメールアドレスを使用しているユーザーがすでに存在します。</value></data>
+  <data name="USERNAME_ALREADY_IN_USE" xml:space="preserve"><value>このユーザー名を使用しているユーザーがすでに存在します。</value></data>
+  <data name="IN_ACTIVE_USER" xml:space="preserve"><value>アカウントが無効になっています。</value></data>
+  <data name="USER_ROLES_REQUIRED" xml:space="preserve"><value>少なくとも1つの役割が必要です。</value></data>
+  <data name="USER_ALREADY_ADMIN" xml:space="preserve"><value>ユーザーはすでに管理者です。</value></data>
+  <data name="USER_NOT_MODERATOR" xml:space="preserve"><value>管理者に昇格する前に、ユーザーはモデレーターである必要があります。</value></data>
+  <data name="USER_NOT_ADMIN" xml:space="preserve"><value>ユーザーは管理者ではありません。</value></data>
+  <data name="USER_ADMIN_LOCK_FORBIDDEN" xml:space="preserve"><value>管理者アカウントはロックできません。</value></data>
+  <data name="USER_ADMIN_DELETE_FORBIDDEN" xml:space="preserve"><value>管理者アカウントは削除できません。まずモデレーターに降格してください。</value></data>
+  <data name="USER_DELETE_CONFIRM_REQUIRED" xml:space="preserve"><value>削除の確認は必須です。</value></data>
+  <data name="USER_PROMOTION_FAILED" xml:space="preserve"><value>ユーザーの昇格に失敗しました：{0}</value></data>
+  <data name="USER_DEMOTION_FAILED" xml:space="preserve"><value>ユーザーの降格に失敗しました：{0}</value></data>
+  <data name="USER_REMOVE_ROLES_FAILED" xml:space="preserve"><value>役割の削除に失敗しました：{0}</value></data>
+  <data name="USER_ADD_ROLES_FAILED" xml:space="preserve"><value>役割の追加に失敗しました：{0}</value></data>
+  <data name="USER_LOCK_FAILED" xml:space="preserve"><value>アカウントのロックに失敗しました：{0}</value></data>
+  <data name="USER_UNLOCK_FAILED" xml:space="preserve"><value>アカウントのロック解除に失敗しました：{0}</value></data>
+  <data name="USER_SUSPEND_FAILED" xml:space="preserve"><value>アカウントの停止に失敗しました：{0}</value></data>
+  <data name="USER_REACTIVATE_FAILED" xml:space="preserve"><value>アカウントの再開に失敗しました：{0}</value></data>
+  <data name="USER_DELETE_FAILED" xml:space="preserve"><value>ユーザーの削除に失敗しました：{0}</value></data>
+  <data name="USER_PERMANENT_DELETE_FAILED" xml:space="preserve"><value>ユーザーの削除に失敗しました：{0}</value></data>
+  <data name="LOCKED_ACCOUNT" xml:space="preserve"><value>アカウントはロックされています。</value></data>
+  <data name="INVALID_TOKEN" xml:space="preserve"><value>無効なアクセストークン。</value></data>
+  <data name="TOKEN_REQUIRED" xml:space="preserve"><value>アクセストークンは必須です。</value></data>
+  <data name="INVALID_REFRESH_TOKEN" xml:space="preserve"><value>無効または期限切れのリフレッシュトークン。</value></data>
+  <data name="INVALID_CLAIMS" xml:space="preserve"><value>無効なトークンクレーム（claims）。</value></data>
+  <data name="EMAIL_NOT_CONFIRMED" xml:space="preserve"><value>メールアドレスが確認されていません。</value></data>
+  <data name="INVALID_INVITATION_STATUS" xml:space="preserve"><value>保留中の招待のみ受け入れることができます。</value></data>
+  <data name="INVITATION_EXPIRED" xml:space="preserve"><value>この招待は期限切れです。</value></data>
+  <data name="CSV_PARSING_FAILED" xml:space="preserve"><value>CSVファイルの解析に失敗しました：{0}</value></data>
+  <data name="USER_GOOGLE_ID_TOKEN_REQUIRED" xml:space="preserve"><value>Google IDトークンは必須です。</value></data>
+  <data name="USER_INVALID_GOOGLE_ID_TOKEN" xml:space="preserve"><value>提供されたGoogle IDトークンは無効です。</value></data>
+
+</root>

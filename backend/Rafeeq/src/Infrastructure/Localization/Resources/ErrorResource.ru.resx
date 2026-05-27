@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <data name="VALIDATION_GENERAL" xml:space="preserve"><value>Произошла одна или несколько ошибок проверки.</value></data>
+  <data name="VALIDATION_VALUE_REQUIRED" xml:space="preserve"><value>Требуется значение.</value></data>
+  <data name="VALIDATION_COLLECTION_REQUIRED" xml:space="preserve"><value>Требуется как минимум один элемент.</value></data>
+  <data name="VALIDATION_INVALID_ENUM_VALUE" xml:space="preserve"><value>Предоставлено недопустимое значение: {0}.</value></data>
+  <data name="VALIDATION_NUMBER_GREATER_THAN_ZERO_REQUIRED" xml:space="preserve"><value>Значение должно быть больше нуля.</value></data>
+  <data name="VALIDATION_MAXIMUM_LENGTH_EXCEEDED" xml:space="preserve"><value>Значение превышает максимально допустимую длину.</value></data>
+  <data name="VALIDATION_MINIMUM_LENGTH_NOT_MET" xml:space="preserve"><value>Значение не соответствует минимальной требуемой длине.</value></data>
+  <data name="VALIDATION_RANGE_INVALID" xml:space="preserve"><value>Предоставленный диапазон недопустим.</value></data>
+  <data name="VALIDATION_WHITESPACE_NOT_ALLOWED" xml:space="preserve"><value>Значения, состоящие только из пробелов, не допускаются.</value></data>
+
+  <data name="FILE_INVALID_ID" xml:space="preserve"><value>ID файла не должен быть пустым.</value></data>
+  <data name="FILE_INVALID_NAME" xml:space="preserve"><value>Имя файла недопустимо или пусто.</value></data>
+  <data name="FILE_EMPTY" xml:space="preserve"><value>Файл не содержит данных.</value></data>
+  <data name="FILE_INVALID_SIGNATURE" xml:space="preserve"><value>Содержимое файла не соответствует заявленному типу.</value></data>
+  <data name="FILE_TOO_LARGE" xml:space="preserve"><value>Размер файла превышает максимально допустимый размер {0} МБ.</value></data>
+  <data name="FILE_UNSUPPORTED_TYPE" xml:space="preserve"><value>Тип файла '{0}' не поддерживается.</value></data>
+  <data name="IMAGE_ID_REQUIRED" xml:space="preserve"><value>Требуется ID изображения.</value></data>
+  <data name="IMAGE_INVALID_SIGNATURE" xml:space="preserve"><value>Загруженный файл имеет недействительную подпись и может не быть допустимым изображением.</value></data>
+  <data name="IMAGE_UPLOAD_FAILED" xml:space="preserve"><value>При загрузке изображения произошла ошибка. Пожалуйста, повторите попытку позже.</value></data>
+  <data name="IMAGE_STORAGE_KEY_REQUIRED" xml:space="preserve"><value>Требуется ключ хранилища.</value></data>
+  <data name="IMAGE_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>Порядок отображения не может быть отрицательным.</value></data>
+  <data name="IMAGE_URL_REQUIRED" xml:space="preserve"><value>Требуется URL изображения.</value></data>
+
+  <data name="OPENING_HOURS_ALREADY_EXIST" xml:space="preserve"><value>Часы работы для {0} уже существуют.</value></data>
+  <data name="OPENING_HOURS_NOT_FOUND" xml:space="preserve"><value>Часы работы для {0} не существуют.</value></data>
+  <data name="ADDRESS_STREET_REQUIRED" xml:space="preserve"><value>Требуется улица.</value></data>
+  <data name="ADDRESS_CITY_REQUIRED" xml:space="preserve"><value>Требуется город.</value></data>
+  <data name="ADDRESS_REQUIRED" xml:space="preserve"><value>Требуется адрес.</value></data>
+  <data name="ADDRESS_STREET_LENGTH_EXCEEDED" xml:space="preserve"><value>Улица превышает максимально допустимую длину.</value></data>
+  <data name="ADDRESS_CITY_LENGTH_EXCEEDED" xml:space="preserve"><value>Город превышает максимально допустимую длину.</value></data>
+  <data name="ADDRESS_REGION_LENGTH_EXCEEDED" xml:space="preserve"><value>Регион превышает максимально допустимую длину.</value></data>
+  <data name="ADDRESS_POSTAL_CODE_LENGTH_EXCEEDED" xml:space="preserve"><value>Почтовый индекс превышает максимально допустимую длину.</value></data>
+  <data name="ADDRESS_LENGTH_EXCEEDED" xml:space="preserve"><value>Длина адреса не может превышать заданный максимум.</value></data>
+  <data name="DATE_RANGE_INVALID" xml:space="preserve"><value>Дата начала должна быть раньше даты окончания.</value></data>
+  <data name="EMAIL_REQUIRED" xml:space="preserve"><value>Требуется Email.</value></data>
+  <data name="EMAIL_TOO_LONG" xml:space="preserve"><value>Email слишком длинный.</value></data>
+  <data name="EMAIL_INVALID_FORMAT" xml:space="preserve"><value>'{0}' не является допустимым адресом электронной почты.</value></data>
+  <data name="GEOLOCATION_INVALID_LATITUDE" xml:space="preserve"><value>Широта должна быть от -90 до 90 градусов. Получено: {0}.</value></data>
+  <data name="GEOLOCATION_INVALID_LONGITUDE" xml:space="preserve"><value>Долгота должна быть от -180 до 180 градусов. Получено: {0}.</value></data>
+  <data name="MONEY_NEGATIVE_AMOUNT" xml:space="preserve"><value>Сумма не может быть отрицательной.</value></data>
+  <data name="MONEY_CURRENCY_REQUIRED" xml:space="preserve"><value>Требуется валюта.</value></data>
+  <data name="MONEY_INVALID_CURRENCY_FORMAT" xml:space="preserve"><value>Валюта должна быть 3-буквенным кодом ISO.</value></data>
+  <data name="MONEY_CURRENCY_MISMATCH" xml:space="preserve"><value>Невозможно оперировать разными валютами.</value></data>
+  <data name="MONEY_DIVISION_BY_ZERO" xml:space="preserve"><value>Деление на ноль невозможно.</value></data>
+  <data name="PHONE_NUMBER_REQUIRED" xml:space="preserve"><value>Требуется номер телефона.</value></data>
+  <data name="PHONENUMBER_INVALID_FORMAT" xml:space="preserve"><value>'{0}' не является допустимым номером телефона.</value></data>
+  <data name="RATING_OUT_OF_RANGE" xml:space="preserve"><value>Рейтинг должен быть между {0} и {1}, а максимальный рейтинг должен быть больше или равен минимальному.</value></data>
+  <data name="RATING_POSITIVE_REQUIRED" xml:space="preserve"><value>Рейтинг должен быть положительным целым числом.</value></data>
+  <data name="TIME_RANGE_INVALID" xml:space="preserve"><value>Время начала должно быть раньше времени окончания.</value></data>
+  <data name="TICKET_NOTES_LENGTH_EXCEEDED" xml:space="preserve"><value>Длина примечаний к билету не может превышать заданный максимум.</value></data>
+
+  <data name="ARTIFACT_NOT_FOUND" xml:space="preserve"><value>Артефакт не найден.</value></data>
+  <data name="ARTIFACT_NAME_REQUIRED" xml:space="preserve"><value>Требуется имя.</value></data>
+  <data name="ARTIFACT_DESCRIPTION_REQUIRED" xml:space="preserve"><value>Требуется описание.</value></data>
+  <data name="ARTIFACT_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>Порядок отображения не может быть отрицательным.</value></data>
+  <data name="ARTIFACT_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>Локализованный контент для указанного языка не найден.</value></data>
+  <data name="ARTIFACT_IMAGE_NOT_FOUND" xml:space="preserve"><value>Изображение не найдено.</value></data>
+
+  <data name="ATTRACTION_ID_REQUIRED" xml:space="preserve"><value>Требуется ID достопримечательности.</value></data>
+  <data name="ATTRACTION_SITE_ID_REQUIRED" xml:space="preserve"><value>Требуется ID места.</value></data>
+  <data name="ATTRACTION_CONTENT_ID_REQUIRED" xml:space="preserve"><value>Требуется ID контента.</value></data>
+  <data name="ATTRACTION_NOT_FOUND" xml:space="preserve"><value>Достопримечательность с ID {0} не существует.</value></data>
+  <data name="ATTRACTION_NAME_REQUIRED" xml:space="preserve"><value>Имя достопримечательности не может быть пустым.</value></data>
+  <data name="ATTRACTION_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>Длина имени достопримечательности не может превышать {0}.</value></data>
+  <data name="ATTRACTION_DESCRIPTION_REQUIRED" xml:space="preserve"><value>Описание достопримечательности не может быть пустым.</value></data>
+  <data name="ATTRACTION_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>Длина описания достопримечательности не может превышать {0}.</value></data>
+  <data name="ATTRACTION_IMAGE_CAPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>Длина подписи достопримечательности не может превышать {0}.</value></data>
+  <data name="ATTRACTION_IMAGE_URL_REQUIRED" xml:space="preserve"><value>Требуется URL изображения достопримечательности.</value></data>
+  <data name="ATTRACTION_IMAGE_NOT_FOUND" xml:space="preserve"><value>Изображение достопримечательности не существует.</value></data>
+  <data name="ATTRACTION_IMAGE_CAPTION_REQUIRED" xml:space="preserve"><value>Требуется подпись к изображению достопримечательности.</value></data>
+  <data name="ATTRACTION_CAPTION_REQUIRED" xml:space="preserve"><value>Требуется подпись к достопримечательности.</value></data>
+  <data name="ATTRACTION_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>Порядок отображения достопримечательности не может быть отрицательным.</value></data>
+  <data name="ATTRACTION_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>Локализованный контент достопримечательности не существует.</value></data>
+  <data name="ATTRACTION_LOCATION_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>Длина описания местоположения достопримечательности не может превышать {0}.</value></data>
+  <data name="ATTRACTION_HISTORICAL_PERIOD_ALREADY_EXISTS" xml:space="preserve"><value>Достопримечательность уже имеет указанный исторический период.</value></data>
+  <data name="ATTRACTION_HISTORICAL_PERIOD_REQUIRED" xml:space="preserve"><value>Требуется исторический период достопримечательности.</value></data>
+  
+  <data name="CITY_ID_REQUIRED" xml:space="preserve"><value>Требуется ID города.</value></data>
+  <data name="CITY_NOT_FOUND" xml:space="preserve"><value>Город с ID {0} не существует.</value></data>
+  <data name="CITY_NAME_REQUIRED" xml:space="preserve"><value>Название города не может быть пустым.</value></data>
+  <data name="CITY_DUPLICATE_NAME" xml:space="preserve"><value>Город с таким названием уже существует.</value></data>
+  <data name="CITY_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>Длина названия города не может превышать {0}.</value></data>
+  <data name="CITY_DESCRIPTION_REQUIRED" xml:space="preserve"><value>Описание города не может быть пустым.</value></data>
+  <data name="CITY_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>Длина описания города не может превышать {0}.</value></data>
+  <data name="CITY_IMAGE_URL_REQUIRED" xml:space="preserve"><value>Требуется URL изображения города.</value></data>
+  <data name="CITY_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>Порядок отображения города не может быть отрицательным.</value></data>
+  <data name="CITY_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>Локализованный контент города не существует.</value></data>
+
+  <data name="REPORT_ID_REQUIRED" xml:space="preserve"><value>Требуется ID жалобы.</value></data>
+  <data name="REPORTED_ENTITY_ID_REQUIRED" xml:space="preserve"><value>Требуется ID объекта жалобы.</value></data>
+  <data name="REPORT_NOT_FOUND" xml:space="preserve"><value>Жалоба на контент с ID {0} не существует.</value></data>
+  <data name="REPORT_DESCRIPTION_REQUIRED" xml:space="preserve"><value>Описание жалобы не может быть пустым.</value></data>
+  <data name="REPORT_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>Длина описания жалобы не может превышать {0}.</value></data>
+  <data name="REPORT_REASON_REQUIRED" xml:space="preserve"><value>Причина жалобы не может быть пустой.</value></data>
+  <data name="REPORT_REASON_LENGTH_EXCEEDED" xml:space="preserve"><value>Длина причины жалобы не может превышать {0}.</value></data>
+  <data name="REPORT_CANNOT_BE_RESOLVED" xml:space="preserve"><value>Необходимо указать либо причину, либо действие, но не оба сразу.</value></data>
+  <data name="REPORT_CANNOT_BE_REVIEWED" xml:space="preserve"><value>Рассматриваться могут только жалобы в статусе ожидания или на рассмотрении.</value></data>
+  <data name="REPORT_CANNOT_BE_MARKED_UNDER_REVIEW" xml:space="preserve"><value>Только жалобы в статусе ожидания могут быть отмечены как находящиеся на рассмотрении.</value></data>
+  <data name="REPORT_CANNOT_BE_DISMISSED" xml:space="preserve"><value>Требуется причина отклонения.</value></data>
+
+  <data name="REVIEW_NOT_FOUND" xml:space="preserve"><value>Отзыв с ID {0} не найден.</value></data>
+  <data name="REVIEW_INVALID_STATUS" xml:space="preserve"><value>Статус отзыва {0} недопустим.</value></data>
+  <data name="REVIEW_ID_REQUIRED" xml:space="preserve"><value>Требуется ID отзыва.</value></data>
+  <data name="REVIEW_SITE_ID_REQUIRED" xml:space="preserve"><value>Требуется ID места.</value></data>
+  <data name="REVIEW_USER_ID_REQUIRED" xml:space="preserve"><value>Требуется ID пользователя.</value></data>
+  <data name="REVIEW_TITLE_REQUIRED" xml:space="preserve"><value>Заголовок отзыва не может быть пустым.</value></data>
+  <data name="REVIEW_TITLE_EXCEEDED_LENGTH" xml:space="preserve"><value>Заголовок отзыва превышает максимально допустимую длину.</value></data>
+  <data name="REVIEW_CONTENT_REQUIRED" xml:space="preserve"><value>Содержание отзыва не может быть пустым.</value></data>
+  <data name="REVIEW_CONTENT_EXCEEDED_LENGTH" xml:space="preserve"><value>Содержание отзыва превышает максимально допустимую длину.</value></data>
+  <data name="REVIEW_IMAGE_URL_REQUIRED" xml:space="preserve"><value>Требуется URL изображения отзыва.</value></data>
+  <data name="REVIEW_IMAGE_NOT_FOUND" xml:space="preserve"><value>Изображение отзыва не существует.</value></data>
+  <data name="REVIEW_REJECTION_REASON_REQUIRED" xml:space="preserve"><value>Требуется причина отклонения.</value></data>
+  <data name="REVIEW_USER_ALREADY_REVIEWED_SITE" xml:space="preserve"><value>Пользователь уже оставил отзыв об этом месте.</value></data>
+  <data name="REVIEW_UNAUTHORIZED" xml:space="preserve"><value>Вы не авторизованы для выполнения этого действия.</value></data>
+
+  <data name="SITE_NOT_FOUND" xml:space="preserve"><value>Место с ID {0} не существует.</value></data>
+  <data name="SITE_ID_REQUIRED" xml:space="preserve"><value>Требуется ID места.</value></data>
+  <data name="SITE_LOCALIZED_ID_REQUIRED" xml:space="preserve"><value>Требуется локализованный ID места.</value></data>
+  <data name="SITE_CITY_ID_REQUIRED" xml:space="preserve"><value>Требуется ID города.</value></data>
+  <data name="SITE_NAME_REQUIRED" xml:space="preserve"><value>Название места не может быть пустым.</value></data>
+  <data name="NEAREST_TRANSPORTATION_NAME_REQUIRED" xml:space="preserve"><value>Название ближайшего транспорта не может быть пустым.</value></data>
+  <data name="SITE_INVALID_FACILITY_TYPE" xml:space="preserve"><value>Один или несколько предоставленных типов удобств недопустимы.</value></data>
+  <data name="SITE_FACILITY_ALREADY_EXISTS" xml:space="preserve"><value>Удобство с таким названием уже существует для этого места.</value></data>
+  <data name="SITE_NAME_EXCEEDED_LENGTH" xml:space="preserve"><value>Название места не может превышать {0} символов.</value></data>
+  <data name="SITE_DESCRIPTION_REQUIRED" xml:space="preserve"><value>Описание места не может быть пустым.</value></data>
+  <data name="FACILITY_DESCRIPTION_REQUIRED" xml:space="preserve"><value>Описание удобства не может быть пустым.</value></data>
+  <data name="SITE_DESCRIPTION_EXCEEDED_LENGTH" xml:space="preserve"><value>Описание места не может превышать {0} символов.</value></data>
+  <data name="SITE_CONTACT_PHONE_REQUIRED" xml:space="preserve"><value>Контактный телефон места не может быть пустым.</value></data>
+  <data name="SITE_IMAGE_ID_REQUIRED" xml:space="preserve"><value>Требуется ID изображения места.</value></data>
+  <data name="SITE_IMAGE_EXCEEDED_LENGTH" xml:space="preserve"><value>URL изображения места не может превышать максимальную длину.</value></data>
+  <data name="SITE_IMAGE_URL_REQUIRED" xml:space="preserve"><value>Требуется URL изображения места.</value></data>
+  <data name="SITE_IMAGE_NOT_FOUND" xml:space="preserve"><value>Изображение места не существует.</value></data>
+  <data name="SITE_CAPTION_REQUIRED" xml:space="preserve"><value>Требуется подпись к изображению места.</value></data>
+  <data name="SITE_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>Порядок отображения места не может быть отрицательным.</value></data>
+  <data name="SITE_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>Локализованный контент места не существует.</value></data>
+  <data name="FACILITY_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>Локализованный контент удобства не существует.</value></data>
+  <data name="NEAREST_TRANSPORTATION_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>Локализованный контент ближайшего транспорта не существует.</value></data>
+  <data name="SITE_FACILITY_ID_REQUIRED" xml:space="preserve"><value>Требуется ID удобства места.</value></data>
+  <data name="SITE_FACILITY_NOT_FOUND" xml:space="preserve"><value>Удобство места не существует.</value></data>
+  <data name="SITE_NEAREST_TRANSPORTATION_NOT_FOUND" xml:space="preserve"><value>Ближайший транспорт места не существует.</value></data>
+  <data name="SITE_NEAREST_TRANSPORTATION_DUPLICATE_LOCATION" xml:space="preserve"><value>Ближайший транспорт с таким местоположением уже существует для этого места.</value></data>
+  <data name="SITE_OPENING_HOUR_NOT_FOUND" xml:space="preserve"><value>Часы работы места не существуют.</value></data>
+  <data name="SITE_CANNOT_BE_FEATURED_AND_HIDDEN_GEM" xml:space="preserve"><value>Место не может быть одновременно популярной достопримечательностью и скрытой жемчужиной.</value></data>
+  <data name="SITE_INVALID_ESTIMATED_DURATION" xml:space="preserve"><value>Расчетная продолжительность должна быть больше нуля.</value></data>
+
+  <data name="SPONSOR_NOT_FOUND" xml:space="preserve"><value>Спонсор с ID {0} не существует.</value></data>
+  <data name="SPONSOR_ID_REQUIRED" xml:space="preserve"><value>Требуется ID спонсора.</value></data>
+  <data name="SPONSOR_OFFER_ID_REQUIRED" xml:space="preserve"><value>Требуется ID предложения спонсора.</value></data>
+  <data name="SPONSOR_OFFER_NOT_FOUND" xml:space="preserve"><value>Предложение с ID {0} не существует.</value></data>
+  <data name="SPONSOR_TITLE_REQUIRED" xml:space="preserve"><value>Название спонсора не может быть пустым.</value></data>
+  <data name="SPONSOR_EXCEEDED_TITLE_LENGTH" xml:space="preserve"><value>Название спонсора не может превышать {0} символов.</value></data>
+  <data name="SPONSOR_DESCRIPTION_REQUIRED" xml:space="preserve"><value>Требуется описание спонсора.</value></data>
+  <data name="SPONSOR_EXCEEDED_DESCRIPTION_LENGTH" xml:space="preserve"><value>Описание спонсора не может превышать {0} символов.</value></data>
+  <data name="SPONSOR_PROMO_CODE_REQUIRED" xml:space="preserve"><value>Промокод не может быть пустым.</value></data>
+  <data name="SPONSOR_DISCOUNT_REQUIRED" xml:space="preserve"><value>Необходимо указать либо сумму скидки, либо процент.</value></data>
+  <data name="SPONSOR_DISCOUNT_PCT_INVALID" xml:space="preserve"><value>Процент скидки должен быть от 0 до 100.</value></data>
+  <data name="SPONSOR_OFFER_INACTIVE" xml:space="preserve"><value>Невозможно активировать неактивное предложение.</value></data>
+  <data name="SPONSOR_OFFER_EXPIRED" xml:space="preserve"><value>Невозможно активировать истекшее предложение.</value></data>
+  <data name="SPONSOR_EXPIRED_CONTRACT" xml:space="preserve"><value>Невозможно активировать спонсора с истекшим контрактом.</value></data>
+  <data name="SPONSOR_OFFER_MAX_REDEMPTIONS_REACHED" xml:space="preserve"><value>Достигнуто максимальное количество активаций для этого предложения.</value></data>
+  <data name="SPONSOR_NEGATIVE_REDEMPTIONS" xml:space="preserve"><value>Количество активаций не может быть отрицательным.</value></data>
+  <data name="SPONSOR_IMAGE_ID_REQUIRED" xml:space="preserve"><value>Требуется ID изображения спонсора.</value></data>
+  <data name="SPONSOR_IMG_URL_REQUIRED" xml:space="preserve"><value>URL изображения спонсора не может быть пустым.</value></data>
+  <data name="SPONSOR_IMG_NOT_FOUND" xml:space="preserve"><value>Изображение спонсора не существует.</value></data>
+  <data name="SPONSOR_EXCEEDED_IMAGE_LENGTH" xml:space="preserve"><value>Длина изображения спонсора превышает максимально допустимую.</value></data>
+  <data name="SPONSOR_CAPTION_REQUIRED" xml:space="preserve"><value>Требуется подпись к изображению спонсора.</value></data>
+  <data name="SPONSOR_EXCEEDED_WEBSITE_URL_LENGTH" xml:space="preserve"><value>URL сайта спонсора не может превышать максимально допустимый.</value></data>
+  <data name="SPONSOR_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>Порядок отображения спонсора не может быть отрицательным.</value></data>
+  <data name="SPONSOR_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>Локализованный контент спонсора не существует.</value></data>
+  <data name="SPONSOR_INVALID_DATE" xml:space="preserve"><value>Дата начала контракта должна быть раньше даты окончания.</value></data>
+  <data name="SPONSOR_INVALID_EXTEND_DATE" xml:space="preserve"><value>Новая дата окончания должна быть позже текущей даты окончания.</value></data>
+  <data name="SPONSOR_INVALID_AVERAGE_RATING" xml:space="preserve"><value>Средний рейтинг должен быть от 0 до {0}.</value></data>
+  <data name="SPONSOR_INVALID_NEW_DATE" xml:space="preserve"><value>Новая дата окончания должна быть позже текущей даты окончания.</value></data>
+  <data name="SPONSOR_CONTENT_ID_REQUIRED" xml:space="preserve"><value>Требуется ID контента.</value></data>
+
+  <data name="USER_UNAUTHORIZED" xml:space="preserve"><value>Пользователь с ID '{0}' не авторизован.</value></data>
+  <data name="USER_NOT_FOUND" xml:space="preserve"><value>Пользователь не найден.</value></data>
+  <data name="FAVOURITE_NOT_FOUND" xml:space="preserve"><value>Избранное с ID '{0}' не найдено.</value></data>
+  <data name="TOURIST_NOT_FOUND" xml:space="preserve"><value>Пользователь с ID '{0}' не найден.</value></data>
+  <data name="USER_FIRST_NAME_REQUIRED" xml:space="preserve"><value>Имя пользователя не может быть пустым.</value></data>
+  <data name="USER_FIRST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>Имя пользователя превышает максимально допустимую длину.</value></data>
+  <data name="TOURIST_FIRST_NAME_REQUIRED" xml:space="preserve"><value>Имя пользователя не может быть пустым.</value></data>
+  <data name="TOURIST_FIRST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>Имя пользователя превышает максимально допустимую длину.</value></data>
+  <data name="USER_LAST_NAME_REQUIRED" xml:space="preserve"><value>Фамилия пользователя не может быть пустой.</value></data>
+  <data name="USER_LAST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>Фамилия пользователя превышает максимально допустимую длину.</value></data>
+  <data name="TOURIST_LAST_NAME_REQUIRED" xml:space="preserve"><value>Фамилия пользователя не может быть пустой.</value></data>
+  <data name="TOURIST_LAST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>Фамилия пользователя превышает максимально допустимую длину.</value></data>
+  <data name="USER_NATIONALITY_REQUIRED" xml:space="preserve"><value>Национальность пользователя не может быть пустой.</value></data>
+  <data name="TOURIST_NATIONALITY_REQUIRED" xml:space="preserve"><value>Национальность пользователя не может быть пустой.</value></data>
+  <data name="VISITED_SITE_NOT_FOUND" xml:space="preserve"><value>Посещенное место не найдено.</value></data>
+  <data name="TRIP_NOTE_CONTENT_REQUIRED" xml:space="preserve"><value>Содержимое заметки о поездке не может быть пустым.</value></data>
+  <data name="VISITED_SITE_DATE_IN_FUTURE" xml:space="preserve"><value>Дата посещения не может быть в будущем.</value></data>
+  <data name="VISITED_SITE_DURATION_INVALID" xml:space="preserve"><value>Продолжительность должна быть больше нуля.</value></data>
+  <data name="TRIP_SITE_VISIT_ORDER_INVALID" xml:space="preserve"><value>Порядок посещения не может быть отрицательным.</value></data>
+  <data name="TOURIST_SITE_ALREADY_VISITED" xml:space="preserve"><value>Место уже отмечено как посещенное.</value></data>
+  <data name="USER_USERNAME_REQUIRED" xml:space="preserve"><value>Требуется имя пользователя.</value></data>
+  <data name="USER_USERNAME_LENGTH_EXCEEDED" xml:space="preserve"><value>Имя пользователя превышает максимально допустимую длину.</value></data>
+  <data name="USER_PASSWORD_REQUIRED" xml:space="preserve"><value>Требуется пароль.</value></data>
+  <data name="USER_PASSWORD_TOO_SHORT" xml:space="preserve"><value>Пароль не соответствует минимальной требуемой длине.</value></data>
+  <data name="USER_PASSWORD_TOO_LONG" xml:space="preserve"><value>Пароль превышает максимально допустимую длину.</value></data>
+  <data name="USER_PREFERRED_LANGUAGE_INVALID" xml:space="preserve"><value>Предпочитаемый язык недопустим.</value></data>
+  <data name="TOURIST_PREFERRED_LANGUAGE_INVALID" xml:space="preserve"><value>Предпочитаемый язык недопустим.</value></data>
+  <data name="USER_FULL_NAME_REQUIRED" xml:space="preserve"><value>Требуется полное имя.</value></data>
+  <data name="USER_ROLE_INVALID" xml:space="preserve"><value>Выбранная роль недопустима.</value></data>
+  <data name="SITE_ALREADY_FAVORITE" xml:space="preserve"><value>Место уже добавлено в избранное.</value></data>
+  <data name="TOURIST_SITE_ALREADY_FAVORITE" xml:space="preserve"><value>Место уже добавлено в избранное.</value></data>
+  <data name="USER_ID_REQUIRED" xml:space="preserve"><value>Требуется ID пользователя.</value></data>
+  <data name="FAVOURITE_SITE_ID_REQUIRED" xml:space="preserve"><value>Требуется ID места.</value></data>
+
+  <data name="TRIP_TOURIST_ID_REQUIRED" xml:space="preserve"><value>Требуется ID туриста.</value></data>
+  <data name="TRIP_NOT_FOUND" xml:space="preserve"><value>Указанная поездка не найдена.</value></data>
+  <data name="TRIP_SITE_NOT_FOUND" xml:space="preserve"><value>Указанное место не найдено в поездке.</value></data>
+  <data name="TRIP_DAY_NOT_FOUND" xml:space="preserve"><value>Указанный день поездки не найден в поездке.</value></data>
+  <data name="TRIP_NOTE_NOT_FOUND" xml:space="preserve"><value>Указанная заметка не найдена в поездке.</value></data>
+  <data name="TRIP_NAME_REQUIRED" xml:space="preserve"><value>Название поездки не может быть пустым.</value></data>
+  <data name="TRIP_SITE_NAME_REQUIRED" xml:space="preserve"><value>Название места не может быть пустым.</value></data>
+  <data name="TRIP_CANNOT_BE_COMPLETED" xml:space="preserve"><value>Поездка не может быть завершена в ее текущем состоянии.</value></data>
+  <data name="TRIP_CANNOT_BE_STARTED" xml:space="preserve"><value>Поездка не может быть начата в ее текущем состоянии или дата начала находится в будущем.</value></data>
+  <data name="TRIP_CANNOT_BE_CANCELED" xml:space="preserve"><value>Завершенные поездки не могут быть отменены.</value></data>
+  <data name="TRIP_CANNOT_BE_PUBLISHED" xml:space="preserve"><value>Только черновики поездок могут быть опубликованы.</value></data>
+  <data name="TRIP_SITE_ALREADY_MARKED_AS_VISITED" xml:space="preserve"><value>Это место уже отмечено как посещенное.</value></data>
+  <data name="SITE_VISIT_DATE_OUT_OF_RANGE" xml:space="preserve"><value>Дата посещения места должна быть в пределах диапазона дат поездки.</value></data>
+  <data name="INVALID_DURATION_DAYS" xml:space="preserve"><value>Продолжительность поездки в днях должна быть больше нуля и меньше или равна {0}.</value></data>
+  <data name="TRIP_DAY_DATE_OUT_OF_RANGE" xml:space="preserve"><value>Дата дня поездки должна быть в пределах диапазона дат поездки.</value></data>
+  <data name="TRIP_DAY_ALREADY_EXISTS" xml:space="preserve"><value>День поездки для этой даты уже существует.</value></data>
+  <data name="SITE_ALREADY_ADDED" xml:space="preserve"><value>Это место уже было добавлено в поездку.</value></data>
+  <data name="ESTIMATED_DURATION_INVALID" xml:space="preserve"><value>Расчетная продолжительность должна быть больше нуля.</value></data>
+  <data name="DISPLAY_ORDER_INVALID" xml:space="preserve"><value>Порядок отображения должен быть равен нулю или положительному числу.</value></data>
+  <data name="DAY_NUMBER_INVALID" xml:space="preserve"><value>Номер дня должен быть больше нуля.</value></data>
+  <data name="INVALID_BUDGET" xml:space="preserve"><value>Недопустимое значение бюджета.</value></data>
+
+  <data name="FULL_NAME_REQUIRED" xml:space="preserve"><value>Требуется полное имя.</value></data>
+  <data name="USERNAME_REQUIRED" xml:space="preserve"><value>Требуется имя пользователя.</value></data>
+  <data name="FIRST_NAME_REQUIRED" xml:space="preserve"><value>Требуется имя.</value></data>
+  <data name="LAST_NAME_REQUIRED" xml:space="preserve"><value>Требуется фамилия.</value></data>
+  <data name="REFRESH_TOKEN_REQUIRED" xml:space="preserve"><value>Требуется действительный токен обновления для обновления токена доступа.</value></data>
+  <data name="REFRESH_TOKEN_EXPIRATION_INVALID" xml:space="preserve"><value>Предоставленный токен обновления истек.</value></data>
+  <data name="INVALID_CREDENTAILS" xml:space="preserve"><value>Неверный Email или пароль.</value></data>
+  <data name="INVALID_CREDENTIALS" xml:space="preserve"><value>Неверный Email или пароль.</value></data>
+  <data name="EMAIL_ALREADY_IN_USE" xml:space="preserve"><value>Пользователь с таким email уже существует.</value></data>
+  <data name="USERNAME_ALREADY_IN_USE" xml:space="preserve"><value>Пользователь с таким именем пользователя уже существует.</value></data>
+  <data name="IN_ACTIVE_USER" xml:space="preserve"><value>Учетная запись деактивирована.</value></data>
+  <data name="USER_ROLES_REQUIRED" xml:space="preserve"><value>Требуется как минимум одна роль.</value></data>
+  <data name="USER_ALREADY_ADMIN" xml:space="preserve"><value>Пользователь уже является администратором.</value></data>
+  <data name="USER_NOT_MODERATOR" xml:space="preserve"><value>Пользователь должен быть модератором перед повышением до администратора.</value></data>
+  <data name="USER_NOT_ADMIN" xml:space="preserve"><value>Пользователь не является администратором.</value></data>
+  <data name="USER_ADMIN_LOCK_FORBIDDEN" xml:space="preserve"><value>Невозможно заблокировать учетные записи администраторов.</value></data>
+  <data name="USER_ADMIN_DELETE_FORBIDDEN" xml:space="preserve"><value>Невозможно удалить учетные записи администраторов. Сначала понизьте до модератора.</value></data>
+  <data name="USER_DELETE_CONFIRM_REQUIRED" xml:space="preserve"><value>Требуется подтверждение удаления.</value></data>
+  <data name="USER_PROMOTION_FAILED" xml:space="preserve"><value>Не удалось повысить пользователя: {0}</value></data>
+  <data name="USER_DEMOTION_FAILED" xml:space="preserve"><value>Не удалось понизить пользователя: {0}</value></data>
+  <data name="USER_REMOVE_ROLES_FAILED" xml:space="preserve"><value>Не удалось удалить роли: {0}</value></data>
+  <data name="USER_ADD_ROLES_FAILED" xml:space="preserve"><value>Не удалось добавить роли: {0}</value></data>
+  <data name="USER_LOCK_FAILED" xml:space="preserve"><value>Не удалось заблокировать учетную запись: {0}</value></data>
+  <data name="USER_UNLOCK_FAILED" xml:space="preserve"><value>Не удалось разблокировать учетную запись: {0}</value></data>
+  <data name="USER_SUSPEND_FAILED" xml:space="preserve"><value>Не удалось приостановить действие учетной записи: {0}</value></data>
+  <data name="USER_REACTIVATE_FAILED" xml:space="preserve"><value>Не удалось повторно активировать учетную запись: {0}</value></data>
+  <data name="USER_DELETE_FAILED" xml:space="preserve"><value>Не удалось удалить пользователя: {0}</value></data>
+  <data name="USER_PERMANENT_DELETE_FAILED" xml:space="preserve"><value>Не удалось удалить пользователя: {0}</value></data>
+  <data name="LOCKED_ACCOUNT" xml:space="preserve"><value>Учетная запись заблокирована.</value></data>
+  <data name="INVALID_TOKEN" xml:space="preserve"><value>Недействительный токен доступа.</value></data>
+  <data name="TOKEN_REQUIRED" xml:space="preserve"><value>Требуется токен доступа.</value></data>
+  <data name="INVALID_REFRESH_TOKEN" xml:space="preserve"><value>Недействительный или истекший токен обновления.</value></data>
+  <data name="INVALID_CLAIMS" xml:space="preserve"><value>Недействительные утверждения токена (claims).</value></data>
+  <data name="EMAIL_NOT_CONFIRMED" xml:space="preserve"><value>Адрес электронной почты не подтвержден.</value></data>
+  <data name="INVALID_INVITATION_STATUS" xml:space="preserve"><value>Могут быть приняты только ожидающие приглашения.</value></data>
+  <data name="INVITATION_EXPIRED" xml:space="preserve"><value>Срок действия этого приглашения истек.</value></data>
+  <data name="CSV_PARSING_FAILED" xml:space="preserve"><value>Не удалось разобрать CSV файл: {0}</value></data>
+  <data name="USER_GOOGLE_ID_TOKEN_REQUIRED" xml:space="preserve"><value>Требуется ID токен Google.</value></data>
+  <data name="USER_INVALID_GOOGLE_ID_TOKEN" xml:space="preserve"><value>Предоставленный ID токен Google недействителен.</value></data>
+
+</root>

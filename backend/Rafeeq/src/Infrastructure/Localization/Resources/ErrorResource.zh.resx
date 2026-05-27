@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <data name="VALIDATION_GENERAL" xml:space="preserve"><value>发生了一个或多个验证错误。</value></data>
+  <data name="VALIDATION_VALUE_REQUIRED" xml:space="preserve"><value>该值是必需的。</value></data>
+  <data name="VALIDATION_COLLECTION_REQUIRED" xml:space="preserve"><value>至少需要一个项目。</value></data>
+  <data name="VALIDATION_INVALID_ENUM_VALUE" xml:space="preserve"><value>提供了无效的值：{0}。</value></data>
+  <data name="VALIDATION_NUMBER_GREATER_THAN_ZERO_REQUIRED" xml:space="preserve"><value>该值必须大于零。</value></data>
+  <data name="VALIDATION_MAXIMUM_LENGTH_EXCEEDED" xml:space="preserve"><value>该值超过了允许的最大长度。</value></data>
+  <data name="VALIDATION_MINIMUM_LENGTH_NOT_MET" xml:space="preserve"><value>该值不满足所需的最小长度。</value></data>
+  <data name="VALIDATION_RANGE_INVALID" xml:space="preserve"><value>提供的范围无效。</value></data>
+  <data name="VALIDATION_WHITESPACE_NOT_ALLOWED" xml:space="preserve"><value>不允许仅包含空格的值。</value></data>
+
+  <data name="FILE_INVALID_ID" xml:space="preserve"><value>文件ID不能为空。</value></data>
+  <data name="FILE_INVALID_NAME" xml:space="preserve"><value>文件名无效或为空。</value></data>
+  <data name="FILE_EMPTY" xml:space="preserve"><value>文件不包含任何数据。</value></data>
+  <data name="FILE_INVALID_SIGNATURE" xml:space="preserve"><value>文件内容与其声明的类型不匹配。</value></data>
+  <data name="FILE_TOO_LARGE" xml:space="preserve"><value>文件超过了允许的最大大小 {0} MB。</value></data>
+  <data name="FILE_UNSUPPORTED_TYPE" xml:space="preserve"><value>不支持文件类型 '{0}'。</value></data>
+  <data name="IMAGE_ID_REQUIRED" xml:space="preserve"><value>需要图片ID。</value></data>
+  <data name="IMAGE_INVALID_SIGNATURE" xml:space="preserve"><value>上传的文件具有无效的签名，可能不是有效的图片。</value></data>
+  <data name="IMAGE_UPLOAD_FAILED" xml:space="preserve"><value>上传图片时发生错误。请稍后重试。</value></data>
+  <data name="IMAGE_STORAGE_KEY_REQUIRED" xml:space="preserve"><value>存储密钥是必需的。</value></data>
+  <data name="IMAGE_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>显示顺序不能为负数。</value></data>
+  <data name="IMAGE_URL_REQUIRED" xml:space="preserve"><value>需要图片URL。</value></data>
+
+  <data name="OPENING_HOURS_ALREADY_EXIST" xml:space="preserve"><value>{0} 的营业时间已经存在。</value></data>
+  <data name="OPENING_HOURS_NOT_FOUND" xml:space="preserve"><value>{0} 的营业时间不存在。</value></data>
+  <data name="ADDRESS_STREET_REQUIRED" xml:space="preserve"><value>街道是必需的。</value></data>
+  <data name="ADDRESS_CITY_REQUIRED" xml:space="preserve"><value>城市是必需的。</value></data>
+  <data name="ADDRESS_REQUIRED" xml:space="preserve"><value>地址是必需的。</value></data>
+  <data name="ADDRESS_STREET_LENGTH_EXCEEDED" xml:space="preserve"><value>街道超过了允许的最大长度。</value></data>
+  <data name="ADDRESS_CITY_LENGTH_EXCEEDED" xml:space="preserve"><value>城市超过了允许的最大长度。</value></data>
+  <data name="ADDRESS_REGION_LENGTH_EXCEEDED" xml:space="preserve"><value>地区超过了允许的最大长度。</value></data>
+  <data name="ADDRESS_POSTAL_CODE_LENGTH_EXCEEDED" xml:space="preserve"><value>邮政编码超过了允许的最大长度。</value></data>
+  <data name="ADDRESS_LENGTH_EXCEEDED" xml:space="preserve"><value>地址长度不能超过定义的最大值。</value></data>
+  <data name="DATE_RANGE_INVALID" xml:space="preserve"><value>开始日期必须在结束日期之前。</value></data>
+  <data name="EMAIL_REQUIRED" xml:space="preserve"><value>电子邮件是必需的。</value></data>
+  <data name="EMAIL_TOO_LONG" xml:space="preserve"><value>电子邮件过长。</value></data>
+  <data name="EMAIL_INVALID_FORMAT" xml:space="preserve"><value>'{0}' 不是有效的电子邮件地址。</value></data>
+  <data name="GEOLOCATION_INVALID_LATITUDE" xml:space="preserve"><value>纬度必须在 -90 到 90 度之间。收到：{0}。</value></data>
+  <data name="GEOLOCATION_INVALID_LONGITUDE" xml:space="preserve"><value>经度必须在 -180 到 180 度之间。收到：{0}。</value></data>
+  <data name="MONEY_NEGATIVE_AMOUNT" xml:space="preserve"><value>金额不能为负数。</value></data>
+  <data name="MONEY_CURRENCY_REQUIRED" xml:space="preserve"><value>货币是必需的。</value></data>
+  <data name="MONEY_INVALID_CURRENCY_FORMAT" xml:space="preserve"><value>货币必须是 3 字母的 ISO 代码。</value></data>
+  <data name="MONEY_CURRENCY_MISMATCH" xml:space="preserve"><value>无法在不同的货币上进行操作。</value></data>
+  <data name="MONEY_DIVISION_BY_ZERO" xml:space="preserve"><value>不能除以零。</value></data>
+  <data name="PHONE_NUMBER_REQUIRED" xml:space="preserve"><value>电话号码是必需的。</value></data>
+  <data name="PHONENUMBER_INVALID_FORMAT" xml:space="preserve"><value>'{0}' 不是有效的电话号码。</value></data>
+  <data name="RATING_OUT_OF_RANGE" xml:space="preserve"><value>评分必须在 {0} 到 {1} 之间，且最高评分必须大于或等于最低评分。</value></data>
+  <data name="RATING_POSITIVE_REQUIRED" xml:space="preserve"><value>评分必须是正整数。</value></data>
+  <data name="TIME_RANGE_INVALID" xml:space="preserve"><value>开始时间必须在结束时间之前。</value></data>
+  <data name="TICKET_NOTES_LENGTH_EXCEEDED" xml:space="preserve"><value>门票备注长度不能超过定义的最大值。</value></data>
+
+  <data name="ARTIFACT_NOT_FOUND" xml:space="preserve"><value>未找到文物。</value></data>
+  <data name="ARTIFACT_NAME_REQUIRED" xml:space="preserve"><value>名称是必需的。</value></data>
+  <data name="ARTIFACT_DESCRIPTION_REQUIRED" xml:space="preserve"><value>描述是必需的。</value></data>
+  <data name="ARTIFACT_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>显示顺序不能为负数。</value></data>
+  <data name="ARTIFACT_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>未找到指定语言的本地化内容。</value></data>
+  <data name="ARTIFACT_IMAGE_NOT_FOUND" xml:space="preserve"><value>未找到图片。</value></data>
+
+  <data name="ATTRACTION_ID_REQUIRED" xml:space="preserve"><value>景点ID是必需的。</value></data>
+  <data name="ATTRACTION_SITE_ID_REQUIRED" xml:space="preserve"><value>地点ID是必需的。</value></data>
+  <data name="ATTRACTION_CONTENT_ID_REQUIRED" xml:space="preserve"><value>内容ID是必需的。</value></data>
+  <data name="ATTRACTION_NOT_FOUND" xml:space="preserve"><value>ID为 {0} 的景点不存在。</value></data>
+  <data name="ATTRACTION_NAME_REQUIRED" xml:space="preserve"><value>景点名称不能为空。</value></data>
+  <data name="ATTRACTION_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>景点名称长度不能超过 {0}。</value></data>
+  <data name="ATTRACTION_DESCRIPTION_REQUIRED" xml:space="preserve"><value>景点描述不能为空。</value></data>
+  <data name="ATTRACTION_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>景点描述长度不能超过 {0}。</value></data>
+  <data name="ATTRACTION_IMAGE_CAPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>景点图片说明长度不能超过 {0}。</value></data>
+  <data name="ATTRACTION_IMAGE_URL_REQUIRED" xml:space="preserve"><value>需要景点图片URL。</value></data>
+  <data name="ATTRACTION_IMAGE_NOT_FOUND" xml:space="preserve"><value>景点图片不存在。</value></data>
+  <data name="ATTRACTION_IMAGE_CAPTION_REQUIRED" xml:space="preserve"><value>景点图片说明是必需的。</value></data>
+  <data name="ATTRACTION_CAPTION_REQUIRED" xml:space="preserve"><value>景点说明是必需的。</value></data>
+  <data name="ATTRACTION_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>景点显示顺序不能为负数。</value></data>
+  <data name="ATTRACTION_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>景点的本地化内容不存在。</value></data>
+  <data name="ATTRACTION_LOCATION_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>景点位置描述长度不能超过 {0}。</value></data>
+  <data name="ATTRACTION_HISTORICAL_PERIOD_ALREADY_EXISTS" xml:space="preserve"><value>景点已具有指定的历史时期。</value></data>
+  <data name="ATTRACTION_HISTORICAL_PERIOD_REQUIRED" xml:space="preserve"><value>景点历史时期是必需的。</value></data>
+  
+  <data name="CITY_ID_REQUIRED" xml:space="preserve"><value>城市ID是必需的。</value></data>
+  <data name="CITY_NOT_FOUND" xml:space="preserve"><value>ID为 {0} 的城市不存在。</value></data>
+  <data name="CITY_NAME_REQUIRED" xml:space="preserve"><value>城市名称不能为空。</value></data>
+  <data name="CITY_DUPLICATE_NAME" xml:space="preserve"><value>同名城市已存在。</value></data>
+  <data name="CITY_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>城市名称长度不能超过 {0}。</value></data>
+  <data name="CITY_DESCRIPTION_REQUIRED" xml:space="preserve"><value>城市描述不能为空。</value></data>
+  <data name="CITY_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>城市描述长度不能超过 {0}。</value></data>
+  <data name="CITY_IMAGE_URL_REQUIRED" xml:space="preserve"><value>需要城市图片URL。</value></data>
+  <data name="CITY_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>城市显示顺序不能为负数。</value></data>
+  <data name="CITY_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>城市的本地化内容不存在。</value></data>
+
+  <data name="REPORT_ID_REQUIRED" xml:space="preserve"><value>举报ID是必需的。</value></data>
+  <data name="REPORTED_ENTITY_ID_REQUIRED" xml:space="preserve"><value>被举报实体ID是必需的。</value></data>
+  <data name="REPORT_NOT_FOUND" xml:space="preserve"><value>ID为 {0} 的内容举报不存在。</value></data>
+  <data name="REPORT_DESCRIPTION_REQUIRED" xml:space="preserve"><value>举报描述不能为空。</value></data>
+  <data name="REPORT_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>举报描述长度不能超过 {0}。</value></data>
+  <data name="REPORT_REASON_REQUIRED" xml:space="preserve"><value>举报原因不能为空。</value></data>
+  <data name="REPORT_REASON_LENGTH_EXCEEDED" xml:space="preserve"><value>举报原因长度不能超过 {0}。</value></data>
+  <data name="REPORT_CANNOT_BE_RESOLVED" xml:space="preserve"><value>必须提供原因或操作，但不能同时提供两者。</value></data>
+  <data name="REPORT_CANNOT_BE_REVIEWED" xml:space="preserve"><value>只能审核待处理或审核中的举报。</value></data>
+  <data name="REPORT_CANNOT_BE_MARKED_UNDER_REVIEW" xml:space="preserve"><value>只有待处理的举报可以标记为审核中。</value></data>
+  <data name="REPORT_CANNOT_BE_DISMISSED" xml:space="preserve"><value>驳回原因是必需的。</value></data>
+
+  <data name="REVIEW_NOT_FOUND" xml:space="preserve"><value>未找到ID为 {0} 的评论。</value></data>
+  <data name="REVIEW_INVALID_STATUS" xml:space="preserve"><value>评论状态 {0} 无效。</value></data>
+  <data name="REVIEW_ID_REQUIRED" xml:space="preserve"><value>评论ID是必需的。</value></data>
+  <data name="REVIEW_SITE_ID_REQUIRED" xml:space="preserve"><value>地点ID是必需的。</value></data>
+  <data name="REVIEW_USER_ID_REQUIRED" xml:space="preserve"><value>用户ID是必需的。</value></data>
+  <data name="REVIEW_TITLE_REQUIRED" xml:space="preserve"><value>评论标题不能为空。</value></data>
+  <data name="REVIEW_TITLE_EXCEEDED_LENGTH" xml:space="preserve"><value>评论标题超过了允许的最大长度。</value></data>
+  <data name="REVIEW_CONTENT_REQUIRED" xml:space="preserve"><value>评论内容不能为空。</value></data>
+  <data name="REVIEW_CONTENT_EXCEEDED_LENGTH" xml:space="preserve"><value>评论内容超过了允许的最大长度。</value></data>
+  <data name="REVIEW_IMAGE_URL_REQUIRED" xml:space="preserve"><value>需要评论图片URL。</value></data>
+  <data name="REVIEW_IMAGE_NOT_FOUND" xml:space="preserve"><value>评论图片不存在。</value></data>
+  <data name="REVIEW_REJECTION_REASON_REQUIRED" xml:space="preserve"><value>拒绝原因是必需的。</value></data>
+  <data name="REVIEW_USER_ALREADY_REVIEWED_SITE" xml:space="preserve"><value>用户已对此地点发表过评论。</value></data>
+  <data name="REVIEW_UNAUTHORIZED" xml:space="preserve"><value>您无权执行此操作。</value></data>
+
+  <data name="SITE_NOT_FOUND" xml:space="preserve"><value>ID为 {0} 的地点不存在。</value></data>
+  <data name="SITE_ID_REQUIRED" xml:space="preserve"><value>地点ID是必需的。</value></data>
+  <data name="SITE_LOCALIZED_ID_REQUIRED" xml:space="preserve"><value>地点本地化ID是必需的。</value></data>
+  <data name="SITE_CITY_ID_REQUIRED" xml:space="preserve"><value>城市ID是必需的。</value></data>
+  <data name="SITE_NAME_REQUIRED" xml:space="preserve"><value>地点名称不能为空。</value></data>
+  <data name="NEAREST_TRANSPORTATION_NAME_REQUIRED" xml:space="preserve"><value>最近的交通名称不能为空。</value></data>
+  <data name="SITE_INVALID_FACILITY_TYPE" xml:space="preserve"><value>提供的一个或多个设施类型无效。</value></data>
+  <data name="SITE_FACILITY_ALREADY_EXISTS" xml:space="preserve"><value>该地点已存在同名设施。</value></data>
+  <data name="SITE_NAME_EXCEEDED_LENGTH" xml:space="preserve"><value>地点名称不能超过 {0} 个字符。</value></data>
+  <data name="SITE_DESCRIPTION_REQUIRED" xml:space="preserve"><value>地点描述不能为空。</value></data>
+  <data name="FACILITY_DESCRIPTION_REQUIRED" xml:space="preserve"><value>设施描述不能为空。</value></data>
+  <data name="SITE_DESCRIPTION_EXCEEDED_LENGTH" xml:space="preserve"><value>地点描述不能超过 {0} 个字符。</value></data>
+  <data name="SITE_CONTACT_PHONE_REQUIRED" xml:space="preserve"><value>地点联系电话不能为空。</value></data>
+  <data name="SITE_IMAGE_ID_REQUIRED" xml:space="preserve"><value>地点图片ID是必需的。</value></data>
+  <data name="SITE_IMAGE_EXCEEDED_LENGTH" xml:space="preserve"><value>地点图片URL不能超过最大长度。</value></data>
+  <data name="SITE_IMAGE_URL_REQUIRED" xml:space="preserve"><value>需要地点图片URL。</value></data>
+  <data name="SITE_IMAGE_NOT_FOUND" xml:space="preserve"><value>地点图片不存在。</value></data>
+  <data name="SITE_CAPTION_REQUIRED" xml:space="preserve"><value>地点图片说明是必需的。</value></data>
+  <data name="SITE_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>地点显示顺序不能为负数。</value></data>
+  <data name="SITE_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>地点的本地化内容不存在。</value></data>
+  <data name="FACILITY_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>设施的本地化内容不存在。</value></data>
+  <data name="NEAREST_TRANSPORTATION_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>最近交通的本地化内容不存在。</value></data>
+  <data name="SITE_FACILITY_ID_REQUIRED" xml:space="preserve"><value>地点设施ID是必需的。</value></data>
+  <data name="SITE_FACILITY_NOT_FOUND" xml:space="preserve"><value>地点设施不存在。</value></data>
+  <data name="SITE_NEAREST_TRANSPORTATION_NOT_FOUND" xml:space="preserve"><value>地点的最近交通不存在。</value></data>
+  <data name="SITE_NEAREST_TRANSPORTATION_DUPLICATE_LOCATION" xml:space="preserve"><value>该地点已存在相同位置的最近交通。</value></data>
+  <data name="SITE_OPENING_HOUR_NOT_FOUND" xml:space="preserve"><value>地点的营业时间不存在。</value></data>
+  <data name="SITE_CANNOT_BE_FEATURED_AND_HIDDEN_GEM" xml:space="preserve"><value>一个地点不能同时是推荐景点和隐藏的宝石。</value></data>
+  <data name="SITE_INVALID_ESTIMATED_DURATION" xml:space="preserve"><value>预计持续时间必须大于零。</value></data>
+
+  <data name="SPONSOR_NOT_FOUND" xml:space="preserve"><value>ID为 {0} 的赞助商不存在。</value></data>
+  <data name="SPONSOR_ID_REQUIRED" xml:space="preserve"><value>赞助商ID是必需的。</value></data>
+  <data name="SPONSOR_OFFER_ID_REQUIRED" xml:space="preserve"><value>赞助商优惠ID是必需的。</value></data>
+  <data name="SPONSOR_OFFER_NOT_FOUND" xml:space="preserve"><value>ID为 {0} 的优惠不存在。</value></data>
+  <data name="SPONSOR_TITLE_REQUIRED" xml:space="preserve"><value>赞助商标题不能为空。</value></data>
+  <data name="SPONSOR_EXCEEDED_TITLE_LENGTH" xml:space="preserve"><value>赞助商标题不能超过 {0} 个字符。</value></data>
+  <data name="SPONSOR_DESCRIPTION_REQUIRED" xml:space="preserve"><value>赞助商描述是必需的。</value></data>
+  <data name="SPONSOR_EXCEEDED_DESCRIPTION_LENGTH" xml:space="preserve"><value>赞助商描述不能超过 {0} 个字符。</value></data>
+  <data name="SPONSOR_PROMO_CODE_REQUIRED" xml:space="preserve"><value>优惠码不能为空。</value></data>
+  <data name="SPONSOR_DISCOUNT_REQUIRED" xml:space="preserve"><value>必须提供折扣金额或百分比。</value></data>
+  <data name="SPONSOR_DISCOUNT_PCT_INVALID" xml:space="preserve"><value>折扣百分比必须在 0 到 100 之间。</value></data>
+  <data name="SPONSOR_OFFER_INACTIVE" xml:space="preserve"><value>无法兑换未激活的优惠。</value></data>
+  <data name="SPONSOR_OFFER_EXPIRED" xml:space="preserve"><value>无法兑换已过期的优惠。</value></data>
+  <data name="SPONSOR_EXPIRED_CONTRACT" xml:space="preserve"><value>无法激活合同已过期的赞助商。</value></data>
+  <data name="SPONSOR_OFFER_MAX_REDEMPTIONS_REACHED" xml:space="preserve"><value>此优惠已达到最大兑换次数。</value></data>
+  <data name="SPONSOR_NEGATIVE_REDEMPTIONS" xml:space="preserve"><value>兑换次数不能为负数。</value></data>
+  <data name="SPONSOR_IMAGE_ID_REQUIRED" xml:space="preserve"><value>赞助商图片ID是必需的。</value></data>
+  <data name="SPONSOR_IMG_URL_REQUIRED" xml:space="preserve"><value>赞助商图片URL不能为空。</value></data>
+  <data name="SPONSOR_IMG_NOT_FOUND" xml:space="preserve"><value>赞助商图片不存在。</value></data>
+  <data name="SPONSOR_EXCEEDED_IMAGE_LENGTH" xml:space="preserve"><value>赞助商图片长度超过了允许的最大值。</value></data>
+  <data name="SPONSOR_CAPTION_REQUIRED" xml:space="preserve"><value>赞助商图片说明是必需的。</value></data>
+  <data name="SPONSOR_EXCEEDED_WEBSITE_URL_LENGTH" xml:space="preserve"><value>赞助商网站URL不能超过允许的最大值。</value></data>
+  <data name="SPONSOR_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>赞助商显示顺序不能为负数。</value></data>
+  <data name="SPONSOR_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>赞助商的本地化内容不存在。</value></data>
+  <data name="SPONSOR_INVALID_DATE" xml:space="preserve"><value>合同开始日期必须在结束日期之前。</value></data>
+  <data name="SPONSOR_INVALID_EXTEND_DATE" xml:space="preserve"><value>新的结束日期必须在当前结束日期之后。</value></data>
+  <data name="SPONSOR_INVALID_AVERAGE_RATING" xml:space="preserve"><value>平均评分必须在 0 到 {0} 之间。</value></data>
+  <data name="SPONSOR_INVALID_NEW_DATE" xml:space="preserve"><value>新的结束日期必须晚于当前结束日期。</value></data>
+  <data name="SPONSOR_CONTENT_ID_REQUIRED" xml:space="preserve"><value>内容ID是必需的。</value></data>
+
+  <data name="USER_UNAUTHORIZED" xml:space="preserve"><value>ID为 '{0}' 的用户未经授权。</value></data>
+  <data name="USER_NOT_FOUND" xml:space="preserve"><value>未找到用户。</value></data>
+  <data name="FAVOURITE_NOT_FOUND" xml:space="preserve"><value>未找到ID为 '{0}' 的收藏。</value></data>
+  <data name="TOURIST_NOT_FOUND" xml:space="preserve"><value>未找到ID为 '{0}' 的用户。</value></data>
+  <data name="USER_FIRST_NAME_REQUIRED" xml:space="preserve"><value>用户名字不能为空。</value></data>
+  <data name="USER_FIRST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>用户名字超过了允许的最大长度。</value></data>
+  <data name="TOURIST_FIRST_NAME_REQUIRED" xml:space="preserve"><value>用户名字不能为空。</value></data>
+  <data name="TOURIST_FIRST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>用户名字超过了允许的最大长度。</value></data>
+  <data name="USER_LAST_NAME_REQUIRED" xml:space="preserve"><value>用户姓氏不能为空。</value></data>
+  <data name="USER_LAST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>用户姓氏超过了允许的最大长度。</value></data>
+  <data name="TOURIST_LAST_NAME_REQUIRED" xml:space="preserve"><value>用户姓氏不能为空。</value></data>
+  <data name="TOURIST_LAST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>用户姓氏超过了允许的最大长度。</value></data>
+  <data name="USER_NATIONALITY_REQUIRED" xml:space="preserve"><value>用户国籍不能为空。</value></data>
+  <data name="TOURIST_NATIONALITY_REQUIRED" xml:space="preserve"><value>用户国籍不能为空。</value></data>
+  <data name="VISITED_SITE_NOT_FOUND" xml:space="preserve"><value>未找到已访问的地点。</value></data>
+  <data name="TRIP_NOTE_CONTENT_REQUIRED" xml:space="preserve"><value>旅行游记内容不能为空。</value></data>
+  <data name="VISITED_SITE_DATE_IN_FUTURE" xml:space="preserve"><value>访问日期不能在未来。</value></data>
+  <data name="VISITED_SITE_DURATION_INVALID" xml:space="preserve"><value>持续时间必须大于零。</value></data>
+  <data name="TRIP_SITE_VISIT_ORDER_INVALID" xml:space="preserve"><value>访问顺序不能为负数。</value></data>
+  <data name="TOURIST_SITE_ALREADY_VISITED" xml:space="preserve"><value>该地点已被标记为已访问。</value></data>
+  <data name="USER_USERNAME_REQUIRED" xml:space="preserve"><value>用户名是必需的。</value></data>
+  <data name="USER_USERNAME_LENGTH_EXCEEDED" xml:space="preserve"><value>用户名超过了允许的最大长度。</value></data>
+  <data name="USER_PASSWORD_REQUIRED" xml:space="preserve"><value>密码是必需的。</value></data>
+  <data name="USER_PASSWORD_TOO_SHORT" xml:space="preserve"><value>密码不满足所需的最小长度。</value></data>
+  <data name="USER_PASSWORD_TOO_LONG" xml:space="preserve"><value>密码超过了允许的最大长度。</value></data>
+  <data name="USER_PREFERRED_LANGUAGE_INVALID" xml:space="preserve"><value>首选语言无效。</value></data>
+  <data name="TOURIST_PREFERRED_LANGUAGE_INVALID" xml:space="preserve"><value>首选语言无效。</value></data>
+  <data name="USER_FULL_NAME_REQUIRED" xml:space="preserve"><value>全名是必需的。</value></data>
+  <data name="USER_ROLE_INVALID" xml:space="preserve"><value>选择的角色无效。</value></data>
+  <data name="SITE_ALREADY_FAVORITE" xml:space="preserve"><value>该地点已在收藏夹中。</value></data>
+  <data name="TOURIST_SITE_ALREADY_FAVORITE" xml:space="preserve"><value>该地点已在收藏夹中。</value></data>
+  <data name="USER_ID_REQUIRED" xml:space="preserve"><value>用户ID是必需的。</value></data>
+  <data name="FAVOURITE_SITE_ID_REQUIRED" xml:space="preserve"><value>地点ID是必需的。</value></data>
+
+  <data name="TRIP_TOURIST_ID_REQUIRED" xml:space="preserve"><value>游客ID是必需的。</value></data>
+  <data name="TRIP_NOT_FOUND" xml:space="preserve"><value>未找到指定的旅行。</value></data>
+  <data name="TRIP_SITE_NOT_FOUND" xml:space="preserve"><value>在旅行中未找到指定的地点。</value></data>
+  <data name="TRIP_DAY_NOT_FOUND" xml:space="preserve"><value>在旅行中未找到指定的旅行日。</value></data>
+  <data name="TRIP_NOTE_NOT_FOUND" xml:space="preserve"><value>在旅行中未找到指定的游记。</value></data>
+  <data name="TRIP_NAME_REQUIRED" xml:space="preserve"><value>旅行标题不能为空。</value></data>
+  <data name="TRIP_SITE_NAME_REQUIRED" xml:space="preserve"><value>地点名称不能为空。</value></data>
+  <data name="TRIP_CANNOT_BE_COMPLETED" xml:space="preserve"><value>旅行在当前状态下无法完成。</value></data>
+  <data name="TRIP_CANNOT_BE_STARTED" xml:space="preserve"><value>旅行在当前状态下无法开始，或者开始日期在未来。</value></data>
+  <data name="TRIP_CANNOT_BE_CANCELED" xml:space="preserve"><value>已完成的旅行无法取消。</value></data>
+  <data name="TRIP_CANNOT_BE_PUBLISHED" xml:space="preserve"><value>只有草稿旅行可以发布。</value></data>
+  <data name="TRIP_SITE_ALREADY_MARKED_AS_VISITED" xml:space="preserve"><value>此地点已被标记为已访问。</value></data>
+  <data name="SITE_VISIT_DATE_OUT_OF_RANGE" xml:space="preserve"><value>地点访问日期必须在旅行日期范围内。</value></data>
+  <data name="INVALID_DURATION_DAYS" xml:space="preserve"><value>旅行持续天数必须大于零且小于或等于 {0}。</value></data>
+  <data name="TRIP_DAY_DATE_OUT_OF_RANGE" xml:space="preserve"><value>旅行日日期必须在旅行日期范围内。</value></data>
+  <data name="TRIP_DAY_ALREADY_EXISTS" xml:space="preserve"><value>此日期已存在旅行日。</value></data>
+  <data name="SITE_ALREADY_ADDED" xml:space="preserve"><value>此地点已被添加到旅行中。</value></data>
+  <data name="ESTIMATED_DURATION_INVALID" xml:space="preserve"><value>预计持续时间必须大于零。</value></data>
+  <data name="DISPLAY_ORDER_INVALID" xml:space="preserve"><value>显示顺序必须为零或正数。</value></data>
+  <data name="DAY_NUMBER_INVALID" xml:space="preserve"><value>天数必须大于零。</value></data>
+  <data name="INVALID_BUDGET" xml:space="preserve"><value>预算值无效。</value></data>
+
+  <data name="FULL_NAME_REQUIRED" xml:space="preserve"><value>全名是必需的。</value></data>
+  <data name="USERNAME_REQUIRED" xml:space="preserve"><value>用户名是必需的。</value></data>
+  <data name="FIRST_NAME_REQUIRED" xml:space="preserve"><value>名字是必需的。</value></data>
+  <data name="LAST_NAME_REQUIRED" xml:space="preserve"><value>姓氏是必需的。</value></data>
+  <data name="REFRESH_TOKEN_REQUIRED" xml:space="preserve"><value>需要有效的刷新令牌才能刷新访问令牌。</value></data>
+  <data name="REFRESH_TOKEN_EXPIRATION_INVALID" xml:space="preserve"><value>提供的刷新令牌已过期。</value></data>
+  <data name="INVALID_CREDENTAILS" xml:space="preserve"><value>电子邮件或密码错误。</value></data>
+  <data name="INVALID_CREDENTIALS" xml:space="preserve"><value>电子邮件或密码错误。</value></data>
+  <data name="EMAIL_ALREADY_IN_USE" xml:space="preserve"><value>使用此电子邮件的用户已存在。</value></data>
+  <data name="USERNAME_ALREADY_IN_USE" xml:space="preserve"><value>使用此用户名的用户已存在。</value></data>
+  <data name="IN_ACTIVE_USER" xml:space="preserve"><value>账户已停用。</value></data>
+  <data name="USER_ROLES_REQUIRED" xml:space="preserve"><value>至少需要一个角色。</value></data>
+  <data name="USER_ALREADY_ADMIN" xml:space="preserve"><value>用户已经是管理员。</value></data>
+  <data name="USER_NOT_MODERATOR" xml:space="preserve"><value>在晋升为管理员之前，用户必须是版主。</value></data>
+  <data name="USER_NOT_ADMIN" xml:space="preserve"><value>用户不是管理员。</value></data>
+  <data name="USER_ADMIN_LOCK_FORBIDDEN" xml:space="preserve"><value>无法锁定管理员账户。</value></data>
+  <data name="USER_ADMIN_DELETE_FORBIDDEN" xml:space="preserve"><value>无法删除管理员账户。请先降级为版主。</value></data>
+  <data name="USER_DELETE_CONFIRM_REQUIRED" xml:space="preserve"><value>删除确认是必需的。</value></data>
+  <data name="USER_PROMOTION_FAILED" xml:space="preserve"><value>晋升用户失败：{0}</value></data>
+  <data name="USER_DEMOTION_FAILED" xml:space="preserve"><value>降级用户失败：{0}</value></data>
+  <data name="USER_REMOVE_ROLES_FAILED" xml:space="preserve"><value>移除角色失败：{0}</value></data>
+  <data name="USER_ADD_ROLES_FAILED" xml:space="preserve"><value>添加角色失败：{0}</value></data>
+  <data name="USER_LOCK_FAILED" xml:space="preserve"><value>锁定账户失败：{0}</value></data>
+  <data name="USER_UNLOCK_FAILED" xml:space="preserve"><value>解锁账户失败：{0}</value></data>
+  <data name="USER_SUSPEND_FAILED" xml:space="preserve"><value>暂停账户失败：{0}</value></data>
+  <data name="USER_REACTIVATE_FAILED" xml:space="preserve"><value>重新激活账户失败：{0}</value></data>
+  <data name="USER_DELETE_FAILED" xml:space="preserve"><value>删除用户失败：{0}</value></data>
+  <data name="USER_PERMANENT_DELETE_FAILED" xml:space="preserve"><value>永久删除用户失败：{0}</value></data>
+  <data name="LOCKED_ACCOUNT" xml:space="preserve"><value>账户被锁定。</value></data>
+  <data name="INVALID_TOKEN" xml:space="preserve"><value>无效的访问令牌。</value></data>
+  <data name="TOKEN_REQUIRED" xml:space="preserve"><value>访问令牌是必需的。</value></data>
+  <data name="INVALID_REFRESH_TOKEN" xml:space="preserve"><value>无效或已过期的刷新令牌。</value></data>
+  <data name="INVALID_CLAIMS" xml:space="preserve"><value>无效的令牌声明(claims)。</value></data>
+  <data name="EMAIL_NOT_CONFIRMED" xml:space="preserve"><value>电子邮件地址未确认。</value></data>
+  <data name="INVALID_INVITATION_STATUS" xml:space="preserve"><value>只能接受待处理的邀请。</value></data>
+  <data name="INVITATION_EXPIRED" xml:space="preserve"><value>此邀请已过期。</value></data>
+  <data name="CSV_PARSING_FAILED" xml:space="preserve"><value>解析CSV文件失败：{0}</value></data>
+  <data name="USER_GOOGLE_ID_TOKEN_REQUIRED" xml:space="preserve"><value>Google ID令牌是必需的。</value></data>
+  <data name="USER_INVALID_GOOGLE_ID_TOKEN" xml:space="preserve"><value>提供的Google ID令牌无效。</value></data>
+
+</root>

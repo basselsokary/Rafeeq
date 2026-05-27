@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <data name="ArtifactType_Other" xml:space="preserve"><value>Другое</value></data>
+  <data name="ArtifactType_Statue" xml:space="preserve"><value>Статуя</value></data>
+  <data name="ArtifactType_Mask" xml:space="preserve"><value>Маска</value></data>
+  <data name="ArtifactType_Sphinx" xml:space="preserve"><value>Сфинкс</value></data>
+  <data name="ArtifactType_Stele" xml:space="preserve"><value>Стела</value></data>
+  <data name="ArtifactType_Bust" xml:space="preserve"><value>Бюст</value></data>
+  <data name="ArtifactType_Painting" xml:space="preserve"><value>Картина</value></data>
+  <data name="ArtifactType_Manuscript" xml:space="preserve"><value>Рукопись</value></data>
+  <data name="ArtifactType_Jewelry" xml:space="preserve"><value>Ювелирное изделие</value></data>
+  <data name="ArtifactType_Coin" xml:space="preserve"><value>Монета</value></data>
+  <data name="ArtifactType_Vessel" xml:space="preserve"><value>Сосуд</value></data>
+  <data name="ArtifactType_Weapon" xml:space="preserve"><value>Оружие</value></data>
+  <data name="ArtifactType_Tool" xml:space="preserve"><value>Инструмент</value></data>
+  <data name="ArtifactType_Textile" xml:space="preserve"><value>Текстиль</value></data>
+  <data name="ArtifactType_Furniture" xml:space="preserve"><value>Мебель</value></data>
+  <data name="ArtifactType_MusicalInstrument" xml:space="preserve"><value>Музыкальный инструмент</value></data>
+  <data name="ArtifactType_Ceramic" xml:space="preserve"><value>Керамика</value></data>
+  <data name="ArtifactType_Pottery" xml:space="preserve"><value>Гончарное изделие</value></data>
+  <data name="ArtifactType_Glassware" xml:space="preserve"><value>Стеклянное изделие</value></data>
+  <data name="ArtifactType_Bone" xml:space="preserve"><value>Кость</value></data>
+  <data name="ArtifactType_Ivory" xml:space="preserve"><value>Слоновая кость</value></data>
+  <data name="ArtifactType_Shell" xml:space="preserve"><value>Раковина</value></data>
+  <data name="ArtifactType_Metalwork" xml:space="preserve"><value>Металлическое изделие</value></data>
+  <data name="ArtifactType_Shrine" xml:space="preserve"><value>Святыня</value></data>
+
+  <data name="AttractionType_Other" xml:space="preserve"><value>Другое</value></data>
+  <data name="AttractionType_Pyramid" xml:space="preserve"><value>Пирамида</value></data>
+  <data name="AttractionType_Temple" xml:space="preserve"><value>Храм</value></data>
+  <data name="AttractionType_Tomb" xml:space="preserve"><value>Гробница</value></data>
+  <data name="AttractionType_Statue" xml:space="preserve"><value>Статуя</value></data>
+  <data name="AttractionType_Monument" xml:space="preserve"><value>Памятник</value></data>
+  <data name="AttractionType_Mosque" xml:space="preserve"><value>Мечеть</value></data>
+  <data name="AttractionType_Church" xml:space="preserve"><value>Церковь</value></data>
+  <data name="AttractionType_Synagogue" xml:space="preserve"><value>Синагога</value></data>
+  <data name="AttractionType_MuseumHall" xml:space="preserve"><value>Музейный зал</value></data>
+  <data name="AttractionType_Exhibition" xml:space="preserve"><value>Выставка</value></data>
+  <data name="AttractionType_Palace" xml:space="preserve"><value>Дворец</value></data>
+  <data name="AttractionType_Fortress" xml:space="preserve"><value>Крепость</value></data>
+  <data name="AttractionType_Gate" xml:space="preserve"><value>Ворота</value></data>
+  <data name="AttractionType_Obelisk" xml:space="preserve"><value>Обелиск</value></data>
+  <data name="AttractionType_Column" xml:space="preserve"><value>Колонна</value></data>
+  <data name="AttractionType_Ruins" xml:space="preserve"><value>Руины</value></data>
+  <data name="AttractionType_Garden" xml:space="preserve"><value>Сад</value></data>
+  <data name="AttractionType_Courtyard" xml:space="preserve"><value>Внутренний двор</value></data>
+  <data name="AttractionType_Cave" xml:space="preserve"><value>Пещера</value></data>
+  <data name="AttractionType_Well" xml:space="preserve"><value>Колодец</value></data>
+  <data name="AttractionType_RockCutStructure" xml:space="preserve"><value>Скальная постройка</value></data>
+  <data name="AttractionType_ArchaeologicalStructure" xml:space="preserve"><value>Археологическое сооружение</value></data>
+  <data name="AttractionType_HistoricBuilding" xml:space="preserve"><value>Историческое здание</value></data>
+  <data name="AttractionType_ViewingPoint" xml:space="preserve"><value>Смотровая площадка</value></data>
+  <data name="AttractionType_CulturalExhibit" xml:space="preserve"><value>Культурный экспонат</value></data>
+  <data name="AttractionType_Waterfall" xml:space="preserve"><value>Водопад</value></data>
+  <data name="AttractionType_Entertainment" xml:space="preserve"><value>Развлечения</value></data>
+  <data name="AttractionType_Historical" xml:space="preserve"><value>Историческое</value></data>
+  <data name="AttractionType_Religious" xml:space="preserve"><value>Религиозное</value></data>
+  <data name="AttractionType_Nature" xml:space="preserve"><value>Природа</value></data>
+  <data name="AttractionType_Dining" xml:space="preserve"><value>Питание</value></data>
+  <data name="AttractionType_Library" xml:space="preserve"><value>Библиотека</value></data>
+
+  <data name="HistoricalPeriod_Unknown" xml:space="preserve"><value>Неизвестно</value></data>
+  <data name="HistoricalPeriod_PreDynastic" xml:space="preserve"><value>Додинастический</value></data>
+  <data name="HistoricalPeriod_EarlyDynastic" xml:space="preserve"><value>Раннединастический</value></data>
+  <data name="HistoricalPeriod_OldKingdom" xml:space="preserve"><value>Древнее царство</value></data>
+  <data name="HistoricalPeriod_MiddleKingdom" xml:space="preserve"><value>Среднее царство</value></data>
+  <data name="HistoricalPeriod_NewKingdom" xml:space="preserve"><value>Новое царство</value></data>
+  <data name="HistoricalPeriod_LatePeriod" xml:space="preserve"><value>Поздний период</value></data>
+  <data name="HistoricalPeriod_PtolemaicPeriod" xml:space="preserve"><value>Птолемеевский период</value></data>
+  <data name="HistoricalPeriod_RomanPeriod" xml:space="preserve"><value>Римский период</value></data>
+  <data name="HistoricalPeriod_ByzantinePeriod" xml:space="preserve"><value>Византийский период</value></data>
+  <data name="HistoricalPeriod_IslamicPeriod" xml:space="preserve"><value>Исламский период</value></data>
+  <data name="HistoricalPeriod_ModernPeriod" xml:space="preserve"><value>Современный период</value></data>
+  <data name="HistoricalPeriod_FirstIntermediatePeriod" xml:space="preserve"><value>Первый переходный период</value></data>
+  <data name="HistoricalPeriod_SecondIntermediatePeriod" xml:space="preserve"><value>Второй переходный период</value></data>
+  <data name="HistoricalPeriod_ThirdIntermediatePeriod" xml:space="preserve"><value>Третий переходный период</value></data>
+  <data name="HistoricalPeriod_Ptolemaic" xml:space="preserve"><value>Птолемеевский</value></data>
+  <data name="HistoricalPeriod_Roman" xml:space="preserve"><value>Римский</value></data>
+  <data name="HistoricalPeriod_Byzantine" xml:space="preserve"><value>Византийский</value></data>
+  <data name="HistoricalPeriod_Rashidun" xml:space="preserve"><value>Праведные халифы</value></data>
+  <data name="HistoricalPeriod_Umayyad" xml:space="preserve"><value>Омейяды</value></data>
+  <data name="HistoricalPeriod_Abbasid" xml:space="preserve"><value>Аббасиды</value></data>
+  <data name="HistoricalPeriod_Tulunid" xml:space="preserve"><value>Тулуниды</value></data>
+  <data name="HistoricalPeriod_Ikhshidid" xml:space="preserve"><value>Ихшидиды</value></data>
+  <data name="HistoricalPeriod_Fatimid" xml:space="preserve"><value>Фатимиды</value></data>
+  <data name="HistoricalPeriod_Ayyubid" xml:space="preserve"><value>Айюбиды</value></data>
+  <data name="HistoricalPeriod_BahriMamluk" xml:space="preserve"><value>Бахритские мамлюки</value></data>
+  <data name="HistoricalPeriod_BurjiMamluk" xml:space="preserve"><value>Бурджитские мамлюки</value></data>
+  <data name="HistoricalPeriod_Ottoman" xml:space="preserve"><value>Османский</value></data>
+  <data name="HistoricalPeriod_MuhammadAliDynasty" xml:space="preserve"><value>Династия Мухаммеда Али</value></data>
+  <data name="HistoricalPeriod_LateAntiqueEarlyCoptic" xml:space="preserve"><value>Позднеантичный / Раннекоптский</value></data>
+  <data name="HistoricalPeriod_Contemporary" xml:space="preserve"><value>Современность</value></data>
+  <data name="HistoricalPeriod_ModernEra" xml:space="preserve"><value>Новое время</value></data>
+  <data name="HistoricalPeriod_KhedivialEra" xml:space="preserve"><value>Эпоха хедивов</value></data>
+  <data name="HistoricalPeriod_Islamic" xml:space="preserve"><value>Исламский</value></data>
+
+  <data name="LanguageCode_Arabic" xml:space="preserve"><value>Арабский</value></data>
+  <data name="LanguageCode_English" xml:space="preserve"><value>Английский</value></data>
+  <data name="LanguageCode_French" xml:space="preserve"><value>Французский</value></data>
+  <data name="LanguageCode_German" xml:space="preserve"><value>Немецкий</value></data>
+  <data name="LanguageCode_Russian" xml:space="preserve"><value>Русский</value></data>
+  <data name="LanguageCode_Spanish" xml:space="preserve"><value>Испанский</value></data>
+
+  <data name="ModerationAction_NoAction" xml:space="preserve"><value>Нет действия</value></data>
+  <data name="ModerationAction_ContentRemoved" xml:space="preserve"><value>Контент удален</value></data>
+  <data name="ModerationAction_UserWarned" xml:space="preserve"><value>Пользователь предупрежден</value></data>
+  <data name="ModerationAction_UserSuspended" xml:space="preserve"><value>Действие пользователя приостановлено</value></data>
+  <data name="ModerationAction_UserBanned" xml:space="preserve"><value>Пользователь заблокирован</value></data>
+  <data name="ModerationAction_ContentEdited" xml:space="preserve"><value>Контент отредактирован</value></data>
+
+  <data name="ReportReason_Spam" xml:space="preserve"><value>Спам</value></data>
+  <data name="ReportReason_HarmfulContent" xml:space="preserve"><value>Вредоносный контент</value></data>
+  <data name="ReportReason_Harassment" xml:space="preserve"><value>Домогательство</value></data>
+  <data name="ReportReason_Inappropriate" xml:space="preserve"><value>Неприемлемо</value></data>
+  <data name="ReportReason_HateSpeech" xml:space="preserve"><value>Разжигание ненависти</value></data>
+  <data name="ReportReason_Violence" xml:space="preserve"><value>Насилие</value></data>
+  <data name="ReportReason_Misinformation" xml:space="preserve"><value>Дезинформация</value></data>
+  <data name="ReportReason_Copyright" xml:space="preserve"><value>Авторское право</value></data>
+  <data name="ReportReason_ChildSafety" xml:space="preserve"><value>Детская безопасность</value></data>
+  <data name="ReportReason_Other" xml:space="preserve"><value>Другое</value></data>
+
+  <data name="ReportStatus_Pending" xml:space="preserve"><value>В ожидании</value></data>
+  <data name="ReportStatus_UnderReview" xml:space="preserve"><value>На рассмотрении</value></data>
+  <data name="ReportStatus_Resolved" xml:space="preserve"><value>Решено</value></data>
+  <data name="ReportStatus_Dismissed" xml:space="preserve"><value>Отклонено</value></data>
+
+  <data name="ReviewOrderBy_Helpful" xml:space="preserve"><value>Полезные</value></data>
+  <data name="ReviewOrderBy_Recent" xml:space="preserve"><value>Недавние</value></data>
+  <data name="ReviewOrderBy_Rating" xml:space="preserve"><value>Рейтинг</value></data>
+
+  <data name="ReviewStatus_Pending" xml:space="preserve"><value>В ожидании</value></data>
+  <data name="ReviewStatus_Approved" xml:space="preserve"><value>Одобрено</value></data>
+  <data name="ReviewStatus_Rejected" xml:space="preserve"><value>Отклонено</value></data>
+  <data name="ReviewStatus_Flagged" xml:space="preserve"><value>Отмечено</value></data>
+
+  <data name="SiteStatus_Active" xml:space="preserve"><value>Активно</value></data>
+  <data name="SiteStatus_UnderMaintenance" xml:space="preserve"><value>На техническом обслуживании</value></data>
+  <data name="SiteStatus_TemporarilyClosed" xml:space="preserve"><value>Временно закрыто</value></data>
+  <data name="SiteStatus_PermanentlyClosed" xml:space="preserve"><value>Закрыто навсегда</value></data>
+  <data name="SiteStatus_Inactive" xml:space="preserve"><value>Неактивно</value></data>
+
+  <data name="SiteType_Other" xml:space="preserve"><value>Другое</value></data>
+  <data name="SiteType_Historical" xml:space="preserve"><value>Историческое</value></data>
+  <data name="SiteType_Museum" xml:space="preserve"><value>Музей</value></data>
+  <data name="SiteType_Religious" xml:space="preserve"><value>Религиозное</value></data>
+  <data name="SiteType_Archaeological" xml:space="preserve"><value>Археологическое</value></data>
+  <data name="SiteType_Cultural" xml:space="preserve"><value>Культурное</value></data>
+  <data name="SiteType_Natural" xml:space="preserve"><value>Природное</value></data>
+  <data name="SiteType_Entertainment" xml:space="preserve"><value>Развлечения</value></data>
+  <data name="SiteType_Aquarium" xml:space="preserve"><value>Аквариум</value></data>
+  <data name="SiteType_Beach" xml:space="preserve"><value>Пляж</value></data>
+  <data name="SiteType_BotanicalGarden" xml:space="preserve"><value>Ботанический сад</value></data>
+  <data name="SiteType_Castle" xml:space="preserve"><value>Замок</value></data>
+  <data name="SiteType_Cave" xml:space="preserve"><value>Пещера</value></data>
+  <data name="SiteType_Desert" xml:space="preserve"><value>Пустыня</value></data>
+  <data name="SiteType_Fortress" xml:space="preserve"><value>Крепость</value></data>
+  <data name="SiteType_Gallery" xml:space="preserve"><value>Галерея</value></data>
+  <data name="SiteType_Island" xml:space="preserve"><value>Остров</value></data>
+  <data name="SiteType_Lake" xml:space="preserve"><value>Озеро</value></data>
+  <data name="SiteType_Library" xml:space="preserve"><value>Библиотека</value></data>
+  <data name="SiteType_Monument" xml:space="preserve"><value>Памятник</value></data>
+  <data name="SiteType_Mountain" xml:space="preserve"><value>Гора</value></data>
+  <data name="SiteType_Palace" xml:space="preserve"><value>Дворец</value></data>
+  <data name="SiteType_Temple" xml:space="preserve"><value>Храм</value></data>
+  <data name="SiteType_Park" xml:space="preserve"><value>Парк</value></data>
+  <data name="SiteType_River" xml:space="preserve"><value>Река</value></data>
+  <data name="SiteType_Stadium" xml:space="preserve"><value>Стадион</value></data>
+  <data name="SiteType_Theater" xml:space="preserve"><value>Театр</value></data>
+  <data name="SiteType_Volcano" xml:space="preserve"><value>Вулкан</value></data>
+  <data name="SiteType_Waterfall" xml:space="preserve"><value>Водопад</value></data>
+  <data name="SiteType_Zoo" xml:space="preserve"><value>Зоопарк</value></data>
+  <data name="SiteType_Gate" xml:space="preserve"><value>Ворота</value></data>
+  <data name="SiteType_Therapeutic" xml:space="preserve"><value>Лечебное</value></data>
+  <data name="SiteType_DivingSite" xml:space="preserve"><value>Место для дайвинга</value></data>
+  <data name="SiteType_Marina" xml:space="preserve"><value>Пристань</value></data>
+  <data name="SiteType_Walkway" xml:space="preserve"><value>Аллея</value></data>
+
+  <data name="SponsorTier_Bronze" xml:space="preserve"><value>Бронзовый</value></data>
+  <data name="SponsorTier_Silver" xml:space="preserve"><value>Серебряный</value></data>
+  <data name="SponsorTier_Gold" xml:space="preserve"><value>Золотой</value></data>
+  <data name="SponsorTier_Platinum" xml:space="preserve"><value>Платиновый</value></data>
+
+  <data name="SponsorStatus_Active" xml:space="preserve"><value>Активен</value></data>
+  <data name="SponsorStatus_Inactive" xml:space="preserve"><value>Неактивен</value></data>
+  <data name="SponsorStatus_Expired" xml:space="preserve"><value>Истек</value></data>
+
+  <data name="SponsorType_Restaurant" xml:space="preserve"><value>Ресторан</value></data>
+  <data name="SponsorType_Hotel" xml:space="preserve"><value>Отель</value></data>
+  <data name="SponsorType_Cafe" xml:space="preserve"><value>Кафе</value></data>
+  <data name="SponsorType_Shop" xml:space="preserve"><value>Магазин</value></data>
+  <data name="SponsorType_Service" xml:space="preserve"><value>Сервис</value></data>
+  <data name="SponsorType_Tour" xml:space="preserve"><value>Тур</value></data>
+  <data name="SponsorType_TravelAgency" xml:space="preserve"><value>Турагентство</value></data>
+  <data name="SponsorType_Transportation" xml:space="preserve"><value>Транспорт</value></data>
+
+  <data name="TransportationType_Bus" xml:space="preserve"><value>Автобус</value></data>
+  <data name="TransportationType_BicycleRental" xml:space="preserve"><value>Прокат велосипедов</value></data>
+  <data name="TransportationType_CarRental" xml:space="preserve"><value>Прокат автомобилей</value></data>
+  <data name="TransportationType_Ferry" xml:space="preserve"><value>Паром</value></data>
+  <data name="TransportationType_Metro" xml:space="preserve"><value>Метро</value></data>
+  <data name="TransportationType_Taxi" xml:space="preserve"><value>Такси</value></data>
+  <data name="TransportationType_Train" xml:space="preserve"><value>Поезд</value></data>
+  <data name="TransportationType_Tram" xml:space="preserve"><value>Трамвай</value></data>
+  <data name="TransportationType_Airplane" xml:space="preserve"><value>Самолет</value></data>
+
+  <data name="TripStatus_Draft" xml:space="preserve"><value>Черновик</value></data>
+  <data name="TripStatus_Planned" xml:space="preserve"><value>Запланировано</value></data>
+  <data name="TripStatus_InProgress" xml:space="preserve"><value>В процессе</value></data>
+  <data name="TripStatus_Completed" xml:space="preserve"><value>Завершено</value></data>
+  <data name="TripStatus_Cancelled" xml:space="preserve"><value>Отменено</value></data>
+
+  <data name="UserRole_Tourist" xml:space="preserve"><value>Турист</value></data>
+  <data name="UserRole_Admin" xml:space="preserve"><value>Администратор</value></data>
+  <data name="UserRole_Moderator" xml:space="preserve"><value>Модератор</value></data>
+  <data name="UserRole_SuperAdmin" xml:space="preserve"><value>Супер-администратор</value></data>
+
+  <data name="UserStatus_Active" xml:space="preserve"><value>Активен</value></data>
+  <data name="UserStatus_Inactive" xml:space="preserve"><value>Неактивен</value></data>
+  <data name="UserStatus_Suspended" xml:space="preserve"><value>Приостановлен</value></data>
+  <data name="UserStatus_Banned" xml:space="preserve"><value>Заблокирован</value></data>
+  <data name="UserStatus_Locked" xml:space="preserve"><value>Заблокирован</value></data>
+  <data name="UserStatus_Deleted" xml:space="preserve"><value>Удален</value></data>
+
+  <data name="Tolerance_Low" xml:space="preserve"><value>Низкая</value></data>
+  <data name="Tolerance_Medium" xml:space="preserve"><value>Средняя</value></data>
+  <data name="Tolerance_High" xml:space="preserve"><value>Высокая</value></data>
+
+  <data name="WeekDay_Saturday" xml:space="preserve"><value>Суббота</value></data>
+  <data name="WeekDay_Sunday" xml:space="preserve"><value>Воскресенье</value></data>
+  <data name="WeekDay_Monday" xml:space="preserve"><value>Понедельник</value></data>
+  <data name="WeekDay_Tuesday" xml:space="preserve"><value>Вторник</value></data>
+  <data name="WeekDay_Wednesday" xml:space="preserve"><value>Среда</value></data>
+  <data name="WeekDay_Thursday" xml:space="preserve"><value>Четверг</value></data>
+  <data name="WeekDay_Friday" xml:space="preserve"><value>Пятница</value></data>
+
+  <data name="ErrorType_None" xml:space="preserve"><value>Нет</value></data>
+  <data name="ErrorType_Failure" xml:space="preserve"><value>Сбой</value></data>
+  <data name="ErrorType_NotFound" xml:space="preserve"><value>Не найдено</value></data>
+  <data name="ErrorType_Validation" xml:space="preserve"><value>Проверка</value></data>
+  <data name="ErrorType_Conflict" xml:space="preserve"><value>Конфликт</value></data>
+  <data name="ErrorType_Unauthorized" xml:space="preserve"><value>Не авторизован</value></data>
+  <data name="ErrorType_Forbidden" xml:space="preserve"><value>Запрещено</value></data>
+
+  <data name="FacilityType_ATM" xml:space="preserve"><value>Банкомат</value></data>
+  <data name="FacilityType_AudioGuide" xml:space="preserve"><value>Аудиогид</value></data>
+  <data name="FacilityType_BabyChanging" xml:space="preserve"><value>Пеленальный стол</value></data>
+  <data name="FacilityType_BicycleRental" xml:space="preserve"><value>Прокат велосипедов</value></data>
+  <data name="FacilityType_CafeteriaOrRestaurant" xml:space="preserve"><value>Кафетерий или ресторан</value></data>
+  <data name="FacilityType_Elevator" xml:space="preserve"><value>Лифт</value></data>
+  <data name="FacilityType_FirstAid" xml:space="preserve"><value>Первая помощь</value></data>
+  <data name="FacilityType_GiftShop" xml:space="preserve"><value>Сувенирный магазин</value></data>
+  <data name="FacilityType_GuidedTours" xml:space="preserve"><value>Экскурсии с гидом</value></data>
+  <data name="FacilityType_InformationCenter" xml:space="preserve"><value>Информационный центр</value></data>
+  <data name="FacilityType_Lockers" xml:space="preserve"><value>Камеры хранения</value></data>
+  <data name="FacilityType_Parking" xml:space="preserve"><value>Парковка</value></data>
+  <data name="FacilityType_PetFriendly" xml:space="preserve"><value>Можно с животными</value></data>
+  <data name="FacilityType_PhotographyAllowed" xml:space="preserve"><value>Фотосъемка разрешена</value></data>
+  <data name="FacilityType_PrayerRoom" xml:space="preserve"><value>Молельная комната</value></data>
+  <data name="FacilityType_Restroom" xml:space="preserve"><value>Туалет</value></data>
+  <data name="FacilityType_SignLanguageTours" xml:space="preserve"><value>Экскурсии на языке жестов</value></data>
+  <data name="FacilityType_StrollerAccess" xml:space="preserve"><value>Доступ с коляской</value></data>
+  <data name="FacilityType_WheelchairAccess" xml:space="preserve"><value>Доступ для инвалидных колясок</value></data>
+  <data name="FacilityType_WiFi" xml:space="preserve"><value>Wi-Fi</value></data>
+  <data name="FacilityType_Restrooms" xml:space="preserve"><value>Туалеты</value></data>
+  <data name="FacilityType_Galleries" xml:space="preserve"><value>Галереи</value></data>
+  <data name="FacilityType_Exhibition" xml:space="preserve"><value>Выставка</value></data>
+  <data name="FacilityType_Theaters" xml:space="preserve"><value>Театры</value></data>
+  <data name="FacilityType_Gardens" xml:space="preserve"><value>Сады</value></data>
+  <data name="FacilityType_Library" xml:space="preserve"><value>Библиотека</value></data>
+  <data name="FacilityType_ReadingRooms" xml:space="preserve"><value>Читальные залы</value></data>
+  <data name="FacilityType_BoardRides" xml:space="preserve"><value>Катание на досках</value></data>
+  <data name="FacilityType_LocalMarkets" xml:space="preserve"><value>Местные рынки</value></data>
+  <data name="FacilityType_NatureTrails" xml:space="preserve"><value>Природные тропы</value></data>
+  <data name="FacilityType_BoatRides" xml:space="preserve"><value>Прогулки на лодке</value></data>
+</root>

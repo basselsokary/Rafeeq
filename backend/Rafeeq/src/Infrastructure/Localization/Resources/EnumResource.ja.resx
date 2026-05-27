@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <data name="ArtifactType_Other" xml:space="preserve"><value>その他</value></data>
+  <data name="ArtifactType_Statue" xml:space="preserve"><value>像</value></data>
+  <data name="ArtifactType_Mask" xml:space="preserve"><value>マスク</value></data>
+  <data name="ArtifactType_Sphinx" xml:space="preserve"><value>スフィンクス</value></data>
+  <data name="ArtifactType_Stele" xml:space="preserve"><value>石碑</value></data>
+  <data name="ArtifactType_Bust" xml:space="preserve"><value>胸像</value></data>
+  <data name="ArtifactType_Painting" xml:space="preserve"><value>絵画</value></data>
+  <data name="ArtifactType_Manuscript" xml:space="preserve"><value>写本</value></data>
+  <data name="ArtifactType_Jewelry" xml:space="preserve"><value>ジュエリー</value></data>
+  <data name="ArtifactType_Coin" xml:space="preserve"><value>硬貨</value></data>
+  <data name="ArtifactType_Vessel" xml:space="preserve"><value>容器</value></data>
+  <data name="ArtifactType_Weapon" xml:space="preserve"><value>武器</value></data>
+  <data name="ArtifactType_Tool" xml:space="preserve"><value>道具</value></data>
+  <data name="ArtifactType_Textile" xml:space="preserve"><value>織物</value></data>
+  <data name="ArtifactType_Furniture" xml:space="preserve"><value>家具</value></data>
+  <data name="ArtifactType_MusicalInstrument" xml:space="preserve"><value>楽器</value></data>
+  <data name="ArtifactType_Ceramic" xml:space="preserve"><value>セラミック</value></data>
+  <data name="ArtifactType_Pottery" xml:space="preserve"><value>陶器</value></data>
+  <data name="ArtifactType_Glassware" xml:space="preserve"><value>ガラス製品</value></data>
+  <data name="ArtifactType_Bone" xml:space="preserve"><value>骨</value></data>
+  <data name="ArtifactType_Ivory" xml:space="preserve"><value>象牙</value></data>
+  <data name="ArtifactType_Shell" xml:space="preserve"><value>貝殻</value></data>
+  <data name="ArtifactType_Metalwork" xml:space="preserve"><value>金工</value></data>
+  <data name="ArtifactType_Shrine" xml:space="preserve"><value>祠</value></data>
+
+  <data name="AttractionType_Other" xml:space="preserve"><value>その他</value></data>
+  <data name="AttractionType_Pyramid" xml:space="preserve"><value>ピラミッド</value></data>
+  <data name="AttractionType_Temple" xml:space="preserve"><value>寺院</value></data>
+  <data name="AttractionType_Tomb" xml:space="preserve"><value>墓</value></data>
+  <data name="AttractionType_Statue" xml:space="preserve"><value>像</value></data>
+  <data name="AttractionType_Monument" xml:space="preserve"><value>記念碑</value></data>
+  <data name="AttractionType_Mosque" xml:space="preserve"><value>モスク</value></data>
+  <data name="AttractionType_Church" xml:space="preserve"><value>教会</value></data>
+  <data name="AttractionType_Synagogue" xml:space="preserve"><value>シナゴーグ</value></data>
+  <data name="AttractionType_MuseumHall" xml:space="preserve"><value>博物館のホール</value></data>
+  <data name="AttractionType_Exhibition" xml:space="preserve"><value>展示</value></data>
+  <data name="AttractionType_Palace" xml:space="preserve"><value>宮殿</value></data>
+  <data name="AttractionType_Fortress" xml:space="preserve"><value>要塞</value></data>
+  <data name="AttractionType_Gate" xml:space="preserve"><value>門</value></data>
+  <data name="AttractionType_Obelisk" xml:space="preserve"><value>オベリスク</value></data>
+  <data name="AttractionType_Column" xml:space="preserve"><value>柱</value></data>
+  <data name="AttractionType_Ruins" xml:space="preserve"><value>遺跡</value></data>
+  <data name="AttractionType_Garden" xml:space="preserve"><value>庭園</value></data>
+  <data name="AttractionType_Courtyard" xml:space="preserve"><value>中庭</value></data>
+  <data name="AttractionType_Cave" xml:space="preserve"><value>洞窟</value></data>
+  <data name="AttractionType_Well" xml:space="preserve"><value>井戸</value></data>
+  <data name="AttractionType_RockCutStructure" xml:space="preserve"><value>岩窟建築</value></data>
+  <data name="AttractionType_ArchaeologicalStructure" xml:space="preserve"><value>考古学的建造物</value></data>
+  <data name="AttractionType_HistoricBuilding" xml:space="preserve"><value>歴史的建造物</value></data>
+  <data name="AttractionType_ViewingPoint" xml:space="preserve"><value>展望台</value></data>
+  <data name="AttractionType_CulturalExhibit" xml:space="preserve"><value>文化展示</value></data>
+  <data name="AttractionType_Waterfall" xml:space="preserve"><value>滝</value></data>
+  <data name="AttractionType_Entertainment" xml:space="preserve"><value>エンターテインメント</value></data>
+  <data name="AttractionType_Historical" xml:space="preserve"><value>歴史的</value></data>
+  <data name="AttractionType_Religious" xml:space="preserve"><value>宗教的</value></data>
+  <data name="AttractionType_Nature" xml:space="preserve"><value>自然</value></data>
+  <data name="AttractionType_Dining" xml:space="preserve"><value>食事</value></data>
+  <data name="AttractionType_Library" xml:space="preserve"><value>図書館</value></data>
+
+  <data name="HistoricalPeriod_Unknown" xml:space="preserve"><value>不明</value></data>
+  <data name="HistoricalPeriod_PreDynastic" xml:space="preserve"><value>王朝成立前</value></data>
+  <data name="HistoricalPeriod_EarlyDynastic" xml:space="preserve"><value>初期王朝時代</value></data>
+  <data name="HistoricalPeriod_OldKingdom" xml:space="preserve"><value>古王国時代</value></data>
+  <data name="HistoricalPeriod_MiddleKingdom" xml:space="preserve"><value>中王国時代</value></data>
+  <data name="HistoricalPeriod_NewKingdom" xml:space="preserve"><value>新王国時代</value></data>
+  <data name="HistoricalPeriod_LatePeriod" xml:space="preserve"><value>末期王朝時代</value></data>
+  <data name="HistoricalPeriod_PtolemaicPeriod" xml:space="preserve"><value>プトレマイオス朝時代</value></data>
+  <data name="HistoricalPeriod_RomanPeriod" xml:space="preserve"><value>ローマ時代</value></data>
+  <data name="HistoricalPeriod_ByzantinePeriod" xml:space="preserve"><value>ビザンツ時代</value></data>
+  <data name="HistoricalPeriod_IslamicPeriod" xml:space="preserve"><value>イスラム時代</value></data>
+  <data name="HistoricalPeriod_ModernPeriod" xml:space="preserve"><value>現代</value></data>
+  <data name="HistoricalPeriod_FirstIntermediatePeriod" xml:space="preserve"><value>第1中間期</value></data>
+  <data name="HistoricalPeriod_SecondIntermediatePeriod" xml:space="preserve"><value>第2中間期</value></data>
+  <data name="HistoricalPeriod_ThirdIntermediatePeriod" xml:space="preserve"><value>第3中間期</value></data>
+  <data name="HistoricalPeriod_Ptolemaic" xml:space="preserve"><value>プトレマイオス朝</value></data>
+  <data name="HistoricalPeriod_Roman" xml:space="preserve"><value>ローマ</value></data>
+  <data name="HistoricalPeriod_Byzantine" xml:space="preserve"><value>ビザンツ</value></data>
+  <data name="HistoricalPeriod_Rashidun" xml:space="preserve"><value>正統カリフ時代</value></data>
+  <data name="HistoricalPeriod_Umayyad" xml:space="preserve"><value>ウマイヤ朝</value></data>
+  <data name="HistoricalPeriod_Abbasid" xml:space="preserve"><value>アッバース朝</value></data>
+  <data name="HistoricalPeriod_Tulunid" xml:space="preserve"><value>トゥールーン朝</value></data>
+  <data name="HistoricalPeriod_Ikhshidid" xml:space="preserve"><value>イフシード朝</value></data>
+  <data name="HistoricalPeriod_Fatimid" xml:space="preserve"><value>ファーティマ朝</value></data>
+  <data name="HistoricalPeriod_Ayyubid" xml:space="preserve"><value>アイユーブ朝</value></data>
+  <data name="HistoricalPeriod_BahriMamluk" xml:space="preserve"><value>バフリー・マムルーク朝</value></data>
+  <data name="HistoricalPeriod_BurjiMamluk" xml:space="preserve"><value>ブルジー・マムルーク朝</value></data>
+  <data name="HistoricalPeriod_Ottoman" xml:space="preserve"><value>オスマン帝国</value></data>
+  <data name="HistoricalPeriod_MuhammadAliDynasty" xml:space="preserve"><value>ムハンマド・アリー朝</value></data>
+  <data name="HistoricalPeriod_LateAntiqueEarlyCoptic" xml:space="preserve"><value>古代末期 / 初期コプト</value></data>
+  <data name="HistoricalPeriod_Contemporary" xml:space="preserve"><value>現代</value></data>
+  <data name="HistoricalPeriod_ModernEra" xml:space="preserve"><value>近代</value></data>
+  <data name="HistoricalPeriod_KhedivialEra" xml:space="preserve"><value>副王時代</value></data>
+  <data name="HistoricalPeriod_Islamic" xml:space="preserve"><value>イスラム</value></data>
+
+  <data name="LanguageCode_Arabic" xml:space="preserve"><value>アラビア語</value></data>
+  <data name="LanguageCode_English" xml:space="preserve"><value>英語</value></data>
+  <data name="LanguageCode_French" xml:space="preserve"><value>フランス語</value></data>
+  <data name="LanguageCode_German" xml:space="preserve"><value>ドイツ語</value></data>
+  <data name="LanguageCode_Russian" xml:space="preserve"><value>ロシア語</value></data>
+  <data name="LanguageCode_Spanish" xml:space="preserve"><value>スペイン語</value></data>
+
+  <data name="ModerationAction_NoAction" xml:space="preserve"><value>アクションなし</value></data>
+  <data name="ModerationAction_ContentRemoved" xml:space="preserve"><value>コンテンツ削除</value></data>
+  <data name="ModerationAction_UserWarned" xml:space="preserve"><value>ユーザーに警告済み</value></data>
+  <data name="ModerationAction_UserSuspended" xml:space="preserve"><value>ユーザーの一時停止</value></data>
+  <data name="ModerationAction_UserBanned" xml:space="preserve"><value>ユーザーを禁止</value></data>
+  <data name="ModerationAction_ContentEdited" xml:space="preserve"><value>コンテンツ編集済み</value></data>
+
+  <data name="ReportReason_Spam" xml:space="preserve"><value>スパム</value></data>
+  <data name="ReportReason_HarmfulContent" xml:space="preserve"><value>有害なコンテンツ</value></data>
+  <data name="ReportReason_Harassment" xml:space="preserve"><value>嫌がらせ</value></data>
+  <data name="ReportReason_Inappropriate" xml:space="preserve"><value>不適切</value></data>
+  <data name="ReportReason_HateSpeech" xml:space="preserve"><value>ヘイトスピーチ</value></data>
+  <data name="ReportReason_Violence" xml:space="preserve"><value>暴力</value></data>
+  <data name="ReportReason_Misinformation" xml:space="preserve"><value>誤報</value></data>
+  <data name="ReportReason_Copyright" xml:space="preserve"><value>著作権</value></data>
+  <data name="ReportReason_ChildSafety" xml:space="preserve"><value>子供の安全</value></data>
+  <data name="ReportReason_Other" xml:space="preserve"><value>その他</value></data>
+
+  <data name="ReportStatus_Pending" xml:space="preserve"><value>保留中</value></data>
+  <data name="ReportStatus_UnderReview" xml:space="preserve"><value>レビュー中</value></data>
+  <data name="ReportStatus_Resolved" xml:space="preserve"><value>解決済み</value></data>
+  <data name="ReportStatus_Dismissed" xml:space="preserve"><value>却下</value></data>
+
+  <data name="ReviewOrderBy_Helpful" xml:space="preserve"><value>役に立つ</value></data>
+  <data name="ReviewOrderBy_Recent" xml:space="preserve"><value>最近</value></data>
+  <data name="ReviewOrderBy_Rating" xml:space="preserve"><value>評価</value></data>
+
+  <data name="ReviewStatus_Pending" xml:space="preserve"><value>保留中</value></data>
+  <data name="ReviewStatus_Approved" xml:space="preserve"><value>承認済み</value></data>
+  <data name="ReviewStatus_Rejected" xml:space="preserve"><value>拒否されました</value></data>
+  <data name="ReviewStatus_Flagged" xml:space="preserve"><value>フラグ付き</value></data>
+
+  <data name="SiteStatus_Active" xml:space="preserve"><value>アクティブ</value></data>
+  <data name="SiteStatus_UnderMaintenance" xml:space="preserve"><value>メンテナンス中</value></data>
+  <data name="SiteStatus_TemporarilyClosed" xml:space="preserve"><value>一時閉鎖</value></data>
+  <data name="SiteStatus_PermanentlyClosed" xml:space="preserve"><value>恒久的に閉鎖</value></data>
+  <data name="SiteStatus_Inactive" xml:space="preserve"><value>非アクティブ</value></data>
+
+  <data name="SiteType_Other" xml:space="preserve"><value>その他</value></data>
+  <data name="SiteType_Historical" xml:space="preserve"><value>歴史的</value></data>
+  <data name="SiteType_Museum" xml:space="preserve"><value>博物館</value></data>
+  <data name="SiteType_Religious" xml:space="preserve"><value>宗教的</value></data>
+  <data name="SiteType_Archaeological" xml:space="preserve"><value>考古学的</value></data>
+  <data name="SiteType_Cultural" xml:space="preserve"><value>文化的</value></data>
+  <data name="SiteType_Natural" xml:space="preserve"><value>自然</value></data>
+  <data name="SiteType_Entertainment" xml:space="preserve"><value>エンターテインメント</value></data>
+  <data name="SiteType_Aquarium" xml:space="preserve"><value>水族館</value></data>
+  <data name="SiteType_Beach" xml:space="preserve"><value>ビーチ</value></data>
+  <data name="SiteType_BotanicalGarden" xml:space="preserve"><value>植物園</value></data>
+  <data name="SiteType_Castle" xml:space="preserve"><value>城</value></data>
+  <data name="SiteType_Cave" xml:space="preserve"><value>洞窟</value></data>
+  <data name="SiteType_Desert" xml:space="preserve"><value>砂漠</value></data>
+  <data name="SiteType_Fortress" xml:space="preserve"><value>要塞</value></data>
+  <data name="SiteType_Gallery" xml:space="preserve"><value>ギャラリー</value></data>
+  <data name="SiteType_Island" xml:space="preserve"><value>島</value></data>
+  <data name="SiteType_Lake" xml:space="preserve"><value>湖</value></data>
+  <data name="SiteType_Library" xml:space="preserve"><value>図書館</value></data>
+  <data name="SiteType_Monument" xml:space="preserve"><value>記念碑</value></data>
+  <data name="SiteType_Mountain" xml:space="preserve"><value>山</value></data>
+  <data name="SiteType_Palace" xml:space="preserve"><value>宮殿</value></data>
+  <data name="SiteType_Temple" xml:space="preserve"><value>寺院</value></data>
+  <data name="SiteType_Park" xml:space="preserve"><value>公園</value></data>
+  <data name="SiteType_River" xml:space="preserve"><value>川</value></data>
+  <data name="SiteType_Stadium" xml:space="preserve"><value>スタジアム</value></data>
+  <data name="SiteType_Theater" xml:space="preserve"><value>劇場</value></data>
+  <data name="SiteType_Volcano" xml:space="preserve"><value>火山</value></data>
+  <data name="SiteType_Waterfall" xml:space="preserve"><value>滝</value></data>
+  <data name="SiteType_Zoo" xml:space="preserve"><value>動物園</value></data>
+  <data name="SiteType_Gate" xml:space="preserve"><value>門</value></data>
+  <data name="SiteType_Therapeutic" xml:space="preserve"><value>治療用</value></data>
+  <data name="SiteType_DivingSite" xml:space="preserve"><value>ダイビングサイト</value></data>
+  <data name="SiteType_Marina" xml:space="preserve"><value>マリーナ</value></data>
+  <data name="SiteType_Walkway" xml:space="preserve"><value>遊歩道</value></data>
+
+  <data name="SponsorTier_Bronze" xml:space="preserve"><value>ブロンズ</value></data>
+  <data name="SponsorTier_Silver" xml:space="preserve"><value>シルバー</value></data>
+  <data name="SponsorTier_Gold" xml:space="preserve"><value>ゴールド</value></data>
+  <data name="SponsorTier_Platinum" xml:space="preserve"><value>プラチナ</value></data>
+
+  <data name="SponsorStatus_Active" xml:space="preserve"><value>アクティブ</value></data>
+  <data name="SponsorStatus_Inactive" xml:space="preserve"><value>非アクティブ</value></data>
+  <data name="SponsorStatus_Expired" xml:space="preserve"><value>期限切れ</value></data>
+
+  <data name="SponsorType_Restaurant" xml:space="preserve"><value>レストラン</value></data>
+  <data name="SponsorType_Hotel" xml:space="preserve"><value>ホテル</value></data>
+  <data name="SponsorType_Cafe" xml:space="preserve"><value>カフェ</value></data>
+  <data name="SponsorType_Shop" xml:space="preserve"><value>ショップ</value></data>
+  <data name="SponsorType_Service" xml:space="preserve"><value>サービス</value></data>
+  <data name="SponsorType_Tour" xml:space="preserve"><value>ツアー</value></data>
+  <data name="SponsorType_TravelAgency" xml:space="preserve"><value>旅行代理店</value></data>
+  <data name="SponsorType_Transportation" xml:space="preserve"><value>交通機関</value></data>
+
+  <data name="TransportationType_Bus" xml:space="preserve"><value>バス</value></data>
+  <data name="TransportationType_BicycleRental" xml:space="preserve"><value>レンタサイクル</value></data>
+  <data name="TransportationType_CarRental" xml:space="preserve"><value>レンタカー</value></data>
+  <data name="TransportationType_Ferry" xml:space="preserve"><value>フェリー</value></data>
+  <data name="TransportationType_Metro" xml:space="preserve"><value>地下鉄</value></data>
+  <data name="TransportationType_Taxi" xml:space="preserve"><value>タクシー</value></data>
+  <data name="TransportationType_Train" xml:space="preserve"><value>電車</value></data>
+  <data name="TransportationType_Tram" xml:space="preserve"><value>路面電車</value></data>
+  <data name="TransportationType_Airplane" xml:space="preserve"><value>飛行機</value></data>
+
+  <data name="TripStatus_Draft" xml:space="preserve"><value>下書き</value></data>
+  <data name="TripStatus_Planned" xml:space="preserve"><value>計画済み</value></data>
+  <data name="TripStatus_InProgress" xml:space="preserve"><value>進行中</value></data>
+  <data name="TripStatus_Completed" xml:space="preserve"><value>完了</value></data>
+  <data name="TripStatus_Cancelled" xml:space="preserve"><value>キャンセル済み</value></data>
+
+  <data name="UserRole_Tourist" xml:space="preserve"><value>旅行者</value></data>
+  <data name="UserRole_Admin" xml:space="preserve"><value>管理者</value></data>
+  <data name="UserRole_Moderator" xml:space="preserve"><value>モデレーター</value></data>
+  <data name="UserRole_SuperAdmin" xml:space="preserve"><value>スーパー管理者</value></data>
+
+  <data name="UserStatus_Active" xml:space="preserve"><value>アクティブ</value></data>
+  <data name="UserStatus_Inactive" xml:space="preserve"><value>非アクティブ</value></data>
+  <data name="UserStatus_Suspended" xml:space="preserve"><value>一時停止</value></data>
+  <data name="UserStatus_Banned" xml:space="preserve"><value>禁止</value></data>
+  <data name="UserStatus_Locked" xml:space="preserve"><value>ロック済み</value></data>
+  <data name="UserStatus_Deleted" xml:space="preserve"><value>削除済み</value></data>
+
+  <data name="Tolerance_Low" xml:space="preserve"><value>低</value></data>
+  <data name="Tolerance_Medium" xml:space="preserve"><value>中</value></data>
+  <data name="Tolerance_High" xml:space="preserve"><value>高</value></data>
+
+  <data name="WeekDay_Saturday" xml:space="preserve"><value>土曜日</value></data>
+  <data name="WeekDay_Sunday" xml:space="preserve"><value>日曜日</value></data>
+  <data name="WeekDay_Monday" xml:space="preserve"><value>月曜日</value></data>
+  <data name="WeekDay_Tuesday" xml:space="preserve"><value>火曜日</value></data>
+  <data name="WeekDay_Wednesday" xml:space="preserve"><value>水曜日</value></data>
+  <data name="WeekDay_Thursday" xml:space="preserve"><value>木曜日</value></data>
+  <data name="WeekDay_Friday" xml:space="preserve"><value>金曜日</value></data>
+
+  <data name="ErrorType_None" xml:space="preserve"><value>なし</value></data>
+  <data name="ErrorType_Failure" xml:space="preserve"><value>失敗</value></data>
+  <data name="ErrorType_NotFound" xml:space="preserve"><value>見つかりません</value></data>
+  <data name="ErrorType_Validation" xml:space="preserve"><value>検証</value></data>
+  <data name="ErrorType_Conflict" xml:space="preserve"><value>競合</value></data>
+  <data name="ErrorType_Unauthorized" xml:space="preserve"><value>不正アクセス</value></data>
+  <data name="ErrorType_Forbidden" xml:space="preserve"><value>禁止</value></data>
+
+  <data name="FacilityType_ATM" xml:space="preserve"><value>ATM</value></data>
+  <data name="FacilityType_AudioGuide" xml:space="preserve"><value>オーディオガイド</value></data>
+  <data name="FacilityType_BabyChanging" xml:space="preserve"><value>おむつ交換台</value></data>
+  <data name="FacilityType_BicycleRental" xml:space="preserve"><value>レンタサイクル</value></data>
+  <data name="FacilityType_CafeteriaOrRestaurant" xml:space="preserve"><value>カフェテリアまたはレストラン</value></data>
+  <data name="FacilityType_Elevator" xml:space="preserve"><value>エレベーター</value></data>
+  <data name="FacilityType_FirstAid" xml:space="preserve"><value>応急処置</value></data>
+  <data name="FacilityType_GiftShop" xml:space="preserve"><value>ギフトショップ</value></data>
+  <data name="FacilityType_GuidedTours" xml:space="preserve"><value>ガイド付きツアー</value></data>
+  <data name="FacilityType_InformationCenter" xml:space="preserve"><value>インフォメーションセンター</value></data>
+  <data name="FacilityType_Lockers" xml:space="preserve"><value>ロッカー</value></data>
+  <data name="FacilityType_Parking" xml:space="preserve"><value>駐車場</value></data>
+  <data name="FacilityType_PetFriendly" xml:space="preserve"><value>ペット可</value></data>
+  <data name="FacilityType_PhotographyAllowed" xml:space="preserve"><value>写真撮影可</value></data>
+  <data name="FacilityType_PrayerRoom" xml:space="preserve"><value>祈祷室</value></data>
+  <data name="FacilityType_Restroom" xml:space="preserve"><value>トイレ</value></data>
+  <data name="FacilityType_SignLanguageTours" xml:space="preserve"><value>手話ツアー</value></data>
+  <data name="FacilityType_StrollerAccess" xml:space="preserve"><value>ベビーカーアクセス</value></data>
+  <data name="FacilityType_WheelchairAccess" xml:space="preserve"><value>車椅子アクセス</value></data>
+  <data name="FacilityType_WiFi" xml:space="preserve"><value>Wi-Fi</value></data>
+  <data name="FacilityType_Restrooms" xml:space="preserve"><value>トイレ</value></data>
+  <data name="FacilityType_Galleries" xml:space="preserve"><value>ギャラリー</value></data>
+  <data name="FacilityType_Exhibition" xml:space="preserve"><value>展示</value></data>
+  <data name="FacilityType_Theaters" xml:space="preserve"><value>劇場</value></data>
+  <data name="FacilityType_Gardens" xml:space="preserve"><value>庭園</value></data>
+  <data name="FacilityType_Library" xml:space="preserve"><value>図書館</value></data>
+  <data name="FacilityType_ReadingRooms" xml:space="preserve"><value>閲覧室</value></data>
+  <data name="FacilityType_BoardRides" xml:space="preserve"><value>ボード乗り物</value></data>
+  <data name="FacilityType_LocalMarkets" xml:space="preserve"><value>地元の市場</value></data>
+  <data name="FacilityType_NatureTrails" xml:space="preserve"><value>自然歩道</value></data>
+  <data name="FacilityType_BoatRides" xml:space="preserve"><value>ボート乗り</value></data>
+</root>

@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <data name="ArtifactType_Other" xml:space="preserve"><value>其他</value></data>
+  <data name="ArtifactType_Statue" xml:space="preserve"><value>雕像</value></data>
+  <data name="ArtifactType_Mask" xml:space="preserve"><value>面具</value></data>
+  <data name="ArtifactType_Sphinx" xml:space="preserve"><value>狮身人面像</value></data>
+  <data name="ArtifactType_Stele" xml:space="preserve"><value>石碑</value></data>
+  <data name="ArtifactType_Bust" xml:space="preserve"><value>半身像</value></data>
+  <data name="ArtifactType_Painting" xml:space="preserve"><value>画作</value></data>
+  <data name="ArtifactType_Manuscript" xml:space="preserve"><value>手稿</value></data>
+  <data name="ArtifactType_Jewelry" xml:space="preserve"><value>珠宝</value></data>
+  <data name="ArtifactType_Coin" xml:space="preserve"><value>硬币</value></data>
+  <data name="ArtifactType_Vessel" xml:space="preserve"><value>容器</value></data>
+  <data name="ArtifactType_Weapon" xml:space="preserve"><value>武器</value></data>
+  <data name="ArtifactType_Tool" xml:space="preserve"><value>工具</value></data>
+  <data name="ArtifactType_Textile" xml:space="preserve"><value>纺织品</value></data>
+  <data name="ArtifactType_Furniture" xml:space="preserve"><value>家具</value></data>
+  <data name="ArtifactType_MusicalInstrument" xml:space="preserve"><value>乐器</value></data>
+  <data name="ArtifactType_Ceramic" xml:space="preserve"><value>陶瓷</value></data>
+  <data name="ArtifactType_Pottery" xml:space="preserve"><value>陶器</value></data>
+  <data name="ArtifactType_Glassware" xml:space="preserve"><value>玻璃器皿</value></data>
+  <data name="ArtifactType_Bone" xml:space="preserve"><value>骨器</value></data>
+  <data name="ArtifactType_Ivory" xml:space="preserve"><value>象牙</value></data>
+  <data name="ArtifactType_Shell" xml:space="preserve"><value>贝壳</value></data>
+  <data name="ArtifactType_Metalwork" xml:space="preserve"><value>金属制品</value></data>
+  <data name="ArtifactType_Shrine" xml:space="preserve"><value>神龛</value></data>
+
+  <data name="AttractionType_Other" xml:space="preserve"><value>其他</value></data>
+  <data name="AttractionType_Pyramid" xml:space="preserve"><value>金字塔</value></data>
+  <data name="AttractionType_Temple" xml:space="preserve"><value>寺庙</value></data>
+  <data name="AttractionType_Tomb" xml:space="preserve"><value>陵墓</value></data>
+  <data name="AttractionType_Statue" xml:space="preserve"><value>雕像</value></data>
+  <data name="AttractionType_Monument" xml:space="preserve"><value>纪念碑</value></data>
+  <data name="AttractionType_Mosque" xml:space="preserve"><value>清真寺</value></data>
+  <data name="AttractionType_Church" xml:space="preserve"><value>教堂</value></data>
+  <data name="AttractionType_Synagogue" xml:space="preserve"><value>犹太教堂</value></data>
+  <data name="AttractionType_MuseumHall" xml:space="preserve"><value>博物馆展厅</value></data>
+  <data name="AttractionType_Exhibition" xml:space="preserve"><value>展览</value></data>
+  <data name="AttractionType_Palace" xml:space="preserve"><value>宫殿</value></data>
+  <data name="AttractionType_Fortress" xml:space="preserve"><value>堡垒</value></data>
+  <data name="AttractionType_Gate" xml:space="preserve"><value>城门</value></data>
+  <data name="AttractionType_Obelisk" xml:space="preserve"><value>方尖碑</value></data>
+  <data name="AttractionType_Column" xml:space="preserve"><value>圆柱</value></data>
+  <data name="AttractionType_Ruins" xml:space="preserve"><value>废墟</value></data>
+  <data name="AttractionType_Garden" xml:space="preserve"><value>花园</value></data>
+  <data name="AttractionType_Courtyard" xml:space="preserve"><value>庭院</value></data>
+  <data name="AttractionType_Cave" xml:space="preserve"><value>洞穴</value></data>
+  <data name="AttractionType_Well" xml:space="preserve"><value>水井</value></data>
+  <data name="AttractionType_RockCutStructure" xml:space="preserve"><value>石窟建筑</value></data>
+  <data name="AttractionType_ArchaeologicalStructure" xml:space="preserve"><value>考古建筑</value></data>
+  <data name="AttractionType_HistoricBuilding" xml:space="preserve"><value>历史建筑</value></data>
+  <data name="AttractionType_ViewingPoint" xml:space="preserve"><value>观景点</value></data>
+  <data name="AttractionType_CulturalExhibit" xml:space="preserve"><value>文化展览</value></data>
+  <data name="AttractionType_Waterfall" xml:space="preserve"><value>瀑布</value></data>
+  <data name="AttractionType_Entertainment" xml:space="preserve"><value>娱乐</value></data>
+  <data name="AttractionType_Historical" xml:space="preserve"><value>历史</value></data>
+  <data name="AttractionType_Religious" xml:space="preserve"><value>宗教</value></data>
+  <data name="AttractionType_Nature" xml:space="preserve"><value>自然</value></data>
+  <data name="AttractionType_Dining" xml:space="preserve"><value>餐饮</value></data>
+  <data name="AttractionType_Library" xml:space="preserve"><value>图书馆</value></data>
+
+  <data name="HistoricalPeriod_Unknown" xml:space="preserve"><value>未知</value></data>
+  <data name="HistoricalPeriod_PreDynastic" xml:space="preserve"><value>前王朝时期</value></data>
+  <data name="HistoricalPeriod_EarlyDynastic" xml:space="preserve"><value>早王朝时期</value></data>
+  <data name="HistoricalPeriod_OldKingdom" xml:space="preserve"><value>古王国时期</value></data>
+  <data name="HistoricalPeriod_MiddleKingdom" xml:space="preserve"><value>中王国时期</value></data>
+  <data name="HistoricalPeriod_NewKingdom" xml:space="preserve"><value>新王国时期</value></data>
+  <data name="HistoricalPeriod_LatePeriod" xml:space="preserve"><value>后期</value></data>
+  <data name="HistoricalPeriod_PtolemaicPeriod" xml:space="preserve"><value>托勒密时期</value></data>
+  <data name="HistoricalPeriod_RomanPeriod" xml:space="preserve"><value>罗马时期</value></data>
+  <data name="HistoricalPeriod_ByzantinePeriod" xml:space="preserve"><value>拜占庭时期</value></data>
+  <data name="HistoricalPeriod_IslamicPeriod" xml:space="preserve"><value>伊斯兰时期</value></data>
+  <data name="HistoricalPeriod_ModernPeriod" xml:space="preserve"><value>现代时期</value></data>
+  <data name="HistoricalPeriod_FirstIntermediatePeriod" xml:space="preserve"><value>第一中间期</value></data>
+  <data name="HistoricalPeriod_SecondIntermediatePeriod" xml:space="preserve"><value>第二中间期</value></data>
+  <data name="HistoricalPeriod_ThirdIntermediatePeriod" xml:space="preserve"><value>第三中间期</value></data>
+  <data name="HistoricalPeriod_Ptolemaic" xml:space="preserve"><value>托勒密</value></data>
+  <data name="HistoricalPeriod_Roman" xml:space="preserve"><value>罗马</value></data>
+  <data name="HistoricalPeriod_Byzantine" xml:space="preserve"><value>拜占庭</value></data>
+  <data name="HistoricalPeriod_Rashidun" xml:space="preserve"><value>正统哈里发</value></data>
+  <data name="HistoricalPeriod_Umayyad" xml:space="preserve"><value>倭马亚</value></data>
+  <data name="HistoricalPeriod_Abbasid" xml:space="preserve"><value>阿拔斯</value></data>
+  <data name="HistoricalPeriod_Tulunid" xml:space="preserve"><value>突伦</value></data>
+  <data name="HistoricalPeriod_Ikhshidid" xml:space="preserve"><value>伊赫什德</value></data>
+  <data name="HistoricalPeriod_Fatimid" xml:space="preserve"><value>法蒂玛</value></data>
+  <data name="HistoricalPeriod_Ayyubid" xml:space="preserve"><value>阿尤布</value></data>
+  <data name="HistoricalPeriod_BahriMamluk" xml:space="preserve"><value>巴赫里马穆鲁克</value></data>
+  <data name="HistoricalPeriod_BurjiMamluk" xml:space="preserve"><value>布尔吉马穆鲁克</value></data>
+  <data name="HistoricalPeriod_Ottoman" xml:space="preserve"><value>奥斯曼</value></data>
+  <data name="HistoricalPeriod_MuhammadAliDynasty" xml:space="preserve"><value>穆罕默德·阿里王朝</value></data>
+  <data name="HistoricalPeriod_LateAntiqueEarlyCoptic" xml:space="preserve"><value>古典时代晚期 / 早期科普特</value></data>
+  <data name="HistoricalPeriod_Contemporary" xml:space="preserve"><value>当代</value></data>
+  <data name="HistoricalPeriod_ModernEra" xml:space="preserve"><value>现代</value></data>
+  <data name="HistoricalPeriod_KhedivialEra" xml:space="preserve"><value>赫迪夫时代</value></data>
+  <data name="HistoricalPeriod_Islamic" xml:space="preserve"><value>伊斯兰</value></data>
+
+  <data name="LanguageCode_Arabic" xml:space="preserve"><value>阿拉伯语</value></data>
+  <data name="LanguageCode_English" xml:space="preserve"><value>英语</value></data>
+  <data name="LanguageCode_French" xml:space="preserve"><value>法语</value></data>
+  <data name="LanguageCode_German" xml:space="preserve"><value>德语</value></data>
+  <data name="LanguageCode_Russian" xml:space="preserve"><value>俄语</value></data>
+  <data name="LanguageCode_Spanish" xml:space="preserve"><value>西班牙语</value></data>
+
+  <data name="ModerationAction_NoAction" xml:space="preserve"><value>无操作</value></data>
+  <data name="ModerationAction_ContentRemoved" xml:space="preserve"><value>内容已移除</value></data>
+  <data name="ModerationAction_UserWarned" xml:space="preserve"><value>已警告用户</value></data>
+  <data name="ModerationAction_UserSuspended" xml:space="preserve"><value>用户被暂停</value></data>
+  <data name="ModerationAction_UserBanned" xml:space="preserve"><value>用户被封禁</value></data>
+  <data name="ModerationAction_ContentEdited" xml:space="preserve"><value>内容已编辑</value></data>
+
+  <data name="ReportReason_Spam" xml:space="preserve"><value>垃圾信息</value></data>
+  <data name="ReportReason_HarmfulContent" xml:space="preserve"><value>有害内容</value></data>
+  <data name="ReportReason_Harassment" xml:space="preserve"><value>骚扰</value></data>
+  <data name="ReportReason_Inappropriate" xml:space="preserve"><value>不适当</value></data>
+  <data name="ReportReason_HateSpeech" xml:space="preserve"><value>仇恨言论</value></data>
+  <data name="ReportReason_Violence" xml:space="preserve"><value>暴力</value></data>
+  <data name="ReportReason_Misinformation" xml:space="preserve"><value>错误信息</value></data>
+  <data name="ReportReason_Copyright" xml:space="preserve"><value>版权</value></data>
+  <data name="ReportReason_ChildSafety" xml:space="preserve"><value>儿童安全</value></data>
+  <data name="ReportReason_Other" xml:space="preserve"><value>其他</value></data>
+
+  <data name="ReportStatus_Pending" xml:space="preserve"><value>待处理</value></data>
+  <data name="ReportStatus_UnderReview" xml:space="preserve"><value>审核中</value></data>
+  <data name="ReportStatus_Resolved" xml:space="preserve"><value>已解决</value></data>
+  <data name="ReportStatus_Dismissed" xml:space="preserve"><value>已驳回</value></data>
+
+  <data name="ReviewOrderBy_Helpful" xml:space="preserve"><value>有用的</value></data>
+  <data name="ReviewOrderBy_Recent" xml:space="preserve"><value>最近的</value></data>
+  <data name="ReviewOrderBy_Rating" xml:space="preserve"><value>评分</value></data>
+
+  <data name="ReviewStatus_Pending" xml:space="preserve"><value>待处理</value></data>
+  <data name="ReviewStatus_Approved" xml:space="preserve"><value>已批准</value></data>
+  <data name="ReviewStatus_Rejected" xml:space="preserve"><value>已拒绝</value></data>
+  <data name="ReviewStatus_Flagged" xml:space="preserve"><value>被标记</value></data>
+
+  <data name="SiteStatus_Active" xml:space="preserve"><value>活跃</value></data>
+  <data name="SiteStatus_UnderMaintenance" xml:space="preserve"><value>维护中</value></data>
+  <data name="SiteStatus_TemporarilyClosed" xml:space="preserve"><value>暂时关闭</value></data>
+  <data name="SiteStatus_PermanentlyClosed" xml:space="preserve"><value>永久关闭</value></data>
+  <data name="SiteStatus_Inactive" xml:space="preserve"><value>不活跃</value></data>
+
+  <data name="SiteType_Other" xml:space="preserve"><value>其他</value></data>
+  <data name="SiteType_Historical" xml:space="preserve"><value>历史</value></data>
+  <data name="SiteType_Museum" xml:space="preserve"><value>博物馆</value></data>
+  <data name="SiteType_Religious" xml:space="preserve"><value>宗教</value></data>
+  <data name="SiteType_Archaeological" xml:space="preserve"><value>考古</value></data>
+  <data name="SiteType_Cultural" xml:space="preserve"><value>文化</value></data>
+  <data name="SiteType_Natural" xml:space="preserve"><value>自然</value></data>
+  <data name="SiteType_Entertainment" xml:space="preserve"><value>娱乐</value></data>
+  <data name="SiteType_Aquarium" xml:space="preserve"><value>水族馆</value></data>
+  <data name="SiteType_Beach" xml:space="preserve"><value>海滩</value></data>
+  <data name="SiteType_BotanicalGarden" xml:space="preserve"><value>植物园</value></data>
+  <data name="SiteType_Castle" xml:space="preserve"><value>城堡</value></data>
+  <data name="SiteType_Cave" xml:space="preserve"><value>洞穴</value></data>
+  <data name="SiteType_Desert" xml:space="preserve"><value>沙漠</value></data>
+  <data name="SiteType_Fortress" xml:space="preserve"><value>堡垒</value></data>
+  <data name="SiteType_Gallery" xml:space="preserve"><value>画廊</value></data>
+  <data name="SiteType_Island" xml:space="preserve"><value>岛屿</value></data>
+  <data name="SiteType_Lake" xml:space="preserve"><value>湖泊</value></data>
+  <data name="SiteType_Library" xml:space="preserve"><value>图书馆</value></data>
+  <data name="SiteType_Monument" xml:space="preserve"><value>纪念碑</value></data>
+  <data name="SiteType_Mountain" xml:space="preserve"><value>山脉</value></data>
+  <data name="SiteType_Palace" xml:space="preserve"><value>宫殿</value></data>
+  <data name="SiteType_Temple" xml:space="preserve"><value>寺庙</value></data>
+  <data name="SiteType_Park" xml:space="preserve"><value>公园</value></data>
+  <data name="SiteType_River" xml:space="preserve"><value>河流</value></data>
+  <data name="SiteType_Stadium" xml:space="preserve"><value>体育场</value></data>
+  <data name="SiteType_Theater" xml:space="preserve"><value>剧院</value></data>
+  <data name="SiteType_Volcano" xml:space="preserve"><value>火山</value></data>
+  <data name="SiteType_Waterfall" xml:space="preserve"><value>瀑布</value></data>
+  <data name="SiteType_Zoo" xml:space="preserve"><value>动物园</value></data>
+  <data name="SiteType_Gate" xml:space="preserve"><value>大门</value></data>
+  <data name="SiteType_Therapeutic" xml:space="preserve"><value>疗养</value></data>
+  <data name="SiteType_DivingSite" xml:space="preserve"><value>潜水点</value></data>
+  <data name="SiteType_Marina" xml:space="preserve"><value>游船码头</value></data>
+  <data name="SiteType_Walkway" xml:space="preserve"><value>步道</value></data>
+
+  <data name="SponsorTier_Bronze" xml:space="preserve"><value>铜牌</value></data>
+  <data name="SponsorTier_Silver" xml:space="preserve"><value>银牌</value></data>
+  <data name="SponsorTier_Gold" xml:space="preserve"><value>金牌</value></data>
+  <data name="SponsorTier_Platinum" xml:space="preserve"><value>白金</value></data>
+
+  <data name="SponsorStatus_Active" xml:space="preserve"><value>活跃</value></data>
+  <data name="SponsorStatus_Inactive" xml:space="preserve"><value>不活跃</value></data>
+  <data name="SponsorStatus_Expired" xml:space="preserve"><value>已过期</value></data>
+
+  <data name="SponsorType_Restaurant" xml:space="preserve"><value>餐厅</value></data>
+  <data name="SponsorType_Hotel" xml:space="preserve"><value>酒店</value></data>
+  <data name="SponsorType_Cafe" xml:space="preserve"><value>咖啡厅</value></data>
+  <data name="SponsorType_Shop" xml:space="preserve"><value>商店</value></data>
+  <data name="SponsorType_Service" xml:space="preserve"><value>服务</value></data>
+  <data name="SponsorType_Tour" xml:space="preserve"><value>旅游</value></data>
+  <data name="SponsorType_TravelAgency" xml:space="preserve"><value>旅行社</value></data>
+  <data name="SponsorType_Transportation" xml:space="preserve"><value>交通</value></data>
+
+  <data name="TransportationType_Bus" xml:space="preserve"><value>公交</value></data>
+  <data name="TransportationType_BicycleRental" xml:space="preserve"><value>自行车租赁</value></data>
+  <data name="TransportationType_CarRental" xml:space="preserve"><value>汽车租赁</value></data>
+  <data name="TransportationType_Ferry" xml:space="preserve"><value>渡轮</value></data>
+  <data name="TransportationType_Metro" xml:space="preserve"><value>地铁</value></data>
+  <data name="TransportationType_Taxi" xml:space="preserve"><value>出租车</value></data>
+  <data name="TransportationType_Train" xml:space="preserve"><value>火车</value></data>
+  <data name="TransportationType_Tram" xml:space="preserve"><value>有轨电车</value></data>
+  <data name="TransportationType_Airplane" xml:space="preserve"><value>飞机</value></data>
+
+  <data name="TripStatus_Draft" xml:space="preserve"><value>草稿</value></data>
+  <data name="TripStatus_Planned" xml:space="preserve"><value>已计划</value></data>
+  <data name="TripStatus_InProgress" xml:space="preserve"><value>进行中</value></data>
+  <data name="TripStatus_Completed" xml:space="preserve"><value>已完成</value></data>
+  <data name="TripStatus_Cancelled" xml:space="preserve"><value>已取消</value></data>
+
+  <data name="UserRole_Tourist" xml:space="preserve"><value>游客</value></data>
+  <data name="UserRole_Admin" xml:space="preserve"><value>管理员</value></data>
+  <data name="UserRole_Moderator" xml:space="preserve"><value>版主</value></data>
+  <data name="UserRole_SuperAdmin" xml:space="preserve"><value>超级管理员</value></data>
+
+  <data name="UserStatus_Active" xml:space="preserve"><value>活跃</value></data>
+  <data name="UserStatus_Inactive" xml:space="preserve"><value>不活跃</value></data>
+  <data name="UserStatus_Suspended" xml:space="preserve"><value>已暂停</value></data>
+  <data name="UserStatus_Banned" xml:space="preserve"><value>已封禁</value></data>
+  <data name="UserStatus_Locked" xml:space="preserve"><value>已锁定</value></data>
+  <data name="UserStatus_Deleted" xml:space="preserve"><value>已删除</value></data>
+
+  <data name="Tolerance_Low" xml:space="preserve"><value>低</value></data>
+  <data name="Tolerance_Medium" xml:space="preserve"><value>中</value></data>
+  <data name="Tolerance_High" xml:space="preserve"><value>高</value></data>
+
+  <data name="WeekDay_Saturday" xml:space="preserve"><value>星期六</value></data>
+  <data name="WeekDay_Sunday" xml:space="preserve"><value>星期日</value></data>
+  <data name="WeekDay_Monday" xml:space="preserve"><value>星期一</value></data>
+  <data name="WeekDay_Tuesday" xml:space="preserve"><value>星期二</value></data>
+  <data name="WeekDay_Wednesday" xml:space="preserve"><value>星期三</value></data>
+  <data name="WeekDay_Thursday" xml:space="preserve"><value>星期四</value></data>
+  <data name="WeekDay_Friday" xml:space="preserve"><value>星期五</value></data>
+
+  <data name="ErrorType_None" xml:space="preserve"><value>无</value></data>
+  <data name="ErrorType_Failure" xml:space="preserve"><value>失败</value></data>
+  <data name="ErrorType_NotFound" xml:space="preserve"><value>未找到</value></data>
+  <data name="ErrorType_Validation" xml:space="preserve"><value>验证</value></data>
+  <data name="ErrorType_Conflict" xml:space="preserve"><value>冲突</value></data>
+  <data name="ErrorType_Unauthorized" xml:space="preserve"><value>未授权</value></data>
+  <data name="ErrorType_Forbidden" xml:space="preserve"><value>禁止</value></data>
+
+  <data name="FacilityType_ATM" xml:space="preserve"><value>自动取款机</value></data>
+  <data name="FacilityType_AudioGuide" xml:space="preserve"><value>语音导览</value></data>
+  <data name="FacilityType_BabyChanging" xml:space="preserve"><value>婴儿换尿布台</value></data>
+  <data name="FacilityType_BicycleRental" xml:space="preserve"><value>自行车租赁</value></data>
+  <data name="FacilityType_CafeteriaOrRestaurant" xml:space="preserve"><value>自助餐厅或餐厅</value></data>
+  <data name="FacilityType_Elevator" xml:space="preserve"><value>电梯</value></data>
+  <data name="FacilityType_FirstAid" xml:space="preserve"><value>急救</value></data>
+  <data name="FacilityType_GiftShop" xml:space="preserve"><value>礼品店</value></data>
+  <data name="FacilityType_GuidedTours" xml:space="preserve"><value>导游服务</value></data>
+  <data name="FacilityType_InformationCenter" xml:space="preserve"><value>信息中心</value></data>
+  <data name="FacilityType_Lockers" xml:space="preserve"><value>储物柜</value></data>
+  <data name="FacilityType_Parking" xml:space="preserve"><value>停车场</value></data>
+  <data name="FacilityType_PetFriendly" xml:space="preserve"><value>允许携带宠物</value></data>
+  <data name="FacilityType_PhotographyAllowed" xml:space="preserve"><value>允许拍照</value></data>
+  <data name="FacilityType_PrayerRoom" xml:space="preserve"><value>祈祷室</value></data>
+  <data name="FacilityType_Restroom" xml:space="preserve"><value>洗手间</value></data>
+  <data name="FacilityType_SignLanguageTours" xml:space="preserve"><value>手语导览</value></data>
+  <data name="FacilityType_StrollerAccess" xml:space="preserve"><value>婴儿车通道</value></data>
+  <data name="FacilityType_WheelchairAccess" xml:space="preserve"><value>轮椅通道</value></data>
+  <data name="FacilityType_WiFi" xml:space="preserve"><value>无线网络</value></data>
+  <data name="FacilityType_Restrooms" xml:space="preserve"><value>洗手间</value></data>
+  <data name="FacilityType_Galleries" xml:space="preserve"><value>画廊</value></data>
+  <data name="FacilityType_Exhibition" xml:space="preserve"><value>展览</value></data>
+  <data name="FacilityType_Theaters" xml:space="preserve"><value>剧院</value></data>
+  <data name="FacilityType_Gardens" xml:space="preserve"><value>花园</value></data>
+  <data name="FacilityType_Library" xml:space="preserve"><value>图书馆</value></data>
+  <data name="FacilityType_ReadingRooms" xml:space="preserve"><value>阅览室</value></data>
+  <data name="FacilityType_BoardRides" xml:space="preserve"><value>滑板骑行</value></data>
+  <data name="FacilityType_LocalMarkets" xml:space="preserve"><value>当地市场</value></data>
+  <data name="FacilityType_NatureTrails" xml:space="preserve"><value>自然步道</value></data>
+  <data name="FacilityType_BoatRides" xml:space="preserve"><value>乘船游览</value></data>
+</root>

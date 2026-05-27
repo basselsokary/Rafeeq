@@ -50,11 +50,19 @@
   <data name="AttractionType_Garden" xml:space="preserve"><value>Garden</value></data>
   <data name="AttractionType_Courtyard" xml:space="preserve"><value>Courtyard</value></data>
   <data name="AttractionType_Cave" xml:space="preserve"><value>Cave</value></data>
+  <data name="AttractionType_Well" xml:space="preserve"><value>Well</value></data>
   <data name="AttractionType_RockCutStructure" xml:space="preserve"><value>Rock-Cut Structure</value></data>
   <data name="AttractionType_ArchaeologicalStructure" xml:space="preserve"><value>Archaeological Structure</value></data>
   <data name="AttractionType_HistoricBuilding" xml:space="preserve"><value>Historic Building</value></data>
   <data name="AttractionType_ViewingPoint" xml:space="preserve"><value>Viewing Point</value></data>
   <data name="AttractionType_CulturalExhibit" xml:space="preserve"><value>Cultural Exhibit</value></data>
+  <data name="AttractionType_Waterfall" xml:space="preserve"><value>Waterfall</value></data>
+  <data name="AttractionType_Entertainment" xml:space="preserve"><value>Entertainment</value></data>
+  <data name="AttractionType_Historical" xml:space="preserve"><value>Historical</value></data>
+  <data name="AttractionType_Religious" xml:space="preserve"><value>Religious</value></data>
+  <data name="AttractionType_Nature" xml:space="preserve"><value>Nature</value></data>
+  <data name="AttractionType_Dining" xml:space="preserve"><value>Dining</value></data>
+  <data name="AttractionType_Library" xml:space="preserve"><value>Library</value></data>
 
   <!-- HistoricalPeriod -->
   <data name="HistoricalPeriod_Unknown" xml:space="preserve"><value>Unknown</value></data>
@@ -86,6 +94,11 @@
   <data name="HistoricalPeriod_BurjiMamluk" xml:space="preserve"><value>Burji Mamluk</value></data>
   <data name="HistoricalPeriod_Ottoman" xml:space="preserve"><value>Ottoman</value></data>
   <data name="HistoricalPeriod_MuhammadAliDynasty" xml:space="preserve"><value>Muhammad Ali Dynasty</value></data>
+  <data name="HistoricalPeriod_LateAntiqueEarlyCoptic" xml:space="preserve"><value>Late Antique / Early Coptic</value></data>
+  <data name="HistoricalPeriod_Contemporary" xml:space="preserve"><value>Contemporary</value></data>
+  <data name="HistoricalPeriod_ModernEra" xml:space="preserve"><value>Modern Era</value></data>
+  <data name="HistoricalPeriod_KhedivialEra" xml:space="preserve"><value>Khedivial Era</value></data>
+  <data name="HistoricalPeriod_Islamic" xml:space="preserve"><value>Islamic</value></data>
 
   <!-- LanguageCode -->
   <data name="LanguageCode_Arabic" xml:space="preserve"><value>Arabic</value></data>
@@ -190,9 +203,11 @@
   <!-- SponsorType -->
   <data name="SponsorType_Restaurant" xml:space="preserve"><value>Restaurant</value></data>
   <data name="SponsorType_Hotel" xml:space="preserve"><value>Hotel</value></data>
+  <data name="SponsorType_Cafe" xml:space="preserve"><value>Cafe</value></data>
   <data name="SponsorType_Shop" xml:space="preserve"><value>Shop</value></data>
   <data name="SponsorType_Service" xml:space="preserve"><value>Service</value></data>
   <data name="SponsorType_Tour" xml:space="preserve"><value>Tour</value></data>
+  <data name="SponsorType_TravelAgency" xml:space="preserve"><value>Travel Agency</value></data>
   <data name="SponsorType_Transportation" xml:space="preserve"><value>Transportation</value></data>
 
   <!-- TransportationType -->
@@ -204,6 +219,7 @@
   <data name="TransportationType_Taxi" xml:space="preserve"><value>Taxi</value></data>
   <data name="TransportationType_Train" xml:space="preserve"><value>Train</value></data>
   <data name="TransportationType_Tram" xml:space="preserve"><value>Tram</value></data>
+  <data name="TransportationType_Airplane" xml:space="preserve"><value>Airplane</value></data>
 
   <!-- TripStatus -->
   <data name="TripStatus_Draft" xml:space="preserve"><value>Draft</value></data>
@@ -223,6 +239,7 @@
   <data name="UserStatus_Inactive" xml:space="preserve"><value>Inactive</value></data>
   <data name="UserStatus_Suspended" xml:space="preserve"><value>Suspended</value></data>
   <data name="UserStatus_Banned" xml:space="preserve"><value>Banned</value></data>
+  <data name="UserStatus_Locked" xml:space="preserve"><value>Locked</value></data>
   <data name="UserStatus_Deleted" xml:space="preserve"><value>Deleted</value></data>
 
   <!-- Tolerance -->
@@ -280,5 +297,4 @@
   <data name="FacilityType_LocalMarkets" xml:space="preserve"><value>Local Markets</value></data>
   <data name="FacilityType_NatureTrails" xml:space="preserve"><value>Nature Trails</value></data>
   <data name="FacilityType_BoatRides" xml:space="preserve"><value>Boat Rides</value></data>
-
 </root>

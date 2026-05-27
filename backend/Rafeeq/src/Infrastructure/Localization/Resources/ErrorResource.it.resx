@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <data name="VALIDATION_GENERAL" xml:space="preserve"><value>Si è verificato uno o più errori di convalida.</value></data>
+  <data name="VALIDATION_VALUE_REQUIRED" xml:space="preserve"><value>Il valore è obbligatorio.</value></data>
+  <data name="VALIDATION_COLLECTION_REQUIRED" xml:space="preserve"><value>È richiesto almeno un elemento.</value></data>
+  <data name="VALIDATION_INVALID_ENUM_VALUE" xml:space="preserve"><value>È stato fornito un valore non valido: {0}.</value></data>
+  <data name="VALIDATION_NUMBER_GREATER_THAN_ZERO_REQUIRED" xml:space="preserve"><value>Il valore deve essere maggiore di zero.</value></data>
+  <data name="VALIDATION_MAXIMUM_LENGTH_EXCEEDED" xml:space="preserve"><value>Il valore supera la lunghezza massima consentita.</value></data>
+  <data name="VALIDATION_MINIMUM_LENGTH_NOT_MET" xml:space="preserve"><value>Il valore non soddisfa la lunghezza minima richiesta.</value></data>
+  <data name="VALIDATION_RANGE_INVALID" xml:space="preserve"><value>L'intervallo fornito non è valido.</value></data>
+  <data name="VALIDATION_WHITESPACE_NOT_ALLOWED" xml:space="preserve"><value>I valori composti solo da spazi vuoti non sono consentiti.</value></data>
+
+  <data name="FILE_INVALID_ID" xml:space="preserve"><value>L'ID del file non deve essere vuoto.</value></data>
+  <data name="FILE_INVALID_NAME" xml:space="preserve"><value>Il nome del file non è valido o è vuoto.</value></data>
+  <data name="FILE_EMPTY" xml:space="preserve"><value>Il file non contiene dati.</value></data>
+  <data name="FILE_INVALID_SIGNATURE" xml:space="preserve"><value>Il contenuto del file non corrisponde al tipo dichiarato.</value></data>
+  <data name="FILE_TOO_LARGE" xml:space="preserve"><value>Il file supera la dimensione massima consentita di {0} MB.</value></data>
+  <data name="FILE_UNSUPPORTED_TYPE" xml:space="preserve"><value>Il tipo di file '{0}' non è supportato.</value></data>
+  <data name="IMAGE_ID_REQUIRED" xml:space="preserve"><value>L'ID dell'immagine è obbligatorio.</value></data>
+  <data name="IMAGE_INVALID_SIGNATURE" xml:space="preserve"><value>Il file caricato ha una firma non valida e potrebbe non essere un'immagine valida.</value></data>
+  <data name="IMAGE_UPLOAD_FAILED" xml:space="preserve"><value>Si è verificato un errore durante il caricamento dell'immagine. Riprova più tardi.</value></data>
+  <data name="IMAGE_STORAGE_KEY_REQUIRED" xml:space="preserve"><value>La chiave di archiviazione è obbligatoria.</value></data>
+  <data name="IMAGE_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>L'ordine di visualizzazione non può essere negativo.</value></data>
+  <data name="IMAGE_URL_REQUIRED" xml:space="preserve"><value>L'URL dell'immagine è obbligatorio.</value></data>
+
+  <data name="OPENING_HOURS_ALREADY_EXIST" xml:space="preserve"><value>Gli orari di apertura per {0} esistono già.</value></data>
+  <data name="OPENING_HOURS_NOT_FOUND" xml:space="preserve"><value>Gli orari di apertura per {0} non esistono.</value></data>
+  <data name="ADDRESS_STREET_REQUIRED" xml:space="preserve"><value>La via è obbligatoria.</value></data>
+  <data name="ADDRESS_CITY_REQUIRED" xml:space="preserve"><value>La città è obbligatoria.</value></data>
+  <data name="ADDRESS_REQUIRED" xml:space="preserve"><value>L'indirizzo è obbligatorio.</value></data>
+  <data name="ADDRESS_STREET_LENGTH_EXCEEDED" xml:space="preserve"><value>La via supera la lunghezza massima consentita.</value></data>
+  <data name="ADDRESS_CITY_LENGTH_EXCEEDED" xml:space="preserve"><value>La città supera la lunghezza massima consentita.</value></data>
+  <data name="ADDRESS_REGION_LENGTH_EXCEEDED" xml:space="preserve"><value>La regione supera la lunghezza massima consentita.</value></data>
+  <data name="ADDRESS_POSTAL_CODE_LENGTH_EXCEEDED" xml:space="preserve"><value>Il codice postale supera la lunghezza massima consentita.</value></data>
+  <data name="ADDRESS_LENGTH_EXCEEDED" xml:space="preserve"><value>La lunghezza dell'indirizzo non può superare il massimo definito.</value></data>
+  <data name="DATE_RANGE_INVALID" xml:space="preserve"><value>La data di inizio deve essere precedente alla data di fine.</value></data>
+  <data name="EMAIL_REQUIRED" xml:space="preserve"><value>L'e-mail è obbligatoria.</value></data>
+  <data name="EMAIL_TOO_LONG" xml:space="preserve"><value>L'e-mail è troppo lunga.</value></data>
+  <data name="EMAIL_INVALID_FORMAT" xml:space="preserve"><value>'{0}' non è un indirizzo e-mail valido.</value></data>
+  <data name="GEOLOCATION_INVALID_LATITUDE" xml:space="preserve"><value>La latitudine deve essere compresa tra -90 e 90 gradi. Ricevuto: {0}.</value></data>
+  <data name="GEOLOCATION_INVALID_LONGITUDE" xml:space="preserve"><value>La longitudine deve essere compresa tra -180 e 180 gradi. Ricevuto: {0}.</value></data>
+  <data name="MONEY_NEGATIVE_AMOUNT" xml:space="preserve"><value>L'importo non può essere negativo.</value></data>
+  <data name="MONEY_CURRENCY_REQUIRED" xml:space="preserve"><value>La valuta è obbligatoria.</value></data>
+  <data name="MONEY_INVALID_CURRENCY_FORMAT" xml:space="preserve"><value>La valuta deve essere un codice ISO a 3 lettere.</value></data>
+  <data name="MONEY_CURRENCY_MISMATCH" xml:space="preserve"><value>Impossibile operare su valute diverse.</value></data>
+  <data name="MONEY_DIVISION_BY_ZERO" xml:space="preserve"><value>Impossibile dividere per zero.</value></data>
+  <data name="PHONE_NUMBER_REQUIRED" xml:space="preserve"><value>Il numero di telefono è obbligatorio.</value></data>
+  <data name="PHONENUMBER_INVALID_FORMAT" xml:space="preserve"><value>'{0}' non è un numero di telefono valido.</value></data>
+  <data name="RATING_OUT_OF_RANGE" xml:space="preserve"><value>La valutazione deve essere compresa tra {0} e {1}, e la valutazione massima deve essere maggiore o uguale a quella minima.</value></data>
+  <data name="RATING_POSITIVE_REQUIRED" xml:space="preserve"><value>La valutazione deve essere un numero intero positivo.</value></data>
+  <data name="TIME_RANGE_INVALID" xml:space="preserve"><value>L'ora di inizio deve essere precedente all'ora di fine.</value></data>
+  <data name="TICKET_NOTES_LENGTH_EXCEEDED" xml:space="preserve"><value>La lunghezza delle note del biglietto non può superare il massimo definito.</value></data>
+
+  <data name="ARTIFACT_NOT_FOUND" xml:space="preserve"><value>Artefatto non trovato.</value></data>
+  <data name="ARTIFACT_NAME_REQUIRED" xml:space="preserve"><value>Il nome è obbligatorio.</value></data>
+  <data name="ARTIFACT_DESCRIPTION_REQUIRED" xml:space="preserve"><value>La descrizione è obbligatoria.</value></data>
+  <data name="ARTIFACT_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>L'ordine di visualizzazione non può essere negativo.</value></data>
+  <data name="ARTIFACT_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>Contenuto localizzato non trovato per la lingua specificata.</value></data>
+  <data name="ARTIFACT_IMAGE_NOT_FOUND" xml:space="preserve"><value>Immagine non trovata.</value></data>
+
+  <data name="ATTRACTION_ID_REQUIRED" xml:space="preserve"><value>L'ID dell'attrazione è obbligatorio.</value></data>
+  <data name="ATTRACTION_SITE_ID_REQUIRED" xml:space="preserve"><value>L'ID del sito è obbligatorio.</value></data>
+  <data name="ATTRACTION_CONTENT_ID_REQUIRED" xml:space="preserve"><value>L'ID del contenuto è obbligatorio.</value></data>
+  <data name="ATTRACTION_NOT_FOUND" xml:space="preserve"><value>L'attrazione con ID {0} non esiste.</value></data>
+  <data name="ATTRACTION_NAME_REQUIRED" xml:space="preserve"><value>Il nome dell'attrazione non può essere vuoto.</value></data>
+  <data name="ATTRACTION_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>La lunghezza del nome dell'attrazione non può superare {0}.</value></data>
+  <data name="ATTRACTION_DESCRIPTION_REQUIRED" xml:space="preserve"><value>La descrizione dell'attrazione non può essere vuota.</value></data>
+  <data name="ATTRACTION_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>La lunghezza della descrizione dell'attrazione non può superare {0}.</value></data>
+  <data name="ATTRACTION_IMAGE_CAPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>La lunghezza della didascalia dell'attrazione non può superare {0}.</value></data>
+  <data name="ATTRACTION_IMAGE_URL_REQUIRED" xml:space="preserve"><value>L'URL dell'immagine dell'attrazione è obbligatorio.</value></data>
+  <data name="ATTRACTION_IMAGE_NOT_FOUND" xml:space="preserve"><value>L'immagine dell'attrazione non esiste.</value></data>
+  <data name="ATTRACTION_IMAGE_CAPTION_REQUIRED" xml:space="preserve"><value>La didascalia dell'immagine dell'attrazione è obbligatoria.</value></data>
+  <data name="ATTRACTION_CAPTION_REQUIRED" xml:space="preserve"><value>La didascalia dell'attrazione è obbligatoria.</value></data>
+  <data name="ATTRACTION_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>L'ordine di visualizzazione dell'attrazione non può essere negativo.</value></data>
+  <data name="ATTRACTION_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>Il contenuto localizzato dell'attrazione non esiste.</value></data>
+  <data name="ATTRACTION_LOCATION_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>La lunghezza della descrizione della posizione dell'attrazione non può superare {0}.</value></data>
+  <data name="ATTRACTION_HISTORICAL_PERIOD_ALREADY_EXISTS" xml:space="preserve"><value>L'attrazione ha già il periodo storico specificato.</value></data>
+  <data name="ATTRACTION_HISTORICAL_PERIOD_REQUIRED" xml:space="preserve"><value>Il periodo storico dell'attrazione è obbligatorio.</value></data>
+  
+  <data name="CITY_ID_REQUIRED" xml:space="preserve"><value>L'ID della città è obbligatorio.</value></data>
+  <data name="CITY_NOT_FOUND" xml:space="preserve"><value>La città con ID {0} non esiste.</value></data>
+  <data name="CITY_NAME_REQUIRED" xml:space="preserve"><value>Il nome della città non può essere vuoto.</value></data>
+  <data name="CITY_DUPLICATE_NAME" xml:space="preserve"><value>Esiste già una città con lo stesso nome.</value></data>
+  <data name="CITY_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>La lunghezza del nome della città non può superare {0}.</value></data>
+  <data name="CITY_DESCRIPTION_REQUIRED" xml:space="preserve"><value>La descrizione della città non può essere vuota.</value></data>
+  <data name="CITY_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>La lunghezza della descrizione della città non può superare {0}.</value></data>
+  <data name="CITY_IMAGE_URL_REQUIRED" xml:space="preserve"><value>L'URL dell'immagine della città è obbligatorio.</value></data>
+  <data name="CITY_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>L'ordine di visualizzazione della città non può essere negativo.</value></data>
+  <data name="CITY_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>Il contenuto localizzato della città non esiste.</value></data>
+
+  <data name="REPORT_ID_REQUIRED" xml:space="preserve"><value>L'ID della segnalazione è obbligatorio.</value></data>
+  <data name="REPORTED_ENTITY_ID_REQUIRED" xml:space="preserve"><value>L'ID dell'entità segnalata è obbligatorio.</value></data>
+  <data name="REPORT_NOT_FOUND" xml:space="preserve"><value>La segnalazione del contenuto con ID {0} non esiste.</value></data>
+  <data name="REPORT_DESCRIPTION_REQUIRED" xml:space="preserve"><value>La descrizione della segnalazione non può essere vuota.</value></data>
+  <data name="REPORT_DESCRIPTION_LENGTH_EXCEEDED" xml:space="preserve"><value>La lunghezza della descrizione della segnalazione non può superare {0}.</value></data>
+  <data name="REPORT_REASON_REQUIRED" xml:space="preserve"><value>Il motivo della segnalazione non può essere vuoto.</value></data>
+  <data name="REPORT_REASON_LENGTH_EXCEEDED" xml:space="preserve"><value>La lunghezza del motivo della segnalazione non può superare {0}.</value></data>
+  <data name="REPORT_CANNOT_BE_RESOLVED" xml:space="preserve"><value>È necessario fornire un motivo o un'azione, ma non entrambi.</value></data>
+  <data name="REPORT_CANNOT_BE_REVIEWED" xml:space="preserve"><value>Solo le segnalazioni in sospeso o in fase di revisione possono essere esaminate.</value></data>
+  <data name="REPORT_CANNOT_BE_MARKED_UNDER_REVIEW" xml:space="preserve"><value>Solo le segnalazioni in sospeso possono essere contrassegnate come in fase di revisione.</value></data>
+  <data name="REPORT_CANNOT_BE_DISMISSED" xml:space="preserve"><value>Il motivo del rifiuto è obbligatorio.</value></data>
+
+  <data name="REVIEW_NOT_FOUND" xml:space="preserve"><value>La recensione con ID {0} non è stata trovata.</value></data>
+  <data name="REVIEW_INVALID_STATUS" xml:space="preserve"><value>Lo stato della recensione {0} non è valido.</value></data>
+  <data name="REVIEW_ID_REQUIRED" xml:space="preserve"><value>L'ID della recensione è obbligatorio.</value></data>
+  <data name="REVIEW_SITE_ID_REQUIRED" xml:space="preserve"><value>L'ID del sito è obbligatorio.</value></data>
+  <data name="REVIEW_USER_ID_REQUIRED" xml:space="preserve"><value>L'ID dell'utente è obbligatorio.</value></data>
+  <data name="REVIEW_TITLE_REQUIRED" xml:space="preserve"><value>Il titolo della recensione non può essere vuoto.</value></data>
+  <data name="REVIEW_TITLE_EXCEEDED_LENGTH" xml:space="preserve"><value>Il titolo della recensione supera la lunghezza massima consentita.</value></data>
+  <data name="REVIEW_CONTENT_REQUIRED" xml:space="preserve"><value>Il contenuto della recensione non può essere vuoto.</value></data>
+  <data name="REVIEW_CONTENT_EXCEEDED_LENGTH" xml:space="preserve"><value>Il contenuto della recensione supera la lunghezza massima consentita.</value></data>
+  <data name="REVIEW_IMAGE_URL_REQUIRED" xml:space="preserve"><value>L'URL dell'immagine della recensione è obbligatorio.</value></data>
+  <data name="REVIEW_IMAGE_NOT_FOUND" xml:space="preserve"><value>L'immagine della recensione non esiste.</value></data>
+  <data name="REVIEW_REJECTION_REASON_REQUIRED" xml:space="preserve"><value>Il motivo del rifiuto è obbligatorio.</value></data>
+  <data name="REVIEW_USER_ALREADY_REVIEWED_SITE" xml:space="preserve"><value>L'utente ha già recensito questo sito.</value></data>
+  <data name="REVIEW_UNAUTHORIZED" xml:space="preserve"><value>Non sei autorizzato a eseguire questa azione.</value></data>
+
+  <data name="SITE_NOT_FOUND" xml:space="preserve"><value>Il sito con ID {0} non esiste.</value></data>
+  <data name="SITE_ID_REQUIRED" xml:space="preserve"><value>L'ID del sito è obbligatorio.</value></data>
+  <data name="SITE_LOCALIZED_ID_REQUIRED" xml:space="preserve"><value>L'ID localizzato del sito è obbligatorio.</value></data>
+  <data name="SITE_CITY_ID_REQUIRED" xml:space="preserve"><value>L'ID della città è obbligatorio.</value></data>
+  <data name="SITE_NAME_REQUIRED" xml:space="preserve"><value>Il nome del sito non può essere vuoto.</value></data>
+  <data name="NEAREST_TRANSPORTATION_NAME_REQUIRED" xml:space="preserve"><value>Il nome del mezzo di trasporto più vicino non può essere vuoto.</value></data>
+  <data name="SITE_INVALID_FACILITY_TYPE" xml:space="preserve"><value>Uno o più tipi di strutture fornite non sono validi.</value></data>
+  <data name="SITE_FACILITY_ALREADY_EXISTS" xml:space="preserve"><value>Esiste già una struttura con lo stesso nome per questo sito.</value></data>
+  <data name="SITE_NAME_EXCEEDED_LENGTH" xml:space="preserve"><value>Il nome del sito non può superare i {0} caratteri.</value></data>
+  <data name="SITE_DESCRIPTION_REQUIRED" xml:space="preserve"><value>La descrizione del sito non può essere vuota.</value></data>
+  <data name="FACILITY_DESCRIPTION_REQUIRED" xml:space="preserve"><value>La descrizione della struttura non può essere vuota.</value></data>
+  <data name="SITE_DESCRIPTION_EXCEEDED_LENGTH" xml:space="preserve"><value>La descrizione del sito non può superare i {0} caratteri.</value></data>
+  <data name="SITE_CONTACT_PHONE_REQUIRED" xml:space="preserve"><value>Il telefono di contatto del sito non può essere vuoto.</value></data>
+  <data name="SITE_IMAGE_ID_REQUIRED" xml:space="preserve"><value>L'ID dell'immagine del sito è obbligatorio.</value></data>
+  <data name="SITE_IMAGE_EXCEEDED_LENGTH" xml:space="preserve"><value>L'URL dell'immagine del sito non può superare la lunghezza massima.</value></data>
+  <data name="SITE_IMAGE_URL_REQUIRED" xml:space="preserve"><value>L'URL dell'immagine del sito è obbligatorio.</value></data>
+  <data name="SITE_IMAGE_NOT_FOUND" xml:space="preserve"><value>L'immagine del sito non esiste.</value></data>
+  <data name="SITE_CAPTION_REQUIRED" xml:space="preserve"><value>La didascalia dell'immagine del sito è obbligatoria.</value></data>
+  <data name="SITE_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>L'ordine di visualizzazione del sito non può essere negativo.</value></data>
+  <data name="SITE_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>Il contenuto localizzato del sito non esiste.</value></data>
+  <data name="FACILITY_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>Il contenuto localizzato della struttura non esiste.</value></data>
+  <data name="NEAREST_TRANSPORTATION_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>Il contenuto localizzato del mezzo di trasporto più vicino non esiste.</value></data>
+  <data name="SITE_FACILITY_ID_REQUIRED" xml:space="preserve"><value>L'ID della struttura del sito è obbligatorio.</value></data>
+  <data name="SITE_FACILITY_NOT_FOUND" xml:space="preserve"><value>La struttura del sito non esiste.</value></data>
+  <data name="SITE_NEAREST_TRANSPORTATION_NOT_FOUND" xml:space="preserve"><value>Il mezzo di trasporto più vicino al sito non esiste.</value></data>
+  <data name="SITE_NEAREST_TRANSPORTATION_DUPLICATE_LOCATION" xml:space="preserve"><value>Per questo sito esiste già un mezzo di trasporto più vicino con la stessa posizione.</value></data>
+  <data name="SITE_OPENING_HOUR_NOT_FOUND" xml:space="preserve"><value>L'orario di apertura del sito non esiste.</value></data>
+  <data name="SITE_CANNOT_BE_FEATURED_AND_HIDDEN_GEM" xml:space="preserve"><value>Un sito non può essere contemporaneamente un'attrazione in evidenza e una gemma nascosta.</value></data>
+  <data name="SITE_INVALID_ESTIMATED_DURATION" xml:space="preserve"><value>La durata stimata deve essere maggiore di zero.</value></data>
+
+  <data name="SPONSOR_NOT_FOUND" xml:space="preserve"><value>Lo sponsor con ID {0} non esiste.</value></data>
+  <data name="SPONSOR_ID_REQUIRED" xml:space="preserve"><value>L'ID dello sponsor è obbligatorio.</value></data>
+  <data name="SPONSOR_OFFER_ID_REQUIRED" xml:space="preserve"><value>L'ID dell'offerta dello sponsor è obbligatorio.</value></data>
+  <data name="SPONSOR_OFFER_NOT_FOUND" xml:space="preserve"><value>L'offerta con ID {0} non esiste.</value></data>
+  <data name="SPONSOR_TITLE_REQUIRED" xml:space="preserve"><value>Il titolo dello sponsor non può essere vuoto.</value></data>
+  <data name="SPONSOR_EXCEEDED_TITLE_LENGTH" xml:space="preserve"><value>Il titolo dello sponsor non può superare i {0} caratteri.</value></data>
+  <data name="SPONSOR_DESCRIPTION_REQUIRED" xml:space="preserve"><value>La descrizione dello sponsor è obbligatoria.</value></data>
+  <data name="SPONSOR_EXCEEDED_DESCRIPTION_LENGTH" xml:space="preserve"><value>La descrizione dello sponsor non può superare i {0} caratteri.</value></data>
+  <data name="SPONSOR_PROMO_CODE_REQUIRED" xml:space="preserve"><value>Il codice promozionale non può essere vuoto.</value></data>
+  <data name="SPONSOR_DISCOUNT_REQUIRED" xml:space="preserve"><value>È necessario fornire l'importo dello sconto o la percentuale.</value></data>
+  <data name="SPONSOR_DISCOUNT_PCT_INVALID" xml:space="preserve"><value>La percentuale di sconto deve essere compresa tra 0 e 100.</value></data>
+  <data name="SPONSOR_OFFER_INACTIVE" xml:space="preserve"><value>Impossibile riscattare un'offerta inattiva.</value></data>
+  <data name="SPONSOR_OFFER_EXPIRED" xml:space="preserve"><value>Impossibile riscattare un'offerta scaduta.</value></data>
+  <data name="SPONSOR_EXPIRED_CONTRACT" xml:space="preserve"><value>Impossibile attivare uno sponsor con un contratto scaduto.</value></data>
+  <data name="SPONSOR_OFFER_MAX_REDEMPTIONS_REACHED" xml:space="preserve"><value>Numero massimo di utilizzi raggiunto per questa offerta.</value></data>
+  <data name="SPONSOR_NEGATIVE_REDEMPTIONS" xml:space="preserve"><value>Gli utilizzi non possono essere negativi.</value></data>
+  <data name="SPONSOR_IMAGE_ID_REQUIRED" xml:space="preserve"><value>L'ID dell'immagine dello sponsor è obbligatorio.</value></data>
+  <data name="SPONSOR_IMG_URL_REQUIRED" xml:space="preserve"><value>L'URL dell'immagine dello sponsor non può essere vuoto.</value></data>
+  <data name="SPONSOR_IMG_NOT_FOUND" xml:space="preserve"><value>L'immagine dello sponsor non esiste.</value></data>
+  <data name="SPONSOR_EXCEEDED_IMAGE_LENGTH" xml:space="preserve"><value>La lunghezza dell'immagine dello sponsor supera il massimo consentito.</value></data>
+  <data name="SPONSOR_CAPTION_REQUIRED" xml:space="preserve"><value>La didascalia dell'immagine dello sponsor è obbligatoria.</value></data>
+  <data name="SPONSOR_EXCEEDED_WEBSITE_URL_LENGTH" xml:space="preserve"><value>L'URL del sito web dello sponsor non può superare il massimo consentito.</value></data>
+  <data name="SPONSOR_NEGATIVE_DISPLAY_ORDER" xml:space="preserve"><value>L'ordine di visualizzazione dello sponsor non può essere negativo.</value></data>
+  <data name="SPONSOR_LOCALIZED_CONTENT_NOT_FOUND" xml:space="preserve"><value>Il contenuto localizzato dello sponsor non esiste.</value></data>
+  <data name="SPONSOR_INVALID_DATE" xml:space="preserve"><value>La data di inizio del contratto deve essere precedente alla data di fine.</value></data>
+  <data name="SPONSOR_INVALID_EXTEND_DATE" xml:space="preserve"><value>La nuova data di fine deve essere successiva alla data di fine attuale.</value></data>
+  <data name="SPONSOR_INVALID_AVERAGE_RATING" xml:space="preserve"><value>La valutazione media deve essere compresa tra 0 e {0}.</value></data>
+  <data name="SPONSOR_INVALID_NEW_DATE" xml:space="preserve"><value>La nuova data di fine deve essere successiva alla data di fine attuale.</value></data>
+  <data name="SPONSOR_CONTENT_ID_REQUIRED" xml:space="preserve"><value>L'ID del contenuto è obbligatorio.</value></data>
+
+  <data name="USER_UNAUTHORIZED" xml:space="preserve"><value>L'utente con ID '{0}' non è autorizzato.</value></data>
+  <data name="USER_NOT_FOUND" xml:space="preserve"><value>Utente non trovato.</value></data>
+  <data name="FAVOURITE_NOT_FOUND" xml:space="preserve"><value>Il preferito con ID '{0}' non è stato trovato.</value></data>
+  <data name="TOURIST_NOT_FOUND" xml:space="preserve"><value>L'utente con ID '{0}' non è stato trovato.</value></data>
+  <data name="USER_FIRST_NAME_REQUIRED" xml:space="preserve"><value>Il nome utente non può essere vuoto.</value></data>
+  <data name="USER_FIRST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>Il nome utente supera la lunghezza massima consentita.</value></data>
+  <data name="TOURIST_FIRST_NAME_REQUIRED" xml:space="preserve"><value>Il nome dell'utente non può essere vuoto.</value></data>
+  <data name="TOURIST_FIRST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>Il nome dell'utente supera la lunghezza massima consentita.</value></data>
+  <data name="USER_LAST_NAME_REQUIRED" xml:space="preserve"><value>Il cognome dell'utente non può essere vuoto.</value></data>
+  <data name="USER_LAST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>Il cognome dell'utente supera la lunghezza massima consentita.</value></data>
+  <data name="TOURIST_LAST_NAME_REQUIRED" xml:space="preserve"><value>Il cognome dell'utente non può essere vuoto.</value></data>
+  <data name="TOURIST_LAST_NAME_LENGTH_EXCEEDED" xml:space="preserve"><value>Il cognome dell'utente supera la lunghezza massima consentita.</value></data>
+  <data name="USER_NATIONALITY_REQUIRED" xml:space="preserve"><value>La nazionalità dell'utente non può essere vuota.</value></data>
+  <data name="TOURIST_NATIONALITY_REQUIRED" xml:space="preserve"><value>La nazionalità dell'utente non può essere vuota.</value></data>
+  <data name="VISITED_SITE_NOT_FOUND" xml:space="preserve"><value>Il sito visitato non è stato trovato.</value></data>
+  <data name="TRIP_NOTE_CONTENT_REQUIRED" xml:space="preserve"><value>Il contenuto della nota di viaggio non può essere vuoto.</value></data>
+  <data name="VISITED_SITE_DATE_IN_FUTURE" xml:space="preserve"><value>La data della visita non può essere nel futuro.</value></data>
+  <data name="VISITED_SITE_DURATION_INVALID" xml:space="preserve"><value>La durata deve essere maggiore di zero.</value></data>
+  <data name="TRIP_SITE_VISIT_ORDER_INVALID" xml:space="preserve"><value>L'ordine di visita non può essere negativo.</value></data>
+  <data name="TOURIST_SITE_ALREADY_VISITED" xml:space="preserve"><value>Il sito è già contrassegnato come visitato.</value></data>
+  <data name="USER_USERNAME_REQUIRED" xml:space="preserve"><value>Il nome utente è obbligatorio.</value></data>
+  <data name="USER_USERNAME_LENGTH_EXCEEDED" xml:space="preserve"><value>Il nome utente supera la lunghezza massima consentita.</value></data>
+  <data name="USER_PASSWORD_REQUIRED" xml:space="preserve"><value>La password è obbligatoria.</value></data>
+  <data name="USER_PASSWORD_TOO_SHORT" xml:space="preserve"><value>La password non soddisfa la lunghezza minima richiesta.</value></data>
+  <data name="USER_PASSWORD_TOO_LONG" xml:space="preserve"><value>La password supera la lunghezza massima consentita.</value></data>
+  <data name="USER_PREFERRED_LANGUAGE_INVALID" xml:space="preserve"><value>La lingua preferita non è valida.</value></data>
+  <data name="TOURIST_PREFERRED_LANGUAGE_INVALID" xml:space="preserve"><value>La lingua preferita non è valida.</value></data>
+  <data name="USER_FULL_NAME_REQUIRED" xml:space="preserve"><value>Il nome completo è obbligatorio.</value></data>
+  <data name="USER_ROLE_INVALID" xml:space="preserve"><value>Il ruolo selezionato non è valido.</value></data>
+  <data name="SITE_ALREADY_FAVORITE" xml:space="preserve"><value>Il sito è già tra i preferiti.</value></data>
+  <data name="TOURIST_SITE_ALREADY_FAVORITE" xml:space="preserve"><value>Il sito è già tra i preferiti.</value></data>
+  <data name="USER_ID_REQUIRED" xml:space="preserve"><value>L'ID utente è obbligatorio.</value></data>
+  <data name="FAVOURITE_SITE_ID_REQUIRED" xml:space="preserve"><value>L'ID del sito è obbligatorio.</value></data>
+
+  <data name="TRIP_TOURIST_ID_REQUIRED" xml:space="preserve"><value>L'ID del turista è obbligatorio.</value></data>
+  <data name="TRIP_NOT_FOUND" xml:space="preserve"><value>Il viaggio specificato non è stato trovato.</value></data>
+  <data name="TRIP_SITE_NOT_FOUND" xml:space="preserve"><value>Il sito specificato non è stato trovato nel viaggio.</value></data>
+  <data name="TRIP_DAY_NOT_FOUND" xml:space="preserve"><value>Il giorno di viaggio specificato non è stato trovato nel viaggio.</value></data>
+  <data name="TRIP_NOTE_NOT_FOUND" xml:space="preserve"><value>La nota specificata non è stata trovata nel viaggio.</value></data>
+  <data name="TRIP_NAME_REQUIRED" xml:space="preserve"><value>Il titolo del viaggio non può essere vuoto.</value></data>
+  <data name="TRIP_SITE_NAME_REQUIRED" xml:space="preserve"><value>Il nome del sito non può essere vuoto.</value></data>
+  <data name="TRIP_CANNOT_BE_COMPLETED" xml:space="preserve"><value>Il viaggio non può essere completato nello stato attuale.</value></data>
+  <data name="TRIP_CANNOT_BE_STARTED" xml:space="preserve"><value>Il viaggio non può essere avviato nello stato attuale o la data di inizio è nel futuro.</value></data>
+  <data name="TRIP_CANNOT_BE_CANCELED" xml:space="preserve"><value>I viaggi completati non possono essere annullati.</value></data>
+  <data name="TRIP_CANNOT_BE_PUBLISHED" xml:space="preserve"><value>Solo i viaggi in bozza possono essere pubblicati.</value></data>
+  <data name="TRIP_SITE_ALREADY_MARKED_AS_VISITED" xml:space="preserve"><value>Questo sito è già stato contrassegnato come visitato.</value></data>
+  <data name="SITE_VISIT_DATE_OUT_OF_RANGE" xml:space="preserve"><value>La data della visita al sito deve rientrare nell'intervallo di date del viaggio.</value></data>
+  <data name="INVALID_DURATION_DAYS" xml:space="preserve"><value>La durata del viaggio in giorni deve essere maggiore di zero e minore o uguale a {0}.</value></data>
+  <data name="TRIP_DAY_DATE_OUT_OF_RANGE" xml:space="preserve"><value>La data del giorno di viaggio deve rientrare nell'intervallo di date del viaggio.</value></data>
+  <data name="TRIP_DAY_ALREADY_EXISTS" xml:space="preserve"><value>Un giorno di viaggio per questa data esiste già.</value></data>
+  <data name="SITE_ALREADY_ADDED" xml:space="preserve"><value>Questo sito è già stato aggiunto al viaggio.</value></data>
+  <data name="ESTIMATED_DURATION_INVALID" xml:space="preserve"><value>La durata stimata deve essere maggiore di zero.</value></data>
+  <data name="DISPLAY_ORDER_INVALID" xml:space="preserve"><value>L'ordine di visualizzazione deve essere zero o un numero positivo.</value></data>
+  <data name="DAY_NUMBER_INVALID" xml:space="preserve"><value>Il numero del giorno deve essere maggiore di zero.</value></data>
+  <data name="INVALID_BUDGET" xml:space="preserve"><value>Valore del budget non valido.</value></data>
+
+  <data name="FULL_NAME_REQUIRED" xml:space="preserve"><value>Il nome completo è obbligatorio.</value></data>
+  <data name="USERNAME_REQUIRED" xml:space="preserve"><value>Il nome utente è obbligatorio.</value></data>
+  <data name="FIRST_NAME_REQUIRED" xml:space="preserve"><value>Il nome è obbligatorio.</value></data>
+  <data name="LAST_NAME_REQUIRED" xml:space="preserve"><value>Il cognome è obbligatorio.</value></data>
+  <data name="REFRESH_TOKEN_REQUIRED" xml:space="preserve"><value>È richiesto un token di aggiornamento valido per aggiornare il token di accesso.</value></data>
+  <data name="REFRESH_TOKEN_EXPIRATION_INVALID" xml:space="preserve"><value>Il token di aggiornamento fornito è scaduto.</value></data>
+  <data name="INVALID_CREDENTAILS" xml:space="preserve"><value>L'e-mail o la password sono errate.</value></data>
+  <data name="INVALID_CREDENTIALS" xml:space="preserve"><value>L'e-mail o la password sono errate.</value></data>
+  <data name="EMAIL_ALREADY_IN_USE" xml:space="preserve"><value>Un utente con questa e-mail esiste già.</value></data>
+  <data name="USERNAME_ALREADY_IN_USE" xml:space="preserve"><value>Un utente con questo nome utente esiste già.</value></data>
+  <data name="IN_ACTIVE_USER" xml:space="preserve"><value>L'account è disattivato.</value></data>
+  <data name="USER_ROLES_REQUIRED" xml:space="preserve"><value>È richiesto almeno un ruolo.</value></data>
+  <data name="USER_ALREADY_ADMIN" xml:space="preserve"><value>L'utente è già un amministratore.</value></data>
+  <data name="USER_NOT_MODERATOR" xml:space="preserve"><value>L'utente deve essere un moderatore prima di essere promosso ad amministratore.</value></data>
+  <data name="USER_NOT_ADMIN" xml:space="preserve"><value>L'utente non è un amministratore.</value></data>
+  <data name="USER_ADMIN_LOCK_FORBIDDEN" xml:space="preserve"><value>Impossibile bloccare gli account amministratore.</value></data>
+  <data name="USER_ADMIN_DELETE_FORBIDDEN" xml:space="preserve"><value>Impossibile eliminare gli account amministratore. Retrocedere prima a moderatore.</value></data>
+  <data name="USER_DELETE_CONFIRM_REQUIRED" xml:space="preserve"><value>La conferma della cancellazione è obbligatoria.</value></data>
+  <data name="USER_PROMOTION_FAILED" xml:space="preserve"><value>Impossibile promuovere l'utente: {0}</value></data>
+  <data name="USER_DEMOTION_FAILED" xml:space="preserve"><value>Impossibile retrocedere l'utente: {0}</value></data>
+  <data name="USER_REMOVE_ROLES_FAILED" xml:space="preserve"><value>Impossibile rimuovere i ruoli: {0}</value></data>
+  <data name="USER_ADD_ROLES_FAILED" xml:space="preserve"><value>Impossibile aggiungere i ruoli: {0}</value></data>
+  <data name="USER_LOCK_FAILED" xml:space="preserve"><value>Impossibile bloccare l'account: {0}</value></data>
+  <data name="USER_UNLOCK_FAILED" xml:space="preserve"><value>Impossibile sbloccare l'account: {0}</value></data>
+  <data name="USER_SUSPEND_FAILED" xml:space="preserve"><value>Impossibile sospendere l'account: {0}</value></data>
+  <data name="USER_REACTIVATE_FAILED" xml:space="preserve"><value>Impossibile riattivare l'account: {0}</value></data>
+  <data name="USER_DELETE_FAILED" xml:space="preserve"><value>Impossibile eliminare l'utente: {0}</value></data>
+  <data name="USER_PERMANENT_DELETE_FAILED" xml:space="preserve"><value>Impossibile eliminare l'utente in modo permanente: {0}</value></data>
+  <data name="LOCKED_ACCOUNT" xml:space="preserve"><value>L'account è bloccato.</value></data>
+  <data name="INVALID_TOKEN" xml:space="preserve"><value>Token di accesso non valido.</value></data>
+  <data name="TOKEN_REQUIRED" xml:space="preserve"><value>Il token di accesso è obbligatorio.</value></data>
+  <data name="INVALID_REFRESH_TOKEN" xml:space="preserve"><value>Token di aggiornamento non valido o scaduto.</value></data>
+  <data name="INVALID_CLAIMS" xml:space="preserve"><value>Dichiarazioni del token (claims) non valide.</value></data>
+  <data name="EMAIL_NOT_CONFIRMED" xml:space="preserve"><value>L'indirizzo e-mail non è confermato.</value></data>
+  <data name="INVALID_INVITATION_STATUS" xml:space="preserve"><value>È possibile accettare solo gli inviti in attesa.</value></data>
+  <data name="INVITATION_EXPIRED" xml:space="preserve"><value>Questo invito è scaduto.</value></data>
+  <data name="CSV_PARSING_FAILED" xml:space="preserve"><value>Impossibile analizzare il file CSV: {0}</value></data>
+  <data name="USER_GOOGLE_ID_TOKEN_REQUIRED" xml:space="preserve"><value>Il token ID di Google è obbligatorio.</value></data>
+  <data name="USER_INVALID_GOOGLE_ID_TOKEN" xml:space="preserve"><value>Il token ID di Google fornito non è valido.</value></data>
+
+</root>
