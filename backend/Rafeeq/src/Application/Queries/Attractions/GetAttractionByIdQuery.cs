@@ -26,10 +26,9 @@ internal sealed class GetAttractionByIdQueryHandler(
             attractionDto with
             {
                 TypeDisplay = enumLocalizer.Localize(attractionDto.Type),
-                
-                // HistoricalPeriodDisplay = attractionDto.HistoricalPeriods
-                //     .Select(hp => enumLocalizer.Localize(hp))
-                //     .ToList(),
+                HistoricalPeriodDisplay = attractionDto.HistoricalPeriods
+                    .Select(hp => enumLocalizer.Localize(hp))
+                    .ToList(),
             });
 
     }
