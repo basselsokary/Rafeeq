@@ -13,6 +13,10 @@ internal sealed class GetAttractionImagesByIdQueryHandler(
 {
     public async Task<Result<List<ImageDto>>> HandleAsync(GetAttractionImagesByIdQuery query, CancellationToken cancellationToken)
     {
+        var attractionExist = await queryService.AnyAsync(query.AttractionId, cancellationToken);
+        if (!attractionExist)
+            return AttractionErrors.NotFound(query.AttractionId);
+
         var images = await queryService.GetImagesAsync(query.AttractionId, cancellationToken);
         
         return Result.Success(images.Select(i => i with
