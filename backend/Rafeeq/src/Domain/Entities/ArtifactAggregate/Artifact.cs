@@ -56,6 +56,11 @@ public class Artifact : BaseAuditableEntity, IAggregateRoot
         return Result.Success();
     }
 
+    public void AssignSite(Guid? siteId)
+    {
+        SiteId = siteId;
+    }
+
     public Result<ArtifactImage> AddImage(string storageKey, string imageUrl, bool isMain, int displayOrder, string? caption = null)
     {
         var imageResult = ArtifactImage.Create(storageKey, imageUrl, isMain, displayOrder, caption);

@@ -45,5 +45,6 @@ public enum AttractionType
     Historical = 29,
     Religious = 30,
     Nature = 31,
-    Dining = 32
+    Dining = 32,
+    Library = 33
 }
