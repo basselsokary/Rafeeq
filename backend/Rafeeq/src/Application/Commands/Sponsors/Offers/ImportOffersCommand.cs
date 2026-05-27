@@ -1,7 +1,3 @@
-using Application.Common.Interfaces.QueryServices;
-using Application.Common.Interfaces.Services;
-using Domain.Common.Interfaces;
-
 namespace Application.Commands.Sponsors.Offers;
 
 public record ImportOffersCommand(Stream CsvFile, string FileName, bool DryRun = true)
@@ -18,10 +14,7 @@ public record OfferRowErrorDto(
     string LogicalOfferId,   // offer name (English) — helps data team find the row
     List<string> Errors);
 
-public sealed class ImportOffersHandler(
-    IUnitOfWork unitOfWork,
-    ISponsorQueryService sponsorQueryService,
-    ICsvFileParser csvParser)
+public sealed class ImportOffersHandler()
     : ICommandHandler<ImportOffersCommand, ImportOffersResultDto>
 {
     public async Task<Result<ImportOffersResultDto>> HandleAsync(

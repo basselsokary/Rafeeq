@@ -1,6 +1,3 @@
-using Application.Common.Interfaces.Services;
-using Domain.Common.Interfaces;
-
 namespace Application.Commands.Sponsors;
 
 public record ImportSponsorsCommand(Stream CsvFile, string FileName, bool DryRun = true)
@@ -17,9 +14,7 @@ public record SponsorRowErrorDto(
     string LogicalSponsorId,   // e.g. "SITE-001" — helps the data team find the row in the sheet
     List<string> Errors);
 
-public sealed class ImportSponsorsHandler(
-    IUnitOfWork unitOfWork,
-    ICsvFileParser csvParser) : ICommandHandler<ImportSponsorsCommand, ImportSponsorsResultDto>
+public sealed class ImportSponsorsHandler() : ICommandHandler<ImportSponsorsCommand, ImportSponsorsResultDto>
 {
     public Task<Result<ImportSponsorsResultDto>> HandleAsync(ImportSponsorsCommand command, CancellationToken cancellationToken = default)
     {
