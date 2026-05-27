@@ -71,8 +71,8 @@ internal sealed class LoginWithGoogleCommandHandler(
             var result = await identityService.RegisterAsync(
                 userId,
                 userName,
-                UserRoles.Tourist,
-                email);
+                email,
+                UserRoles.Tourist);
 
             if (result.Failed)
                 return result;
