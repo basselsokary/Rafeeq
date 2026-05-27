@@ -85,11 +85,11 @@ internal sealed class AttractionsCsvRowMap : ClassMap<AttractionCsvRowDto>
         Map(m => m.NameAr).Name("Name (Localized)");
         Map(m => m.DescriptionEn).Name("Description (English)");
         Map(m => m.DescriptionAr).Name("Description (Localized)");
-        Map(m => m.LocationGuidEn).Name("Location GUID (English)");
-        Map(m => m.LocationGuidAr).Name("Location GUID (Localized)");
+        Map(m => m.LocationGuidEn).Name("Location Guid (English)");
+        Map(m => m.LocationGuidAr).Name("Location Guid (Localized)");
         Map(m => m.Type).Name("Type");
-        Map(m => m.Latitude).Name("Latitude");
-        Map(m => m.Longitude).Name("Longitude");
+        Map(m => m.Latitude).Name("Latitude 'NULLABLE'");
+        Map(m => m.Longitude).Name("Longitude 'NULLABLE'");
         Map(m => m.IsFeatured).Name("Is Featured?");
         Map(m => m.HistoricalPeriods).Name("Historical Periods (comma-separated)");
     }
@@ -118,17 +118,17 @@ internal sealed class NearestTransportationCsvRowMap : ClassMap<NearestTransport
         Map(m => m.SiteName).Name("Site Name");
         Map(m => m.NameEn).Name("Transport Name (English)");
         Map(m => m.NameAr).Name("Transport Name (Localized)");
-        Map(m => m.DescriptionEn).Name("Description (English)");
-        Map(m => m.DescriptionAr).Name("Description (Localized)");
-        Map(m => m.AddressEn).Name("Address / Location Info (English)");
-        Map(m => m.AddressAr).Name("Address / Location Info (Localized)");
+        Map(m => m.DescriptionEn).Name("Description (English) 'NULLABLE'");
+        Map(m => m.DescriptionAr).Name("Description (Localized) 'NULLABLE'");
+        Map(m => m.AddressEn).Name("Address / Location Info (English) 'NULLABLE'");
+        Map(m => m.AddressAr).Name("Address / Location Info (Localized) 'NULLABLE'");
         Map(m => m.Type).Name("Transport Type");
         Map(m => m.Latitude).Name("Latitude");
         Map(m => m.Longitude).Name("Longitude");
         Map(m => m.DistanceKm).Name("Distance to Site (Km)");
         Map(m => m.IsOperational).Name("Is Operational?");
         Map(m => m.HasAccessibility).Name("Has Accessibility?");
-        Map(m => m.OperatingHours).Name("Operating Hours");
+        Map(m => m.OperatingHours).Name("Operating Hours 'NULLABLE'");
     }
 }
 

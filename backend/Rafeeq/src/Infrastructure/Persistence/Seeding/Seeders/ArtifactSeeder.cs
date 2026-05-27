@@ -52,16 +52,74 @@ internal sealed class ArtifactSeeder(
             .Where(x => x.EnName is not null)
             .ToDictionary(x => x.EnName!, x => x.SiteId, StringComparer.OrdinalIgnoreCase);
 
-        // Idempotency: existing artifact English names (per site, null-site keyed by Guid.Empty).
-        var existingArtifacts = await dbContext.Artifacts
-            .Include(a => a.LocalizedContents.Where(lc => lc.Language == LanguageCode.English))
-            .SelectMany(a => a.LocalizedContents
-                .Select(lc => new { SiteId = a.SiteId ?? Guid.Empty, lc.Name }))
-            .ToListAsync(cancellationToken);
+        // ── Re-link pass: fix orphaned artifacts whose site was re-created ──────
+        // Build a lookup: EnName → expected SiteId from CSV (only rows with a real site).
+        var expectedSiteByArtifactName = rows
+            .Where(r => !string.IsNullOrWhiteSpace(r.SiteName)
+                    && !r.SiteName.Equals("Unknown", StringComparison.OrdinalIgnoreCase)
+                    && siteIdByEnName.ContainsKey(r.SiteName.Trim()))
+            .ToDictionary(
+                r => r.NameEn.Trim().ToUpperInvariant(),
+                r => siteIdByEnName[r.SiteName.Trim()],
+                StringComparer.OrdinalIgnoreCase);
 
-        var existingSet = existingArtifacts
-            .Select(x => (x.SiteId, x.Name.Trim().ToUpperInvariant()))
-            .ToHashSet();
+        List<Artifact> artifacts = [];
+        if (expectedSiteByArtifactName.Count > 0)
+        {
+            // Load only orphaned artifacts (SiteId is null) that appear in our lookup.
+            artifacts = await dbContext.Artifacts
+                .Include(a => a.LocalizedContents.Where(lc => lc.Language == LanguageCode.English))
+                .ToListAsync(cancellationToken);
+            
+            var orphanedArtifacts = artifacts
+                .Where(a => a.SiteId == null)
+                .ToList();
+
+            int relinkedCount = 0;
+
+            foreach (var artifact in orphanedArtifacts)
+            {
+                var enName = artifact.LocalizedContents.FirstOrDefault()?.Name?.Trim().ToUpperInvariant();
+                if (enName is null) continue;
+
+                if (!expectedSiteByArtifactName.TryGetValue(enName, out var correctSiteId))
+                    continue;
+
+                artifact.AssignSite(correctSiteId);
+                relinkedCount++;
+            }
+
+            if (relinkedCount > 0)
+                logger.LogInformation(
+                    "{Seeder}: Re-linked {Count} orphaned artifact(s) to their restored site(s).",
+                    nameof(ArtifactSeeder), relinkedCount);
+        }
+
+        // Idempotency: existing artifact English names (per site, null-site keyed by Guid.Empty).
+        HashSet<(Guid SiteId, string)> existingSet;
+        if (artifacts.Count > 0)
+        {
+            var existingArtifacts = artifacts
+                .SelectMany(a => a.LocalizedContents
+                    .Select(lc => new { SiteId = a.SiteId ?? Guid.Empty, lc.Name }))
+                .ToList();
+            
+            existingSet = existingArtifacts
+                .Select(x => (x.SiteId, x.Name.Trim().ToUpperInvariant()))
+                .ToHashSet();
+        }
+        else
+        {
+            var existingArtifacts = await dbContext.Artifacts
+                .Include(a => a.LocalizedContents.Where(lc => lc.Language == LanguageCode.English))
+                .SelectMany(a => a.LocalizedContents
+                    .Select(lc => new { SiteId = a.SiteId ?? Guid.Empty, lc.Name }))
+                .ToListAsync(cancellationToken);
+
+            existingSet = existingArtifacts
+                .Select(x => (x.SiteId, x.Name.Trim().ToUpperInvariant()))
+                .ToHashSet();
+        }
 
         int addedCount = 0;
 

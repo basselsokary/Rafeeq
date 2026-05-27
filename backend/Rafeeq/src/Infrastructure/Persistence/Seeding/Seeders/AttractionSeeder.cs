@@ -137,12 +137,24 @@ internal sealed class AttractionSeeder(
             if (row.Latitude.HasValue && row.Longitude.HasValue)
             {
                 var locResult = GeoLocation.Create(row.Latitude.Value, row.Longitude.Value);
-                if (!locResult.Failed)
+                if (locResult.Succeeded)
                     attraction.SetLocation(locResult.Value);
                 else
+                {
                     logger.LogWarning(
                         "{Seeder}: Invalid geo-location for attraction '{Name}': {Error} — location skipped.",
-                        nameof(AttractionSeeder), row.NameEn, locResult.Error);
+                        nameof(AttractionSeeder), row.NameEn, locResult.Error.Message);
+                    
+                    continue;
+                }
+            }
+            else
+            {
+                logger.LogWarning(
+                    "{Seeder}: No geo-location provided for attraction '{Name}': Values ({Latitude}, {Longitude}) — location skipped.",
+                    nameof(AttractionSeeder), row.NameEn, row.Latitude, row.Longitude);
+                
+                continue;
             }
 
             // ── Arabic localized content ────────────────────────────────────

@@ -1,5 +1,4 @@
 using Application.Commands.Sites;
-using Application.Commands.Sponsors;
 using Application.Common.Interfaces.Services;
 using Domain.Entities.SiteAggregate;
 using Domain.Enums;
