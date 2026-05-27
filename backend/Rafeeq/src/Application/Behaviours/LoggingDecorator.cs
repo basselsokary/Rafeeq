@@ -112,13 +112,23 @@ internal static class LoggingDecorator
             return;
         }
 
-        using (LogContext.PushProperty("Error", result.Error, true))
+        if (result.Error is ValidationError vaildationError)
         {
-            logger.LogError(
-                "Completed {OperationType} {OperationName} with error in {ElapsedMs}ms",
+            logger.LogWarning(
+                "Completed {OperationType} {OperationName} with warning '{ErrorMessage}' in {ElapsedMs}ms",
                 operationType,
                 operationName,
+                vaildationError.Errors,
                 elapsedMilliseconds);
+            
+            return;
         }
+
+        logger.LogWarning(
+            "Completed {OperationType} {OperationName} with warning '{ErrorMessage}' in {ElapsedMs}ms",
+            operationType,
+            operationName,
+            result.Error.Message,
+            elapsedMilliseconds);
     }
 }
