@@ -104,4 +104,13 @@ internal class CachedAttractionQueryService(IAttractionQueryService inner, IMemo
             LongTtl30_Minutes,
             () => inner.GetDashboardAsync(cancellationToken));
     }
+
+    public Task<bool> AnyAsync(Guid attractionId, CancellationToken cancellationToken)
+    {
+        var key = $"{Prefix}:any:{attractionId}";
+        return GetOrCreateAsync(
+            key,
+            ShortTtl5_Minutes,
+            () => inner.AnyAsync(attractionId, cancellationToken));
+    }
 }

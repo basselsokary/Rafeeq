@@ -99,7 +99,7 @@ internal class CachedSiteQueryService(ISiteQueryService inner, IMemoryCache cach
             $"{Prefix}:list:nearby:{FormatCoordinate(latitude)}:{FormatCoordinate(longitude)}:{radiusKm}:{count}:{FormatFilters(filters)}:{language}";
         return await GetOrCreateAsync(
             key,
-            MediumTtl20_Minutes,
+            ShortTtl5_Minutes,
             () => inner.GetNearbyAsync(latitude, longitude, filters, radiusKm, count, language, cancellationToken));
     }
 
@@ -250,7 +250,7 @@ internal class CachedSiteQueryService(ISiteQueryService inner, IMemoryCache cach
             $"{Prefix}:list:nearby:markers:{FormatCoordinate(latitude)}:{FormatCoordinate(longitude)}:{radiusKm}:{count}:{language}";
         return await GetOrCreateAsync(
             key,
-            MediumTtl20_Minutes,
+            ShortTtl5_Minutes,
             () => inner.GetNearbyMarkerAsync(latitude, longitude, radiusKm, count, language, cancellationToken));
     }
 
@@ -270,6 +270,15 @@ internal class CachedSiteQueryService(ISiteQueryService inner, IMemoryCache cach
             key,
             LongTtl30_Minutes,
             () => inner.GetDashboardAsync(cancellationToken));
+    }
+
+    public Task<bool> AnyAsync(Guid siteId, CancellationToken cancellationToken)
+    {
+        var key = $"{Prefix}:any:{siteId}";
+        return GetOrCreateAsync(
+            key,
+            ShortTtl5_Minutes,
+            () => inner.AnyAsync(siteId, cancellationToken));
     }
 
     private static string FormatFilters(SiteFilters filters)

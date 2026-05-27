@@ -195,6 +195,15 @@ internal class CachedSponsorQueryService(ISponsorQueryService inner, IMemoryCach
             () => inner.GetDashboardAsync(cancellationToken));
     }
 
+    public Task<bool> AnyAsync(Guid sponsorId, CancellationToken cancellationToken)
+    {
+        var key = $"{Prefix}:any:{sponsorId}";
+        return GetOrCreateAsync(
+            key,
+            ShortTtl5_Minutes,
+            () => inner.AnyAsync(sponsorId, cancellationToken));
+    }
+
     private static string FormatFilters(SponsorFilters filters)
     {
         var type = filters.Type?.ToString() ?? "all";
