@@ -1,7 +1,7 @@
 using Infrastructure;
 using Application;
-using System.Globalization;
 using Serilog;
+using API.Configurations;
 
 namespace API;
 
@@ -49,25 +49,7 @@ public class Program
             };
         });
 
-        app.UseRequestLocalization(options =>
-        {
-            var supportedCultures = new[]
-            {
-                "ar", // Arabic
-                "en", // English 
-                "ru", // Russian
-                "fr", // French
-                "es", // Spanish
-                "de", // German
-                "zh", // Chinese
-                "ja", // Japanese
-                "it"  // Italian
-            };
-
-            options.SetDefaultCulture("en");
-            options.AddSupportedCultures(supportedCultures);
-            options.AddSupportedUICultures(supportedCultures);
-        });
+        app.UseLocalization();
 
         app.UseRouting();
         
@@ -78,16 +60,6 @@ public class Program
         app.UseAuthorization();
         
         app.UseRateLimiter();
-
-        // Here is an endpoint to test the localization of error messages in validators
-        app.Use(async (context, next) =>
-            {
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine($"\nTesting localization...\nCurrent culture is => {CultureInfo.CurrentCulture}\n");
-                Console.ResetColor();
-                await next();
-            }
-        );
 
         app.MapControllers();
         #endregion
