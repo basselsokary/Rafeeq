@@ -1037,4 +1037,9 @@ internal sealed class SiteQueryService(
         
         return dashboardDto ?? new AdminSiteDashboardDto(0, 0, 0, 0, 0, 0);
     }
+
+    public Task<bool> AnyAsync(Guid siteId, CancellationToken cancellationToken)
+    {
+        return context.Sites.AnyAsync(s => s.Id == siteId, cancellationToken);
+    }
 }

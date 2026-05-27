@@ -37,4 +37,5 @@ public interface IAttractionQueryService
         string? searchTerm, AttractionType? type, PagingParameters paging, CancellationToken cancellationToken);
     
     Task<AdminAttractionDashboardDto> GetDashboardAsync(CancellationToken cancellationToken);
+    Task<bool> AnyAsync(Guid attractionId, CancellationToken cancellationToken);
 }

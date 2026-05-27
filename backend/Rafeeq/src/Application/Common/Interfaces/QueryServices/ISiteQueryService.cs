@@ -125,4 +125,5 @@ public interface ISiteQueryService
     Task<List<AdminSiteOpeningHourDto>> GetOpeningHoursAsync(Guid siteId, CancellationToken cancellationToken);
 
     Task<AdminSiteDashboardDto> GetDashboardAsync(CancellationToken cancellationToken);
+    Task<bool> AnyAsync(Guid siteId, CancellationToken cancellationToken);
 }

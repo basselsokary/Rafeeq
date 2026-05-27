@@ -244,4 +244,9 @@ internal sealed class AttractionQueryService(
         
         return dashboardData ?? new AdminAttractionDashboardDto(0, 0);
     }
+
+    public Task<bool> AnyAsync(Guid attractionId, CancellationToken cancellationToken)
+    {
+        return context.Attractions.AnyAsync(a => a.Id == attractionId, cancellationToken);
+    }
 }

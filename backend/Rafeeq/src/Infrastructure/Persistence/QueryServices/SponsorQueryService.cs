@@ -732,4 +732,9 @@ internal sealed class SponsorQueryService(
         
         return dashboardData ?? new AdminSponsorDashboardDto(0, 0, 0, 0, 0);
     }
+
+    public Task<bool> AnyAsync(Guid sponsorId, CancellationToken cancellationToken)
+    {
+        return context.Sponsors.AnyAsync(s => s.Id == sponsorId, cancellationToken);
+    }
 }

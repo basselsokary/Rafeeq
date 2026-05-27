@@ -100,4 +100,5 @@ public interface ISponsorQueryService
         CancellationToken cancellationToken = default);
     
     Task<AdminSponsorDashboardDto> GetDashboardAsync(CancellationToken cancellationToken);
+    Task<bool> AnyAsync(Guid sponsorId,CancellationToken cancellationToken);
 }
