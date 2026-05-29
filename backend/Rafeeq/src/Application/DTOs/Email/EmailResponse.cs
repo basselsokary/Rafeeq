@@ -106,7 +106,7 @@ public static class EmailTemplates
                     <li><strong>Temporary Password:</strong> {tempPassword}</li>
                 </ul>
                 <p><strong>IMPORTANT:</strong> You must change your password on first login.</p>
-                <p>Login here: <a href='https://admin.rafeeq.com/login'>https://admin.rafeeq.com/login</a></p>
+                <p>Login here: <a href='https://admin.rafeeq.live/login'>https://admin.rafeeq.live/login</a></p>
                 <p>If you did not expect this email, please contact: <a href='mailto:admin@rafeeq.live'>admin@rafeeq.live</a></p>
             ",
             TextBody: $@"

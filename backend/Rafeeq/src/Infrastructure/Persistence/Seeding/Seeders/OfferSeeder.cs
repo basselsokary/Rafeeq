@@ -214,6 +214,8 @@ internal sealed class OfferSeeder(
                         nameof(OfferSeeder), row.TitleEn, arContentResult.Error);
             }
 
+            offer.Activate();
+
             await dbContext.AddAsync(offer, cancellationToken);
 
             seededCount++;
