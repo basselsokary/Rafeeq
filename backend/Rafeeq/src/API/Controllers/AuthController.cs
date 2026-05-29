@@ -194,7 +194,7 @@ public class AuthController : ApiBaseController
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Lax,
+            SameSite = SameSiteMode.Strict,
             Expires = DateTime.UtcNow.AddMinutes(AccessTokenExpirationInMinutes),
             Path = "/"
         };
@@ -203,7 +203,7 @@ public class AuthController : ApiBaseController
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Lax,
+            SameSite = SameSiteMode.Strict,
             Expires = DateTime.UtcNow.AddHours(RefreshTokenExpirationInHours),
             Path = "/api/auth/web/refresh" // Better security by restricting the refresh token to a specific endpoint
         };
