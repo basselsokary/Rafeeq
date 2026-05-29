@@ -1,6 +1,7 @@
 using Application.Common.Interfaces.Services;
 using Application.DTOs.Services;
 using Application.Services;
+using Domain.Common;
 using Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -27,19 +28,43 @@ internal class ImageProcessingService(
     {
         try
         {
-            imageStream.Position = 0;
+            if (imageStream.CanSeek)
+                imageStream.Position = 0;
+
+            bool needsResize;
+
+            // Peek at dimensions without fully decoding pixel data
+            var imageInfo = await Image.IdentifyAsync(imageStream, ct);
+            if (imageInfo is null)
+                return Result.Failure<ProcessedImage>(ImageErrors.ProcessingFailed);
+
+            needsResize = _options.EnableImageResize &&
+                        (imageInfo.Width  > _options.MaxWidthPx ||
+                        imageInfo.Height > _options.MaxHeightPx);
+
+            if (!needsResize)
+            {
+                if (imageStream.CanSeek)
+                    imageStream.Position = 0;
+
+                var passthroughBuffer = new MemoryStream();
+                await imageStream.CopyToAsync(passthroughBuffer, ct);
+                passthroughBuffer.Position = 0;
+
+                return Result.Success(
+                    new ProcessedImage(passthroughBuffer, contentType, passthroughBuffer.Length));
+            }
+
+            if (imageStream.CanSeek)
+                imageStream.Position = 0;
+
             using var image = await Image.LoadAsync(imageStream, ct);
 
-            if (_options.EnableImageResize &&
-                (image.Width > _options.MaxWidthPx || image.Height > _options.MaxHeightPx))
+            image.Mutate(ctx => ctx.Resize(new ResizeOptions
             {
-                var before = $"{image.Width}x{image.Height}";
-                image.Mutate(ctx => ctx.Resize(new ResizeOptions
-                {
-                    Size = new Size(_options.MaxWidthPx, _options.MaxHeightPx),
-                    Mode = ResizeMode.Max,
-                }));
-            }
+                Size = new Size(_options.MaxWidthPx, _options.MaxHeightPx),
+                Mode = ResizeMode.Max,
+            }));
 
             // Strip EXIF — prevents GPS, device serial, timestamps leaking out
             image.Metadata.ExifProfile = null;
@@ -56,7 +81,7 @@ internal class ImageProcessingService(
         catch (Exception ex)
         {
             logger.LogError(ex, "Image processing failed");
-            return Result.Failure<ProcessedImage>("Image could not be processed.");
+            return Result.Failure<ProcessedImage>(ImageErrors.ProcessingFailed);
         }
     }
 

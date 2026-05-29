@@ -98,6 +98,9 @@ public static class ImageErrors
     
     public static Error ImageUrlRequired =>
         Error.Validation("IMAGE_URL_REQUIRED", "Image URL is required.");
+
+    public static Error ProcessingFailed =>
+        Error.Failure("IMAGE_PROCESSING_FAILED", "Image could not be processed.");
 }
 
 public static class FileErrors
