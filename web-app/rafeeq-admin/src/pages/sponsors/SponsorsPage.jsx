@@ -103,31 +103,37 @@ export default function SponsorsPage() {
   const [search,       setSearch]       = useState('');
   const [typeFilter,   setTypeFilter]   = useState('');
   const [tierFilter,   setTierFilter]   = useState('');
+  const [appliedFilters, setAppliedFilters] = useState({
+    search: '',
+    typeFilter: '',
+    tierFilter: '',
+    activeFilter: 'All',
+  });
   const [page,         setPage]         = useState(1);
   const [totalCount,   setTotalCount]   = useState(0);
   const [dashboard,    setDashboard]    = useState(null);
   const [dashLoading,  setDashLoading]  = useState(true);
 
   /* ── Fetch ── */
-  const buildParams = useCallback(() => {
-    const p = { page, pageSize: PER_PAGE };
-    if (search.trim()) p.searchTerm = search.trim();
-    if (typeFilter)    p.type = typeFilter;
-    if (tierFilter)    p.tier = tierFilter;
-    if (activeFilter === 'Active')   p.activeOnly = true;
+  const buildParams = (pageNumber, filters) => {
+    const p = { page: pageNumber, pageSize: PER_PAGE };
+    if (filters.search.trim()) p.searchTerm = filters.search.trim();
+    if (filters.typeFilter)    p.type = filters.typeFilter;
+    if (filters.tierFilter)    p.tier = filters.tierFilter;
+    if (filters.activeFilter === 'Active')   p.activeOnly = true;
     return p;
-  }, [page, search, typeFilter, tierFilter, activeFilter]);
+  };
 
   const loadSponsors = useCallback(async (params) => {
     try {
       setLoading(true);
-      const res = await getSponsors(params || buildParams());
+      const res = await getSponsors(params);
       const d   = res.data;
       setSponsors(Array.isArray(d) ? d : Array.isArray(d?.data) ? d.data : Array.isArray(d?.value) ? d.value : []);
       setTotalCount(d?.totalCount ?? d?.length ?? 0);
     } catch { setSponsors([]); }
     finally { setLoading(false); }
-  }, [buildParams]);
+  }, []);
 
   const loadDashboard = useCallback(async () => {
     try {
@@ -145,15 +151,20 @@ export default function SponsorsPage() {
     finally { setDashLoading(false); }
   }, []);
 
-  useEffect(() => { loadSponsors(); loadDashboard(); }, []);
-  useEffect(() => { loadSponsors(); }, [page]);
+  useEffect(() => { loadDashboard(); }, [loadDashboard]);
+  useEffect(() => { loadSponsors(buildParams(page, appliedFilters)); }, [page, appliedFilters, loadSponsors]);
 
-  const applyFilters = () => { setPage(1); loadSponsors(buildParams()); };
+  const applyFilters = () => {
+    const nextFilters = { search, typeFilter, tierFilter, activeFilter };
+    setAppliedFilters(nextFilters);
+    setPage(1);
+  };
 
   const clearFilters = () => {
     setSearch(''); setTypeFilter(''); setTierFilter('');
     setActiveFilter('All'); setPage(1);
-    loadSponsors({ page: 1, pageSize: PER_PAGE });
+    const clearedFilters = { search: '', typeFilter: '', tierFilter: '', activeFilter: 'All' };
+    setAppliedFilters(clearedFilters);
   };
 
   /* ── Filter pills (client-side fallback for quick tabs) ── */

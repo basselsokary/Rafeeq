@@ -140,7 +140,7 @@ export default function LoginPage() {
           </div>
 
           <div className="panel-stats">
-            <div className="stat-item">
+            {/* <div className="stat-item">
               <span className="stat-value">120+</span>
               <span className="stat-label">Destinations</span>
             </div>
@@ -151,7 +151,7 @@ export default function LoginPage() {
             <div className="stat-item">
               <span className="stat-value">5★</span>
               <span className="stat-label">Avg. rating</span>
-            </div>
+            </div> */}
           </div>
         </div>
 

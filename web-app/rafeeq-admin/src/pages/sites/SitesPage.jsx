@@ -110,25 +110,32 @@ export default function SitesPage() {
   const [cityFilter,   setCityFilter]   = useState('');
   const [typeFilter,   setTypeFilter]   = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState({
+    topSearch: '',
+    typeFilter: '',
+    cityFilter: '',
+    statusFilter: '',
+    activeFilter: 'All',
+  });
   const [statsLoading, setStatsLoading] = useState(true);
   const [stats, setStats] = useState({ totalSites: 0, activeSites: 0, featuredSites: 0, hiddenGemSites: 0, averageRating: 0 });
 
   /* ── fetch ── */
-  const buildParams = (page = 1) => {
+  const buildParams = (page = 1, filters) => {
     const p = { page, pageSize: PER_PAGE };
-    if (topSearch?.trim()) p.searchTerm = topSearch.trim();
-    if (typeFilter)   p.type = typeFilter;
-    if (cityFilter)   p.city = cityFilter;
-    if (statusFilter) p.status = statusFilter;
-    if (activeFilter === 'Free') p.isFree = true;
-    if (activeFilter === 'Paid') p.isFree = false;
+    if (filters.topSearch?.trim()) p.searchTerm = filters.topSearch.trim();
+    if (filters.typeFilter)   p.type = filters.typeFilter;
+    if (filters.cityFilter)   p.city = filters.cityFilter;
+    if (filters.statusFilter) p.status = filters.statusFilter;
+    if (filters.activeFilter === 'Free') p.isFree = true;
+    if (filters.activeFilter === 'Paid') p.isFree = false;
     return p;
   };
 
-  const loadSites = useCallback(async (page = 1) => {
+  const loadSites = useCallback(async (page = 1, filters) => {
     try {
       setLoading(true);
-      const res = await getSites(buildParams(page));
+      const res = await getSites(buildParams(page, filters));
       const d = res.data;
       const items = Array.isArray(d)
         ? d
@@ -146,7 +153,7 @@ export default function SitesPage() {
       setTotalCount(0);
     }
     finally { setLoading(false); }
-  }, [topSearch, typeFilter, cityFilter, statusFilter, activeFilter]);
+  }, []);
 
   const loadStats = useCallback(async () => {
     try {
@@ -164,7 +171,7 @@ export default function SitesPage() {
     finally { setStatsLoading(false); }
   }, []);
 
-  useEffect(() => { loadSites(1); loadStats(); }, [loadSites, loadStats]);
+  useEffect(() => { loadSites(1, appliedFilters); loadStats(); }, [loadSites, loadStats]);
 
   useEffect(() => {
     let active = true;
@@ -177,20 +184,24 @@ export default function SitesPage() {
   }, []);
 
   const applyFilters = () => {
+    const nextFilters = { topSearch, typeFilter, cityFilter, statusFilter, activeFilter };
+    setAppliedFilters(nextFilters);
     setPage(1);
-    loadSites(1);
+    loadSites(1, nextFilters);
   };
 
   const clearFilters = () => {
     setTopSearch(''); setTypeFilter(''); setCityFilter(''); setStatusFilter('');
     setActiveFilter('All');
+    const clearedFilters = { topSearch: '', typeFilter: '', cityFilter: '', statusFilter: '', activeFilter: 'All' };
+    setAppliedFilters(clearedFilters);
     setPage(1);
-    loadSites(1);
+    loadSites(1, clearedFilters);
   };
 
   const handlePageChange = (nextPage) => {
     setPage(nextPage);
-    loadSites(nextPage);
+    loadSites(nextPage, appliedFilters);
   };
 
   const handleCreate = async (payload) => {
