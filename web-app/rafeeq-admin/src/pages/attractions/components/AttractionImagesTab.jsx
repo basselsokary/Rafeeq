@@ -11,6 +11,7 @@ const FALLBACK_IMAGE = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/20
 export default function AttractionImagesTab({ attractionId }) {
   const toast = useToast();
   const fileRef = useRef(null);
+  const stagedRef = useRef([]);
 
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,15 +44,20 @@ export default function AttractionImagesTab({ attractionId }) {
 
   const handleFiles = (files) => {
     const f = Array.from(files);
-    const limited = f.slice(0, MAX_UPLOAD);
-    if (f.length > MAX_UPLOAD) toast(`Only ${MAX_UPLOAD} images allowed per upload.`, 'info');
-    setStaged(limited.map((file, i) => ({
-      file,
-      isMain: images.length === 0 && i === 0,
-      displayOrder: images.length + i + 1,
-      preview: URL.createObjectURL(file),
-      caption: '',
-    })));
+    setStaged((prev) => {
+      const remaining = Math.max(0, MAX_UPLOAD - prev.length);
+      const limited = f.slice(0, remaining);
+      if (f.length > remaining) toast(`Only ${MAX_UPLOAD} images allowed per upload.`, 'info');
+      const offset = prev.length;
+      const additions = limited.map((file, i) => ({
+        file,
+        isMain: images.length + offset === 0 && i === 0,
+        displayOrder: images.length + offset + i + 1,
+        preview: URL.createObjectURL(file),
+        caption: '',
+      }));
+      return [...prev, ...additions];
+    });
   };
 
   const setMainImage = (index) => {
@@ -62,9 +68,34 @@ export default function AttractionImagesTab({ attractionId }) {
     setStaged(prev => prev.map((s, i) => (i === index ? { ...s, caption: value } : s)));
   };
 
+  const revokePreview = (item) => {
+    if (item?.preview) URL.revokeObjectURL(item.preview);
+  };
+
+  const clearStaged = () => {
+    setStaged((prev) => {
+      prev.forEach(revokePreview);
+      return [];
+    });
+  };
+
+  const removeStaged = (index) => {
+    setStaged((prev) => {
+      const removed = prev[index];
+      revokePreview(removed);
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
   useEffect(() => {
-    return () => { staged.forEach(s => URL.revokeObjectURL(s.preview)); };
+    stagedRef.current = staged;
   }, [staged]);
+
+  useEffect(() => {
+    return () => {
+      stagedRef.current.forEach(revokePreview);
+    };
+  }, []);
 
   const handleDrop = (e) => {
     e.preventDefault(); setDragOver(false);
@@ -84,7 +115,7 @@ export default function AttractionImagesTab({ attractionId }) {
       });
       await uploadImages(attractionId, fd);
       toast('Images uploaded', 'success');
-      setStaged([]);
+      clearStaged();
       load();
     } catch { toast('Upload failed', 'error'); }
     finally { setUploading(false); }
@@ -120,6 +151,16 @@ export default function AttractionImagesTab({ attractionId }) {
         onDragOver={e => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
+        onPaste={(e) => {
+          const items = Array.from(e.clipboardData?.items || []);
+          const imageItems = items.filter((item) => item.type?.startsWith('image/'));
+          if (!imageItems.length) return;
+          e.preventDefault();
+          const files = imageItems
+            .map((item) => item.getAsFile())
+            .filter(Boolean);
+          if (files.length) handleFiles(files);
+        }}
         style={{
           border: `1.5px dashed ${dragOver ? 'var(--accent-btn)' : 'var(--border-dash)'}`,
           borderRadius: 12, padding: '40px 20px', textAlign: 'center', marginBottom: 32,
@@ -139,6 +180,9 @@ export default function AttractionImagesTab({ attractionId }) {
         <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 18 }}>
           Drag and drop your images here, or click to browse<br/>files from your computer.
         </div>
+        <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 12 }}>
+          Tip: paste from clipboard with Ctrl+V.
+        </div>
         <button onClick={() => fileRef.current.click()} style={{
           padding: '10px 28px', background: 'var(--accent-btn)', color: '#fff',
           border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer',
@@ -157,7 +201,7 @@ export default function AttractionImagesTab({ attractionId }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--accent)' }}>{staged.length} file{staged.length > 1 ? 's' : ''} ready to upload</div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <Button variant="ghost" size="sm" onClick={() => setStaged([])}>Discard</Button>
+              <Button variant="ghost" size="sm" onClick={clearStaged}>Discard</Button>
               <Button size="sm" onClick={uploadAll} loading={uploading}>Upload All</Button>
             </div>
           </div>
@@ -165,6 +209,22 @@ export default function AttractionImagesTab({ attractionId }) {
             {staged.map((s, i) => (
               <div key={i} style={{ borderRadius: 8, overflow: 'hidden', position: 'relative', background: 'var(--bg-base)', border: '1px solid var(--border)' }}>
                 <img src={s.preview} alt="" style={{ width: '100%', height: 100, objectFit: 'cover', display: 'block' }} />
+                <button
+                  type="button"
+                  onClick={() => removeStaged(i)}
+                  title="Remove"
+                  style={{
+                    position: 'absolute', top: 6, right: 6,
+                    width: 24, height: 24, borderRadius: 6,
+                    background: 'rgba(0,0,0,.45)', border: 'none', cursor: 'pointer', color: '#fff',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M18 6L6 18" />
+                    <path d="M6 6l12 12" />
+                  </svg>
+                </button>
                 <button
                   type="button"
                   onClick={() => setMainImage(i)}

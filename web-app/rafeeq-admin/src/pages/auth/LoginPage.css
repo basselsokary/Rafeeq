@@ -7,7 +7,12 @@
 /* ── Left Panel ── */
 .login-panel {
   position: relative;
-  background: linear-gradient(160deg, var(--primary) 0%, var(--on-primary-container) 55%, color-mix(in srgb, var(--on-primary-container), var(--on-surface) 35%) 100%);
+  background: linear-gradient(
+    160deg,
+    var(--secondary) 0%,
+    var(--on-primary-container) 55%,
+    color-mix(in srgb, var(--on-primary-container), var(--on-surface) 35%) 100%
+  );
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -121,7 +126,7 @@
 
 .panel-subtext {
   font-size: 15px;
-  color: color-mix(in srgb, var(--on-primary), transparent 45%);
+  color: color-mix(in srgb, var(--on-primary), transparent 30%);
   line-height: 1.6;
   max-width: 320px;
 }
@@ -158,6 +163,7 @@
 /* ── Right Panel ── */
 .login-form-side {
   background: var(--surface-container-lowest);
+  color-scheme: inherit;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -8,6 +8,7 @@ import { useToast } from '../../../components/common/Toast';
 export default function SponsorImagesTab({ sponsorId }) {
   const toast = useToast();
   const fileRef = useRef(null);
+  const stagedRef = useRef([]);
   const MAX_UPLOAD = 5;
   const FALLBACK_IMAGE =
     "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='200' viewBox='0 0 320 200'><rect width='320' height='200' fill='%23e5e7eb'/><text x='50%25' y='50%25' font-size='14' fill='%236b7280' text-anchor='middle' dy='.3em'>Image unavailable</text></svg>";
@@ -51,17 +52,20 @@ export default function SponsorImagesTab({ sponsorId }) {
 
   const handleFiles = (files) => {
     const f = Array.from(files);
-    const limited = f.slice(0, MAX_UPLOAD);
-    if (f.length > MAX_UPLOAD) toast(`Only ${MAX_UPLOAD} images allowed per upload.`, 'info');
-    setStaged(
-      limited.map((file, i) => ({
+    setStaged((prev) => {
+      const remaining = Math.max(0, MAX_UPLOAD - prev.length);
+      const limited = f.slice(0, remaining);
+      if (f.length > remaining) toast(`Only ${MAX_UPLOAD} images allowed per upload.`, 'info');
+      const offset = prev.length;
+      const additions = limited.map((file, i) => ({
         file,
-        isMain: images.length === 0 && i === 0,
-        displayOrder: images.length + i + 1,
+        isMain: images.length + offset === 0 && i === 0,
+        displayOrder: images.length + offset + i + 1,
         preview: URL.createObjectURL(file),
         caption: '',
-      })),
-    );
+      }));
+      return [...prev, ...additions];
+    });
   };
 
   const setMainImage = (index) => {
@@ -72,11 +76,34 @@ export default function SponsorImagesTab({ sponsorId }) {
     setStaged((prev) => prev.map((s, i) => (i === index ? { ...s, caption: value } : s)));
   };
 
+  const revokePreview = (item) => {
+    if (item?.preview) URL.revokeObjectURL(item.preview);
+  };
+
+  const clearStaged = () => {
+    setStaged((prev) => {
+      prev.forEach(revokePreview);
+      return [];
+    });
+  };
+
+  const removeStaged = (index) => {
+    setStaged((prev) => {
+      const removed = prev[index];
+      revokePreview(removed);
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
+  useEffect(() => {
+    stagedRef.current = staged;
+  }, [staged]);
+
   useEffect(() => {
     return () => {
-      staged.forEach((s) => URL.revokeObjectURL(s.preview));
+      stagedRef.current.forEach(revokePreview);
     };
-  }, [staged]);
+  }, []);
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -97,7 +124,7 @@ export default function SponsorImagesTab({ sponsorId }) {
       });
       await uploadSponsorImages(sponsorId, fd);
       toast('Images uploaded', 'success');
-      setStaged([]);
+      clearStaged();
       load();
     } catch {
       toast('Upload failed', 'error');
@@ -154,6 +181,16 @@ export default function SponsorImagesTab({ sponsorId }) {
         }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
+        onPaste={(e) => {
+          const items = Array.from(e.clipboardData?.items || []);
+          const imageItems = items.filter((item) => item.type?.startsWith('image/'));
+          if (!imageItems.length) return;
+          e.preventDefault();
+          const files = imageItems
+            .map((item) => item.getAsFile())
+            .filter(Boolean);
+          if (files.length) handleFiles(files);
+        }}
         style={{
           border: `1.5px dashed ${dragOver ? 'var(--accent-btn)' : 'var(--border-dash)'}`,
           borderRadius: 12,
@@ -185,6 +222,9 @@ export default function SponsorImagesTab({ sponsorId }) {
           Drag and drop your images here, or click to browse
           <br />
           files from your computer.
+        </div>
+        <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 12 }}>
+          Tip: paste from clipboard with Ctrl+V.
         </div>
         <button
           onClick={() => fileRef.current.click()}
@@ -242,7 +282,7 @@ export default function SponsorImagesTab({ sponsorId }) {
               {staged.length} file{staged.length > 1 ? 's' : ''} ready to upload
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <Button variant="ghost" size="sm" onClick={() => setStaged([])}>
+              <Button variant="ghost" size="sm" onClick={clearStaged}>
                 Discard
               </Button>
               <Button size="sm" onClick={uploadAll} loading={uploading}>
@@ -263,6 +303,22 @@ export default function SponsorImagesTab({ sponsorId }) {
                 }}
               >
                 <img src={s.preview} alt="" style={{ width: '100%', height: 100, objectFit: 'cover', display: 'block' }} />
+                <button
+                  type="button"
+                  onClick={() => removeStaged(i)}
+                  title="Remove"
+                  style={{
+                    position: 'absolute', top: 6, right: 6,
+                    width: 24, height: 24, borderRadius: 6,
+                    background: 'rgba(0,0,0,.45)', border: 'none', cursor: 'pointer', color: '#fff',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M18 6L6 18" />
+                    <path d="M6 6l12 12" />
+                  </svg>
+                </button>
                 <button
                   type="button"
                   onClick={() => setMainImage(i)}
