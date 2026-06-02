@@ -4,6 +4,12 @@ public record MapPlaceMarkerDto(
     Guid Id,
     string Name,
     LocationDto Location,
-    string Type,
-    string? ImageUrl
-);
+    MarkerType Type,
+    string? ImageUrl,
+    string TypeDisplay = "");
+
+public enum MarkerType
+{
+    Site,
+    Sponsor
+}

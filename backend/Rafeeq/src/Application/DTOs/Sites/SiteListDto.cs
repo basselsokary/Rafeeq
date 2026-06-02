@@ -16,6 +16,7 @@ public record SiteListDto(
     int TotalRating,
     bool IsFree,
     bool IsFeatured,
+    bool IsHiddenGem,
     string TypeDisplay = "",
     string StatusDisplay = "");
 

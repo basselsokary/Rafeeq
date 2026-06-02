@@ -17,6 +17,7 @@ public record SiteDetailDto(
     string? MainImageUrl,
     double AverageRating,
     int TotalRating,
+    int EstimatedDurationMinutes,
     TicketDto? EntryTicket,
     List<ImageDto> Images,
     List<OpeningHourDto> OpeningHours,
@@ -24,6 +25,8 @@ public record SiteDetailDto(
     List<NearestTransportationDto> NearestTransportations,
     bool IsFree,
     bool IsFeatured,
+    bool IsHiddenGem,
+    bool IsPopular,
     List<string> FacilityTypeDisplays,
     string TypeDisplay = "",
     string StatusDisplay = "");

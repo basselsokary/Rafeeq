@@ -20,7 +20,6 @@ public sealed record AdminSponsorDetailDto(
     bool IsContractValid,
     SponsorStatus Status,
     int TotalRedemptions,
-    double? DistanceKm,
     DateTime CreatedAt,
     Guid CreatedBy,
     string CreatedByName,

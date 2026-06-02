@@ -17,9 +17,12 @@ public record AdminSiteDetailDto(
     string? MainImageUrl,
     double AverageRating,
     int TotalRatings,
+    int EstimatedDurationMinutes,
     TicketDto? EntryTicket,
     bool IsFree,
     bool IsFeatured,
+    bool IsHiddenGem,
+    bool IsPopular,
     AuditInfoDto AuditInfo);
 
 public record AdminSiteLocalizedContentDto(
