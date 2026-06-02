@@ -1,5 +1,4 @@
 using Domain.Common.Constants;
-using Domain.Enums;
 using Infrastructure.Identity.Entities;
 using Infrastructure.Persistence.ApplicationContext;
 using Microsoft.AspNetCore.Identity;

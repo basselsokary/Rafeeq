@@ -99,7 +99,7 @@ internal static class EntryFeeParser
     private static bool TryParseAmountWithCurrency(
         string raw, out decimal amount, out string currency)
     {
-        currency = "USD"; // Default foreign currency.
+        currency = "EGP"; // Default currency if no symbol is found.
         amount   = 0;
 
         if (string.IsNullOrWhiteSpace(raw))
