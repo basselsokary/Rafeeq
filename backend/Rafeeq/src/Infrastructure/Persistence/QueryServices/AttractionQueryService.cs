@@ -91,10 +91,10 @@ internal sealed class AttractionQueryService(
             data.LastModifiedBy);
     }
 
-    public async Task<PagedResult<AttractionListDto>> GetBySiteIdAsync(
+    public async Task<List<AttractionListDto>> GetBySiteIdAsync(
         Guid siteId,
         AttractionType? type,
-        PagingParameters paging,
+        string? searchTerm = null,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
@@ -103,13 +103,19 @@ internal sealed class AttractionQueryService(
         {
             query = query.Where(a => a.Type == type);
         }
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            query = query.Where(s =>
+                s.LocalizedContents.Any(lc =>
+                    lc.Language == language &&
+                    EF.Functions.Like(lc.Name, $"%{searchTerm}%")));
+        }
         
         var totalCount = await query.CountAsync(cancellationToken);
         
         var items = await query
             .OrderBy(a => a.IsFeatured)
-            .Skip(paging.Skip)
-            .Take(paging.Take)
             .Select(a => new AttractionListDto(
                 a.Id,
                 a.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
@@ -125,7 +131,7 @@ internal sealed class AttractionQueryService(
                 a.MainImageUrl))
             .ToListAsync(cancellationToken);
         
-        return new PagedResult<AttractionListDto>(items, totalCount, paging.Page, paging.PageSize);
+        return items;
     }
 
     public async Task<List<AttractionLocalizedContentDto>> GetLocalizedContentsAsync(

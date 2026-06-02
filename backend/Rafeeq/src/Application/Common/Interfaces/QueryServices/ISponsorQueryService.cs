@@ -34,7 +34,7 @@ public interface ISponsorQueryService
     Task<List<SponsorMapMarkerDto>> GetNearbyMarkerAsync(
         double latitude,
         double longitude,
-        int radiusKm = 20,
+        int radiusKm = 40,
         int count = 10,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default);

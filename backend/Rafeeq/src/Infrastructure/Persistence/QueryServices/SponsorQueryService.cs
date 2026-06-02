@@ -10,8 +10,10 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Persistence.QueryServices;
 
 internal sealed class SponsorQueryService(
-    ApplicationDbContext context) : ISponsorQueryService
+    ApplicationDbContext context,
+    IDbContextFactory<ApplicationDbContext> dbContextFactory) : ISponsorQueryService
 {
+    private readonly IDbContextFactory<ApplicationDbContext> _factory = dbContextFactory;
     private IQueryable<Sponsor> Sponsors => context.Sponsors.AsNoTracking();
 
     public async Task<AdminSponsorDetailDto?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken = default)
@@ -60,7 +62,6 @@ internal sealed class SponsorQueryService(
                 data.ContractDate.IsWithinRange(now),
                 data.Status,
                 data.TotalRedemptions,
-                null,
                 data.CreatedAt,
                 Guid.Empty,
                 string.Empty,
@@ -200,10 +201,9 @@ internal sealed class SponsorQueryService(
                 x.Sponsor.ContactPhone,
                 x.Sponsor.ContactEmail,
                 x.Sponsor.WebsiteUrl,
-                0,
-                0,
                 x.Sponsor.Images
-                    .OrderBy(i => i.DisplayOrder)
+                    .OrderByDescending(i => i.IsMain)
+                    .ThenBy(i => i.DisplayOrder)
                     .Select(i => new ImageDto(i.Id, i.StorageKey, i.ImageUrl, i.Caption, i.IsMain, i.DisplayOrder))
                     .ToList(),
                 x.Sponsor.Offers
@@ -243,9 +243,7 @@ internal sealed class SponsorQueryService(
                 new(x.Sponsor.ContractDate.StartDate, x.Sponsor.ContractDate.EndDate, x.Sponsor.ContractDate.DurationInDays),
                 x.Sponsor.ContractDate.IsWithinRange(now),
                 x.Sponsor.Status,
-                0,
-                x.Sponsor.TotalRedemptions,
-                null))
+                x.Sponsor.TotalRedemptions))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -493,7 +491,18 @@ internal sealed class SponsorQueryService(
     {
         var now = DateTime.UtcNow;
 
-        return Sponsors
+        return GetActiveOffersInternalAsync(count, language, now, cancellationToken);
+    }
+
+    private async Task<List<SponsorOfferSummaryDto>> GetActiveOffersInternalAsync(
+        int count,
+        LanguageCode language,
+        DateTime now,
+        CancellationToken cancellationToken)
+    {
+        await using var db = await _factory.CreateDbContextAsync(cancellationToken);
+
+        return await db.Sponsors.AsNoTracking()
             .SelectMany(s => s.Offers)
             .Where(o =>
                 o.IsActive &&
@@ -666,7 +675,7 @@ internal sealed class SponsorQueryService(
     public async Task<List<SponsorMapMarkerDto>> GetNearbyMarkerAsync(
         double latitude,
         double longitude,
-        int radiusKm = 20,
+        int radiusKm = 40,
         int count = 10,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)

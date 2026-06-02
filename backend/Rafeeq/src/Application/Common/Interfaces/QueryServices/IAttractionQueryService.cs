@@ -17,10 +17,10 @@ public interface IAttractionQueryService
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default);
 
-    Task<PagedResult<AttractionListDto>> GetBySiteIdAsync(
+    Task<List<AttractionListDto>> GetBySiteIdAsync(
         Guid siteId,
         AttractionType? type,
-        PagingParameters paging,
+        string? searchTerm = null,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default);
     

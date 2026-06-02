@@ -12,8 +12,10 @@ using Application.DTOs.Admins;
 namespace Infrastructure.Persistence.QueryServices;
 
 internal sealed class SiteQueryService(
-    ApplicationDbContext context) : ISiteQueryService
+    ApplicationDbContext context,
+    IDbContextFactory<ApplicationDbContext> dbContextFactory) : ISiteQueryService
 {
+    private readonly IDbContextFactory<ApplicationDbContext> _factory = dbContextFactory;
     private IQueryable<Site> Sites => context.Sites.AsNoTracking();
     
     public async Task<AdminSiteDetailDto?> GetByIdForAdminAsync(
@@ -40,9 +42,12 @@ internal sealed class SiteQueryService(
                 s.MainImageUrl,
                 s.AverageRating,
                 s.TotalRating,
+                s.EstimatedDurationMinutes,
                 s.EntryTicket,
                 s.IsFree,
                 s.IsFeatured,
+                s.IsHiddenGem,
+                s.IsPopular,
                 s.CreatedAt,
                 s.CreatedBy,
                 s.CreatedByName,
@@ -77,9 +82,12 @@ internal sealed class SiteQueryService(
             data.MainImageUrl,
             data.AverageRating,
             data.TotalRating,
+            data.EstimatedDurationMinutes,
             data.EntryTicket.ToDto(data.Localized.EntryTicketNotes),
             data.IsFree,
             data.IsFeatured,
+            data.IsHiddenGem,
+            data.IsPopular,
             auditInfo);
     }
 
@@ -155,10 +163,12 @@ internal sealed class SiteQueryService(
                 s.MainImageUrl,
                 s.AverageRating,
                 s.TotalRating,
+                s.EstimatedDurationMinutes,
                 s.EntryTicket,
 
                 ImageDtos = s.Images
-                    .OrderBy(i => i.DisplayOrder)
+                    .OrderByDescending(i => i.IsMain)
+                    .ThenBy(i => i.DisplayOrder)
                     .Select(i => new ImageDto(
                         default,
                         i.StorageKey,
@@ -192,7 +202,9 @@ internal sealed class SiteQueryService(
                     })
                     .ToList(),
                 s.IsFree,
-                s.IsFeatured
+                s.IsFeatured,
+                s.IsHiddenGem,
+                s.IsPopular
             })
             .FirstOrDefaultAsync(cancellationToken);
         
@@ -213,6 +225,7 @@ internal sealed class SiteQueryService(
                 data.MainImageUrl,
                 data.AverageRating,
                 data.TotalRating,
+                data.EstimatedDurationMinutes,
                 data.EntryTicket.ToDto(data.Localized.EntryTicketNotes),
 
                 data.ImageDtos,
@@ -237,7 +250,9 @@ internal sealed class SiteQueryService(
 
                 data.IsFree,
                 data.IsFeatured,
-                FacilityTypeDisplays: new()
+                data.IsHiddenGem,
+                data.IsPopular,
+                FacilityTypeDisplays: []
             );
         
         return site;
@@ -349,7 +364,8 @@ internal sealed class SiteQueryService(
                     s.AverageRating,
                     s.TotalRating,
                     s.IsFree,
-                    s.IsFeatured),
+                    s.IsFeatured,
+                    s.IsHiddenGem),
                 Distance = 6371 * 2 * Math.Asin(
                     Math.Sqrt(
                         Math.Pow(Math.Sin((latitude - s.Location.Latitude) * Math.PI / 180 / 2), 2) +
@@ -445,7 +461,9 @@ internal sealed class SiteQueryService(
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
-        return await Sites
+        await using var db = await _factory.CreateDbContextAsync(cancellationToken);
+
+        return await db.Sites.AsNoTracking()
             .Where(s => s.Status == SiteStatus.Active)
             .Where(s => 
                 s.IsFeatured || 
@@ -484,11 +502,13 @@ internal sealed class SiteQueryService(
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
-        return await Sites
+        await using var db = await _factory.CreateDbContextAsync(cancellationToken);
+
+        return await db.Sites.AsNoTracking()
             .Where(s => s.Status == SiteStatus.Active)
             .Where(s => s.IsHiddenGem ||
                 s.AverageRating >= 4.0 ||
-                s.TotalRating >= 5) // At least some reviews
+                s.TotalRating >= 5) // At least some ratings
             .OrderByDescending(s => s.IsHiddenGem)
             .ThenBy(s => s.AverageRating)
             .Take(count)
@@ -526,6 +546,8 @@ internal sealed class SiteQueryService(
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
+        await using var db = await _factory.CreateDbContextAsync(cancellationToken);
+
         var latDelta = radiusKm / 111.0;
         var lonDelta = radiusKm / (111.0 * Math.Cos(latitude * Math.PI / 180.0));
 
@@ -534,7 +556,7 @@ internal sealed class SiteQueryService(
         var minLon = longitude - lonDelta;
         var maxLon = longitude + lonDelta;
 
-        var sites = await Sites
+        var sites = await db.Sites.AsNoTracking()
             .Where(a => a.Status == SiteStatus.Active)
             .Where(s => 
                 s.Location.Latitude >= minLat &&
@@ -587,7 +609,7 @@ internal sealed class SiteQueryService(
     public async Task<List<SiteMapMarkerDto>> GetNearbyMarkerAsync(
         double latitude,
         double longitude,
-        int radiusKm = 40,
+        int radiusKm = 30,
         int count = 10,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
@@ -606,6 +628,7 @@ internal sealed class SiteQueryService(
                     )
                 )
             })
+            .Where(x => x.Distance <= radiusKm)
             .OrderBy(x => x.Distance);
         
         return await sites
@@ -994,7 +1017,8 @@ internal sealed class SiteQueryService(
             s.AverageRating,
             s.TotalRating,
             s.IsFree,
-            s.IsFeatured);
+            s.IsFeatured,
+            s.IsHiddenGem);
     }
 
     private static double HaversineKm(double lat1, double lon1, double lat2, double lon2)

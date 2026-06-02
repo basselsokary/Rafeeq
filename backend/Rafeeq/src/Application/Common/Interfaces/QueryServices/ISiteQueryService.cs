@@ -56,6 +56,14 @@ public interface ISiteQueryService
         int count = 10,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default);
+    
+    Task<List<SiteMapMarkerDto>> GetNearbyMarkerAsync(
+        double latitude,
+        double longitude,
+        int radiusKm = 30,
+        int count = 10,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default);
 
     Task<List<SiteListDto>> GetFeaturedAsync(
         int count = 10,
@@ -113,14 +121,6 @@ public interface ISiteQueryService
 
     Task<ImageDto?> GetImageByIdAsync(
         Guid siteId, Guid imageId, CancellationToken cancellationToken = default);
-    
-    Task<List<SiteMapMarkerDto>> GetNearbyMarkerAsync(
-        double latitude,
-        double longitude,
-        int radiusKm = 40,
-        int count = 10,
-        LanguageCode language = LanguageCode.English,
-        CancellationToken cancellationToken = default);
 
     Task<List<AdminSiteOpeningHourDto>> GetOpeningHoursAsync(Guid siteId, CancellationToken cancellationToken);
 
