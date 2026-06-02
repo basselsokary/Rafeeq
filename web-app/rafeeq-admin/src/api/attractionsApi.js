@@ -14,7 +14,7 @@ export const getAttractions = (params = {}) =>
   api.get(BASE, { params });
 
 export const getAttractionsBySiteId = (siteId, params = {}) =>
-  api.get(`${PUBLIC_BASE}/site/${siteId}`, { params });
+  api.get(`${BASE}/site/${siteId}`, { params });
 
 export const getAttractionById = (id) =>
   api.get(`${BASE}/${id}`);
