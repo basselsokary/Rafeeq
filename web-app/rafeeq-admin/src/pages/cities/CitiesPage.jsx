@@ -226,7 +226,7 @@ export default function CitiesPage() {
       toast('City created', 'success');
       setCreateOpen(false);
       loadStats();
-      const newId = res.data?.value?.id ?? res.data?.id;
+      const newId = res.data?.value?.id ?? res.data?.value ?? res.data?.id ?? res.data?.data?.id ?? res.data?.data ?? res.data;
       newId ? navigate(`/cities/${newId}`) : loadCities();
     } catch (e) {
       console.error('Create city failed:', e.response?.data || e);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getSponsorById, updateSponsor, deleteSponsor, activateSponsor, getSponsorOffers } from '../../api/sponsorsApi';
 import SponsorLocalizedContentsTab from './components/SponsorLocalizedContentsTab';
@@ -168,64 +168,145 @@ function OffersTab({ sponsorId }) {
 }
 
 /* ── Overview tab ── */
-function OverviewTab({ sponsor, onEdit, onToggleActive, statusSaving }) {
+function OverviewTab({
+  sponsor,
+  onEdit,
+  statusForm,
+  setStatusForm,
+  onStatusSave,
+  statusSaving,
+  statusDirty,
+}) {
   const tc = TIER_CFG[sponsor.tier] || TIER_CFG.bronze;
+  const [showFullDesc, setShowFullDesc] = useState(false);
+  const [canExpandDesc, setCanExpandDesc] = useState(false);
+  const descRef = useRef(null);
+
+  useEffect(() => {
+    setShowFullDesc(false);
+  }, [sponsor.description]);
+
+  useEffect(() => {
+    if (!descRef.current || showFullDesc) return;
+    const el = descRef.current;
+    setCanExpandDesc(el.scrollHeight > el.clientHeight + 1);
+  }, [sponsor.description, showFullDesc]);
   return (
-    <div style={{ maxWidth:720 }}>
-      {/* Hero image */}
-      <div style={{ borderRadius:16, overflow:'hidden', marginBottom:20, background:'var(--surface-container)', aspectRatio:'21/9', position:'relative' }}>
-        {sponsor.mainImageUrl
-          ? <img src={sponsor.mainImageUrl} alt={sponsor.title} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
-          : <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', fontSize:56 }}>{TYPE_ICONS[sponsor.type]||'🤝'}</div>
-        }
-        <div style={{ position:'absolute', top:0, right:0, width:0, height:0, borderStyle:'solid', borderWidth:'0 36px 36px 0', borderColor:`transparent rgba(124,87,45,.2) transparent transparent` }} />
-      </div>
-
-      {/* Description */}
-      {sponsor.description && (
-        <p style={{ color:'var(--text-2)', fontSize:14, lineHeight:1.75, marginBottom:20, background:'var(--surface-container-low)', borderRadius:12, padding:'14px 18px' }}>{sponsor.description}</p>
-      )}
-
-      {/* Info card */}
-      <div style={{ background:'var(--surface-container-lowest)', borderRadius:14, overflow:'hidden', marginBottom:20, boxShadow:'0 1px 4px rgba(29,27,23,.05)' }}>
-        {/* Status row */}
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 18px', borderBottom:'1px solid rgba(212,196,183,.2)' }}>
-          <div>
-            <div style={{ fontSize:10, fontWeight:700, letterSpacing:'0.08em', textTransform:'uppercase', color:'var(--outline)', marginBottom:3 }}>Status</div>
-            <div style={{ fontSize:13, color: STATUS_COLOR[sponsor.status]||'var(--outline)', fontWeight:600 }}>
-              {STATUS_LABEL[sponsor.status]||sponsor.status}
-            </div>
+    <div style={{ maxWidth:1000 }}>
+      <div style={{ display:'flex', alignItems:'flex-start', gap:24, flexWrap:'wrap' }}>
+        <div style={{ flex:'1 1 520px', minWidth:320 }}>
+          {/* Hero image */}
+          <div style={{ borderRadius:16, overflow:'hidden', marginBottom:20, background:'var(--surface-container)', aspectRatio:'21/9', position:'relative' }}>
+            {sponsor.mainImageUrl
+              ? <img src={sponsor.mainImageUrl} alt={sponsor.title} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+              : <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', fontSize:56 }}>{TYPE_ICONS[sponsor.type]||'🤝'}</div>
+            }
+            <div style={{ position:'absolute', top:0, right:0, width:0, height:0, borderStyle:'solid', borderWidth:'0 36px 36px 0', borderColor:`transparent rgba(124,87,45,.2) transparent transparent` }} />
           </div>
-          <ActivateToggle isActive={sponsor.status==='active'} onClick={onToggleActive} disabled={statusSaving||sponsor.status==='expired'} />
+
+          {/* Description */}
+          {sponsor.description && (
+            <div style={{ color:'var(--text-2)', fontSize:14, lineHeight:1.75, marginBottom:20, background:'var(--surface-container-low)', borderRadius:12, padding:'14px 18px' }}>
+              <p ref={descRef} style={{
+                margin: 0,
+                display: showFullDesc ? 'block' : '-webkit-box',
+                WebkitLineClamp: showFullDesc ? 'unset' : 3,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}>
+                {sponsor.description}
+              </p>
+              {canExpandDesc && (
+                <button type="button" onClick={() => setShowFullDesc(s => !s)} style={{
+                  marginTop: 8,
+                  background: 'none', border: 'none', padding: 0,
+                  color: 'var(--primary)', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                }}>
+                  {showFullDesc ? 'Show Less' : 'Show More'}
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Info card */}
+          <div style={{ background:'var(--surface-container-lowest)', borderRadius:14, overflow:'hidden', marginBottom:20, boxShadow:'0 1px 4px rgba(29,27,23,.05)' }}>
+            {/* Status row */}
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 18px', borderBottom:'1px solid rgba(212,196,183,.2)' }}>
+              <div>
+                <div style={{ fontSize:10, fontWeight:700, letterSpacing:'0.08em', textTransform:'uppercase', color:'var(--outline)', marginBottom:3 }}>Status</div>
+                <div style={{ fontSize:13, color: STATUS_COLOR[sponsor.status]||'var(--outline)', fontWeight:600 }}>
+                  {STATUS_LABEL[sponsor.status]||sponsor.status}
+                </div>
+              </div>
+            </div>
+
+            {/* Tier row */}
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'11px 18px', borderBottom:'1px solid rgba(212,196,183,.2)' }}>
+              <span style={{ fontSize:10, fontWeight:700, letterSpacing:'0.08em', textTransform:'uppercase', color:'var(--outline)' }}>Tier</span>
+              <span style={{ display:'inline-block', padding:'3px 9px', borderRadius:4, fontSize:10, fontWeight:700, letterSpacing:'0.07em', background:tc.bg, color:tc.text, border:`1px solid ${tc.border}` }}>
+                {tc.emoji} {fmt(sponsor.tier)}
+              </span>
+            </div>
+
+            <InfoRow label="Type"           value={`${TYPE_ICONS[sponsor.type]||''} ${fmt(sponsor.type)}`} />
+            <InfoRow label="Address"        value={sponsor.address} />
+            <InfoRow label="Phone"          value={sponsor.contactPhone} />
+            <InfoRow label="Email"          value={sponsor.contactEmail} />
+            <InfoRow label="Website"        value={sponsor.websiteUrl} />
+            <InfoRow label="Contract Start" value={sponsor.dateRange?.start ? new Date(sponsor.dateRange.start).toLocaleDateString() : null} />
+            <InfoRow label="Contract End"   value={sponsor.dateRange?.end   ? new Date(sponsor.dateRange.end).toLocaleDateString()   : null} />
+            <InfoRow label="Contract Valid" value={sponsor.isContractValid != null ? (sponsor.isContractValid ? 'Yes ✅' : 'Expired ❌') : null} />
+            <InfoRow label="Coordinates"    value={sponsor.location ? `${sponsor.location.latitude}, ${sponsor.location.longitude}` : null} />
+            <InfoRow label="Total Redemptions" value={sponsor.totalRedemptions} />
+            {sponsor.createdByName && <InfoRow label="Created By" value={`${sponsor.createdByName} — ${new Date(sponsor.createdAt).toLocaleString()}`} />}
+            {sponsor.lastModifiedByName && <InfoRow label="Last Modified" value={`${sponsor.lastModifiedByName} — ${new Date(sponsor.lastModifiedAt).toLocaleString()}`} />}
+            <div style={{ height:1 }} />
+          </div>
+
+          <Btn onClick={onEdit}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4z"/></svg>
+            Edit Sponsor
+          </Btn>
         </div>
 
-        {/* Tier row */}
-        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'11px 18px', borderBottom:'1px solid rgba(212,196,183,.2)' }}>
-          <span style={{ fontSize:10, fontWeight:700, letterSpacing:'0.08em', textTransform:'uppercase', color:'var(--outline)' }}>Tier</span>
-          <span style={{ display:'inline-block', padding:'3px 9px', borderRadius:4, fontSize:10, fontWeight:700, letterSpacing:'0.07em', background:tc.bg, color:tc.text, border:`1px solid ${tc.border}` }}>
-            {tc.emoji} {fmt(sponsor.tier)}
-          </span>
+        {/* Status box */}
+        <div style={{
+          flex:'0 0 280px',
+          minWidth:240,
+          background:'var(--surface-container-lowest)',
+          borderRadius:14,
+          padding:16,
+          boxShadow:'0 1px 4px rgba(29,27,23,.05)',
+        }}>
+          <div style={{ fontSize:11, fontWeight:700, letterSpacing:'0.08em', textTransform:'uppercase', color:'var(--outline)', marginBottom:10 }}>
+            Status
+          </div>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
+            <div style={{ fontSize:13, color: STATUS_COLOR[statusForm.isActive ? 'active' : 'inactive'], fontWeight:600 }}>
+              {statusForm.isActive ? 'Active' : 'Inactive'}
+            </div>
+            <ActivateToggle
+              isActive={statusForm.isActive}
+              onClick={() => setStatusForm(s => ({ ...s, isActive: !s.isActive }))}
+              disabled={statusSaving || sponsor.status === 'expired'}
+            />
+          </div>
+          <Btn
+            size="sm"
+            onClick={onStatusSave}
+            loading={statusSaving}
+            disabled={!statusDirty || sponsor.status === 'expired'}
+            style={{ width:'100%', justifyContent:'center' }}
+          >
+            Save Status
+          </Btn>
+          {sponsor.status === 'expired' && (
+            <div style={{ marginTop: 10, fontSize: 11, color: 'var(--outline)' }}>
+              Expired sponsors cannot be reactivated.
+            </div>
+          )}
         </div>
-
-        <InfoRow label="Type"           value={`${TYPE_ICONS[sponsor.type]||''} ${fmt(sponsor.type)}`} />
-        <InfoRow label="Address"        value={sponsor.address} />
-        <InfoRow label="Phone"          value={sponsor.contactPhone} />
-        <InfoRow label="Email"          value={sponsor.contactEmail} />
-        <InfoRow label="Website"        value={sponsor.websiteUrl} />
-        <InfoRow label="Contract Start" value={sponsor.dateRange?.start ? new Date(sponsor.dateRange.start).toLocaleDateString() : null} />
-        <InfoRow label="Contract End"   value={sponsor.dateRange?.end   ? new Date(sponsor.dateRange.end).toLocaleDateString()   : null} />
-        <InfoRow label="Contract Valid" value={sponsor.isContractValid != null ? (sponsor.isContractValid ? 'Yes ✅' : 'Expired ❌') : null} />
-        <InfoRow label="Coordinates"    value={sponsor.location ? `${sponsor.location.latitude}, ${sponsor.location.longitude}` : null} />
-        <InfoRow label="Total Redemptions" value={sponsor.totalRedemptions} />
-        {sponsor.createdByName && <InfoRow label="Created By" value={`${sponsor.createdByName} — ${new Date(sponsor.createdAt).toLocaleString()}`} />}
-        {sponsor.lastModifiedByName && <InfoRow label="Last Modified" value={`${sponsor.lastModifiedByName} — ${new Date(sponsor.lastModifiedAt).toLocaleString()}`} />}
-        <div style={{ height:1 }} />
       </div>
-
-      <Btn onClick={onEdit}>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4z"/></svg>
-        Edit Sponsor
-      </Btn>
     </div>
   );
 }
@@ -244,6 +325,7 @@ export default function SponsorDetailPage() {
   const [saving,       setSaving]       = useState(false);
   const [statusSaving, setStatusSaving] = useState(false);
   const [deleting,     setDeleting]     = useState(false);
+  const [statusForm,   setStatusForm]   = useState({ isActive: false });
 
   const load = useCallback(async () => {
     try {
@@ -255,6 +337,11 @@ export default function SponsorDetailPage() {
   }, [id]);
 
   useEffect(() => { load(); }, [load]);
+
+  useEffect(() => {
+    if (!sponsor) return;
+    setStatusForm({ isActive: sponsor.status === 'active' });
+  }, [sponsor]);
 
   const handleUpdate = async (payload) => {
     setSaving(true);
@@ -275,14 +362,13 @@ export default function SponsorDetailPage() {
     finally { setDeleting(false); }
   };
 
-  const handleToggleActive = async () => {
-    if (!sponsor) return;
-    const next = sponsor.status === 'active' ? false : true;
+  const handleStatusSave = async () => {
+    if (!sponsor || sponsor.status === 'expired') return;
     const prev = sponsor.status;
     setStatusSaving(true);
-    setSponsor(s => ({ ...s, status: next ? 'active' : 'inactive' }));
     try {
-      await activateSponsor(id, next);
+      await activateSponsor(id, statusForm.isActive);
+      setSponsor(s => ({ ...s, status: statusForm.isActive ? 'active' : 'inactive' }));
       toast('Status updated', 'success');
     } catch (e) {
       setSponsor(s => ({ ...s, status: prev }));
@@ -304,6 +390,7 @@ export default function SponsorDetailPage() {
   );
 
   const sc = STATUS_COLOR[sponsor.status] || 'var(--outline)';
+  const statusDirty = statusForm.isActive !== (sponsor.status === 'active');
 
   return (
     <div style={{ minHeight:'100vh', background:'var(--background)', fontFamily:'var(--font-body)', display:'flex', flexDirection:'column' }}>
@@ -342,7 +429,17 @@ export default function SponsorDetailPage() {
 
       {/* Content */}
       <div style={{ flex:1, padding:'32px', maxWidth:1000, width:'100%', margin:'0 auto', boxSizing:'border-box' }}>
-        {tab === 'overview' && <OverviewTab sponsor={sponsor} onEdit={() => setEditOpen(true)} onToggleActive={handleToggleActive} statusSaving={statusSaving} />}
+        {tab === 'overview' && (
+          <OverviewTab
+            sponsor={sponsor}
+            onEdit={() => setEditOpen(true)}
+            statusForm={statusForm}
+            setStatusForm={setStatusForm}
+            onStatusSave={handleStatusSave}
+            statusSaving={statusSaving}
+            statusDirty={statusDirty}
+          />
+        )}
         {tab === 'localize' && <SponsorLocalizedContentsTab sponsorId={id} />}
         {tab === 'images'   && <SponsorImagesTab sponsorId={id} />}
         {tab === 'offers'   && <OffersTab sponsorId={id} />}

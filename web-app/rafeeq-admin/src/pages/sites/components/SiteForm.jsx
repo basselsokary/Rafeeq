@@ -144,7 +144,7 @@ export default function SiteForm({ initial = null, onSubmit, loading, onCancel }
             <input
               value={form.name || ''}
               onChange={(e) => set('name', e.target.value)}
-              placeholder="e.g. The Great Pyramid of Giza"
+              placeholder="e.g. Cairo Citadel"
             />
           </div>
           <div className="form-group">

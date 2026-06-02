@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getSiteById, updateSite, deleteSite, updateSiteStatus } from '../../api/sitesApi';
 import FacilitiesTab from './components/FacilitiesTab';
@@ -91,84 +91,198 @@ function InfoRow({ label, value }) {
 }
 
 /* ── Basic Info Tab ── */
-function BasicInfoTab({ site, onEdit, onStatusChange, statusSaving }) {
+function BasicInfoTab({
+  site,
+  onEdit,
+  statusForm,
+  setStatusForm,
+  onStatusSave,
+  statusSaving,
+  statusDirty,
+}) {
+  const [showFullDesc, setShowFullDesc] = useState(false);
+  const [canExpandDesc, setCanExpandDesc] = useState(false);
+  const descRef = useRef(null);
+
+  useEffect(() => {
+    setShowFullDesc(false);
+  }, [site.description]);
+
+  useEffect(() => {
+    if (!descRef.current || showFullDesc) return;
+    const el = descRef.current;
+    setCanExpandDesc(el.scrollHeight > el.clientHeight + 1);
+  }, [site.description, showFullDesc]);
   return (
-    <div style={{ maxWidth: 720 }}>
-
-      {/* Cover image */}
-      <div style={{ borderRadius: 16, overflow: 'hidden', marginBottom: 20, background: 'var(--surface-container)', aspectRatio: '21/9', position: 'relative' }}>
-        {site.mainImageUrl
-          ? <img src={site.mainImageUrl} alt={site.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-          : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--outline)', fontSize: 13 }}>No cover image</div>
-        }
-        {/* Pyramid accent */}
-        <div style={{
-          position: 'absolute', top: 0, right: 0,
-          width: 0, height: 0, borderStyle: 'solid',
-          borderWidth: '0 40px 40px 0',
-          borderColor: `transparent rgba(124,87,45,0.2) transparent transparent`,
-        }} />
-      </div>
-
-      {/* Description */}
-      {site.description && (
-        <p style={{
-          color: 'var(--text-2)', fontSize: 14, lineHeight: 1.75, marginBottom: 20,
-          background: 'var(--surface-container-low)',
-          borderRadius: 12, padding: '14px 18px',
-        }}>{site.description}</p>
-      )}
-
-      {/* Info card */}
-      <div style={{
-        background: 'var(--surface-container-lowest)',
-        borderRadius: 14, overflow: 'hidden', marginBottom: 20,
-        boxShadow: '0 1px 4px rgba(29,27,23,.05)',
-      }}>
-        {/* Status row */}
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '14px 18px', borderBottom: '1px solid rgba(212,196,183,.2)',
-        }}>
-          <div>
-            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--outline)', marginBottom: 3 }}>Status</div>
-            <div style={{ fontSize: 13, color: STATUS_COLOR[site.status] || 'var(--outline)', fontWeight: 600 }}>
-              {STATUS_LABELS[site.status] || site.status}
-            </div>
+    <div style={{ maxWidth: 1000 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 24, flexWrap: 'wrap' }}>
+        <div style={{ flex: '1 1 520px', minWidth: 320 }}>
+          {/* Cover image */}
+          <div style={{ borderRadius: 16, overflow: 'hidden', marginBottom: 20, background: 'var(--surface-container)', aspectRatio: '21/9', position: 'relative' }}>
+            {site.mainImageUrl
+              ? <img src={site.mainImageUrl} alt={site.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--outline)', fontSize: 13 }}>No cover image</div>
+            }
+            {/* Pyramid accent */}
+            <div style={{
+              position: 'absolute', top: 0, right: 0,
+              width: 0, height: 0, borderStyle: 'solid',
+              borderWidth: '0 40px 40px 0',
+              borderColor: `transparent rgba(124,87,45,0.2) transparent transparent`,
+            }} />
           </div>
-          <StatusToggle on={site.status === 'active'} onClick={onStatusChange} disabled={statusSaving} />
+
+          {/* Description */}
+          {site.description && (
+            <div style={{
+              color: 'var(--text-2)', fontSize: 14, lineHeight: 1.75, marginBottom: 20,
+              background: 'var(--surface-container-low)',
+              borderRadius: 12, padding: '14px 18px',
+            }}>
+              <p ref={descRef} style={{
+                margin: 0,
+                display: showFullDesc ? 'block' : '-webkit-box',
+                WebkitLineClamp: showFullDesc ? 'unset' : 3,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}>
+                {site.description}
+              </p>
+              {canExpandDesc && (
+                <button type="button" onClick={() => setShowFullDesc(s => !s)} style={{
+                  marginTop: 8,
+                  background: 'none', border: 'none', padding: 0,
+                  color: 'var(--primary)', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                }}>
+                  {showFullDesc ? 'Show Less' : 'Show More'}
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Info card */}
+          <div style={{
+            background: 'var(--surface-container-lowest)',
+            borderRadius: 14, overflow: 'hidden', marginBottom: 20,
+            boxShadow: '0 1px 4px rgba(29,27,23,.05)',
+          }}>
+            <InfoRow label="City"             value={site.cityName} />
+            <InfoRow label="Address"          value={site.address} />
+            <InfoRow label="Status"           value={STATUS_LABELS[site.status] || site.status} />
+            <InfoRow label="Featured"         value={site.isFeatured ? 'Yes' : 'No'} />
+            <InfoRow label="Hidden Gem"       value={site.isHiddenGem ? 'Yes' : 'No'} />
+            <InfoRow label="Popular"          value={site.isPopular ? 'Yes' : 'No'} />
+            <InfoRow label="Type"             value={formatEnum(site.type)} />
+            <InfoRow label="Free Entry"       value={site.isFree ? 'Yes' : 'No'} />
+            <InfoRow
+              label="Entry Fee"
+              value={(() => {
+                const egyptian = site.entryTicket?.egyptianTicketPrice;
+                const foreigner = site.entryTicket?.foreingerTicketPrice;
+                if (!egyptian && !foreigner) return site.isFree ? null : 'Not provided';
+                const parts = [];
+                if (egyptian) {
+                  parts.push(egyptian.formattedAmount ?? `${egyptian.currency ?? 'EGP'} ${egyptian.amount}`);
+                }
+                if (foreigner) {
+                  parts.push(foreigner.formattedAmount ?? `${foreigner.currency ?? 'USD'} ${foreigner.amount}`);
+                }
+                return parts.join(' / ');
+              })()}
+            />
+            <InfoRow label="Est. Duration"    value={site.estimatedDurationMinutes ? `${site.estimatedDurationMinutes} minutes` : null} />
+            <InfoRow label="Phone"            value={site.contactPhone} />
+            <InfoRow label="Website"          value={site.website} />
+            <InfoRow label="Coordinates"      value={site.location ? `${site.location.latitude}, ${site.location.longitude}` : null} />
+            <InfoRow label="Rating"           value={site.averageRating ? `${site.averageRating.toFixed(1)} / 5  (${site.totalRatings} reviews)` : null} />
+
+            {site.auditInfo && (
+              <>
+                <InfoRow label="Created By"    value={`${site.auditInfo.createdByName || ''} — ${new Date(site.auditInfo.createdAt).toLocaleString()}`} />
+                {site.auditInfo.lastModifiedAt && (
+                  <InfoRow label="Last Modified" value={`${site.auditInfo.lastModifiedByName || ''} — ${new Date(site.auditInfo.lastModifiedAt).toLocaleString()}`} />
+                )}
+              </>
+            )}
+
+            {/* last row has no border */}
+            <div style={{ height: 1 }} />
+          </div>
+
+          <Btn onClick={onEdit}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4z"/>
+            </svg>
+            Edit Basic Info
+          </Btn>
         </div>
 
-        <InfoRow label="City"             value={site.cityName} />
-        <InfoRow label="Address"          value={site.address} />
-        <InfoRow label="Type"             value={formatEnum(site.type)} />
-        <InfoRow label="Free Entry"       value={site.isFree ? 'Yes — Free admission' : 'No — Paid entry'} />
-        <InfoRow label="Est. Duration"    value={site.estimatedDurationMinutes ? `${site.estimatedDurationMinutes} minutes` : null} />
-        <InfoRow label="Phone"            value={site.contactPhone} />
-        <InfoRow label="Website"          value={site.website} />
-        <InfoRow label="Coordinates"      value={site.location ? `${site.location.latitude}, ${site.location.longitude}` : null} />
-        <InfoRow label="Rating"           value={site.averageRating ? `${site.averageRating.toFixed(1)} / 5  (${site.totalRatings} reviews)` : null} />
+        {/* Status controls */}
+        <div style={{
+          flex: '0 0 280px',
+          minWidth: 240,
+          background: 'var(--surface-container-lowest)',
+          borderRadius: 14,
+          padding: 16,
+          boxShadow: '0 1px 4px rgba(29,27,23,.05)',
+        }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--outline)', marginBottom: 10 }}>
+            Status & Flags
+          </div>
 
-        {site.auditInfo && (
-          <>
-            <InfoRow label="Created By"    value={`${site.auditInfo.createdByName || ''} — ${new Date(site.auditInfo.createdAt).toLocaleString()}`} />
-            {site.auditInfo.lastModifiedAt && (
-              <InfoRow label="Last Modified" value={`${site.auditInfo.lastModifiedByName || ''} — ${new Date(site.auditInfo.lastModifiedAt).toLocaleString()}`} />
-            )}
-          </>
-        )}
+          <div style={{ marginBottom: 12 }}>
+            <div style={{ fontSize: 12, color: 'var(--text-2)', marginBottom: 6 }}>Status</div>
+            <select
+              value={statusForm.status}
+              onChange={e => setStatusForm(s => ({ ...s, status: e.target.value }))}
+              style={{
+                width: '100%',
+                padding: '8px 10px',
+                borderRadius: 10,
+                border: '1px solid rgba(212,196,183,.5)',
+                background: 'var(--surface-container-high)',
+                color: 'var(--text)',
+                fontSize: 13,
+                outline: 'none',
+              }}
+            >
+              {Object.entries(STATUS_LABELS).map(([value, label]) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </select>
+          </div>
 
-        {/* last row has no border */}
-        <div style={{ height: 1 }} />
+          <div style={{ display: 'grid', gap: 10, marginBottom: 14 }}>
+            <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 13, color: 'var(--text)' }}>
+              <span>Featured</span>
+              <StatusToggle
+                on={statusForm.isFeatured}
+                onClick={() => setStatusForm(s => ({ ...s, isFeatured: !s.isFeatured }))}
+                disabled={statusSaving}
+              />
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 13, color: 'var(--text)' }}>
+              <span>Hidden Gem</span>
+              <StatusToggle
+                on={statusForm.isHiddenGem}
+                onClick={() => setStatusForm(s => ({ ...s, isHiddenGem: !s.isHiddenGem }))}
+                disabled={statusSaving}
+              />
+            </label>
+          </div>
+
+          <Btn
+            size="sm"
+            onClick={onStatusSave}
+            loading={statusSaving}
+            disabled={!statusDirty}
+            style={{ width: '100%', justifyContent: 'center' }}
+          >
+            Save Status
+          </Btn>
+        </div>
       </div>
-
-      <Btn onClick={onEdit}>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
-          <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4z"/>
-        </svg>
-        Edit Basic Info
-      </Btn>
     </div>
   );
 }
@@ -187,6 +301,11 @@ export default function SiteDetailPage() {
   const [saving,       setSaving]       = useState(false);
   const [statusSaving, setStatusSaving] = useState(false);
   const [deleting,     setDeleting]     = useState(false);
+  const [statusForm,   setStatusForm]   = useState({
+    status: 'active',
+    isFeatured: false,
+    isHiddenGem: false,
+  });
 
   const load = useCallback(async () => {
     try {
@@ -198,6 +317,15 @@ export default function SiteDetailPage() {
   }, [id]);
 
   useEffect(() => { load(); }, [load]);
+
+  useEffect(() => {
+    if (!site) return;
+    setStatusForm({
+      status: site.status || 'active',
+      isFeatured: !!site.isFeatured,
+      isHiddenGem: !!site.isHiddenGem,
+    });
+  }, [site]);
 
   const handleUpdate = async (payload) => {
     setSaving(true);
@@ -219,17 +347,23 @@ export default function SiteDetailPage() {
     finally { setDeleting(false); }
   };
 
-  const handleStatusToggle = async () => {
+  const handleStatusSave = async () => {
     if (!site) return;
-    const next = site.status === 'active' ? 'temporarilyClosed' : 'active';
-    const prev = site.status;
     setStatusSaving(true);
-    setSite(s => ({ ...s, status: next }));
     try {
-      await updateSiteStatus(id, { status: next });
+      await updateSiteStatus(id, {
+        status: statusForm.status,
+        isFeatured: statusForm.isFeatured,
+        isHiddenGem: statusForm.isHiddenGem,
+      });
+      setSite(s => ({
+        ...s,
+        status: statusForm.status,
+        isFeatured: statusForm.isFeatured,
+        isHiddenGem: statusForm.isHiddenGem,
+      }));
       toast('Status updated', 'success');
     } catch (e) {
-      setSite(s => ({ ...s, status: prev }));
       console.error('Status update failed:', e.response?.data || e);
       toast('Status update failed', 'error');
     } finally { setStatusSaving(false); }
@@ -248,6 +382,11 @@ export default function SiteDetailPage() {
   );
 
   const statusColor = STATUS_COLOR[site.status] || 'var(--outline)';
+  const statusDirty = (
+    statusForm.status !== site.status
+    || statusForm.isFeatured !== !!site.isFeatured
+    || statusForm.isHiddenGem !== !!site.isHiddenGem
+  );
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--background)', fontFamily: 'var(--font-body)', display: 'flex', flexDirection: 'column' }}>
@@ -306,7 +445,17 @@ export default function SiteDetailPage() {
 
       {/* ── Content ── */}
       <div style={{ flex: 1, padding: '32px', maxWidth: 1000, width: '100%', margin: '0 auto', boxSizing: 'border-box' }}>
-        {tab === 'basic'      && <BasicInfoTab site={site} onEdit={() => setEditOpen(true)} onStatusChange={handleStatusToggle} statusSaving={statusSaving} />}
+        {tab === 'basic'      && (
+          <BasicInfoTab
+            site={site}
+            onEdit={() => setEditOpen(true)}
+            statusForm={statusForm}
+            setStatusForm={setStatusForm}
+            onStatusSave={handleStatusSave}
+            statusSaving={statusSaving}
+            statusDirty={statusDirty}
+          />
+        )}
         {tab === 'localize'   && <LocalizedContentsTab siteId={id} />}
         {tab === 'images'     && <ImagesTab siteId={id} />}
         {tab === 'hours'      && <OpeningHoursTab siteId={id} />}

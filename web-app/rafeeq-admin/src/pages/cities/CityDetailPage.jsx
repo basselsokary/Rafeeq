@@ -56,6 +56,9 @@ function BasicInfoTab({ city, cityId, onEdit, onImageUpdated, toast }) {
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [showFullDesc, setShowFullDesc] = useState(false);
+  const [canExpandDesc, setCanExpandDesc] = useState(false);
+  const descRef = useRef(null);
 
   const pickImage = () => {
     if (uploading) return;
@@ -86,6 +89,16 @@ function BasicInfoTab({ city, cityId, onEdit, onImageUpdated, toast }) {
       setUploading(false);
     }
   };
+
+  useEffect(() => {
+    setShowFullDesc(false);
+  }, [city.description]);
+
+  useEffect(() => {
+    if (!descRef.current || showFullDesc) return;
+    const el = descRef.current;
+    setCanExpandDesc(el.scrollHeight > el.clientHeight + 1);
+  }, [city.description, showFullDesc]);
 
   return (
     <div style={{ maxWidth: 720 }}>
@@ -163,10 +176,29 @@ function BasicInfoTab({ city, cityId, onEdit, onImageUpdated, toast }) {
 
       {/* Description */}
       {city.description && (
-        <p style={{
+        <div style={{
           color: 'var(--text-2)', fontSize: 14, lineHeight: 1.75, marginBottom: 20,
           background: 'var(--surface-container-low)', borderRadius: 12, padding: '14px 18px',
-        }}>{city.description}</p>
+        }}>
+          <p ref={descRef} style={{
+            margin: 0,
+            display: showFullDesc ? 'block' : '-webkit-box',
+            WebkitLineClamp: showFullDesc ? 'unset' : 3,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+          }}>
+            {city.description}
+          </p>
+          {canExpandDesc && (
+            <button type="button" onClick={() => setShowFullDesc(s => !s)} style={{
+              marginTop: 8,
+              background: 'none', border: 'none', padding: 0,
+              color: 'var(--primary)', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+            }}>
+              {showFullDesc ? 'Show Less' : 'Show More'}
+            </button>
+          )}
+        </div>
       )}
 
       {/* Info card */}

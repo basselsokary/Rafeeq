@@ -439,7 +439,7 @@ export default function DashboardPage() {
                   return (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                       {sorted.map(({ name, count }) => (
-                        <div key={name} style={{ cursor: 'pointer' }} onClick={() => navigate(`/sites?city=${encodeURIComponent(name)}`)}>
+                        <div key={name} >
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 4 }}>
                             <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>{name}</span>
                             <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--primary)' }}>{count}</span>

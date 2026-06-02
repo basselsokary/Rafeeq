@@ -187,7 +187,7 @@ export default function SponsorsPage() {
       toast('Sponsor created', 'success');
       setCreateOpen(false);
       loadDashboard();
-      const newId = res.data?.value?.id ?? res.data?.id;
+      const newId = res.data?.value?.id ?? res.data?.value ?? res.data?.id ?? res.data?.data?.id ?? res.data?.data ?? res.data;
       newId ? navigate(`/sponsors/${newId}`) : loadSponsors();
     } catch (e) {
       console.error(e.response?.data || e);

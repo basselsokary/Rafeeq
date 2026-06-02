@@ -211,7 +211,7 @@ export default function SitesPage() {
       toast('Site created', 'success');
       setCreateOpen(false);
       loadStats();
-      const newId = res.data?.value?.id ?? res.data?.id;
+      const newId = res.data?.value?.id ?? res.data?.value ?? res.data?.id ?? res.data?.data?.id ?? res.data?.data ?? res.data;
       newId ? navigate(`/sites/${newId}`) : loadSites(page);
     } catch (e) {
       console.error('Create site failed:', e.response?.data || e);
@@ -310,7 +310,7 @@ export default function SitesPage() {
             value={topSearch}
             onChange={e => setTopSearch(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && applyFilters()}
-            placeholder="Global search input..."
+            placeholder="Search input..."
             style={{
               width: '100%', padding: '9px 14px 9px 34px',
               background: 'var(--surface-container-lowest)',
