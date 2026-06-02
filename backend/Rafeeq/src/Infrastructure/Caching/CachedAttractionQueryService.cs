@@ -34,18 +34,18 @@ internal class CachedAttractionQueryService(IAttractionQueryService inner, IMemo
             () => inner.GetByIdForAdminAsync(siteId, language, cancellationToken));
     }
 
-    public async Task<PagedResult<AttractionListDto>> GetBySiteIdAsync(
+    public async Task<List<AttractionListDto>> GetBySiteIdAsync(
         Guid siteId,
         AttractionType? type,
-        PagingParameters paging,
+        string? searchTerm = null,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
-        var key = $"{Prefix}:site:{siteId}:{type}:{language}:{FormatPaging(paging)}";
+        var key = $"{Prefix}:site:{siteId}:{type}:{searchTerm}:{language}";
         return await GetOrCreateAsync(
             key,
             LongTtl30_Minutes,
-            () => inner.GetBySiteIdAsync(siteId, type, paging, language, cancellationToken));
+            () => inner.GetBySiteIdAsync(siteId, type, searchTerm, language, cancellationToken));
     }
 
     public async Task<List<AttractionLocalizedContentDto>> GetLocalizedContentsAsync(Guid attractionId, CancellationToken cancellationToken)

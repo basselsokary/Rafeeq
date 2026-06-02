@@ -18,6 +18,7 @@ internal class BaseCache : ICacheService
     protected readonly TimeSpan LongTtl40_Minutes = TimeSpan.FromMinutes(40);
     protected readonly TimeSpan LongTtl2_Hours = TimeSpan.FromHours(2);
     protected readonly TimeSpan LongTtl6_Hours = TimeSpan.FromHours(6);
+    protected readonly TimeSpan LongTtl12_Hours = TimeSpan.FromHours(12);
     private readonly IMemoryCache _cache;
 
     public BaseCache(IMemoryCache cache)
@@ -37,7 +38,8 @@ internal class BaseCache : ICacheService
         var result = await _cache.GetOrCreateAsync(key, async entry =>
         {
             CachedKeys.TryAdd(key, true);
-            entry.AbsoluteExpirationRelativeToNow = ttl;
+            entry.SlidingExpiration = ttl;
+            entry.AbsoluteExpirationRelativeToNow = LongTtl12_Hours;
             return await factory();
         });
 
@@ -49,7 +51,8 @@ internal class BaseCache : ICacheService
         return await _cache.GetOrCreateAsync(key, async entry =>
         {
             CachedKeys.TryAdd(key, true);
-            entry.AbsoluteExpirationRelativeToNow = ttl;
+            entry.SlidingExpiration = ttl;
+            entry.AbsoluteExpirationRelativeToNow = LongTtl12_Hours;
             return await factory();
         });
     }
