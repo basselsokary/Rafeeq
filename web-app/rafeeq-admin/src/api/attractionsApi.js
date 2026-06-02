@@ -1,5 +1,6 @@
 import api from './axiosInstance';
 
+const PUBLIC_BASE = '/api/attractions';
 const BASE = '/api/admins/attractions';
 
 // ─── Dashboard ─────────────────────────────────────────────────────
@@ -11,6 +12,9 @@ export const getDashboardStats = () =>
 
 export const getAttractions = (params = {}) =>
   api.get(BASE, { params });
+
+export const getAttractionsBySiteId = (siteId, params = {}) =>
+  api.get(`${PUBLIC_BASE}/site/${siteId}`, { params });
 
 export const getAttractionById = (id) =>
   api.get(`${BASE}/${id}`);

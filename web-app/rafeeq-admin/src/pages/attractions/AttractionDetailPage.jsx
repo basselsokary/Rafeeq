@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getAttractionById, updateAttraction, deleteAttraction, markAsFeatured } from '../../api/attractionsApi';
 import AttractionLocalizedContentsTab from './components/AttractionLocalizedContentsTab';
@@ -89,7 +89,20 @@ function PeriodBadge({ period }) {
 }
 
 function BasicInfoTab({ attraction, onEdit, onFeaturedToggle, featuredSaving }) {
+  const [showFullDesc, setShowFullDesc] = useState(false);
+  const [canExpandDesc, setCanExpandDesc] = useState(false);
+  const descRef = useRef(null);
   const mainImage = attraction.images?.find(i => i.isMain)?.url || attraction.images?.[0]?.url;
+
+  useEffect(() => {
+    setShowFullDesc(false);
+  }, [attraction.description]);
+
+  useEffect(() => {
+    if (!descRef.current || showFullDesc) return;
+    const el = descRef.current;
+    setCanExpandDesc(el.scrollHeight > el.clientHeight + 1);
+  }, [attraction.description, showFullDesc]);
 
   return (
     <div style={{ maxWidth: 720 }}>
@@ -109,10 +122,29 @@ function BasicInfoTab({ attraction, onEdit, onFeaturedToggle, featuredSaving }) 
 
       {/* Description */}
       {attraction.description && (
-        <p style={{
+        <div style={{
           color: 'var(--text-2)', fontSize: 14, lineHeight: 1.75, marginBottom: 20,
           background: 'var(--surface-container-low)', borderRadius: 12, padding: '14px 18px',
-        }}>{attraction.description}</p>
+        }}>
+          <p ref={descRef} style={{
+            margin: 0,
+            display: showFullDesc ? 'block' : '-webkit-box',
+            WebkitLineClamp: showFullDesc ? 'unset' : 3,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+          }}>
+            {attraction.description}
+          </p>
+          {canExpandDesc && (
+            <button type="button" onClick={() => setShowFullDesc(s => !s)} style={{
+              marginTop: 8,
+              background: 'none', border: 'none', padding: 0,
+              color: 'var(--primary)', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+            }}>
+              {showFullDesc ? 'Show Less' : 'Show More'}
+            </button>
+          )}
+        </div>
       )}
 
       {/* Info card */}

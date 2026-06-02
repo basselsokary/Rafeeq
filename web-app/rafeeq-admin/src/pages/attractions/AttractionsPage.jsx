@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAttractions, createAttraction, getDashboardStats } from '../../api/attractionsApi';
-import { getSites } from '../../api/sitesApi';
+import { getAttractionsBySiteId, createAttraction, getDashboardStats } from '../../api/attractionsApi';
+import { searchSites } from '../../api/sitesApi';
 import Modal from '../../components/common/Modal';
 import Spinner from '../../components/common/Spinner';
 import AttractionForm from './components/AttractionForm';
@@ -26,8 +26,6 @@ const TYPE_CFG = {
   historicBuilding:       { bg: 'rgba(212,165,116,.18)', text: '#7c572d', border: 'rgba(212,165,116,.4)' },
   viewingPoint:           { bg: 'rgba(22,163,74,.08)',   text: '#15803d', border: 'rgba(22,163,74,.25)' },
 };
-
-const PER_PAGE = 20;
 
 function TypeBadge({ type }) {
   const c = TYPE_CFG[type] || { bg: 'var(--surface-container)', text: 'var(--outline)', border: 'var(--outline-variant)' };
@@ -63,21 +61,6 @@ function StatCard({ label, value, sub, icon, loading }) {
       </div>
       {sub && <div style={{ fontSize: 12, color: 'var(--outline)', marginTop: 6 }}>{sub}</div>}
     </div>
-  );
-}
-
-function PaginationBtn({ children, active, onClick, disabled }) {
-  return (
-    <button onClick={onClick} disabled={disabled} style={{
-      width: 32, height: 32, borderRadius: 8, fontSize: 13, fontWeight: 600,
-      border: 'none',
-      background: active ? 'linear-gradient(135deg, var(--primary), var(--primary-container))' : 'var(--surface-container-low)',
-      color: active ? '#fff' : 'var(--text-2)',
-      cursor: disabled ? 'default' : 'pointer',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      opacity: disabled ? 0.4 : 1,
-      boxShadow: active ? '0 2px 8px rgba(124,87,45,0.3)' : 'none',
-    }}>{children}</button>
   );
 }
 
@@ -188,31 +171,41 @@ export default function AttractionsPage() {
   const [createOpen,  setCreateOpen]  = useState(false);
   const [creating,    setCreating]    = useState(false);
   const [topSearch,   setTopSearch]   = useState('');
+  const [siteQuery,   setSiteQuery]   = useState('');
+  const [siteResults, setSiteResults] = useState([]);
+  const [siteSearching, setSiteSearching] = useState(false);
+  const [siteTouched, setSiteTouched] = useState(false);
+  const [selectedSiteId, setSelectedSiteId] = useState('');
   const [typeFilter,  setTypeFilter]  = useState('');
-  const [page,        setPage]        = useState(1);
   const [statsLoading, setStatsLoading] = useState(true);
   const [stats, setStats] = useState({ totalAttractions: 0, featuredAttractions: 0 });
+  const [siteFocused, setSiteFocused] = useState(false);
+  const [selectedSiteName, setSelectedSiteName] = useState('');
 
   const buildParams = () => {
-    const p = { page, pageSize: PER_PAGE };
+    const p = {};
     if (topSearch?.trim()) p.searchTerm = topSearch.trim();
     if (typeFilter) p.type = typeFilter;
     return p;
   };
 
-  const loadAttractions = useCallback(async (params) => {
+  const loadAttractions = useCallback(async (siteId, params) => {
+    if (!siteId) {
+      setAttractions([]);
+      setTotalCount(0);
+      return;
+    }
     try {
       setLoading(true);
-      const p = params || { page, pageSize: PER_PAGE };
-      const res = await getAttractions(p);
+      const p = params || {};
+      const res = await getAttractionsBySiteId(siteId, p);
       const d = res.data;
       const items = d?.data ?? d?.value?.data ?? d?.items ?? (Array.isArray(d) ? d : []);
       setAttractions(items);
-      const total = d?.totalCount ?? d?.value?.totalCount ?? items.length;
-      setTotalCount(total);
+      setTotalCount(items.length);
     } catch { setAttractions([]); setTotalCount(0); }
     finally { setLoading(false); }
-  }, [page]);
+  }, []);
 
   const loadStats = useCallback(async () => {
     try {
@@ -227,14 +220,64 @@ export default function AttractionsPage() {
     finally { setStatsLoading(false); }
   }, []);
 
-  useEffect(() => { loadAttractions(buildParams()); }, [page]);
-  useEffect(() => { loadStats(); }, [loadStats]);
+  useEffect(() => {
+    if (!selectedSiteId) {
+      setAttractions([]);
+      setTotalCount(0);
+      return;
+    }
+    loadAttractions(selectedSiteId, buildParams());
+  }, [selectedSiteId]);
+  useEffect(() => { loadStats(); }, []);
 
-  const applyFilters = () => { setPage(1); loadAttractions({ ...buildParams(), page: 1 }); };
+  useEffect(() => {
+    if (selectedSiteId && !siteFocused) return;
+    const q = siteQuery.trim();
+    if (!q) {
+      setSiteResults([]);
+      setSiteSearching(false);
+      return;
+    }
+
+    let cancelled = false;
+    const handle = setTimeout(async () => {
+      setSiteSearching(true);
+      try {
+        const res = await searchSites({ q });
+        const d = res?.data;
+        const items = Array.isArray(d)
+          ? d
+          : (d?.data ?? d?.value ?? d?.items ?? d?.results ?? []);
+        const list = Array.isArray(items) ? items : [];
+        if (!cancelled) setSiteResults(list.slice(0, 10));
+      } catch {
+        if (!cancelled) setSiteResults([]);
+      } finally {
+        if (!cancelled) setSiteSearching(false);
+      }
+    }, 700);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(handle);
+    };
+  }, [siteQuery]);
+
+  const applyFilters = () => {
+    if (!selectedSiteId) {
+      toast('Select a site first', 'error');
+      return;
+    }
+    loadAttractions(selectedSiteId, buildParams());
+  };
 
   const clearFilters = () => {
-    setTopSearch(''); setTypeFilter(''); setPage(1);
-    loadAttractions({ page: 1, pageSize: PER_PAGE });
+    setTopSearch(''); setTypeFilter('');
+    setSiteQuery(''); setSiteResults([]); setSiteTouched(false); setSelectedSiteId('');
+    setSelectedSiteName('');
+    setSiteFocused(false);
+    setAttractions([]);
+    setTotalCount(0);
   };
 
   const handleCreate = async (payload) => {
@@ -244,15 +287,14 @@ export default function AttractionsPage() {
       toast('Attraction created', 'success');
       setCreateOpen(false);
       loadStats();
-      const newId = res.data?.value?.id ?? res.data?.id;
-      newId ? navigate(`/attractions/${newId}`) : loadAttractions(buildParams());
+      const newId = res.data?.value?.id ?? res.data?.value ?? res.data?.id ?? res.data?.data?.id ?? res.data?.data ?? res.data;
+      newId ? navigate(`/attractions/${newId}`) : loadAttractions(selectedSiteId, buildParams());
     } catch (e) {
       console.error('Create attraction failed:', e.response?.data || e);
       toast('Failed to create attraction', 'error');
     } finally { setCreating(false); }
   };
 
-  const totalPages = Math.max(1, Math.ceil(totalCount / PER_PAGE));
   const featuredCount = stats.featuredAttractions;
 
   const selectStyle = {
@@ -310,7 +352,7 @@ export default function AttractionsPage() {
 
           {/* Clear filters */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            {(topSearch || typeFilter) && (
+            {(topSearch || typeFilter || selectedSiteId) && (
               <button onClick={clearFilters} style={{
                 background: 'none', border: 'none', fontSize: 13, color: 'var(--primary)', cursor: 'pointer', fontWeight: 600,
               }}>Clear Filters</button>
@@ -338,6 +380,91 @@ export default function AttractionsPage() {
               />
             </div>
 
+            <div style={{ flex: 2, minWidth: 220, position: 'relative' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--outline)" strokeWidth="2"
+                style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+              </svg>
+              <input
+                value={siteQuery}
+                onChange={e => {
+                  setSiteQuery(e.target.value);
+                  setSiteTouched(true);
+                  setSiteFocused(true);
+                  if (selectedSiteId) setSelectedSiteId('');
+                }}
+                onKeyDown={e => e.key === 'Enter' && applyFilters()}
+                onFocus={() => setSiteFocused(true)}
+                onBlur={() => setTimeout(() => setSiteFocused(false), 0)}
+                placeholder="Search site name..."
+                style={{
+                  width: '100%', padding: '9px 14px 9px 34px',
+                  background: 'var(--surface-container-lowest)',
+                  border: '1px solid rgba(212,196,183,.3)',
+                  borderRadius: 10, fontSize: 13, color: 'var(--text)', outline: 'none',
+                }}
+              />
+
+              {siteFocused && (siteQuery.trim() || siteTouched) && (
+                <div style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 6px)',
+                  left: 0,
+                  right: 0,
+                  zIndex: 10,
+                  background: 'var(--surface-container-lowest)',
+                  border: '1px solid rgba(212,196,183,.35)',
+                  borderRadius: 12,
+                  overflow: 'hidden',
+                  boxShadow: '0 10px 25px rgba(29,27,23,.08)',
+                }}>
+                  {siteSearching ? (
+                    <div style={{ padding: '10px 12px', fontSize: 12, color: 'var(--text-2)' }}>
+                      Searching…
+                    </div>
+                  ) : siteResults.length ? (
+                    siteResults.map((s) => (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => {
+                          setSelectedSiteId(s.id ?? '');
+                          setSelectedSiteName(s.name || s.title || s.id || '');
+                          setSiteQuery(s.name || s.title || s.id || '');
+                          setSiteResults([]);
+                          setSiteFocused(false);
+                        }}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          padding: '10px 12px',
+                          border: 'none',
+                          background: 'transparent',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: 12,
+                        }}
+                      >
+                        <span style={{ fontSize: 13, color: 'var(--text)' }}>
+                          {s.name || s.title || s.id}
+                        </span>
+                        <span style={{ fontSize: 11, color: 'var(--outline)' }}>
+                          {s.id}
+                        </span>
+                      </button>
+                    ))
+                  ) : (
+                    <div style={{ padding: '10px 12px', fontSize: 12, color: 'var(--text-2)' }}>
+                      No sites found.
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
             <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} style={selectStyle}>
               <option value="">All Types</option>
               {ATTRACTION_TYPES.map(t => <option key={t} value={t}>{formatEnum(t)}</option>)}
@@ -351,8 +478,56 @@ export default function AttractionsPage() {
             }}>Apply Filters</button>
           </div>
 
+          {selectedSiteId && (
+            <div style={{
+              marginBottom: 18,
+              background: 'var(--surface-container-lowest)',
+              borderRadius: 12,
+              padding: '10px 14px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 12,
+              boxShadow: '0 1px 4px rgba(29,27,23,.05)',
+            }}>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--outline)' }}>
+                  Selected site
+                </div>
+                <div style={{ fontSize: 13, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {selectedSiteName || siteQuery || selectedSiteId}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedSiteId('');
+                  setSiteQuery('');
+                  setSiteResults([]);
+                  setSelectedSiteName('');
+                  setSiteFocused(true);
+                }}
+                style={{
+                  border: 'none',
+                  background: 'transparent',
+                  cursor: 'pointer',
+                  color: 'var(--text-2)',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  padding: 0,
+                }}
+              >
+                Clear
+              </button>
+            </div>
+          )}
+
           {/* Card Grid */}
-          {loading ? (
+          {!selectedSiteId ? (
+            <div style={{ padding: '80px 20px', textAlign: 'center', color: 'var(--outline)', fontSize: 14 }}>
+              Select a site to view its attractions.
+            </div>
+          ) : loading ? (
             <div style={{ padding: 80 }}><Spinner center /></div>
           ) : attractions.length === 0 ? (
             <div style={{ padding: '80px 20px', textAlign: 'center', color: 'var(--outline)', fontSize: 14 }}>
@@ -396,27 +571,6 @@ export default function AttractionsPage() {
             </div>
           )}
 
-          {/* Pagination */}
-          {totalCount > PER_PAGE && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 24, padding: '16px 20px', background: 'var(--surface-container-low)', borderRadius: 12 }}>
-              <div style={{ fontSize: 12, color: 'var(--outline)' }}>
-                Showing {(page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, totalCount)} of {totalCount} attractions
-              </div>
-              <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-                <PaginationBtn onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
-                </PaginationBtn>
-                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map(p => (
-                  <PaginationBtn key={p} active={p === page} onClick={() => setPage(p)}>{p}</PaginationBtn>
-                ))}
-                {totalPages > 5 && <span style={{ color: 'var(--outline)', padding: '0 4px' }}>…</span>}
-                {totalPages > 5 && <PaginationBtn onClick={() => setPage(totalPages)}>{totalPages}</PaginationBtn>}
-                <PaginationBtn onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
-                </PaginationBtn>
-              </div>
-            </div>
-          )}
       <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Create Attraction" width={680}>
         <AttractionForm onSubmit={handleCreate} loading={creating} onCancel={() => setCreateOpen(false)} />
       </Modal>
