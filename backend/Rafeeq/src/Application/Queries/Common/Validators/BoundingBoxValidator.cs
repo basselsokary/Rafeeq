@@ -28,10 +28,10 @@ internal sealed class BoundingBoxValidator : AbstractValidator<BoundingBox>
 
         RuleFor(x => x)
             .Must(bounds => bounds.NorthLatitude >= bounds.SouthLatitude)
-            .WithMessage(errors[ValidationErrors.RangeInvalid.Code]);
+            .WithMessage(bounds => errors[ValidationErrors.RangeInvalid(bounds.SouthLatitude.ToString(), bounds.NorthLatitude.ToString()).Code]);
         
         RuleFor(x => x)
             .Must(bounds => bounds.EastLongitude >= bounds.WestLongitude)
-            .WithMessage(errors[ValidationErrors.RangeInvalid.Code]);
+            .WithMessage(bounds => errors[ValidationErrors.RangeInvalid(bounds.WestLongitude.ToString(), bounds.EastLongitude.ToString()).Code]);
     }
 }

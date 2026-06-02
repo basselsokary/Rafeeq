@@ -19,48 +19,53 @@ public sealed class GetHomeDataQueryHandler(
 {
     public async Task<Result<HomeScreenDto>> HandleAsync(GetHomeDataQuery query, CancellationToken cancellationToken)
     {
-        List<SiteSummaryDto> mustVisitSites = [];
-        List<SiteSummaryDto> hiddenGems = [];
-        List<SiteSummaryDto> nearbySites = [];
-        List<SponsorOfferSummaryDto> featuredDeals = [];
-
-        mustVisitSites = await siteQueryService
+        var mustVisitTask = siteQueryService
             .GetMustVisitAsync(
                 language: userContext.Language,
                 cancellationToken: cancellationToken);
-        
-        mustVisitSites = mustVisitSites
-            .Select(s => s with { TypeDisplay = enumLocalizer.Localize(s.Type) })
-            .ToList();
 
-        hiddenGems = await siteQueryService
+        var hiddenGemsTask = siteQueryService
             .GetHiddenGemsAsync(
                 language: userContext.Language,
                 cancellationToken: cancellationToken);
 
-        hiddenGems = hiddenGems
-            .Select(s => s with { TypeDisplay = enumLocalizer.Localize(s.Type) })
-            .ToList();
+        var featuredDealsTask = sponsorQueryService
+            .GetActiveOffersAsync(cancellationToken: cancellationToken);
 
-        // result.QuickCategories = await cityQueryService
-        //     .GetAsync(new PagingParameters(),cancellationToken);
-            
-        featuredDeals = await sponsorQueryService.GetActiveOffersAsync(cancellationToken: cancellationToken);            
+        Task<List<SiteSummaryDto>>? nearbyTask = null;
 
         // Near You (if location provided)
         if (query.Latitude.HasValue && query.Longitude.HasValue)
         {
-            nearbySites = await siteQueryService
+            nearbyTask = siteQueryService
                 .GetNearbyAsync(
                     query.Latitude.Value,
                     query.Longitude.Value,
                     language: userContext.Language,
                     cancellationToken: cancellationToken);
-                
-            nearbySites = nearbySites
+        }
+
+        await Task.WhenAll(
+            mustVisitTask,
+            hiddenGemsTask,
+            featuredDealsTask,
+            nearbyTask ?? Task.FromResult<List<SiteSummaryDto>>([]));
+
+        var mustVisitSites = (await mustVisitTask)
+            .Select(s => s with { TypeDisplay = enumLocalizer.Localize(s.Type) })
+            .ToList();
+
+        var hiddenGems = (await hiddenGemsTask)
+            .Select(s => s with { TypeDisplay = enumLocalizer.Localize(s.Type) })
+            .ToList();
+
+        var featuredDeals = await featuredDealsTask;
+
+        var nearbySites = (nearbyTask is null)
+            ? []
+            : (await nearbyTask)
                 .Select(s => s with { TypeDisplay = enumLocalizer.Localize(s.Type) })
                 .ToList();
-        }
 
         return new HomeScreenDto(
             MustVisit: mustVisitSites,

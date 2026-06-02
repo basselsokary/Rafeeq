@@ -1,6 +1,8 @@
+using Domain.Common;
+using Domain.ValueObjects;
 using FluentValidation;
 
-namespace Application.Queries.Home;
+namespace Application.Queries.Home.Validators;
 
 internal sealed class GetMapPlacesQueryValidator : AbstractValidator<GetMapPlacesQuery>
 {
@@ -8,15 +10,20 @@ internal sealed class GetMapPlacesQueryValidator : AbstractValidator<GetMapPlace
     {
         RuleFor(q => q.Latitude)
             .InclusiveBetween(-90, 90)
-            .WithMessage("Latitude must be between -90 and 90.");
+            .WithMessage(q => GeoLocationErrors.InvalidLatitude(q.Latitude).Code);
 
         RuleFor(q => q.Longitude)
             .InclusiveBetween(-180, 180)
-            .WithMessage("Longitude must be between -180 and 180.");
+            .WithMessage(q => GeoLocationErrors.InvalidLongitude(q.Longitude).Code);
 
         RuleFor(q => q.RadiusKm)
-            .GreaterThan(0)
+            .GreaterThanOrEqualTo(10)
             .LessThanOrEqualTo(100)
-            .WithMessage("RadiusKm must be greater than 0 and less than or equal to 100.");
+            .WithMessage(ValidationErrors.RangeInvalid(10.ToString(), 100.ToString()).Code);
+        
+        RuleFor(q => q.Count)
+            .GreaterThanOrEqualTo(10)
+            .LessThanOrEqualTo(50)
+            .WithMessage(ValidationErrors.RangeInvalid(10.ToString(), 50.ToString()).Code);
     }
 }

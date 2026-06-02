@@ -10,27 +10,27 @@ namespace Application.Queries.Attractions;
 public sealed record GetAttractionsBySiteIdQuery(
     Guid SiteId,
     AttractionType? Type,
-    PagingParameters Paging) : IQuery<PagedResult<AttractionListDto>>;
+    string? SearchTerm = null) : IQuery<List<AttractionListDto>>;
 
 internal sealed class GetAttractionsBySiteIdQueryHandler(
     IAttractionQueryService queryService,
     IUserContext userContext,
-    IEnumLocalizer enumLocalizer) : IQueryHandler<GetAttractionsBySiteIdQuery, PagedResult<AttractionListDto>>
+    IEnumLocalizer enumLocalizer) : IQueryHandler<GetAttractionsBySiteIdQuery, List<AttractionListDto>>
 {
-    public async Task<Result<PagedResult<AttractionListDto>>> HandleAsync(GetAttractionsBySiteIdQuery query, CancellationToken cancellationToken)
+    public async Task<Result<List<AttractionListDto>>> HandleAsync(GetAttractionsBySiteIdQuery query, CancellationToken cancellationToken)
     {
-        PagedResult<AttractionListDto> pagedResult = await queryService.GetBySiteIdAsync(
+        List<AttractionListDto> attractions = await queryService.GetBySiteIdAsync(
             query.SiteId,
             query.Type,
-            query.Paging,
+            query.SearchTerm,
             userContext.Language,
             cancellationToken);
 
-        var localizedData = pagedResult.Data.Select(attraction => attraction with
+        var localizedAttractions = attractions.Select(attraction => attraction with
         {
             TypeDisplay = enumLocalizer.Localize(attraction.Type)
         }).ToList();
 
-        return Result.Success(pagedResult with { Data = localizedData });
+        return Result.Success(localizedAttractions);
     }
 }

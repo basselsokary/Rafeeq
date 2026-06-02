@@ -19,9 +19,9 @@ internal sealed class GetAttractionsBySiteIdQueryValidator : AbstractValidator<G
             .When(x => x.Type != null)
             .WithMessage(x => errors.Format(ValidationErrors.InvalidEnumValue.Code, x.Type?.ToString()!));
 
-        RuleFor(x => x.Paging)
-            .NotNull()
-            .WithMessage(errors[ValidationErrors.ValueRequired.Code])
-            .SetValidator(new PagingParametersValidator(errors));
+        RuleFor(x => x.SearchTerm)
+            .MaximumLength(100)
+            .When(x => !string.IsNullOrEmpty(x.SearchTerm))
+            .WithMessage(errors.Format(ValidationErrors.MaximumLengthExceeded.Code));
     }
 }

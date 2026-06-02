@@ -18,6 +18,11 @@ internal sealed class GetSitesQueryValidator : AbstractValidator<GetSitesQuery>
             .SetValidator(new PagingParametersValidator(errors))
             .WithMessage(errors[ValidationErrors.ValueRequired.Code])
             .When(x => x.Paging is not null);
+
+        RuleFor(x => x.SearchTerm)
+            .MaximumLength(100)
+            .When(x => !string.IsNullOrEmpty(x.SearchTerm))
+            .WithMessage(errors.Format(ValidationErrors.MaximumLengthExceeded.Code));
     }
 }
 
