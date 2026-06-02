@@ -175,7 +175,9 @@ internal sealed class CloudinaryStorageService : IFileStorageService
         var url = _cloudinary.Api.UrlImgUp
             .Transform(new Transformation()
                 .Quality("auto")
-                .FetchFormat("auto"))
+                .FetchFormat("auto")
+                .Width(800)
+                .Crop("limit"))
             .BuildUrl(publicId);
 
         return url;
