@@ -72,8 +72,11 @@ public static class ValidationErrors
     public static Error MinimumLengthNotMet =>
         Error.Validation("VALIDATION_MINIMUM_LENGTH_NOT_MET", "Value does not meet the minimum required length.");
 
-    public static Error RangeInvalid =>
+    public static Error RangeInvalid() =>
         Error.Validation("VALIDATION_RANGE_INVALID", "The provided range is invalid.");
+    
+    public static Error RangeInvalid(string min, string max) =>
+        Error.Validation("VALIDATION_RANGE_INVALID", $"The provided range is invalid. Please provide a value between {min} and {max}.");
 
     public static Error WhitespaceNotAllowed =>
         Error.Validation("VALIDATION_WHITESPACE_NOT_ALLOWED", "Whitespace-only values are not allowed.");
