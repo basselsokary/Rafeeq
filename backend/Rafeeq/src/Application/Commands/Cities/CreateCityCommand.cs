@@ -13,25 +13,23 @@ public sealed record CreateCityCommand(
     string Description,
     double CenterLatitude,
     double CenterLongitude,
-    int DisplayOrder) : ICommand;
+    int DisplayOrder) : ICommand<Guid>;
 
 internal sealed class CreateCityCommandHandler(
     IUnitOfWork unitOfWork,
     IFileStorageService storageService,
-    IFileUploadService fileUploadService) : ICommandHandler<CreateCityCommand>
+    IFileUploadService fileUploadService) : ICommandHandler<CreateCityCommand, Guid>
 {
-    public async Task<Result> HandleAsync(CreateCityCommand command, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> HandleAsync(CreateCityCommand command, CancellationToken cancellationToken)
     {
         var locationResult = GeoLocation.Create(command.CenterLatitude, command.CenterLongitude);
         if (locationResult.Failed)
-            return locationResult;
+            return locationResult.Error;
         
         var uploadResult = await fileUploadService.UploadSingleAsync(new UploadImageContext<ImageMetadata>(command.File), Guid.Empty, cancellationToken);
 
         if (uploadResult.Failed)
-        {
-            return uploadResult;
-        }
+            return uploadResult.Error;
 
         var cityResult = City.Create(
             uploadResult.Value.FileId,
@@ -45,13 +43,13 @@ internal sealed class CreateCityCommandHandler(
         if (cityResult.Failed)
         {
             await storageService.DeleteAsync(uploadResult.Value.StorageKey, cancellationToken);
-            return cityResult;
+            return cityResult.Error;
         }
 
         await unitOfWork.Cities.AddAsync(cityResult.Value, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return cityResult.Value.Id;
     }
 }
 

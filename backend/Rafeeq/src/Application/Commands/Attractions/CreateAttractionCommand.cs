@@ -15,12 +15,12 @@ public sealed record CreateAttractionCommand(
     bool IsFeatured,
     double? Latitude,
     double? Longitude,
-    List<HistoricalPeriod> HistoricalPeriod) : ICommand;
+    List<HistoricalPeriod> HistoricalPeriod) : ICommand<Guid>;
 
 internal sealed class CreateAttractionCommandHandler(
-    IUnitOfWork unitOfWork) : ICommandHandler<CreateAttractionCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<CreateAttractionCommand, Guid>
 {
-    public async Task<Result> HandleAsync(CreateAttractionCommand command, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> HandleAsync(CreateAttractionCommand command, CancellationToken cancellationToken)
     {
         var siteExist = await unitOfWork.Sites.AnyAsync(command.SiteId, cancellationToken);
         if (!siteExist)
@@ -35,7 +35,7 @@ internal sealed class CreateAttractionCommandHandler(
             command.HistoricalPeriod);
 
         if (attractionResult.Failed)
-            return attractionResult;
+            return attractionResult.Error;
         
         var attraction = attractionResult.Value;
         
@@ -53,6 +53,6 @@ internal sealed class CreateAttractionCommandHandler(
         await unitOfWork.Attractions.AddAsync(attraction, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return attraction.Id;
     }
 }

@@ -21,22 +21,22 @@ public sealed record CreateSiteCommand(
     string? EntryFreeNotes,
     bool IsFree,
     string? ContactPhone,
-    string? ContactWebsiteUrl) : ICommand;
+    string? ContactWebsiteUrl) : ICommand<Guid>;
 
 public sealed record AddSiteLocalizedContentDto(LanguageCode Language, string Name, string Description, string Address, string? EntryFreeNotes);
 
 internal sealed class CreateSiteCommandHandler(
-    IUnitOfWork unitOfWork) : ICommandHandler<CreateSiteCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<CreateSiteCommand, Guid>
 {
-    public async Task<Result> HandleAsync(CreateSiteCommand command, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> HandleAsync(CreateSiteCommand command, CancellationToken cancellationToken)
     {
         var locationResult = GeoLocation.Create(command.Latitude, command.Longitude);
         if (locationResult.Failed)
-            return locationResult;
+            return locationResult.Error;
         
         var addressResult = Address.Create(command.Address);
         if (addressResult.Failed)
-            return addressResult;
+            return addressResult.Error;
         
         var siteResult = Site.Create(
             command.CityId,
@@ -51,10 +51,12 @@ internal sealed class CreateSiteCommandHandler(
             command.ContactWebsiteUrl);
         
         if (siteResult.Failed)
-            return siteResult;
+            return siteResult.Error;
 
         var site = siteResult.Value;
-        AddTicket(site, command);
+        var ticketResult = AddTicket(site, command);
+        if (ticketResult.Failed)
+            return ticketResult.Error;
 
         var city = await unitOfWork.Cities.GetByIdAsync(
             command.CityId,
@@ -68,7 +70,7 @@ internal sealed class CreateSiteCommandHandler(
         await unitOfWork.Sites.AddAsync(siteResult.Value, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return site.Id;
     }
 
     private static Result AddTicket(Site site, CreateSiteCommand command)

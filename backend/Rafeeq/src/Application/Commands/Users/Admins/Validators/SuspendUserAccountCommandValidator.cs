@@ -18,6 +18,6 @@ internal sealed class SuspendUserAccountCommandValidator : AbstractValidator<Sus
 
         RuleFor(x => x.SuspendUntil)
             .Must(date => date > DateTime.UtcNow)
-            .WithMessage(errors[ValidationErrors.RangeInvalid.Code]);
+            .WithMessage(errors[ValidationErrors.RangeInvalid().Code]);
     }
 }

@@ -17,24 +17,24 @@ public sealed record CreateSponsorCommand(
     DateTime EndDate,
     string? WebsiteUrl,
     string? ContactPhone,
-    string? ContactEmail) : ICommand;
+    string? ContactEmail) : ICommand<Guid>;
 
 internal sealed class CreateSponsorCommandHandler(
-    IUnitOfWork unitOfWork) : ICommandHandler<CreateSponsorCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<CreateSponsorCommand, Guid>
 {
-    public async Task<Result> HandleAsync(CreateSponsorCommand command, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> HandleAsync(CreateSponsorCommand command, CancellationToken cancellationToken)
     {
         var locationResult = GeoLocation.Create(command.Latitude, command.Longitude);
         if (locationResult.Failed)
-            return locationResult;
+            return locationResult.Error;
 
         var dateRange = DateRange.Create(command.StartDate, command.EndDate);
         if (dateRange.Failed)
-            return dateRange;
+            return dateRange.Error;
         
         var addressResult = Address.Create(command.Address);
         if (addressResult.Failed)
-            return addressResult;
+            return addressResult.Error;
         
         PhoneNumber? phone = null;
         if (!string.IsNullOrWhiteSpace(command.ContactPhone))
@@ -65,11 +65,11 @@ internal sealed class CreateSponsorCommandHandler(
             email);
 
         if (sponsorResult.Failed)
-            return sponsorResult;
+            return sponsorResult.Error;
 
         await unitOfWork.Sponsors.AddAsync(sponsorResult.Value, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return sponsorResult.Value.Id;
     }
 }

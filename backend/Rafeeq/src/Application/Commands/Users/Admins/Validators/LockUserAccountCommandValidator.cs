@@ -18,6 +18,6 @@ internal sealed class LockUserAccountCommandValidator : AbstractValidator<LockUs
 
         RuleFor(x => x.LockUntil)
             .Must(date => date == null || date.Value > DateTime.UtcNow)
-            .WithMessage(errors[ValidationErrors.RangeInvalid.Code]);
+            .WithMessage(errors[ValidationErrors.RangeInvalid().Code]);
     }
 }

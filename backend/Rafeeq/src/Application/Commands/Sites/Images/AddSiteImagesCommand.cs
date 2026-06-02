@@ -5,7 +5,6 @@ using Application.Services;
 using Domain.Common.Interfaces;
 using Domain.Entities.SiteAggregate;
 using Domain.ValueObjects;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Commands.Sites.Images;
 
