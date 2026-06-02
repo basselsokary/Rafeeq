@@ -87,8 +87,8 @@ internal class IdentityService(
         if (!user.IsActive)
             return AuthenticationResult.Failure(ApplicationUserErrors.InActiveUser);
 
-        if (user.MustChangePassword)
-            return AuthenticationResult.Failure(ApplicationUserErrors.MustChangePassword);
+        // if (user.MustChangePassword)
+        //     return AuthenticationResult.Failure(ApplicationUserErrors.MustChangePassword);
 
         if (password is not null)
         {
@@ -106,11 +106,15 @@ internal class IdentityService(
             }
         }
 
-        user.RecordLastLogin();
-        await userManager.UpdateAsync(user);
-
         var roles = await userManager.GetRolesAsync(user);
         bool isAdmin = IsAdmin(roles);
+        if (isAdmin)
+        {
+            return AuthenticationResult.Failure(ApplicationUserErrors.InvalidCredentials);
+        }
+
+        user.RecordLastLogin();
+        await userManager.UpdateAsync(user);
 
         var accessToken = jwtTokenGenerator.GenerateAccessToken(user, roles);
         var refreshToken = jwtTokenGenerator.GenerateRefreshToken();
