@@ -3,7 +3,6 @@ using Application.Services;
 
 namespace Application.Common.Interfaces.Services;
 
-// Services/Interfaces/IFileUploadService.cs
 public interface IFileUploadService
 {
     Task<Result<FileUploadResponse<TMetadata>>> UploadSingleAsync<TMetadata>(

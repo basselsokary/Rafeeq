@@ -7,7 +7,6 @@ public interface IFileStorageService
 {
     /// <summary>
     /// Uploads a stream to cloud storage under the given storage key.
-    /// Returns the public (or SAS) URL for the stored file.
     /// </summary>
     Task<Result<UploadedFileResponse>> UploadAsync(
         Stream fileStream,
