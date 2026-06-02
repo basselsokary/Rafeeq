@@ -65,9 +65,10 @@ internal sealed class CloudinaryStorageService : IFileStorageService
                 return Result.Failure<UploadedFileResponse>(CloudinaryStorageErrors.UploadFailed);
             }
 
-            _logger.LogInformation("Upload succeeded: {Key} -> {Url}", storageKey, result.SecureUrl.ToString());
-
-            return Result.Success(new UploadedFileResponse(storageKey, result.SecureUrl.ToString(), result.Bytes));
+            return Result.Success(new UploadedFileResponse(
+                storageKey,
+                GetOptimizedUrl(storageKey),
+                result.Bytes));
         }
         catch (Exception ex)
         {

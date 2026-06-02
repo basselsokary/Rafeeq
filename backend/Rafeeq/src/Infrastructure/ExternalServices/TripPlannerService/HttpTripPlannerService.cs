@@ -24,8 +24,6 @@ public class HttpTripPlannerService(
     {
         try
         {
-            // here we are printing the request object to the console for debugging purposes. You can remove this in production.
-            logger.LogInformation("Sending trip plan request: {@Request}", request);
             var httpResponse = await http.PostAsJsonAsync(
                 settings.PlanEndpoint, request, JsonOptions, ct);
 
