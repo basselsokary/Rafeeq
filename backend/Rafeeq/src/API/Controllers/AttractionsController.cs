@@ -5,6 +5,7 @@ using Application.DTOs.Common;
 using Application.Queries.Attractions;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Shared;
 
 namespace API.Controllers;
 
@@ -23,20 +24,16 @@ public class AttractionsController : ApiBaseController
 	}
 
 	[HttpGet("site/{siteId:guid}")]
-	public async Task<ActionResult<List<AttractionListDto>>> GetAttractionsBySiteId(
+	public async Task<ActionResult<PagedResult<AttractionListDto>>> GetAttractionsBySiteId(
 		[FromRoute] Guid siteId,
 		[FromQuery] AttractionType? type,
 		[FromServices] IQueryHandler<GetAttractionsBySiteIdQuery, List<AttractionListDto>> queryHandler,
-		[FromQuery] string? searchTerm = null,
-		[FromQuery] int page = 1,
-		[FromQuery] int pageSize = 20,
 		CancellationToken cancellationToken = default)
 	{
-		var paging = new PagingParameters(page, pageSize);
-		var query = new GetAttractionsBySiteIdQuery(siteId, type, searchTerm);
-
+		var query = new GetAttractionsBySiteIdQuery(siteId, type);
 		var result = await queryHandler.HandleAsync(query, cancellationToken);
+		var pagesResult = new PagedResult<AttractionListDto>(result.Value, result.Value.Count, 1, result.Value.Count);
 
-		return HandleResult(result);
+		return HandleResult(result.To(pagesResult));
 	}
 }

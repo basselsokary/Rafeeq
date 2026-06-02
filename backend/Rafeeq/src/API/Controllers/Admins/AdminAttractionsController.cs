@@ -50,6 +50,20 @@ public class AdminAttractionsController : ApiBaseController
 		return HandleResult(result);
 	}
 
+	[HttpGet("site/{siteId:guid}")]
+	public async Task<ActionResult<List<AttractionListDto>>> GetAttractionsBySiteId(
+		[FromRoute] Guid siteId,
+		[FromQuery] AttractionType? type,
+		[FromServices] IQueryHandler<GetAttractionsBySiteIdQuery, List<AttractionListDto>> queryHandler,
+		[FromQuery] string? searchTerm = null,
+		CancellationToken cancellationToken = default)
+	{
+		var query = new GetAttractionsBySiteIdQuery(siteId, type, searchTerm);
+		var result = await queryHandler.HandleAsync(query, cancellationToken);
+
+		return HandleResult(result);
+	}
+
 	public sealed record CreateAttractionRequest(Guid SiteId, string Name, string Description, string? LocationDescription, AttractionType Type, bool IsFeatured, LocationRequest? Location, List<HistoricalPeriod> HistoricalPeriod);
 	
 	[HttpPost]
