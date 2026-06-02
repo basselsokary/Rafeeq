@@ -34,10 +34,10 @@ public class AdminCitiesController : ApiBaseController
 	public sealed record CreateCityRequest(string Name, string Description, LocationRequest CenterLocation, int DisplayOrder);
 	
 	[HttpPost]
-	public async Task<IActionResult> Create(
+	public async Task<ActionResult<Guid>> Create(
 		[FromForm] CreateCityRequest request,
 		IFormFile image,
-		[FromServices] ICommandHandler<CreateCityCommand> commandHandler,
+		[FromServices] ICommandHandler<CreateCityCommand, Guid> commandHandler,
 		CancellationToken cancellationToken = default)
 	{		
 		await using var imageStream = image.OpenReadStream();

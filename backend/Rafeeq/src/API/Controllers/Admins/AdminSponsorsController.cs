@@ -40,9 +40,9 @@ public class AdminSponsorsController : ApiBaseController
 	public record CreateSponsorRequest(string Title, string Description, string Address, SponsorType Type, SponsorTier Tier, LocationRequest Location, DateTime StartDate, DateTime EndDate, string? WebsiteUrl, string? ContactPhone, string? ContactEmail);
 
 	[HttpPost]
-	public async Task<IActionResult> Create(
+	public async Task<ActionResult<Guid>> Create(
 		[FromBody] CreateSponsorRequest request,
-		[FromServices] ICommandHandler<CreateSponsorCommand> commandHandler,
+		[FromServices] ICommandHandler<CreateSponsorCommand, Guid> commandHandler,
         CancellationToken cancellationToken = default)
 	{
 		var command = new CreateSponsorCommand(

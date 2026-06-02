@@ -60,9 +60,9 @@ public class AdminSitesController : ApiBaseController
     public record ContactInfo(string? Phone, string? WebsiteUrl);
 
     [HttpPost]
-    public async Task<IActionResult> Create(
+    public async Task<ActionResult<Guid>> Create(
         [FromBody] CreateSiteRequest request,
-        [FromServices] ICommandHandler<CreateSiteCommand> commandHandler,
+        [FromServices] ICommandHandler<CreateSiteCommand, Guid> commandHandler,
         CancellationToken cancellationToken = default)
     {
         var command = new CreateSiteCommand(

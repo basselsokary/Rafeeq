@@ -205,7 +205,7 @@ public class AuthController : ApiBaseController
             Secure = true,
             SameSite = SameSiteMode.Strict,
             Expires = DateTime.UtcNow.AddHours(RefreshTokenExpirationInHours),
-            Path = "/api/auth/web/refresh" // Better security by restricting the refresh token to a specific endpoint
+            Path = "/api/auth/admins/refresh" // Better security by restricting the refresh token to a specific endpoint
         };
 
         response.Cookies.Delete("access_token");

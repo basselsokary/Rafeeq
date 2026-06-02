@@ -53,9 +53,9 @@ public class AdminAttractionsController : ApiBaseController
 	public sealed record CreateAttractionRequest(Guid SiteId, string Name, string Description, string? LocationDescription, AttractionType Type, bool IsFeatured, LocationRequest? Location, List<HistoricalPeriod> HistoricalPeriod);
 	
 	[HttpPost]
-	public async Task<IActionResult> Create(
+	public async Task<ActionResult<Guid>> Create(
 		[FromBody] CreateAttractionRequest request,
-		[FromServices] ICommandHandler<CreateAttractionCommand> commandHandler,
+		[FromServices] ICommandHandler<CreateAttractionCommand, Guid> commandHandler,
 		CancellationToken cancellationToken = default)
 	{
 		var command = new CreateAttractionCommand(

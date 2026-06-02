@@ -23,16 +23,17 @@ public class AttractionsController : ApiBaseController
 	}
 
 	[HttpGet("site/{siteId:guid}")]
-	public async Task<ActionResult<PagedResult<AttractionListDto>>> GetAttractionsBySiteId(
+	public async Task<ActionResult<List<AttractionListDto>>> GetAttractionsBySiteId(
 		[FromRoute] Guid siteId,
 		[FromQuery] AttractionType? type,
-		[FromServices] IQueryHandler<GetAttractionsBySiteIdQuery, PagedResult<AttractionListDto>> queryHandler,
+		[FromServices] IQueryHandler<GetAttractionsBySiteIdQuery, List<AttractionListDto>> queryHandler,
+		[FromQuery] string? searchTerm = null,
 		[FromQuery] int page = 1,
 		[FromQuery] int pageSize = 20,
 		CancellationToken cancellationToken = default)
 	{
 		var paging = new PagingParameters(page, pageSize);
-		var query = new GetAttractionsBySiteIdQuery(siteId, type, paging);
+		var query = new GetAttractionsBySiteIdQuery(siteId, type, searchTerm);
 
 		var result = await queryHandler.HandleAsync(query, cancellationToken);
 

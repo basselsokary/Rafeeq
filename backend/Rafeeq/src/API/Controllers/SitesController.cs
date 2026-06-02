@@ -4,7 +4,6 @@ using Application.DTOs.Common;
 using Application.DTOs.Sites;
 using Application.Queries.Sites;
 using Domain.Enums;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
