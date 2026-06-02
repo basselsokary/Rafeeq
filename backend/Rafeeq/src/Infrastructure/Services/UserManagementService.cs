@@ -466,6 +466,7 @@ internal sealed class UserManagementService(
                 MustChangePassword = g.Count(u => u.MustChangePassword),
                 TwoFactorEnabled   = g.Count(u => u.TwoFactorEnabled),
             })
+            .OrderByDescending(x => x.CreatedToday) // just to have a deterministic order
             .FirstOrDefaultAsync(cancellationToken);
 
         // Second round-trip: daily breakdown for the chart (still all in SQL)

@@ -124,6 +124,7 @@ public static class DependencyInjection
         services.AddScoped<IContentReportQueryService, ContentReportQueryService>();
         services.AddScoped<ITripQueryService, TripQueryService>();
         services.AddScoped<IDashboardQueryService, DashboardQueryService>();
+        services.AddScoped<IMapQueryService, MapQueryService>();
 
         services.Decorate<ICityQueryService, CachedCityQueryService>();
         services.Decorate<IArtifactQueryService, CachedArtifactQueryService>();
@@ -135,6 +136,7 @@ public static class DependencyInjection
         services.Decorate<IContentReportQueryService, CachedContentReportQueryService>();
         services.Decorate<ITripQueryService, CachedTripQueryService>();
         services.Decorate<IDashboardQueryService, CachedDashboardQueryService>();
+        services.Decorate<IMapQueryService, CachedMapQueryService>();
 
         return services;
     }
@@ -183,36 +185,59 @@ public static class DependencyInjection
         services.AddScoped<AuditableEntityInterceptor>();
         services.AddScoped<DomainEventDispatcherInterceptor>();
 
-        services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
+        services.AddScoped(sp =>
         {
-            options.AddInterceptors(
-                serviceProvider.GetRequiredService<AuditableEntityInterceptor>(),
-                serviceProvider.GetRequiredService<DomainEventDispatcherInterceptor>()
+            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+            optionsBuilder.ConfigureDbContext(configuration, useStaticData);
+            optionsBuilder.AddInterceptors(
+                sp.GetRequiredService<AuditableEntityInterceptor>(),
+                sp.GetRequiredService<DomainEventDispatcherInterceptor>()
             );
+            return new ApplicationDbContext(optionsBuilder.Options);
+        });
 
-            if (useStaticData)
-            {
-                options.UseInMemoryDatabase("RafeeqStaticData");
-            }
-            else
-            {
-                options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultSqlServer"),
-                    b =>
-                    {
-                        b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
-                        b.EnableRetryOnFailure(
-                            maxRetryCount: 3,
-                            maxRetryDelay: TimeSpan.FromSeconds(5),
-                            errorNumbersToAdd: null);
-                    });
-            }
+        // services.AddDbContext<ApplicationDbContext>((sp, options) =>
+        // {
+        //     options.ConfigureDbContext(configuration, useStaticData);
+        //     options.AddInterceptors(
+        //         sp.GetRequiredService<AuditableEntityInterceptor>(),
+        //         sp.GetRequiredService<DomainEventDispatcherInterceptor>()
+        //     );
+        // });
 
-            options.EnableSensitiveDataLogging(false);
-            options.EnableDetailedErrors(false);
+        services.AddDbContextFactory<ApplicationDbContext>(options =>
+        {
+            options.ConfigureDbContext(configuration, useStaticData);
         });
 
         return services;
+    }
+
+    private static void ConfigureDbContext(
+        this DbContextOptionsBuilder options,
+        IConfiguration configuration,
+        bool useStaticData)
+    {
+        if (useStaticData)
+        {
+            options.UseInMemoryDatabase("RafeeqStaticData");
+        }
+        else
+        {
+            options.UseSqlServer(
+                configuration.GetConnectionString("DefaultSqlServer"),
+                b =>
+                {
+                    b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+                    b.EnableRetryOnFailure(
+                        maxRetryCount: 3,
+                        maxRetryDelay: TimeSpan.FromSeconds(5),
+                        errorNumbersToAdd: null);
+                });
+        }
+
+        options.EnableSensitiveDataLogging(false);
+        options.EnableDetailedErrors(false);
     }
 
     private static IServiceCollection AddIdentity(
