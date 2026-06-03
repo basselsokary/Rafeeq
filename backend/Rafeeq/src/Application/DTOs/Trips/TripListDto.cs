@@ -18,10 +18,3 @@ public sealed record TripListDto(
     DateTime CreatedAt,
     DateTime UpdatedAt,
     string StatusDisplay = "");
-
-// public class TripSitePreviewDto
-// {
-//     public string SiteName { get; set; }
-//     public string SiteImageUrl { get; set; }
-//     public string CityName { get; set; }
-// }

@@ -25,28 +25,3 @@ public sealed record TripDetailDto(
     List<string> PreferredSiteTypesDisplay,
     string StatusDisplay = "",
     string ToleranceDisplay = "");
-
-public sealed record TripDayDto(
-    Guid Id,
-    int DayNumber,
-    DateTime Date,
-    MoneyDto? EstimatedDayCost,
-    int TotalSites,
-    int TotalDurationMinutes,
-    string? Notes,
-    List<TripSiteDto> Sites);
-
-public sealed record TripSiteDto(
-    Guid Id,
-    string SiteName,
-    string SiteImageUrl,
-    SiteType SiteType,
-    string CityName,
-    LocationDto SiteLocation,
-    MoneyDto EstimatedCost,
-    int VisitOrder,
-    TimeOnly PlannedArrivalTime,
-    DateTime? ActualVisitTime,
-    int EstimatedDurationMinutes,
-    bool IsVisited,
-    string SiteTypeDisplay = "");

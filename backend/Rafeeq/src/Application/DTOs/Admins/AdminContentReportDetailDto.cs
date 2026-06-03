@@ -1,6 +1,6 @@
 using Domain.Enums;
 
-namespace Application.DTOs.ContentReports;
+namespace Application.DTOs.Admins;
 
 public record ContentReportAdminDetailDto(
     Guid Id,

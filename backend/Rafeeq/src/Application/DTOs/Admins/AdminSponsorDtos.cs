@@ -1,5 +1,4 @@
 using Application.DTOs.Common;
-using Domain.Entities.SponsorAggregate;
 using Domain.Enums;
 
 namespace Application.DTOs.Admins;
@@ -41,3 +40,11 @@ public sealed record AdminSponsorDashboardDto(
     int ExpiredSponsors,
     int TotalOffers,
     int ActiveOffers);
+
+public sealed record AdminOfferLocalizedContentDto(
+    Guid Id,
+    LanguageCode Language,
+    string Title,
+    string Description,
+    string? TermsAndConditions,
+    AuditInfoDto AuditInfo);

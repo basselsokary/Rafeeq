@@ -1,6 +1,6 @@
 using Domain.ValueObjects;
 
-namespace Application.DTOs.Common;
+namespace Application.DTOs.Services;
 
 public record UploadedFileResponse(
     StorageKey StorageKey,

@@ -7,7 +7,6 @@ public record SiteListDto(
     Guid Id,
     string CityName,
     string Name,
-    string Description,
     SiteType Type,
     SiteStatus Status,
     LocationDto Location,

@@ -1,4 +1,4 @@
-namespace Application.DTOs.Artifacts;
+namespace Application.DTOs.Integrations.Scanner;
 
 public record ScanImageResponse(
     List<ScanImageResult> Results);
@@ -7,6 +7,3 @@ public record ScanImageResult(
     string VectorId,
     string ArtifactId,
     double Distance);
-
-public record ScanImageResponseV2(
-    string Label);

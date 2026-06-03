@@ -1,5 +1,3 @@
-using Domain.Enums;
-
 namespace Application.DTOs.Tourists;
 
 public record TouristProfileDto(
