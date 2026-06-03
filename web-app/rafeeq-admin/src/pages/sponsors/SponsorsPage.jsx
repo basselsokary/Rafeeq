@@ -8,7 +8,7 @@ import { useToast } from '../../components/common/Toast';
 import { formatEnum } from '../../utils/constants';
 
 /* ── Enums ─────────────────────────────────────────────── */
-const SPONSOR_TYPES   = ['restaurant','hotel','shop','service','tour','transportation'];
+const SPONSOR_TYPES   = ['restaurant','hotel','service','tour','transportation'];
 const SPONSOR_TIERS   = ['bronze','silver','gold','platinum'];
 const SPONSOR_FILTERS = ['All','Active','Inactive','Expired','Gold','Platinum'];
 
