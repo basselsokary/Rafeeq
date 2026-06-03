@@ -1,6 +1,6 @@
 using API.Controllers.Base;
 using Application.Common.Interfaces.Messaging;
-using Application.DTOs;
+using Application.DTOs.Admins;
 using Application.Queries.Dashboard;
 using Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authorization;
