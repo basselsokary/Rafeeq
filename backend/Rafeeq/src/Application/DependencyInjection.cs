@@ -17,7 +17,6 @@ public static class DependencyInjection
 
         services.AddDecrotors();
 
-        services.AddScoped<ScannerService>();
         services.AddScoped<IFileUploadService, FileUploadService>();
 
         return services;
