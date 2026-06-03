@@ -1,8 +1,8 @@
 using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.QueryServices;
 using Application.Common.Interfaces.Services;
+using Application.DTOs.Integrations.TripPlanner;
 using Application.DTOs.Sites;
-using Application.DTOs.Trips;
 using Domain.Common.Interfaces;
 using Domain.Entities.TripAggregate;
 using Domain.Enums;

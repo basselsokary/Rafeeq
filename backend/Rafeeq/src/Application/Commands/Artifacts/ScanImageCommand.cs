@@ -19,7 +19,7 @@ public sealed class ScanImageHandler(
 {
     public async Task<Result<ArtifactDetailsDto>> HandleAsync(ScanImageCommand command, CancellationToken ct)
     {
-        var processedImageResult = await imageProcessingService.ProcessAsync(command.Image, command.ContentType, ct);
+        var processedImageResult = await imageProcessingService.CompressForMlAsync(command.Image, command.ContentType, ct);
         if (processedImageResult.Failed)
             return processedImageResult.Error;
         
