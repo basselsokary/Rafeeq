@@ -25,6 +25,16 @@ public interface IEmailService
         string tempPassword,
         CancellationToken cancellationToken = default);
 
+    Task SendAdminPromotionEmailAsync(
+        string email,
+        string userName,
+        CancellationToken cancellationToken = default);
+    
+    Task SendAdminDemotionEmailAsync(
+        string email,
+        string userName,
+        CancellationToken cancellationToken = default);
+
     Task SendTripReminderEmailAsync(
         string email,
         string userName,

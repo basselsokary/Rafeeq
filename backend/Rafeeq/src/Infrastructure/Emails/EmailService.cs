@@ -1,5 +1,5 @@
 using Application.Common.Interfaces.Email;
-using Application.DTOs.Email;
+using Application.DTOs.Integrations.Email;
 using Infrastructure.Authentication;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -26,9 +26,8 @@ internal class EmailService(
         var resetLink = $"{_options.ApplicationUrl}/reset-password?token={resetToken}";
         var template = EmailTemplates.PasswordReset(userName, resetLink, _jwtOptions.TokenLifespanHours);
         
-        await SendEmailAsync(email, userName, template.Subject, template.HtmlBody, template.TextBody, cancellationToken);
-        
-        logger.LogInformation("Password reset email sent to {Email}", email);
+        await SendEmailAsync(
+            email, userName, template.Subject, template.HtmlBody, template.TextBody, cancellationToken);
     }
 
     public async Task SendEmailVerificationAsync(
@@ -40,9 +39,8 @@ internal class EmailService(
         var verificationLink = $"{_options.ApplicationUrl}/verify-email?token={verificationToken}";
         var template = EmailTemplates.EmailVerification(userName, verificationLink, _jwtOptions.TokenLifespanHours);
         
-        await SendEmailAsync(email, userName, template.Subject, template.HtmlBody, template.TextBody, cancellationToken);
-        
-        logger.LogInformation("Email verification sent to {Email}", email);
+        await SendEmailAsync(
+            email, userName, template.Subject, template.HtmlBody, template.TextBody, cancellationToken);
     }
 
     public async Task SendWelcomeEmailAsync(
@@ -51,9 +49,8 @@ internal class EmailService(
         CancellationToken cancellationToken = default)
     {
         var template = EmailTemplates.WelcomeTourist(userName);
-        await SendEmailAsync(email, userName, template.Subject, template.HtmlBody, template.TextBody, cancellationToken);
-        
-        logger.LogInformation("Welcome email sent to new user {Email}", email);
+        await SendEmailAsync(
+            email, userName, template.Subject, template.HtmlBody, template.TextBody, cancellationToken);
     }
 
     public async Task SendWelcomeModeratorAsync(
@@ -63,9 +60,30 @@ internal class EmailService(
         CancellationToken cancellationToken = default)
     {
         var template = EmailTemplates.WelcomeModerator(firstName, email, tempPassword);
-        await SendEmailAsync(email, firstName, template.Subject, template.HtmlBody, template.TextBody, cancellationToken);
+        await SendEmailAsync(
+            email, firstName, template.Subject, template.HtmlBody, template.TextBody, cancellationToken);
+    }
 
-        logger.LogInformation("Welcome email sent to new moderator {Email}", email);
+    public async Task SendAdminPromotionEmailAsync(
+        string email,
+        string userName,
+        CancellationToken cancellationToken = default)
+    {
+        var template = EmailTemplates.AdminPromotion(userName);
+        
+        await SendEmailAsync(
+            email, userName, template.Subject, template.HtmlBody, template.TextBody, cancellationToken);
+    }
+
+    public async Task SendAdminDemotionEmailAsync(
+        string email,
+        string userName,
+        CancellationToken cancellationToken = default)
+    {
+        var template = EmailTemplates.AdminDemotion(userName);
+        
+        await SendEmailAsync(
+            email, userName, template.Subject, template.HtmlBody, template.TextBody, cancellationToken);
     }
 
     public async Task SendTripReminderEmailAsync(
@@ -78,14 +96,7 @@ internal class EmailService(
         var template = EmailTemplates.TripReminder(userName, tripName, tripDate);
         
         await SendEmailAsync(
-            email,
-            userName,
-            template.Subject,
-            template.HtmlBody,
-            template.TextBody,
-            cancellationToken);
-        
-        logger.LogInformation("Trip reminder sent to {Email} for trip {TripName}", email, tripName);
+            email, userName, template.Subject, template.HtmlBody, template.TextBody, cancellationToken);
     }
 
     public async Task SendReviewResponseNotificationAsync(
@@ -97,14 +108,7 @@ internal class EmailService(
         var template = EmailTemplates.ReviewResponse(userName, siteName);
         
         await SendEmailAsync(
-            email,
-            userName,
-            template.Subject,
-            template.HtmlBody,
-            template.TextBody,
-            cancellationToken);
-        
-        logger.LogInformation("Review response notification sent to {Email}", email);
+            email, userName, template.Subject, template.HtmlBody, template.TextBody, cancellationToken);
     }
 
     private async Task SendEmailAsync(
@@ -130,16 +134,12 @@ internal class EmailService(
             };
             message.Body = builder.ToMessageBody();
 
-            // Send using SMTP
             using var client = new SmtpClient();
-            
-            // For debugging/development, you can log protocol
-            // client.ServerCertificateValidationCallback = (s,c,h,e) => true;
             
             await client.ConnectAsync(
                 _options.SmtpHost,
                 _options.SmtpPort,
-                false, // For now
+                false,
                 cancellationToken);
 
             // Authenticate (if credentials provided)

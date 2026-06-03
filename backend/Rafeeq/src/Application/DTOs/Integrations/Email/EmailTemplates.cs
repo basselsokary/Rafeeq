@@ -1,6 +1,4 @@
-namespace Application.DTOs.Email;
-
-public record EmailResponse(string Subject, string HtmlBody, string TextBody);
+namespace Application.DTOs.Integrations.Email;
 
 public static class EmailTemplates
 {
@@ -122,6 +120,53 @@ public static class EmailTemplates
 
                 Best regards,
                 Rafeeq Admin Team
+            ");
+    }
+
+    public static EmailResponse AdminPromotion(string userName)
+    {
+        return new EmailResponse(
+            Subject: "You've Been Promoted to Admin!",
+            HtmlBody: $@"
+                <h2>Congratulations, {userName}!</h2>
+                <p>You have been promoted to an admin role on the Rafeeq platform.</p>
+                <p>With this new role, you will have access to additional features and responsibilities.</p>
+                <p>Please log in to your account to explore your new admin dashboard.</p>
+                <p>Best regards,<br/>The Rafeeq Team</p>
+            ",
+            TextBody: $@"
+                Congratulations, {userName}!
+                
+                You have been promoted to an admin role on the Rafeeq platform.
+                
+                With this new role, you will have access to additional features and responsibilities.
+                
+                Please log in to your account to explore your new admin dashboard.
+                
+                Best regards,
+                The Rafeeq Team
+            ");
+    }
+
+    public static EmailResponse AdminDemotion(string userName)
+    {
+        return new EmailResponse(
+            Subject: "Admin Role Update",
+            HtmlBody: $@"
+                <h2>Hello {userName},</h2>
+                <p>We wanted to inform you that your admin role on the Rafeeq platform has been updated.</p>
+                <p>If you have any questions or concerns, please contact our support team.</p>
+                <p>Best regards,<br/>The Rafeeq Team</p>
+            ",
+            TextBody: $@"
+                Hello {userName},
+                
+                We wanted to inform you that your admin role on the Rafeeq platform has been updated.
+                
+                If you have any questions or concerns, please contact our support team.
+                
+                Best regards,
+                The Rafeeq Team
             ");
     }
 
