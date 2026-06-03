@@ -1,4 +1,4 @@
-using Application.DTOs.Artifacts;
+using Application.DTOs.Integrations.Scanner;
 
 namespace Application.Common.Interfaces.Services;
 

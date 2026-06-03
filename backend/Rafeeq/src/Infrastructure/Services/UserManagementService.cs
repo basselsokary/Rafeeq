@@ -445,7 +445,6 @@ internal sealed class UserManagementService(
         var last30Days = now.AddDays(-30);
         var last24Hours = now.AddHours(-24);
 
-        // Single round-trip: all scalar aggregates in one query
         var stats = await context.Users
             .AsNoTracking()
             .GroupBy(_ => 1)
@@ -468,8 +467,18 @@ internal sealed class UserManagementService(
             })
             .OrderByDescending(x => x.CreatedToday) // just to have a deterministic order
             .FirstOrDefaultAsync(cancellationToken);
+        
+        var roleCounts = await (
+            from ur in context.UserRoles
+            join r in context.Roles on ur.RoleId equals r.Id
+            group ur by r.Name into g
+            select new
+            {
+                Role = g.Key,
+                Count = g.Count()
+            })
+            .ToListAsync(cancellationToken);
 
-        // Second round-trip: daily breakdown for the chart (still all in SQL)
         var dailyCounts = await context.Users
             .AsNoTracking()
             .Where(u => u.CreatedAt >= last30Days)
@@ -479,7 +488,7 @@ internal sealed class UserManagementService(
 
         // Fill in days with zero registrations (pure C#, no DB needed)
         var dailyBreakdown = Enumerable.Range(0, 30)
-            .Select(offset => today.AddDays(-29 + offset))           // oldest → newest
+            .Select(offset => today.AddDays(-29 + offset)) // oldest → newest
             .Select(date => new DailyUserCountDto(
                 date,
                 dailyCounts.GetValueOrDefault(date, 0)))
@@ -500,6 +509,10 @@ internal sealed class UserManagementService(
                 stats?.ActiveLast24Hours ?? 0,
                 stats?.ActiveLast7Days   ?? 0,
                 stats?.ActiveLast30Days  ?? 0),
+            new UsersByRoleDto(
+                roleCounts.FirstOrDefault(rc => rc.Role == UserRoles.Admin || rc.Role == UserRoles.SuperAdmin)?.Count ?? 0,
+                roleCounts.FirstOrDefault(rc => rc.Role == UserRoles.Moderator)?.Count ?? 0,
+                roleCounts.FirstOrDefault(rc => rc.Role == UserRoles.Tourist)?.Count ?? 0),
             stats?.UnconfirmedEmails     ?? 0,
             stats?.MustChangePassword    ?? 0,
             stats?.TwoFactorEnabled      ?? 0);
@@ -662,7 +675,7 @@ internal sealed class UserManagementService(
             touristDetails);
     }
 
-    private async Task<(string? FirstName, string? LastName)> GetNamesAsync(
+    private async Task<(string FirstName, string LastName)> GetNamesAsync(
         ApplicationUser user,
         CancellationToken cancellationToken)
     {
@@ -679,7 +692,7 @@ internal sealed class UserManagementService(
                 return (tourist.FirstName, tourist.LastName);
         }
 
-        return (null, null);
+        return (user.UserName!, user.UserName!);
     }
 
     private static (string? FirstName, string? LastName) GetNames(

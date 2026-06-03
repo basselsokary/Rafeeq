@@ -1,4 +1,4 @@
-using Application.DTOs.Common;
+using Application.DTOs.Services;
 using Domain.ValueObjects;
 
 namespace Application.Common.Interfaces.Services;

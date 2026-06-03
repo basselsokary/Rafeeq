@@ -23,7 +23,6 @@ public sealed record UploadImageContext<TMetadata>(
 
 public sealed class FileUploadService(
     IFileStorageService storage,
-    IImageProcessingService imageProcessor,
     IOptions<FileUploadOptions> options,
     ILogger<FileUploadService> logger,
     IUnitOfWork unitOfWork,
@@ -69,7 +68,7 @@ public sealed class FileUploadService(
                     "Duplicate detected for user {UserId}, hash {Hash} — reusing existing asset",
                     uploaderUserId, hash.Value);
 
-                var existingUrl = storage.GetCleanUrl(existing.StorageKey);
+                var existingUrl = storage.GetOptimizedUrl(existing.StorageKey);
                 existing.IncrementReference();
                 return Result.Success(MapToResponse(existing, existingUrl, file.Metadata));
             }
@@ -167,7 +166,7 @@ public sealed class FileUploadService(
                     "Duplicate detected for user {UserId}, hash {Hash} — reusing existing asset",
                     uploaderUserId, existing.Hash.Value);
 
-                var url = storage.GetCleanUrl(existing.StorageKey);
+                var url = storage.GetOptimizedUrl(existing.StorageKey);
                 entriesByHash[existing.Hash.Value] = new HashEntry(
                     StoredFile: existing,
                     Url: url,
@@ -280,25 +279,10 @@ public sealed class FileUploadService(
         string ext,
         CancellationToken ct)
     {
-        // Process image (resize/compress if configured)
         file.File.Stream.Position = 0;
-        var processedResult = await imageProcessor.ProcessAsync(file.File.Stream, contentType, ct);
-
-        if (processedResult.Failed)
-        {
-            logger.LogError(
-                "Image processing failed for user {UserId}, file {FileName}: {Error}",
-                uploaderUserId,
-                file.File.OriginalFileName,
-                processedResult.Error);
-            return Result.Failure<UploadOutcome<T>>(processedResult.Error);
-        }
-
-        await using var _ = processedResult.Value.Stream; // Ensure disposal
 
         // Build storage key and upload
         var fileId = Guid.NewGuid();
-
         StorageKey storageKey;
         if (uploaderUserId == Guid.Empty)
         {
@@ -313,7 +297,7 @@ public sealed class FileUploadService(
                 DateTimeOffset.UtcNow);
         }
 
-        var uploadResult = await storage.UploadAsync(processedResult.Value.Stream, storageKey, hash.Value, ct);
+        var uploadResult = await storage.UploadAsync(file.File.Stream, storageKey, hash.Value, ct);
         if (uploadResult.Failed)
         {
             logger.LogError(
@@ -327,7 +311,7 @@ public sealed class FileUploadService(
             fileId,
             hash,
             storageKey,
-            (ImageContentType) processedResult.Value.ContentType.Value,
+            contentType,
             file.File.Length);
 
         await unitOfWork.StoredFiles.AddAsync(storedFile, ct);

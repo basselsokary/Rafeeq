@@ -1,4 +1,4 @@
-using Application.DTOs.Trips;
+using Application.DTOs.Integrations.TripPlanner;
 
 namespace Application.Common.Interfaces.Services;
 
