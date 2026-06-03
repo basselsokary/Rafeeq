@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using Application.Common.Interfaces.Services;
-using Application.DTOs.Trips;
+using Application.DTOs.Integrations.TripPlanner;
 using Microsoft.Extensions.Logging;
 using Shared;
 

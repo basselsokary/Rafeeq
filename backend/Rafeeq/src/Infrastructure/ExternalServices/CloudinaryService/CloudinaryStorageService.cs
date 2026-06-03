@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Application.Common.Interfaces.Services;
-using Application.DTOs.Common;
+using Application.DTOs.Services;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Domain.ValueObjects;

@@ -2,7 +2,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Application.Common.Interfaces.Services;
-using Application.DTOs.Artifacts;
+using Application.DTOs.Integrations.Scanner;
 using Microsoft.Extensions.Logging;
 using Shared;
 
