@@ -1,7 +1,7 @@
 using Application.Common.Interfaces.QueryServices;
 using Infrastructure.Persistence.ApplicationContext;
-using Application.DTOs;
 using Microsoft.EntityFrameworkCore;
+using Application.DTOs.Admins;
 
 namespace Infrastructure.Persistence.QueryServices;
 

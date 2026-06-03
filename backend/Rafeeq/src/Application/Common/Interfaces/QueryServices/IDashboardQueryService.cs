@@ -1,4 +1,4 @@
-using Application.DTOs;
+using Application.DTOs.Admins;
 
 namespace Application.Common.Interfaces.QueryServices;
 

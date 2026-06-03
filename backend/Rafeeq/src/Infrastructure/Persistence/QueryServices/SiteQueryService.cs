@@ -1,13 +1,13 @@
-using Application.DTOs.Sites;
-using Application.Common.Interfaces.QueryServices;
-using Infrastructure.Persistence.ApplicationContext;
-using Application.DTOs.Common;
 using System.Linq.Expressions;
-using Domain.Entities.SiteAggregate;
-using Microsoft.EntityFrameworkCore;
-using Domain.Enums;
-using Application.Extensions;
+using Application.Common.Interfaces.QueryServices;
 using Application.DTOs.Admins;
+using Application.DTOs.Common;
+using Application.DTOs.Sites;
+using Application.Extensions;
+using Domain.Entities.SiteAggregate;
+using Domain.Enums;
+using Infrastructure.Persistence.ApplicationContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.QueryServices;
 
@@ -352,10 +352,6 @@ internal sealed class SiteQueryService(
                     s.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
                         .OrderBy(lc => lc.Language == language ? 0 : 1)
                         .Select(lc => lc.Name)
-                        .FirstOrDefault()!,
-                    s.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
-                        .OrderBy(lc => lc.Language == language ? 0 : 1)
-                        .Select(lc => lc.Description)
                         .FirstOrDefault()!,
                     s.Type,
                     s.Status,
@@ -1005,10 +1001,6 @@ internal sealed class SiteQueryService(
             s.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
                 .OrderBy(lc => lc.Language == language ? 0 : 1)
                 .Select(lc => lc.Name)
-                .FirstOrDefault()!,
-            s.LocalizedContents.Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
-                .OrderBy(lc => lc.Language == language ? 0 : 1)
-                .Select(lc => lc.Description)
                 .FirstOrDefault()!,
             s.Type,
             s.Status,

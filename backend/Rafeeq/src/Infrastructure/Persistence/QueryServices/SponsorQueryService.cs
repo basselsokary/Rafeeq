@@ -138,6 +138,7 @@ internal sealed class SponsorQueryService(
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
+        var now = DateTime.UtcNow;
         var query = ApplyFilters(Sponsors, filters)
             .Select(s => new
             {
@@ -157,13 +158,11 @@ internal sealed class SponsorQueryService(
             .Select(x => new SponsorListDto(
                 x.Sponsor.Id,
                 x.Localized.Title,
-                x.Localized.Description,
                 x.Sponsor.Type,
                 x.Sponsor.Location.Latitude,
                 x.Sponsor.Location.Longitude,
                 x.Sponsor.MainImageUrl,
-                0,
-                0,
+                x.Sponsor.ContractDate.StartDate <= now && x.Sponsor.ContractDate.EndDate >= now,
                 x.Sponsor.Status,
                 x.Sponsor.Offers.Count(o => o.IsActive),
                 null))
@@ -545,6 +544,7 @@ internal sealed class SponsorQueryService(
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
+        var now = DateTime.UtcNow;
         var term = searchTerm.Trim();
         var query = ApplyFilters(Sponsors, filters)
             .Select(s => new
@@ -563,13 +563,11 @@ internal sealed class SponsorQueryService(
             .Select(x => new SponsorListDto(
                 x.Sponsor.Id,
                 x.Localized.Title,
-                x.Localized.Description,
                 x.Sponsor.Type,
                 x.Sponsor.Location.Latitude,
                 x.Sponsor.Location.Longitude,
                 x.Sponsor.MainImageUrl,
-                0,
-                0,
+                x.Sponsor.ContractDate.StartDate <= now && x.Sponsor.ContractDate.EndDate >= now,
                 x.Sponsor.Status,
                 x.Sponsor.Offers.Count(o => o.IsActive),
                 null));
