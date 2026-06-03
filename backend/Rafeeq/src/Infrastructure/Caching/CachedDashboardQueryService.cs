@@ -1,5 +1,5 @@
 using Application.Common.Interfaces.QueryServices;
-using Application.DTOs;
+using Application.DTOs.Admins;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Infrastructure.Caching;
