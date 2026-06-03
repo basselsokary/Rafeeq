@@ -311,7 +311,7 @@ public sealed class FileUploadService(
             fileId,
             hash,
             storageKey,
-            contentType,
+            (ImageContentType) contentType.Value,
             file.File.Length);
 
         await unitOfWork.StoredFiles.AddAsync(storedFile, ct);
