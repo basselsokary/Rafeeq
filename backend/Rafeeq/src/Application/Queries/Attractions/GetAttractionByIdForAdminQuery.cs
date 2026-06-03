@@ -1,7 +1,7 @@
 using Application.Common.Interfaces.QueryServices;
 using Application.Common.Interfaces.Authentication;
-using Application.DTOs.Attractions;
 using Domain.Entities.AttractionAggregate;
+using Application.DTOs.Admins;
 
 namespace Application.Queries.Attractions;
 

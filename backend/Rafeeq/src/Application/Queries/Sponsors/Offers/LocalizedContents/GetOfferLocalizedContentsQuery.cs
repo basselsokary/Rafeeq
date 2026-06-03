@@ -1,5 +1,5 @@
 using Application.Common.Interfaces.QueryServices;
-using Application.DTOs.Sponsors;
+using Application.DTOs.Admins;
 using Domain.Entities.SponsorAggregate;
 
 namespace Application.Queries.Sponsors.Offers.LocalizedContents;

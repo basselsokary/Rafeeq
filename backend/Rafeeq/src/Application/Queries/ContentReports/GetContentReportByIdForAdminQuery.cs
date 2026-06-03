@@ -1,5 +1,5 @@
 using Application.Common.Interfaces.QueryServices;
-using Application.DTOs.ContentReports;
+using Application.DTOs.Admins;
 using Domain.Entities.ContentReportAggregate;
 
 namespace Application.Queries.ContentReports;

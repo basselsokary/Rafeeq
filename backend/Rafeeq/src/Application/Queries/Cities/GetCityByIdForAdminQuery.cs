@@ -1,7 +1,7 @@
 using Application.Common.Interfaces.QueryServices;
 using Application.Common.Interfaces.Authentication;
-using Application.DTOs.Cities;
 using Domain.Entities.CityAggregate;
+using Application.DTOs.Admins;
 
 namespace Application.Queries.Cities;
 
