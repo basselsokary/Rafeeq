@@ -26,16 +26,18 @@ public class UserManagementController : ApiBaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<PagedResult<UserListDto>>> GetUsers(
         [FromServices] IQueryHandler<GetUsersQuery, PagedResult<UserListDto>> handler,
-        string? SearchTerm = null,
-        bool? EmailVerified = null,
+        string? earchTerm = null,
+        bool? emailVerified = null,
         string? role = null,
-        UserStatus Status = UserStatus.Active,
-        int Page = 1,
-        int PageSize = 20,
+        UserStatus? status = null,
+        string? sortBy = null,
+        string? sortOrder = null,
+        int page = 1,
+        int pageSize = 20,
         CancellationToken cancellationToken = default)
     {
-        var paging = new PagingParameters(Page, PageSize);
-        var query = new GetUsersQuery(paging, SearchTerm, role, EmailVerified, Status);
+        var paging = new PagingParameters(page, pageSize);
+        var query = new GetUsersQuery(paging, earchTerm, role, emailVerified, sortBy, sortOrder, status);
         var result = await handler.HandleAsync(query, cancellationToken);
 
         return HandleResult(result);
