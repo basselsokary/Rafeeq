@@ -217,22 +217,22 @@ internal class CachedSiteQueryService(ISiteQueryService inner, IMemoryCache cach
             () => inner.GetNearestTransportationLocalizedContentByIdAsync(siteId, transportationId, contentId, cancellationToken));
     }
 
-    public Task<List<ImageDto>> GetImagesAsync(Guid siteId, CancellationToken cancellationToken = default)
+    public async Task<List<ImageDto>> GetImagesAsync(Guid siteId, CancellationToken cancellationToken = default)
     {
         var key = $"{Prefix}:images:{siteId}";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             ShortTtl5_Minutes,
             () => inner.GetImagesAsync(siteId, cancellationToken));
     }
 
-    public Task<ImageDto?> GetImageByIdAsync(
+    public async Task<ImageDto?> GetImageByIdAsync(
         Guid siteId,
         Guid imageId,
         CancellationToken cancellationToken = default)
     {
         var key = $"{Prefix}:image:{siteId}:{imageId}";
-        return GetOrCreateNullableAsync(
+        return await GetOrCreateNullableAsync(
             key,
             ShortTtl5_Minutes,
             () => inner.GetImageByIdAsync(siteId, imageId, cancellationToken));
@@ -254,31 +254,27 @@ internal class CachedSiteQueryService(ISiteQueryService inner, IMemoryCache cach
             () => inner.GetNearbyMarkerAsync(latitude, longitude, radiusKm, count, language, cancellationToken));
     }
 
-    public Task<List<AdminSiteOpeningHourDto>> GetOpeningHoursAsync(Guid siteId, CancellationToken cancellationToken)
+    public async Task<List<AdminSiteOpeningHourDto>> GetOpeningHoursAsync(Guid siteId, CancellationToken cancellationToken)
     {
         var key = $"{Prefix}:opening-hours:{siteId}";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             ShortTtl5_Minutes,
             () => inner.GetOpeningHoursAsync(siteId, cancellationToken));
     }
 
-    public Task<AdminSiteDashboardDto> GetDashboardAsync(CancellationToken cancellationToken)
+    public async Task<AdminSiteDashboardDto> GetDashboardAsync(CancellationToken cancellationToken)
     {
         var key = $"{Prefix}:dashboard";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             LongTtl30_Minutes,
             () => inner.GetDashboardAsync(cancellationToken));
     }
 
-    public Task<bool> AnyAsync(Guid siteId, CancellationToken cancellationToken)
+    public async Task<bool> AnyAsync(Guid siteId, CancellationToken cancellationToken)
     {
-        var key = $"{Prefix}:any:{siteId}";
-        return GetOrCreateAsync(
-            key,
-            ShortTtl5_Minutes,
-            () => inner.AnyAsync(siteId, cancellationToken));
+        return await inner.AnyAsync(siteId, cancellationToken);
     }
 
     private static string FormatFilters(SiteFilters filters)

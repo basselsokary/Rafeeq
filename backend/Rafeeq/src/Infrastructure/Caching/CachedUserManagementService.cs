@@ -11,39 +11,41 @@ namespace Infrastructure.Caching;
 internal sealed class CachedUserManagementService(IUserManagementService inner, IMemoryCache cache)
     : BaseCache("user-management", cache), IUserManagementService
 {
-    public Task<PagedResult<UserListDto>> GetUsersAsync(
+    public async Task<PagedResult<UserListDto>> GetUsersAsync(
         PagingParameters paging,
         string? searchTerm,
         string? role,
         bool? emailVerified,
-        UserStatus status,
+        string? sortBy,
+        string? sortOrder,
+        UserStatus? status,
         CancellationToken cancellationToken)
     {
         var normalizedSearch = (searchTerm ?? string.Empty).Trim().ToLowerInvariant();
         var key = $"{Prefix}:list:search={normalizedSearch}:status={status}:email-verified={emailVerified?.ToString() ?? "all"}:role={role ?? "all"}:{FormatPaging(paging)}";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             MediumTtl20_Minutes,
-            () => inner.GetUsersAsync(paging, searchTerm, role, emailVerified, status, cancellationToken));
+            () => inner.GetUsersAsync(paging, searchTerm, role, emailVerified, sortBy, sortOrder, status, cancellationToken));
     }
 
-    public Task<UserDetailsDto?> GetUserByIdAsync(Guid userId, CancellationToken cancellationToken)
+    public async Task<UserDetailsDto?> GetUserByIdAsync(Guid userId, CancellationToken cancellationToken)
     {
         var key = $"{Prefix}:detail:{userId}";
-        return GetOrCreateNullableAsync(
+        return await GetOrCreateNullableAsync(
             key,
             MediumTtl10_Minutes,
             () => inner.GetUserByIdAsync(userId, cancellationToken));
     }
 
-    public Task<List<UserSearchResultDto>> SearchUsersAsync(
+    public async Task<List<UserSearchResultDto>> SearchUsersAsync(
         string searchTerm,
         int limit,
         CancellationToken cancellationToken)
     {
         var normalizedSearch = (searchTerm ?? string.Empty).Trim().ToLowerInvariant();
         var key = $"{Prefix}:list:search:{normalizedSearch}:{limit}";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             MediumTtl10_Minutes,
             () => inner.SearchUsersAsync(searchTerm ?? string.Empty, limit, cancellationToken));
@@ -168,36 +170,36 @@ internal sealed class CachedUserManagementService(IUserManagementService inner, 
         return result;
     }
 
-    public Task<PagedResult<UserActivityDto>> GetUserActivityAsync(
+    public async Task<PagedResult<UserActivityDto>> GetUserActivityAsync(
         Guid userId,
         int page,
         int pageSize,
         CancellationToken cancellationToken)
     {
         var key = $"{Prefix}:activity:{userId}:{page}:{pageSize}";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             MediumTtl10_Minutes,
             () => inner.GetUserActivityAsync(userId, page, pageSize, cancellationToken));
     }
 
-    public Task<PagedResult<LoginHistoryDto>> GetUserLoginHistoryAsync(
+    public async Task<PagedResult<LoginHistoryDto>> GetUserLoginHistoryAsync(
         Guid userId,
         int page,
         int pageSize,
         CancellationToken cancellationToken)
     {
         var key = $"{Prefix}:login-history:{userId}:{page}:{pageSize}";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             MediumTtl10_Minutes,
             () => inner.GetUserLoginHistoryAsync(userId, page, pageSize, cancellationToken));
     }
 
-    public Task<UserStatisticsDto> GetUserStatisticsAsync(CancellationToken cancellationToken)
+    public async Task<UserStatisticsDto> GetUserStatisticsAsync(CancellationToken cancellationToken)
     {
         var key = $"{Prefix}:statistics";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             ShortTtl2_Minutes,
             () => inner.GetUserStatisticsAsync(cancellationToken));

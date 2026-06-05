@@ -40,15 +40,11 @@ internal class CachedTouristQueryService(ITouristQueryService inner, IMemoryCach
             MediumTtl10_Minutes,
             () => inner.GetFavoriteSiteIdsAsync(touristId, cancellationToken));
     }
-    private static string NormalizeEmail(string email)
-    {
-        return email.Trim().ToLowerInvariant();
-    }
 
-    public Task<PagedResult<VisitedSiteDto>> GetVisitedSitesAsync(Guid id, PagingParameters paging, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<VisitedSiteDto>> GetVisitedSitesAsync(Guid id, PagingParameters paging, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default)
     {
         var key = $"{Prefix}:visited:sites:{id}:{FormatPaging(paging)}";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             MediumTtl10_Minutes,
             () => inner.GetVisitedSitesAsync(id, paging, language, cancellationToken));

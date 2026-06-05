@@ -134,37 +134,37 @@ internal class CachedSponsorQueryService(ISponsorQueryService inner, IMemoryCach
             () => inner.GetActiveOffersAsync(count, language, cancellationToken));
     }
 
-    public Task<AdminOfferLocalizedContentDto?> GetOfferLocalizedContentByIdAsync(Guid offerId, Guid contentId, CancellationToken cancellationToken = default)
+    public async Task<AdminOfferLocalizedContentDto?> GetOfferLocalizedContentByIdAsync(Guid offerId, Guid contentId, CancellationToken cancellationToken = default)
     {
         var key = $"{Prefix}:offer:content:{offerId}:{contentId}";
-        return GetOrCreateNullableAsync(
+        return await GetOrCreateNullableAsync(
             key,
             ShortTtl5_Minutes,
             () => inner.GetOfferLocalizedContentByIdAsync(offerId, contentId, cancellationToken));
     }
 
-    public Task<List<AdminOfferLocalizedContentDto>> GetOfferLocalizedContentsAsync(Guid offerId, CancellationToken cancellationToken = default)
+    public async Task<List<AdminOfferLocalizedContentDto>> GetOfferLocalizedContentsAsync(Guid offerId, CancellationToken cancellationToken = default)
     {
         var key = $"{Prefix}:offer:contents:{offerId}";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             ShortTtl5_Minutes,
             () => inner.GetOfferLocalizedContentsAsync(offerId, cancellationToken));
     }
 
-    public Task<List<AdminSponsorLocalizedContentDto>> GetLocalizedContentsAsync(Guid sponsorId, CancellationToken cancellationToken = default)
+    public async Task<List<AdminSponsorLocalizedContentDto>> GetLocalizedContentsAsync(Guid sponsorId, CancellationToken cancellationToken = default)
     {
         var key = $"{Prefix}:contents:{sponsorId}";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             ShortTtl5_Minutes,
             () => inner.GetLocalizedContentsAsync(sponsorId, cancellationToken));
     }
 
-    public Task<AdminSponsorLocalizedContentDto?> GetLocalizedContentByIdAsync(Guid sponsorId, Guid contentId, CancellationToken cancellationToken = default)
+    public async Task<AdminSponsorLocalizedContentDto?> GetLocalizedContentByIdAsync(Guid sponsorId, Guid contentId, CancellationToken cancellationToken = default)
     {
         var key = $"{Prefix}:content:{sponsorId}:{contentId}";
-        return GetOrCreateNullableAsync(
+        return await GetOrCreateNullableAsync(
             key,
             ShortTtl5_Minutes,
             () => inner.GetLocalizedContentByIdAsync(sponsorId, contentId, cancellationToken));
@@ -186,19 +186,19 @@ internal class CachedSponsorQueryService(ISponsorQueryService inner, IMemoryCach
             () => inner.GetNearbyMarkerAsync(latitude, longitude, radiusKm, count, language, cancellationToken));
     }
 
-    public Task<AdminSponsorDashboardDto> GetDashboardAsync(CancellationToken cancellationToken)
+    public async Task<AdminSponsorDashboardDto> GetDashboardAsync(CancellationToken cancellationToken)
     {
         var key = $"{Prefix}:dashboard:admin";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             LongTtl30_Minutes,
             () => inner.GetDashboardAsync(cancellationToken));
     }
 
-    public Task<bool> AnyAsync(Guid sponsorId, CancellationToken cancellationToken)
+    public async Task<bool> AnyAsync(Guid sponsorId, CancellationToken cancellationToken)
     {
         var key = $"{Prefix}:any:{sponsorId}";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             ShortTtl5_Minutes,
             () => inner.AnyAsync(sponsorId, cancellationToken));

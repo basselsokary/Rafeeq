@@ -87,28 +87,28 @@ internal class CachedAttractionQueryService(IAttractionQueryService inner, IMemo
             () => inner.GetImageByIdAsync(attractionId, imageId, cancellationToken));
     }
 
-    public Task<PagedResult<AttractionListDto>> GetAllAsync(string? searchTerm, AttractionType? type, PagingParameters paging, CancellationToken cancellationToken)
+    public async Task<PagedResult<AttractionListDto>> GetAllAsync(string? searchTerm, AttractionType? type, PagingParameters paging, CancellationToken cancellationToken)
     {
         var key = $"{Prefix}:list:{searchTerm}:{type}:{FormatPaging(paging)}";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             ShortTtl5_Minutes,
             () => inner.GetAllAsync(searchTerm, type, paging, cancellationToken));
     }
 
-    public Task<AdminAttractionDashboardDto> GetDashboardAsync(CancellationToken cancellationToken)
+    public async Task<AdminAttractionDashboardDto> GetDashboardAsync(CancellationToken cancellationToken)
     {
         var key = $"{Prefix}:dashboard";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             LongTtl30_Minutes,
             () => inner.GetDashboardAsync(cancellationToken));
     }
 
-    public Task<bool> AnyAsync(Guid attractionId, CancellationToken cancellationToken)
+    public async Task<bool> AnyAsync(Guid attractionId, CancellationToken cancellationToken)
     {
         var key = $"{Prefix}:any:{attractionId}";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             ShortTtl5_Minutes,
             () => inner.AnyAsync(attractionId, cancellationToken));

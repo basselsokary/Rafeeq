@@ -54,19 +54,19 @@ internal class CachedCityQueryService(ICityQueryService inner, IMemoryCache cach
             () => inner.GetLocalizedContentsAsync(cityId, cancellationToken));
     }
 
-    public Task<CityLocalizedContentDto?> GetLocalizedContentByIdAsync(Guid cityId, Guid contentId, CancellationToken cancellationToken)
+    public async Task<CityLocalizedContentDto?> GetLocalizedContentByIdAsync(Guid cityId, Guid contentId, CancellationToken cancellationToken)
     {
         var key = $"{Prefix}:localized-content:{cityId}:{contentId}";
-        return GetOrCreateNullableAsync(
+        return await GetOrCreateNullableAsync(
             key,
             ShortTtl5_Minutes,
             () => inner.GetLocalizedContentByIdAsync(cityId, contentId, cancellationToken));
     }
 
-    public Task<AdminCityDashboardDto> GetDashboardAsync(CancellationToken cancellationToken)
+    public async Task<AdminCityDashboardDto> GetDashboardAsync(CancellationToken cancellationToken)
     {
         var key = $"{Prefix}:dashboard";
-        return GetOrCreateAsync(
+        return await GetOrCreateAsync(
             key,
             LongTtl30_Minutes,
             () => inner.GetDashboardAsync(cancellationToken));
