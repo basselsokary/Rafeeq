@@ -207,7 +207,6 @@ export default function UsersPage() {
     { value: 'CreatedAt', label: 'Date Joined' },
     { value: 'LastLoginAt', label: 'Last Login' },
     { value: 'Email', label: 'Email' },
-    { value: 'LastName', label: 'Name' },
   ];
 
   // ── fetch users ────────────────────────────────────────────────────────────
