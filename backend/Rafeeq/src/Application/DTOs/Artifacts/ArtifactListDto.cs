@@ -6,4 +6,5 @@ public record ArtifactListDto(
     Guid Id,
     string Name,
     string? MainImageUrl,
-    ArtifactType Type);
+    ArtifactType Type,
+    string TypeDisplay = "");
