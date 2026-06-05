@@ -21,9 +21,8 @@ public class Program
         // await app.Services.EnsureStaticDataAsync(builder.Configuration);
         await app.Services.SeedAsync();
 
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
+        // if (app.Environment.IsDevelopment())
+        // {
             app.UseSwagger();
 
             app.UseSwaggerUI(options =>
@@ -33,7 +32,7 @@ public class Program
                 // ✅ This tells the browser to send cookies with every Swagger request
                 options.ConfigObject.AdditionalItems["withCredentials"] = true;
             });
-        }
+        // }
 
         #region Middlewares
         
