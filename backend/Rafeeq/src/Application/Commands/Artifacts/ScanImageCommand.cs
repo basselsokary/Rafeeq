@@ -29,12 +29,12 @@ public sealed class ScanImageHandler(
         
         var label = result.Value.Label;
         if (string.IsNullOrEmpty(label) || label.Equals("unknown", StringComparison.OrdinalIgnoreCase))
-            return ArtifactErrors.NotFound;
+            return ArtifactErrors.NotFound();
             // return await ScanAsync(command, processedImageResult.Value.Stream, ct);
         
         var artifact = await artifactQueryService.GetByNameAsync(label, userContext.Language, ct);
         if (artifact == null)
-            return ArtifactErrors.NotFound;
+            return ArtifactErrors.NotFound(label);
             // return await ScanAsync(command, processedImageResult.Value.Stream, ct);
         
         return Result.Success(artifact with
@@ -58,12 +58,11 @@ public sealed class ScanImageHandler(
             .FirstOrDefault();
         
         if (string.IsNullOrEmpty(imageResultDto?.ArtifactId) || imageResultDto.Distance < 0.8)
-            return ArtifactErrors.NotFound;
+            return ArtifactErrors.NotFound();
 
         var artifact = await artifactQueryService.GetByNameAsync(imageResultDto.ArtifactId, userContext.Language, ct);
-        
         if (artifact == null)
-            return ArtifactErrors.NotFound;
+            return ArtifactErrors.NotFound(imageResultDto.ArtifactId);
         
         return Result.Success(artifact with
         {
