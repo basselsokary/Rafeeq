@@ -1,4 +1,3 @@
-// src/pages/users/UserDetailPage.jsx
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -6,7 +5,7 @@ import {
   lockUserAccount, unlockUserAccount, suspendUserAccount,
   reactivateUserAccount, resetUserPassword, requirePasswordChange,
   confirmUserEmail, resendVerificationEmail,
-  deleteUser, getUserActivity, getUserLoginHistory,
+  deleteUser, permanentlyDeleteUser, getUserActivity, getUserLoginHistory,
 } from '../../api/usersApi';
 import { useToast } from '../../components/common/Toast';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
@@ -239,6 +238,12 @@ export default function UserDetailPage() {
                 <Btn variant="warning" style={{ background: 'linear-gradient(135deg,#7c3aed,#a78bfa)' }} onClick={() => setShowSuspend(true)} disabled={!!actionLoading}>
                   ⏸ Suspend
                 </Btn>
+                <Btn variant="danger" onClick={() => setConfirm({
+                  msg: `Delete ${fullName}? This will soft-delete the account.`,
+                  action: 'delete',
+                })}>
+                  🗑 Delete
+                </Btn>
               </>
             )}
             {(user.status === 'Locked' || user.status === 'Suspended') && (
@@ -249,12 +254,12 @@ export default function UserDetailPage() {
           </>
         )}
 
-        {!isAdmin && (
+        {!isAdmin && user.status === 'Deleted' && (
           <Btn variant="danger" onClick={() => setConfirm({
-            msg: `Delete ${fullName}? This will soft-delete the account.`,
-            action: 'delete',
+            msg: `Permanently delete ${fullName}? This cannot be undone.`,
+            action: 'permanentlyDelete',
           })}>
-            🗑 Delete
+            🗑 Permanently Delete
           </Btn>
         )}
       </div>
@@ -468,6 +473,7 @@ export default function UserDetailPage() {
             if (c.action === 'promote') await doAction('promote', () => promoteToAdmin(userId), 'User promoted to Admin');
             if (c.action === 'demote')  await doAction('demote',  () => demoteToModerator(userId), 'User demoted to Moderator');
             if (c.action === 'delete')  await doAction('delete',  () => deleteUser(userId, 'Admin action'), 'User deleted');
+            if (c.action === 'permanentlyDelete')  await doAction('permanentlyDelete',  () => permanentlyDeleteUser(userId, 'Admin action'), 'User permanently deleted');
           }}
           onClose={() => setConfirm(null)}
         />
