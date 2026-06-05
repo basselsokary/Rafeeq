@@ -19,7 +19,8 @@ internal sealed class AddArtifactImagesCommandValidator : AbstractValidator<AddA
         RuleFor(x => x.Images)
             .NotEmpty()
             .WithMessage(errors[ValidationErrors.CollectionRequired.Code])
-            .Must(x => x.Count <= DomainConstants.File.MaxImagesPerRequest);
+            .Must(x => x.Count <= DomainConstants.File.MaxImagesPerRequest)
+            .WithMessage(x => $"Maximum allowed images is {DomainConstants.File.MaxImagesPerRequest}. Provided {x.Images.Count} count.");
 
         RuleForEach(x => x.Images)
             .SetValidator(new AddArtifactImageDtoValidator(errors, options));
@@ -32,7 +33,9 @@ internal sealed class AddArtifactImageDtoValidator : AbstractValidator<AddArtifa
     {
         var opts = options.Value;
 
-        RuleFor(x => x.File).NotNull();
+        RuleFor(x => x.File)
+            .NotNull()
+            .WithMessage(errors[ValidationErrors.ValueRequired.Code]);
 
         RuleFor(x => x.File.OriginalFileName)
             .NotEmpty()
@@ -52,7 +55,8 @@ internal sealed class AddArtifactImageDtoValidator : AbstractValidator<AddArtifa
                 bool valid = FileSignatureValidator.IsValid(x.File.Stream, ext);
                 x.File.Stream.Position = 0;
                 return valid;
-            });
+            })
+            .WithMessage("File content does not match the file extension.");
 
         RuleFor(x => x.DisplayOrder)
             .GreaterThanOrEqualTo(0)
