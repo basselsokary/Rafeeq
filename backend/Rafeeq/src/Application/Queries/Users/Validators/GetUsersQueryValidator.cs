@@ -11,7 +11,8 @@ internal sealed class GetUsersQueryValidator : AbstractValidator<GetUsersQuery>
     {
         RuleFor(x => x.Status)
             .IsInEnum()
-            .WithMessage(x => errors.Format(ValidationErrors.InvalidEnumValue.Code, x.Status.ToString()));
+            .When(x => x.Status.HasValue)
+            .WithMessage(x => errors.Format(ValidationErrors.InvalidEnumValue.Code));
 
         RuleFor(x => x.Paging)
             .SetValidator(new PagingParametersValidator(errors))

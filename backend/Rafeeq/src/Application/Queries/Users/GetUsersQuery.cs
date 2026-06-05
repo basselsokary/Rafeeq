@@ -10,7 +10,9 @@ public sealed record GetUsersQuery(
     string? SearchTerm = null,
     string? Role = null,
     bool? EmailVerified = null,
-    UserStatus Status = UserStatus.Active) : IQuery<PagedResult<UserListDto>>;
+    string? SortBy = null,
+    string? SortOrder = null,
+    UserStatus? Status = null) : IQuery<PagedResult<UserListDto>>;
 
 internal sealed class GetUsersQueryHandler(
     IUserManagementService userManagementService) : IQueryHandler<GetUsersQuery, PagedResult<UserListDto>>
@@ -22,6 +24,8 @@ internal sealed class GetUsersQueryHandler(
             query.SearchTerm,
             query.Role,
             query.EmailVerified,
+            query.SortBy,
+            query.SortOrder,
             query.Status,
             cancellationToken);
 
