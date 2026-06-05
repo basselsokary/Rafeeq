@@ -22,7 +22,11 @@ internal class IdentityService(
 
     public async Task<Result<string>> RegisterAsync(Guid userId, string userName, string email, string role, string password)
     {
-        var touristResult = await RegisterCoreAsync(userId, userName, email, role, password);
+        var touristResult = TouristUser.Create(userId, userName, email);
+        if (touristResult.Failed)
+            return touristResult.Error;
+
+        touristResult = await RegisterCoreAsync(touristResult.Value, userName, email, role, password);
         if (touristResult.Failed)
             return touristResult.Error;
 
@@ -32,15 +36,15 @@ internal class IdentityService(
 
     public async Task<Result> RegisterAsync(Guid userId, string userName, string email, string role)
     {
-        return await RegisterCoreAsync(userId, userName, email, role, password: null);
-    }
-
-    private async Task<Result<TouristUser>> RegisterCoreAsync(Guid userId, string userName, string email, string role, string? password)
-    {
-        var touristResult = TouristUser.Create(userId, userName, email);
+        var touristResult = TouristUser.Create(userId, userName, email, emailConfirmed: true);
         if (touristResult.Failed)
             return touristResult;
 
+        return await RegisterCoreAsync(touristResult.Value, userName, email, role, password: null);
+    }
+
+    private async Task<Result<TouristUser>> RegisterCoreAsync(TouristUser tourist, string userName, string email, string role, string? password)
+    {
         string normalizedUserName = userManager.NormalizeName(userName);
         if (await userManager.Users.AnyAsync(u => u.NormalizedUserName == normalizedUserName))
             return ApplicationUserErrors.UserNameAlreadyInUse;
@@ -48,8 +52,6 @@ internal class IdentityService(
         string normalizedEmail = userManager.NormalizeEmail(email);
         if (await userManager.Users.AnyAsync(u => u.NormalizedEmail == normalizedEmail))
             return ApplicationUserErrors.EmailAlreadyInUse;
-
-        TouristUser tourist = touristResult.Value;
 
         var result = password is not null
             ? await userManager.CreateAsync(tourist, password)
