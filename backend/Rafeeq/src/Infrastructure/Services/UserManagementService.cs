@@ -31,7 +31,6 @@ internal sealed class UserManagementService(
 
         var totalCount = await query.CountAsync(cancellationToken);
         var users = await query
-            .OrderByDescending(u => u.CreatedAt)
             .Skip(paging.Skip)
             .Take(paging.Take)
             .ToListAsync(cancellationToken);
