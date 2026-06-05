@@ -21,10 +21,13 @@ internal sealed class UserManagementService(
         string? searchTerm,
         string? role,
         bool? emailVerified,
-        UserStatus status,
+        string? sortBy,
+        string? sortOrder,
+        UserStatus? status,
         CancellationToken cancellationToken)
     {
-        var query = ApplyFilters(context.Users.AsNoTracking(), searchTerm, role: role, emailVerified, status);
+        var query = ApplyFilters(context.Users.AsNoTracking(), searchTerm, role, emailVerified, status);
+        query = ApplyOrder(query, sortBy, sortOrder);
 
         var totalCount = await query.CountAsync(cancellationToken);
         var users = await query
@@ -562,6 +565,22 @@ internal sealed class UserManagementService(
                 moderatorIds.Contains(u.Id) ||
                 touristIds.Contains(u.Id));
         }
+
+        return query;
+    }
+
+    private static IQueryable<ApplicationUser> ApplyOrder(
+        IQueryable<ApplicationUser> query,
+        string? sortBy,
+        string? sortOrder)
+    {
+        query = sortBy?.ToLower() switch
+        {
+            "email" => sortOrder == "asc" ? query.OrderBy(u => u.Email) : query.OrderByDescending(u => u.Email),
+            "createdat" => sortOrder == "asc" ? query.OrderBy(u => u.CreatedAt) : query.OrderByDescending(u => u.CreatedAt),
+            "lastloginat" => sortOrder == "asc" ? query.OrderBy(u => u.LastLoginAt) : query.OrderByDescending(u => u.LastLoginAt),
+            _ => query.OrderByDescending(u => u.CreatedAt)
+        };
 
         return query;
     }

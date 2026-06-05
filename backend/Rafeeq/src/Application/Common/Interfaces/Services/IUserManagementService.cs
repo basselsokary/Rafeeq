@@ -1,7 +1,6 @@
 using Application.Commands.Users.Admins;
 using Application.DTOs.Common;
 using Application.DTOs.Users;
-using Application.Queries.Users;
 using Domain.Enums;
 
 namespace Application.Common.Interfaces.Services;
@@ -13,7 +12,9 @@ public interface IUserManagementService
         string? searchTerm,
         string? role,
         bool? emailVerified,
-        UserStatus status,
+        string? sortBy,
+        string? sortOrder,
+        UserStatus? status,
         CancellationToken cancellationToken);
 
     Task<UserDetailsDto?> GetUserByIdAsync(
