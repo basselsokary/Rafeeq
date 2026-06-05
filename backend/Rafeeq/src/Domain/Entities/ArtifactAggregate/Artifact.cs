@@ -83,7 +83,7 @@ public class Artifact : BaseAuditableEntity, IAggregateRoot
         return Result.Success(imageResult.Value);
     }
 
-    public Result RemoveImage(Guid imageId)
+    public Result<ArtifactImage> RemoveImage(Guid imageId)
     {
         var image = _images.FirstOrDefault(i => i.Id == imageId);
         if (image == null)
@@ -101,10 +101,26 @@ public class Artifact : BaseAuditableEntity, IAggregateRoot
             MainImageUrl = null;
         }
 
+        return Result.Success(image);
+    }
+
+    public Result SetMainImage(Guid imageId)
+    {
+        var image = _images.FirstOrDefault(i => i.Id == imageId);
+        if (image == null)
+            return ArtifactErrors.ImageNotFound;
+
+        var mainImages = _images.Where(i => i.IsMain).ToList();
+        foreach (var img in mainImages)
+            img.SetAsMain(false);
+
+        image.SetAsMain(true);
+        SetMainImage(image.ImageUrl);
+
         return Result.Success();
     }
 
-    public Result AddLocalizedContent(LanguageCode language, string name, string description)
+    public Result<ArtifactLocalizedContent> AddLocalizedContent(LanguageCode language, string name, string description)
     {
         var contentResult = ArtifactLocalizedContent.Create(language, name, description);
         if (contentResult.Failed)
@@ -116,7 +132,7 @@ public class Artifact : BaseAuditableEntity, IAggregateRoot
 
         _localizedContents.Add(contentResult.Value);
 
-        return Result.Success();
+        return Result.Success(contentResult.Value);
     }
 
     public Result UpdateLocalizedContent(LanguageCode language, string name, string description)
