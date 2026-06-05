@@ -100,6 +100,28 @@ public static class FileSignatureValidator
         return isRiff && isWebP;
     }
 
+    // private static bool IsWebP(byte[] header, int bytesRead)
+    // {
+    //     if (bytesRead < 12) return false;
+
+    //     bool riff = header[0] == 0x52 && header[1] == 0x49 &&
+    //                 header[2] == 0x46 && header[3] == 0x46;
+
+    //     bool webp = header[8] == 0x57 && header[9] == 0x45 &&
+    //                 header[10] == 0x42 && header[11] == 0x50;
+
+    //     if (!riff || !webp) return false;
+
+    //     if (bytesRead >= 16)
+    //     {
+    //         var chunk = System.Text.Encoding.ASCII.GetString(header, 12, 4);
+
+    //         return chunk is "VP8 " or "VP8L" or "VP8X";
+    //     }
+
+    //     return false;
+    // }
+
     /// <summary>
     /// Maps a verified extension to its canonical MIME type.
     /// Used to set Content-Type in storage — again, never trust client input.
