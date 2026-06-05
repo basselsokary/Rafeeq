@@ -6,12 +6,18 @@ namespace Infrastructure.Identity.Entities;
 public abstract class ApplicationUser : IdentityUser<Guid>
 {
     protected ApplicationUser() { }
-    protected ApplicationUser(Guid userId, string userName, string email, bool mustChangePassword = false)
+    protected ApplicationUser(
+        Guid userId,
+        string userName,
+        string email,
+        bool mustChangePassword = false,
+        bool emailConfirmed = false)
     {
         Id = userId;
         UserName = userName;
         Email = email;
         MustChangePassword = mustChangePassword;
+        EmailConfirmed = emailConfirmed;
 
         CreatedAt = DateTime.UtcNow;
         Status = UserStatus.Active;

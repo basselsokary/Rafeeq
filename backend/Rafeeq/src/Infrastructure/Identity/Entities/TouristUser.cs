@@ -6,10 +6,10 @@ namespace Infrastructure.Identity.Entities;
 public sealed class TouristUser : ApplicationUser
 {
     private TouristUser() : base() { }
-    private TouristUser(Guid userId, string userName, string email)
-        : base(userId, userName, email) { }
+    private TouristUser(Guid userId, string userName, string email, bool emailConfirmed = false)
+        : base(userId, userName, email, emailConfirmed: emailConfirmed) { }
 
-    public static Result<TouristUser> Create(Guid userId, string userName, string email)
+    public static Result<TouristUser> Create(Guid userId, string userName, string email, bool emailConfirmed = false)
     {
         if (string.IsNullOrWhiteSpace(userName))
             return ApplicationUserErrors.UserNameRequired;
@@ -17,7 +17,7 @@ public sealed class TouristUser : ApplicationUser
         if (string.IsNullOrWhiteSpace(email))
             return ApplicationUserErrors.EmailRequired;
 
-        return new TouristUser(userId, userName, email);
+        return new TouristUser(userId, userName, email, emailConfirmed);
     }
 
     public void BanAccount()

@@ -7,7 +7,7 @@ public abstract class StaffUser : ApplicationUser
 {
     protected StaffUser() : base() { }
     protected StaffUser(Guid userId, string userName, string email, string firstName, string lastName, string fullName)
-        : base(userId, userName, email, true)
+        : base(userId, userName, email, mustChangePassword: true, emailConfirmed: true)
     {
         FirstName = firstName;
         LastName = lastName;
