@@ -573,7 +573,7 @@ internal sealed class UserManagementService(
         string? sortBy,
         string? sortOrder)
     {
-        query = sortBy?.ToLower() switch
+        query = sortBy?.Trim().ToLowerInvariant() switch
         {
             "email" => sortOrder == "asc" ? query.OrderBy(u => u.Email) : query.OrderByDescending(u => u.Email),
             "createdat" => sortOrder == "asc" ? query.OrderBy(u => u.CreatedAt) : query.OrderByDescending(u => u.CreatedAt),

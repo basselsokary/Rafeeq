@@ -22,7 +22,7 @@ internal sealed class CachedUserManagementService(IUserManagementService inner, 
         CancellationToken cancellationToken)
     {
         var normalizedSearch = (searchTerm ?? string.Empty).Trim().ToLowerInvariant();
-        var key = $"{Prefix}:list:search={normalizedSearch}:status={status}:email-verified={emailVerified?.ToString() ?? "all"}:role={role ?? "all"}:{FormatPaging(paging)}";
+        var key = $"{Prefix}:list:search={normalizedSearch}:status={status}:email-verified={emailVerified?.ToString() ?? "all"}:role={role ?? "all"}:sortBy={sortBy ?? "createdAt"}:sortOrder={sortOrder ?? "desc"}:{FormatPaging(paging)}";
         return await GetOrCreateAsync(
             key,
             MediumTtl20_Minutes,
