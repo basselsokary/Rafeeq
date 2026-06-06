@@ -24,11 +24,11 @@ internal sealed class DatabaseSeeder(
     {
         context.Database.Migrate();
         
-        // if (await context.Cities.AnyAsync(cancellationToken))
-        // {
-        //     logger.LogInformation("Database already contains data; skipping seeding.");
-        //     return;
-        // }
+        if (await context.Cities.AnyAsync(cancellationToken))
+        {
+            logger.LogInformation("Database already contains data; skipping seeding.");
+            return;
+        }
 
         if (!roleManager.Roles.Any())
         {
