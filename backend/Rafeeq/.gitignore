@@ -61,5 +61,6 @@ ApplicationDbContextFactory.cs
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt 
 
-#Temporary
+# Others
 src/API/src
+src/API/Controllers/TestController.cs
