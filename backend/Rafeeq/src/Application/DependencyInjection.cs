@@ -1,5 +1,6 @@
 ﻿using Application.Behaviours;
 using Application.Common.Interfaces.Services;
+using Application.Common.Validators;
 using Application.Services;
 using Domain.Common.Interfaces;
 using FluentValidation;
@@ -18,6 +19,7 @@ public static class DependencyInjection
         services.AddDecrotors();
 
         services.AddScoped<IFileUploadService, FileUploadService>();
+        services.AddScoped<FileSignatureValidator>();
 
         return services;
     }
