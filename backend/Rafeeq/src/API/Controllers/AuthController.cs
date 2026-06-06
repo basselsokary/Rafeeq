@@ -187,15 +187,15 @@ public class AuthController : ApiBaseController
         HttpResponse response,
         string accessToken,
         string refreshToken,
-        int AccessTokenExpirationInMinutes,
-        int RefreshTokenExpirationInHours)
+        int accessTokenExpirationInMinutes,
+        int refreshTokenExpirationInHours)
     {
         var accessTokenOptions = new CookieOptions
         {
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.None,
-            Expires = DateTime.UtcNow.AddMinutes(AccessTokenExpirationInMinutes),
+            MaxAge = TimeSpan.FromMinutes(accessTokenExpirationInMinutes),
             Path = "/"
         };
 
@@ -204,14 +204,13 @@ public class AuthController : ApiBaseController
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.None,
-            Expires = DateTime.UtcNow.AddHours(RefreshTokenExpirationInHours),
-            Path = "/api/auth/admins/refresh" // Better security by restricting the refresh token to a specific endpoint
+            MaxAge = TimeSpan.FromHours(refreshTokenExpirationInHours),
+            Path = "/api/auth/admins/refresh"
         };
-
-        response.Cookies.Delete("access_token");
-        response.Cookies.Delete("refresh_token");
         
         response.Cookies.Append("access_token", accessToken, accessTokenOptions);
         response.Cookies.Append("refresh_token", refreshToken, refreshTokenOptions);
     }
 }
+
+
