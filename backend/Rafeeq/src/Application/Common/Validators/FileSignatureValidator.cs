@@ -1,3 +1,6 @@
+using Application.Services;
+using Microsoft.Extensions.Options;
+
 namespace Application.Common.Validators;
 
 /// <summary>
@@ -5,7 +8,7 @@ namespace Application.Common.Validators;
 /// This is the ONLY trustworthy way to validate file type — never trust
 /// the Content-Type header or file extension provided by the client.
 /// </summary>
-public static class FileSignatureValidator
+public class FileSignatureValidator
 {
     private static readonly Dictionary<string, List<byte[]>> _signatures = new()
     {
@@ -28,18 +31,15 @@ public static class FileSignatureValidator
             [0x52, 0x49, 0x46, 0x46]   // "RIFF" — additional WEBP check below
         ],
     };
+    private readonly FileUploadOptions _options;
 
-    // .jpeg maps to same signatures as .jpg
-    static FileSignatureValidator()
+    public FileSignatureValidator(IOptions<FileUploadOptions> options)
     {
         _signatures[".jpeg"] = _signatures[".jpg"];
+        _options = options.Value;
     }
 
-    /// <summary>
-    /// Validates a collection of stream/extension pairs.
-    /// Each stream must be paired with the extension that belongs to it.
-    /// </summary>
-    public static bool IsValid(IEnumerable<(Stream Stream, string Extension)> files)
+    public bool IsValid(IEnumerable<(Stream Stream, string Extension)> files)
     {
         foreach (var file in files)
         {
@@ -52,38 +52,57 @@ public static class FileSignatureValidator
 
     /// <summary>
     /// Reads up to 12 bytes from the START of the stream and checks against
-    /// known magic bytes. Does NOT advance the stream past what it reads —
-    /// always resets Position to 0 after inspection.
+    /// known magic bytes.
     /// </summary>
-    public static bool IsValid(Stream stream, string extension)
+    public bool IsValid(Stream stream, string extension)
     {
-        if (!_signatures.TryGetValue(extension.ToLowerInvariant(), out var signatures))
+        if (!IsAllowedExtension(extension))
             return false;
 
-        // Read the header bytes (12 covers all signatures above, including WebP marker)
         const int headerSize = 12;
         var headerBytes = new byte[headerSize];
 
         var originalPosition = stream.Position;
         try
         {
+            stream.Position = 0;
+
             var bytesRead = stream.Read(headerBytes, 0, headerSize);
-            if (bytesRead < 4) return false; // Too small to be a valid image
 
-            // Special-case WebP: must be RIFF at [0..3] AND WEBP at [8..11]
-            if (extension.Equals(".webp", StringComparison.OrdinalIgnoreCase))
-            {
-                return IsWebP(headerBytes, bytesRead);
-            }
+            if (bytesRead < 4)
+                return false;
 
-            return signatures.Any(sig =>
+            if (_signatures[".jpg"].Any(sig =>
                 bytesRead >= sig.Length &&
-                sig.SequenceEqual(headerBytes.AsSpan()[..sig.Length]));
+                sig.SequenceEqual(headerBytes.AsSpan()[..sig.Length])))
+                return true;
+
+            if (_signatures[".png"].Any(sig =>
+                bytesRead >= sig.Length &&
+                sig.SequenceEqual(headerBytes.AsSpan()[..sig.Length])))
+                return true;
+
+            if (IsWebP(headerBytes, bytesRead))
+                return true;
+
+            return false;
         }
         finally
         {
             stream.Position = originalPosition;
         }
+
+    }
+
+    public static string GetContentType(string extension)
+    {
+        return extension.Trim().ToLowerInvariant() switch
+        {
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
+            ".webp" => "image/webp",
+            _ => "application/octet-stream"
+        };
     }
 
     private static bool IsWebP(byte[] header, int bytesRead)
@@ -122,16 +141,8 @@ public static class FileSignatureValidator
     //     return false;
     // }
 
-    /// <summary>
-    /// Maps a verified extension to its canonical MIME type.
-    /// Used to set Content-Type in storage — again, never trust client input.
-    /// </summary>
-    public static string GetCanonicalMimeType(string extension) =>
-        extension.ToLowerInvariant() switch
-        {
-            ".jpg" or ".jpeg" => "image/jpeg",
-            ".png"            => "image/png",
-            ".webp"           => "image/webp",
-            _                 => "application/octet-stream"
-        };
+    private bool IsAllowedExtension(string extension)
+    {
+        return _options.AllowedExtensions.Contains(extension.Trim().ToLowerInvariant());
+    }
 }
