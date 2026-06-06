@@ -24,6 +24,7 @@ public sealed record UploadImageContext<TMetadata>(
 public sealed class FileUploadService(
     IFileStorageService storage,
     IOptions<FileUploadOptions> options,
+    FileSignatureValidator signatureValidator,
     ILogger<FileUploadService> logger,
     IUnitOfWork unitOfWork,
     IErrorLocalizer errorLocalizer) : IFileUploadService
@@ -256,13 +257,13 @@ public sealed class FileUploadService(
         return Result.Success((ext, contentTypeResult.Value));
     }
 
-    private static async Task<Result<FileHash>> ValidateSignatureAndComputeHashAsync(
+    private async Task<Result<FileHash>> ValidateSignatureAndComputeHashAsync(
         FileUploadInput file,
         string ext,
         CancellationToken ct)
     {
         file.Stream.Position = 0;
-        if (!FileSignatureValidator.IsValid(file.Stream, ext))
+        if (!signatureValidator.IsValid(file.Stream, ext))
             return Result.Failure<FileHash>(FileErrors.InvalidSignature);
 
         var hash = await ComputeSha256Async(file.Stream, ct);
