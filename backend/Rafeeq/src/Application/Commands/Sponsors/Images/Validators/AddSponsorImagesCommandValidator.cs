@@ -11,7 +11,7 @@ namespace Application.Commands.Sponsors.Images.Validators;
 
 internal sealed class AddSponsorImagesCommandValidator : AbstractValidator<AddSponsorImagesCommand>
 {
-    public AddSponsorImagesCommandValidator(IErrorLocalizer errors, IOptions<FileUploadOptions> options)
+    public AddSponsorImagesCommandValidator(IErrorLocalizer errors, IOptions<FileUploadOptions> options, FileSignatureValidator fileSignatureValidator)
     {
         RuleFor(x => x.Id)
             .NotEmpty()
@@ -24,13 +24,13 @@ internal sealed class AddSponsorImagesCommandValidator : AbstractValidator<AddSp
             .WithMessage(x => $"Maximum allowed images is {DomainConstants.File.MaxImagesPerRequest}. Provided {x.Images.Count} count.");
 
         RuleForEach(x => x.Images)
-            .SetValidator(new AddSponsorImageDtoValidator(errors, options));
+            .SetValidator(new AddSponsorImageDtoValidator(errors, options, fileSignatureValidator));
     }
 }
 
 internal sealed class AddSponsorImageDtoValidator : AbstractValidator<AddSponsorImageDto>
 {
-    public AddSponsorImageDtoValidator(IErrorLocalizer errors, IOptions<FileUploadOptions> options)
+    public AddSponsorImageDtoValidator(IErrorLocalizer errors, IOptions<FileUploadOptions> options, FileSignatureValidator fileSignatureValidator)
     {
         var opts = options.Value;
 
@@ -53,7 +53,7 @@ internal sealed class AddSponsorImageDtoValidator : AbstractValidator<AddSponsor
             .Must(x =>
             {
                 var ext = Path.GetExtension(x.File.OriginalFileName);
-                bool valid = FileSignatureValidator.IsValid(x.File.Stream, ext);
+                bool valid = fileSignatureValidator.IsValid(x.File.Stream, ext);
                 x.File.Stream.Position = 0; // Reset stream position after validation
                 return valid;
             })

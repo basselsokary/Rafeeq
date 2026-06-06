@@ -10,7 +10,7 @@ namespace Application.Commands.Cities.Validators;
 
 internal sealed class SetCityImageCommandValidator : AbstractValidator<SetCityImageCommand>
 {
-    public SetCityImageCommandValidator(IErrorLocalizer errors, IOptions<FileUploadOptions> options)
+    public SetCityImageCommandValidator(IErrorLocalizer errors, IOptions<FileUploadOptions> options, FileSignatureValidator fileSignatureValidator)
     {
         var opts = options.Value;
 
@@ -31,7 +31,7 @@ internal sealed class SetCityImageCommandValidator : AbstractValidator<SetCityIm
             .Must(x =>
             {
                 var ext = Path.GetExtension(x.File.OriginalFileName);
-                bool valid = FileSignatureValidator.IsValid(x.File.Stream, ext);
+                bool valid = fileSignatureValidator.IsValid(x.File.Stream, ext);
                 x.File.Stream.Position = 0; // Reset stream position after validation
                 return valid;
             });
