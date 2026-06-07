@@ -141,8 +141,8 @@ function OffersTab({ sponsorId }) {
                   <div style={{ background:'var(--surface-container-low)', borderRadius:10, padding:'9px 13px' }}>
                     <div style={{ fontSize:9, fontWeight:700, color:'var(--outline)', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:3 }}>Validity</div>
                     <div style={{ fontSize:11, fontWeight:600, color:'var(--text-2)' }}>
-                      {new Date(offer.validityPeriod.start).toLocaleDateString()} –<br/>
-                      {new Date(offer.validityPeriod.end).toLocaleDateString()}
+                      {new Date(offer.validityPeriod.startDate).toLocaleDateString()} –<br/>
+                      {new Date(offer.validityPeriod.endDate).toLocaleDateString()}
                     </div>
                   </div>
                 )}

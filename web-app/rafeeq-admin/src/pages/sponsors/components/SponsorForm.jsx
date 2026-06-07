@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Spinner from '../../../components/common/Spinner';
+import LocationPickerModal from '../../../components/map/LocationPickerModal';
 
 const TYPES = ['restaurant','hotel','shop','service','tour','transportation'];
 const TIERS = ['bronze','silver','gold','platinum'];
@@ -56,7 +57,8 @@ function Section({ title, children }) {
 
 export default function SponsorForm({ initial = null, onSubmit, loading, onCancel }) {
   const [form, setForm] = useState(() => initial ? { ...DEFAULTS, ...initial } : DEFAULTS);
-
+  const [pickerOpen, setPickerOpen] = useState(false);
+  
   useEffect(() => { if (initial) setForm({ ...DEFAULTS, ...initial }); }, [initial]);
 
   const set = (path, value) => setForm(prev => {
@@ -83,77 +85,143 @@ export default function SponsorForm({ initial = null, onSubmit, loading, onCance
     onSubmit(payload);
   };
 
+  const handleLocationConfirm = ({ latitude, longitude }) => {
+    set('location.latitude', latitude.toFixed(6));
+    set('location.longitude', longitude.toFixed(6));
+  };
+
   const isEdit = !!initial;
 
+  /* Whether a valid location is already set */
+  const hasLocation =
+    form.location.latitude !== '' && form.location.latitude !== null &&
+    form.location.longitude !== '' && form.location.longitude !== null &&
+    !isNaN(parseFloat(form.location.latitude)) &&
+    !isNaN(parseFloat(form.location.longitude));
+
   return (
-    <form onSubmit={handleSubmit}>
-      <Section title="Basic Information">
-        <Field label="Title">
-          <input value={form.title} onChange={e => set('title', e.target.value)} placeholder="e.g. Koshary El Tahrir" style={inputStyle} />
-        </Field>
-        <Field label="Description">
-          <textarea value={form.description} onChange={e => set('description', e.target.value)} rows={3} placeholder="Brief description…" style={{ ...inputStyle, resize:'vertical', minHeight:70 }} />
-        </Field>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
-          <Field label="Type *">
-            <select value={form.type} onChange={e => set('type', e.target.value)} required style={selectStyle}>
-              {TYPES.map(t => <option key={t} value={t}>{fmt(t)}</option>)}
-            </select>
+    <>
+      <form onSubmit={handleSubmit}>
+        <Section title="Basic Information">
+          <Field label="Title">
+            <input value={form.title} onChange={e => set('title', e.target.value)} disabled={isEdit} placeholder="e.g. Koshary El Tahrir" style={inputStyle} />
           </Field>
-          <Field label="Tier *">
-            <select value={form.tier} onChange={e => set('tier', e.target.value)} required style={selectStyle}>
-              {TIERS.map(t => <option key={t} value={t}>{fmt(t)}</option>)}
-            </select>
+          <Field label="Description">
+            <textarea value={form.description} onChange={e => set('description', e.target.value)} rows={3} disabled={isEdit} placeholder="Brief description…" style={{ ...inputStyle, resize:'vertical', minHeight:70 }} />
           </Field>
-        </div>
-        <Field label="Address">
-          <input value={form.address} onChange={e => set('address', e.target.value)} placeholder="Street / district" style={inputStyle} />
-        </Field>
-      </Section>
-
-      <Section title="Location">
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
-          <Field label="Latitude *">
-            <input type="number" step="any" required value={form.location.latitude} onChange={e => set('location.latitude', e.target.value)} placeholder="e.g. 30.0444" style={inputStyle} />
-          </Field>
-          <Field label="Longitude *">
-            <input type="number" step="any" required value={form.location.longitude} onChange={e => set('location.longitude', e.target.value)} placeholder="e.g. 31.2357" style={inputStyle} />
-          </Field>
-        </div>
-      </Section>
-
-      <Section title="Contract Period">
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
-          {!isEdit && (
-            <Field label="Start Date *">
-              <input type="date" required value={form.startDate} onChange={e => set('startDate', e.target.value)} style={inputStyle} />
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
+            <Field label="Type *">
+              <select value={form.type} onChange={e => set('type', e.target.value)} required style={selectStyle}>
+                {TYPES.map(t => <option key={t} value={t}>{fmt(t)}</option>)}
+              </select>
             </Field>
-          )}
-          <Field label={isEdit ? 'New End Date' : 'End Date *'}>
-            <input type="date" required={!isEdit} value={isEdit ? (form.newEndDate || '') : form.endDate}
-              onChange={e => set(isEdit ? 'newEndDate' : 'endDate', e.target.value)} style={inputStyle} />
+            <Field label="Tier *">
+              <select value={form.tier} onChange={e => set('tier', e.target.value)} required style={selectStyle}>
+                {TIERS.map(t => <option key={t} value={t}>{fmt(t)}</option>)}
+              </select>
+            </Field>
+          </div>
+          <Field label="Address">
+            <input value={form.address} onChange={e => set('address', e.target.value)} disabled={isEdit} placeholder="Street / district" style={inputStyle} />
           </Field>
-        </div>
-      </Section>
+        </Section>
 
-      <Section title="Contact Information">
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
-          <Field label="Phone">
-            <input value={form.contactPhone} onChange={e => set('contactPhone', e.target.value)} placeholder="+20 2 XXXX XXXX" style={inputStyle} />
-          </Field>
-          <Field label="Email">
-            <input type="email" value={form.contactEmail} onChange={e => set('contactEmail', e.target.value)} placeholder="sponsor@example.com" style={inputStyle} />
-          </Field>
-        </div>
-        <Field label="Website URL">
-          <input type="url" value={form.websiteUrl} onChange={e => set('websiteUrl', e.target.value)} placeholder="https://…" style={inputStyle} />
-        </Field>
-      </Section>
+        {/* ── Location ── */}
+        <Section title="Location Coordinates">
+          {/* Map picker trigger */}
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            style={{
+              width: '100%', padding: '11px 16px', marginBottom: 14,
+              borderRadius: 10, cursor: 'pointer',
+              border: `1.5px dashed ${hasLocation ? 'var(--primary)' : 'var(--outline-variant)'}`,
+              background: hasLocation ? 'rgba(124,87,45,0.05)' : 'var(--surface-container-low)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
+              color: hasLocation ? 'var(--primary)' : 'var(--text-2)',
+              fontSize: 13, fontWeight: 600,
+              fontFamily: 'var(--font-body)',
+              transition: 'all .15s',
+            }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            {hasLocation ? 'Change Location on Map' : 'Select Location on Map'}
+            {hasLocation && (
+              <span style={{
+                marginLeft: 4, fontSize: 11, fontWeight: 500,
+                color: 'var(--outline)', fontFamily: 'monospace',
+              }}>
+                ({parseFloat(form.location.latitude).toFixed(4)}, {parseFloat(form.location.longitude).toFixed(4)})
+              </span>
+            )}
+          </button>
 
-      <div style={{ display:'flex', justifyContent:'flex-end', gap:10, marginTop:8 }}>
-        <Btn variant="ghost" onClick={onCancel} disabled={loading}>Cancel</Btn>
-        <Btn type="submit" loading={loading}>{isEdit ? 'Save Changes' : 'Create Sponsor'}</Btn>
-      </div>
-    </form>
+          <div className="form-row">
+            <div className="form-group">
+              <label>Latitude *</label>
+              <input
+                type="number" step="any" required
+                value={form.location.latitude}
+                onChange={(e) => set('location.latitude', e.target.value)}
+                placeholder="e.g. 29.979200"
+              />
+            </div>
+            <div className="form-group">
+              <label>Longitude *</label>
+              <input
+                type="number" step="any" required
+                value={form.location.longitude}
+                onChange={(e) => set('location.longitude', e.target.value)}
+                placeholder="e.g. 31.134200"
+              />
+            </div>
+          </div>
+        </Section>
+
+        <Section title="Contract Period">
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
+            {!isEdit && (
+              <Field label="Start Date *">
+                <input type="date" required value={form.startDate} onChange={e => set('startDate', e.target.value)} style={inputStyle} />
+              </Field>
+            )}
+            <Field label={isEdit ? 'New End Date' : 'End Date *'}>
+              <input type="date" required={!isEdit} value={isEdit ? (form.newEndDate || '') : form.endDate}
+                onChange={e => set(isEdit ? 'newEndDate' : 'endDate', e.target.value)} style={inputStyle} />
+            </Field>
+          </div>
+        </Section>
+
+        <Section title="Contact Information">
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
+            <Field label="Phone">
+              <input value={form.contactPhone} onChange={e => set('contactPhone', e.target.value)} placeholder="+20 2 XXXX XXXX" style={inputStyle} />
+            </Field>
+            <Field label="Email">
+              <input type="email" value={form.contactEmail} onChange={e => set('contactEmail', e.target.value)} placeholder="sponsor@example.com" style={inputStyle} />
+            </Field>
+          </div>
+          <Field label="Website URL">
+            <input type="url" value={form.websiteUrl} onChange={e => set('websiteUrl', e.target.value)} placeholder="https://…" style={inputStyle} />
+          </Field>
+        </Section>
+
+        <div style={{ display:'flex', justifyContent:'flex-end', gap:10, marginTop:8 }}>
+          <Btn variant="ghost" onClick={onCancel} disabled={loading}>Cancel</Btn>
+          <Btn type="submit" loading={loading}>{isEdit ? 'Save Changes' : 'Create Sponsor'}</Btn>
+        </div>
+      </form>
+
+      {/* Location picker modal */}
+      <LocationPickerModal
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onConfirm={handleLocationConfirm}
+        initial={hasLocation ? form.location : null}
+      />
+    </>
   );
 }
