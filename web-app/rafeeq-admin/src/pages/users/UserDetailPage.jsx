@@ -331,7 +331,7 @@ export default function UserDetailPage() {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, paddingTop: 8 }}>
                     {[
                       { label: 'Total Trips', value: user.touristDetails.totalTrips ?? 0, icon: '🗺' },
-                      { label: 'Total Reviews', value: user.touristDetails.totalRatings ?? 0, icon: '⭐' },
+                      { label: 'Total Ratings', value: user.touristDetails.totalRatings ?? 0, icon: '⭐' },
                     ].map(s => (
                       <div key={s.label} style={{
                         background: 'var(--surface-container-low)', borderRadius: 10,
