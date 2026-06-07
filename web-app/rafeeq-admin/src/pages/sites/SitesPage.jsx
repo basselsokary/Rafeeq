@@ -469,7 +469,7 @@ export default function SitesPage() {
       {/* Pagination */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 18 }}>
         <div style={{ fontSize: 12, color: 'var(--outline)', display: 'flex', alignItems: 'center', gap: 10 }}>
-          Showing {filtered.length === 0 ? 0 : (page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, filtered.length)} of {filtered.length}
+          Showing {filtered.length === 0 ? 0 : (page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, filtered.length)} of {totalCount}
         </div>
         <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
           <PaginationBtn onClick={() => handlePageChange(Math.max(1, page - 1))} disabled={page === 1}>
