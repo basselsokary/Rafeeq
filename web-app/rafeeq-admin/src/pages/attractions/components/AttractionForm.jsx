@@ -143,8 +143,8 @@ export default function AttractionForm({ initial = null, onSubmit, loading, onCa
   };
 
   const handleLocationConfirm = ({ latitude, longitude }) => {
-    set('location.latitude', latitude.toFixed(6));
-    set('location.longitude', longitude.toFixed(6));
+    set('location.latitude', latitude.toFixed(9));
+    set('location.longitude', longitude.toFixed(9));
   };
 
   const hasLocation =

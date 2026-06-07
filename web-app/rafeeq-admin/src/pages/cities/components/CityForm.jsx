@@ -100,8 +100,8 @@ export default function CityForm({ initial = null, onSubmit, loading, onCancel }
   };
 
   const handleLocationConfirm = ({ latitude, longitude }) => {
-    set('centerLocation.latitude', latitude.toFixed(6));
-    set('centerLocation.longitude', longitude.toFixed(6));
+    set('centerLocation.latitude', latitude.toFixed(9));
+    set('centerLocation.longitude', longitude.toFixed(9));
   };
 
   const hasLocation =
