@@ -87,7 +87,7 @@ public class AdminArtifactsController : ApiBaseController
         return HandleResult(result);
     }
 
-    public sealed record UpdateArtifactRequest(int DisplayOrder, Guid? SiteId);
+    public sealed record UpdateArtifactRequest(int DisplayOrder, ArtifactType Type, Guid? SiteId);
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(
@@ -96,7 +96,7 @@ public class AdminArtifactsController : ApiBaseController
         [FromServices] ICommandHandler<UpdateArtifactCommand> commandHandler,
         CancellationToken cancellationToken = default)
     {
-        var command = new UpdateArtifactCommand(id, request.DisplayOrder, request.SiteId);
+        var command = new UpdateArtifactCommand(id, request.DisplayOrder, request.Type, request.SiteId);
         var result = await commandHandler.HandleAsync(command, cancellationToken);
         return HandleResult(result);
     }
@@ -184,6 +184,18 @@ public class AdminArtifactsController : ApiBaseController
     #endregion
 
     #region Localized Contents
+    [HttpGet("{id:guid}/localized-contents")]
+	public async Task<ActionResult<List<ArtifactLocalizedContentDto>>> GetLocalizedContents(
+		[FromRoute] Guid id,
+		[FromServices] IQueryHandler<GetArtifactLocalizedContentsQuery, List<ArtifactLocalizedContentDto>> queryHandler,
+		CancellationToken cancellationToken = default)
+	{
+		var query = new GetArtifactLocalizedContentsQuery(id);
+		var result = await queryHandler.HandleAsync(query, cancellationToken);
+
+		return HandleResult(result);
+	}
+
     [HttpPost("{id:guid}/localized-contents")]
     public async Task<IActionResult> AddLocalizedContents(
         [FromRoute] Guid id,
@@ -197,18 +209,6 @@ public class AdminArtifactsController : ApiBaseController
     }
 
     [HttpPut("{id:guid}/localized-contents")]
-	public async Task<ActionResult<List<ArtifactLocalizedContentDto>>> GetLocalizedContents(
-		[FromRoute] Guid id,
-		[FromServices] IQueryHandler<GetArtifactLocalizedContentsQuery, List<ArtifactLocalizedContentDto>> queryHandler,
-		CancellationToken cancellationToken = default)
-	{
-		var query = new GetArtifactLocalizedContentsQuery(id);
-		var result = await queryHandler.HandleAsync(query, cancellationToken);
-
-		return HandleResult(result);
-	}
-
-    [HttpGet("{id:guid}/localized-contents")]
     public async Task<IActionResult> UpdateLocalizedContents(
         [FromRoute] Guid id,
         [FromBody] List<UpdateArtifactLocalizedContentsDtoCommand> request,
