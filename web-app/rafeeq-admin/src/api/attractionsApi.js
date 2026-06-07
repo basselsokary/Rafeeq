@@ -1,6 +1,5 @@
 import api from './axiosInstance';
 
-const PUBLIC_BASE = '/api/attractions';
 const BASE = '/api/admins/attractions';
 
 // ─── Dashboard ─────────────────────────────────────────────────────
