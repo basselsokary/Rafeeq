@@ -253,8 +253,8 @@ function OverviewTab({
             <InfoRow label="Phone"          value={sponsor.contactPhone} />
             <InfoRow label="Email"          value={sponsor.contactEmail} />
             <InfoRow label="Website"        value={sponsor.websiteUrl} />
-            <InfoRow label="Contract Start" value={sponsor.dateRange?.start ? new Date(sponsor.dateRange.start).toLocaleDateString() : null} />
-            <InfoRow label="Contract End"   value={sponsor.dateRange?.end   ? new Date(sponsor.dateRange.end).toLocaleDateString()   : null} />
+            <InfoRow label="Contract Start" value={sponsor.dateRange?.startDate ? new Date(sponsor.dateRange.startDate).toLocaleDateString() : null} />
+            <InfoRow label="Contract End"   value={sponsor.dateRange?.endDate   ? new Date(sponsor.dateRange.endDate).toLocaleDateString()   : null} />
             <InfoRow label="Contract Valid" value={sponsor.isContractValid != null ? (sponsor.isContractValid ? 'Yes ✅' : 'Expired ❌') : null} />
             <InfoRow label="Coordinates"    value={sponsor.location ? `${sponsor.location.latitude}, ${sponsor.location.longitude}` : null} />
             <InfoRow label="Total Redemptions" value={sponsor.totalRedemptions} />

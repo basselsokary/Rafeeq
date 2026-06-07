@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Spinner from '../../../components/common/Spinner';
 import LocationPickerModal from '../../../components/map/LocationPickerModal';
-
-const TYPES = ['restaurant','hotel','shop','service','tour','transportation'];
-const TIERS = ['bronze','silver','gold','platinum'];
+import { SPONSOR_TYPES as TYPES, SPONSOR_TIERS as TIERS } from '../../../utils/constants';
 
 const fmt = v => v ? v.replace(/([A-Z])/g,' $1').replace(/^./,s=>s.toUpperCase()) : '';
 
@@ -56,6 +54,8 @@ function Section({ title, children }) {
 }
 
 export default function SponsorForm({ initial = null, onSubmit, loading, onCancel }) {
+  const isEdit = !!initial;
+  
   const [form, setForm] = useState(() => initial ? { ...DEFAULTS, ...initial } : DEFAULTS);
   const [pickerOpen, setPickerOpen] = useState(false);
   
@@ -72,25 +72,45 @@ export default function SponsorForm({ initial = null, onSubmit, loading, onCance
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const payload = {
-      ...form,
-      location: {
-        latitude:  parseFloat(form.location.latitude),
-        longitude: parseFloat(form.location.longitude),
-      },
+
+    const parsedLocation = {
+      latitude:  parseFloat(form.location.latitude),
+      longitude: parseFloat(form.location.longitude),
     };
-    ['title','description','address','websiteUrl','contactPhone','contactEmail'].forEach(k => {
-      if (!payload[k]) delete payload[k];
-    });
-    onSubmit(payload);
+
+    if (isEdit) {
+      // Structure explicitly maps to UpdateSponsorRequest
+      const updatePayload = {
+        type: form.type,
+        tier: form.tier,
+        location: parsedLocation,
+        newEndDate: form.newEndDate || null,
+        contactPhone: form.contactPhone || null,
+        contactEmail: form.contactEmail || null,
+        websiteUrl: form.websiteUrl || null,
+      };
+      onSubmit(updatePayload);
+    } else {
+      // Structure maps to Create request
+      const createPayload = {
+        ...form,
+        location: parsedLocation,
+      };
+      
+      // Cleanup empty strings
+      ['title','description','address','websiteUrl','contactPhone','contactEmail'].forEach(k => {
+        if (!createPayload[k]) delete createPayload[k];
+      });
+      delete createPayload.newEndDate; // Ensure this UI state doesn't leak into Create
+      
+      onSubmit(createPayload);
+    }
   };
 
   const handleLocationConfirm = ({ latitude, longitude }) => {
     set('location.latitude', latitude.toFixed(9));
     set('location.longitude', longitude.toFixed(9));
   };
-
-  const isEdit = !!initial;
 
   /* Whether a valid location is already set */
   const hasLocation =
@@ -159,23 +179,25 @@ export default function SponsorForm({ initial = null, onSubmit, loading, onCance
             )}
           </button>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Latitude *</label>
+          <div className="form-row" style={{ display: 'flex', gap: 16 }}>
+            <div className="form-group" style={{ flex: 1 }}>
+              <label style={{ fontSize:10, fontWeight:700, letterSpacing:'0.08em', textTransform:'uppercase', color:'var(--outline)', display: 'block', marginBottom: 6 }}>Latitude *</label>
               <input
                 type="number" step="any" required
                 value={form.location.latitude}
                 onChange={(e) => set('location.latitude', e.target.value)}
                 placeholder="e.g. 29.979200"
+                style={inputStyle}
               />
             </div>
-            <div className="form-group">
-              <label>Longitude *</label>
+            <div className="form-group" style={{ flex: 1 }}>
+              <label style={{ fontSize:10, fontWeight:700, letterSpacing:'0.08em', textTransform:'uppercase', color:'var(--outline)', display: 'block', marginBottom: 6 }}>Longitude *</label>
               <input
                 type="number" step="any" required
                 value={form.location.longitude}
                 onChange={(e) => set('location.longitude', e.target.value)}
                 placeholder="e.g. 31.134200"
+                style={inputStyle}
               />
             </div>
           </div>
@@ -188,7 +210,7 @@ export default function SponsorForm({ initial = null, onSubmit, loading, onCance
                 <input type="date" required value={form.startDate} onChange={e => set('startDate', e.target.value)} style={inputStyle} />
               </Field>
             )}
-            <Field label={isEdit ? 'New End Date' : 'End Date *'}>
+            <Field label={isEdit ? 'New End Date' : 'End Date *'} note={isEdit ? "(Leave blank to keep existing)" : ""}>
               <input type="date" required={!isEdit} value={isEdit ? (form.newEndDate || '') : form.endDate}
                 onChange={e => set(isEdit ? 'newEndDate' : 'endDate', e.target.value)} style={inputStyle} />
             </Field>
