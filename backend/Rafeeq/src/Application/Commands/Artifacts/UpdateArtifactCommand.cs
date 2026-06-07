@@ -1,12 +1,14 @@
 using Domain.Common.Interfaces;
 using Domain.Entities.ArtifactAggregate;
 using Domain.Entities.SiteAggregate;
+using Domain.Enums;
 
 namespace Application.Commands.Artifacts;
 
 public sealed record UpdateArtifactCommand(
     Guid Id,
     int DisplayOrder,
+    ArtifactType Type,
     Guid? SiteId) : ICommand;
 
 internal sealed class UpdateArtifactCommandHandler(
@@ -27,7 +29,7 @@ internal sealed class UpdateArtifactCommandHandler(
             artifact.AssignSite(command.SiteId.Value);
         }
 
-        var updateResult = artifact.Update(command.DisplayOrder);
+        var updateResult = artifact.Update(command.DisplayOrder, command.Type);
         if (updateResult.Failed)
             return updateResult;
 

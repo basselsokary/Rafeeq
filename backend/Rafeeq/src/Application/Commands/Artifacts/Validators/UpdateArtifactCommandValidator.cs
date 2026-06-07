@@ -20,5 +20,9 @@ internal sealed class UpdateArtifactCommandValidator : AbstractValidator<UpdateA
         RuleFor(x => x.DisplayOrder)
             .GreaterThan(0)
             .WithMessage(errors[ArtifactErrors.NegativeDisplayOrder.Code]);
+        
+        RuleFor(x => x.Type)
+            .IsInEnum()
+            .WithMessage(errors[ValidationErrors.InvalidEnumValue.Code]);
     }
 }
