@@ -29,10 +29,6 @@ internal sealed class UpdateSponsorCommandValidator : AbstractValidator<UpdateSp
         RuleFor(x => x.Tier)
             .IsInEnum()
             .WithMessage(x => errors.Format(ValidationErrors.InvalidEnumValue.Code, x.Tier.ToString()));
-        
-        RuleFor(x => x.NewEndDate)
-            .NotEmpty()
-            .WithMessage(errors[SponsorErrors.InvalidExtendDate.Code]);
     }
 }
 
