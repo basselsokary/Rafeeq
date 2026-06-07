@@ -58,7 +58,7 @@ internal class CachedArtifactQueryService(IArtifactQueryService inner, IMemoryCa
 
     public async Task<List<ArtifactListDto>> GetBySiteIdAsync(Guid siteId, ArtifactType? type, string? searchTerm = null, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default)
     {
-        var key = $"{Prefix}:site:{siteId}:{type}:{searchTerm}:{language}";
+        var key = $"{Prefix}:list:site:{siteId}:{type}:{searchTerm}:{language}";
         return await GetOrCreateAsync(
             key,
             MediumTtl20_Minutes,
