@@ -34,6 +34,13 @@ export const ATTRACTION_TYPES = [
   'archaeologicalStructure','historicBuilding','viewingPoint','culturalExhibit',
 ];
 
+export const ARTIFACT_TYPES = [
+  'other','statue','mask','sphinx','stele','bust','painting','manuscript',
+  'jewelry','coin','vessel','weapon','tool','textile','furniture',
+  'musicalInstrument','ceramic','pottery','glassware','bone','ivory',
+  'shell','metalwork','shrine',
+];
+
 export const HISTORICAL_PERIODS = [
   'unknown','predynastic','earlyDynastic','oldKingdom','firstIntermediatePeriod',
   'middleKingdom','secondIntermediatePeriod','newKingdom','thirdIntermediatePeriod',

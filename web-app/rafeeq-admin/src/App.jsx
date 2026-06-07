@@ -6,6 +6,8 @@ import SitesPage from './pages/sites/SitesPage';
 import SiteDetailPage from './pages/sites/SiteDetailPage';
 import AttractionsPage from './pages/attractions/AttractionsPage';
 import AttractionDetailPage from './pages/attractions/AttractionDetailPage';
+import ArtifactsPage from './pages/artifacts/ArtifactsPage';
+import ArtifactDetailPage from './pages/artifacts/ArtifactDetailPage';
 import CitiesPage from './pages/cities/CitiesPage';
 import CityDetailPage from './pages/cities/CityDetailPage';
 import SponsorsPage from './pages/sponsors/SponsorsPage';
@@ -47,6 +49,18 @@ export default function App() {
             <Route path="/sites/:id" element={
               <ProtectedRoute>
                 <Layout><SiteDetailPage /></Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/artifacts" element={
+              <ProtectedRoute>
+                <Layout><ArtifactsPage /></Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/artifacts/:id" element={
+              <ProtectedRoute>
+                <Layout><ArtifactDetailPage /></Layout>
               </ProtectedRoute>
             } />
 
