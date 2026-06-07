@@ -49,6 +49,10 @@ export const HISTORICAL_PERIODS = [
   'ottoman','muhammadAliDynasty',
 ];
 
+export const SPONSOR_TYPES = ['restaurant','hotel','shop','service','tour','transportation'];
+
+export const SPONSOR_TIERS = ['bronze','silver','gold','platinum'];
+
 export const WEEKDAYS = [
   'saturday','sunday','monday','tuesday','wednesday','thursday','friday',
 ];
@@ -71,6 +75,7 @@ export const ROLES = {
   superAdmin: 'SuperAdmin',
   admin:     'Admin',
   moderator: 'Moderator',
+  tourist: 'Tourist',
 };
 
 export const formatEnum = (val) =>
