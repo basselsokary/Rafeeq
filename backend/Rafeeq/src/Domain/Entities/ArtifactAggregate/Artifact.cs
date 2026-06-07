@@ -44,20 +44,25 @@ public class Artifact : BaseAuditableEntity, IAggregateRoot
         if (result.Failed)
             return result.To<Artifact>();
         
+        artifact.RaiseDomainEvent(new ArtifactCreatedEvent(artifact.Id));
+
         return artifact;
     }
 
-    public Result Update(int displayOrder)
+    public Result Update(int displayOrder, ArtifactType type)
     {
         if (displayOrder <= 0)
             return ArtifactErrors.NegativeDisplayOrder;
 
         DisplayOrder = displayOrder;
+        Type = type;
+        RaiseDomainEvent(new ArtifactUpdatedEvent(Id));
         return Result.Success();
     }
 
     public void AssignSite(Guid? siteId)
     {
+        RaiseDomainEvent(new ArtifactUpdatedEvent(Id));
         SiteId = siteId;
     }
 
@@ -80,6 +85,7 @@ public class Artifact : BaseAuditableEntity, IAggregateRoot
 
         _images.Add(imageResult.Value);
 
+        RaiseDomainEvent(new ArtifactImageUpdatedEvent(Id));
         return Result.Success(imageResult.Value);
     }
 
@@ -101,6 +107,7 @@ public class Artifact : BaseAuditableEntity, IAggregateRoot
             MainImageUrl = null;
         }
 
+        RaiseDomainEvent(new ArtifactImageUpdatedEvent(Id));
         return Result.Success(image);
     }
 
@@ -117,6 +124,7 @@ public class Artifact : BaseAuditableEntity, IAggregateRoot
         image.SetAsMain(true);
         SetMainImage(image.ImageUrl);
 
+        RaiseDomainEvent(new ArtifactImageUpdatedEvent(Id));
         return Result.Success();
     }
 
@@ -132,6 +140,7 @@ public class Artifact : BaseAuditableEntity, IAggregateRoot
 
         _localizedContents.Add(contentResult.Value);
 
+        RaiseDomainEvent(new ArtifactLocalizedContentUpdatedEvent(Id));
         return Result.Success(contentResult.Value);
     }
 
@@ -145,6 +154,7 @@ public class Artifact : BaseAuditableEntity, IAggregateRoot
         if (result.Failed)
             return result;
 
+        RaiseDomainEvent(new ArtifactLocalizedContentUpdatedEvent(Id));
         return Result.Success();
     }
 
@@ -155,5 +165,4 @@ public class Artifact : BaseAuditableEntity, IAggregateRoot
             MainImageUrl = imageUrl;
         }
     }
-
 }
