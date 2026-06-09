@@ -66,6 +66,16 @@ internal class CachedSiteQueryService(ISiteQueryService inner, IMemoryCache cach
         return await inner.GetByNamesAsync(names, language, cancellationToken);
     }
 
+    public async Task<Dictionary<string, SiteListDto>> GetByEnglishNamesAsync(List<string> names, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default)
+    {
+        return await inner.GetByEnglishNamesAsync(names, language, cancellationToken);
+    }
+
+    public async Task<Dictionary<Guid, SiteListDto>> GetByIdsAsync(List<Guid> ids, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default)
+    {
+        return await inner.GetByIdsAsync(ids, language, cancellationToken);
+    }
+
     public async Task<List<SiteListDto>> GetFeaturedAsync(int count = 10, Guid? city = null, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default)
     {
         var key = $"{Prefix}:list:featured:{count}:{city?.ToString() ?? "none"}:{language}";

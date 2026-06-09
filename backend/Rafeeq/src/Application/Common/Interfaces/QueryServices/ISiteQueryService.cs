@@ -42,6 +42,16 @@ public interface ISiteQueryService
         List<string> names,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default);
+    
+    Task<Dictionary<string, SiteListDto>> GetByEnglishNamesAsync(
+        List<string> names,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default);
+
+    Task<Dictionary<Guid, SiteListDto>> GetByIdsAsync(
+        List<Guid> ids,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default);
 
     Task<List<SiteSummaryDto>> GetMustVisitAsync(
         int count = 10, LanguageCode language = LanguageCode.English, CancellationToken cancellationToken = default);

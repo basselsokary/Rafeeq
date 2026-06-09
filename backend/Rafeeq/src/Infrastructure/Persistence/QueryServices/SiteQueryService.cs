@@ -277,6 +277,20 @@ internal sealed class SiteQueryService(
             cancellationToken);
     }
 
+    public async Task<Dictionary<Guid, SiteListDto>> GetByIdsAsync(
+        List<Guid> ids,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
+    {
+        var query = Sites
+            .Where(s => s.LocalizedContents.Any(lc =>
+                lc.Language == LanguageCode.English &&
+                ids.Contains(lc.Id)));
+        
+        var sites = await query.Select(ConvertSiteToListDto(language)).ToListAsync(cancellationToken);
+        return sites.ToDictionary(s => s.Id, s => s);
+    }
+
     public async Task<List<SiteListDto>> GetByNamesAsync(
         List<string> names,
         LanguageCode language = LanguageCode.English,
@@ -284,12 +298,75 @@ internal sealed class SiteQueryService(
     {
         names = names.Select(n => n.Trim()).ToList();
         var query = Sites;
-        query = Sites
+        query = query
             .Where(s => s.LocalizedContents
                 .Any(lc => (lc.Language == language || lc.Language == LanguageCode.English) && names.Contains(lc.Name)));
             
         return await query.Select(ConvertSiteToListDto(language)).ToListAsync(cancellationToken);
     }
+
+    public async Task<Dictionary<string, SiteListDto>> GetByEnglishNamesAsync(
+        List<string> names,
+        LanguageCode language = LanguageCode.English,
+        CancellationToken cancellationToken = default)
+    {
+        names = names.Select(n => n.Trim()).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+
+        var query = Sites
+            .Where(s => s.LocalizedContents.Any(lc =>
+                lc.Language == LanguageCode.English &&
+                names.Contains(lc.Name)));
+        
+        return await GetSites(query, language, cancellationToken);
+    }
+
+    private static async Task<Dictionary<string, SiteListDto>> GetSites(
+        IQueryable<Site> query,
+        LanguageCode language,
+        CancellationToken cancellationToken)
+    {
+        var sites = await query.Select(s => new
+        {
+            EnglishName = s.LocalizedContents
+                .Where(lc => lc.Language == LanguageCode.English)
+                .Select(lc => lc.Name)
+                .FirstOrDefault(),
+
+            Site = new SiteListDto(
+            s.Id,
+
+            s.City.LocalizedContents
+                .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                .OrderBy(lc => lc.Language == language ? 0 : 1)
+                .Select(lc => lc.Name)
+                .FirstOrDefault()!,
+
+            s.LocalizedContents
+                .Where(lc => lc.Language == language || lc.Language == LanguageCode.English)
+                .OrderBy(lc => lc.Language == language ? 0 : 1)
+                .Select(lc => lc.Name)
+                .FirstOrDefault()!,
+
+            s.Type,
+            s.Status,
+            new(s.Location.Latitude, s.Location.Longitude),
+            s.MainImageUrl,
+            s.AverageRating,
+            s.TotalRating,
+            s.IsFree,
+            s.IsFeatured,
+            s.IsHiddenGem)
+        })
+        .ToListAsync(cancellationToken);
+
+        return sites
+            .Where(x => !string.IsNullOrWhiteSpace(x.EnglishName))
+            .ToDictionary(
+                x => x.EnglishName!,
+                x => x.Site,
+                StringComparer.OrdinalIgnoreCase);
+    }
+
 
     public Task<List<SiteListDto>> GetFeaturedAsync(
         int count = 10,
