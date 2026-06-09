@@ -1,11 +1,13 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
+import { useNavigate } from 'react-router-dom';
 
 export default function Topbar() {
   const { user } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const initial  = user?.userName?.[0]?.toUpperCase() ?? '…';
+  const navigate = useNavigate();
 
   const now     = new Date();
   const timeStr = now.toLocaleTimeString('en-EG', { hour: '2-digit', minute: '2-digit' });
@@ -65,7 +67,7 @@ export default function Topbar() {
         </div>
 
         {/* User avatar */}
-        <div title={user?.userName ?? ''} style={{
+        <div onClick={() => navigate(`/users/profile`)} title={user?.userName ?? ''} style={{
           width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
           background: 'linear-gradient(135deg, var(--primary), var(--primary-container))',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
