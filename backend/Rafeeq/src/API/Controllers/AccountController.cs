@@ -117,4 +117,14 @@ public class AccountController : ApiBaseController
 
         return HandleResult(result);
     }
+
+    [HttpDelete("account")]
+    public async Task<ActionResult> DeleteAccount(
+        [FromServices] ICommandHandler<DeleteAccountCommand> commandHandler,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await commandHandler.HandleAsync(new DeleteAccountCommand(), cancellationToken);
+
+        return HandleResult(result);
+    }
 }

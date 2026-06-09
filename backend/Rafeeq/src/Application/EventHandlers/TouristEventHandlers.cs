@@ -111,3 +111,13 @@ internal class TouristFavoriteRemovedEventHandler(
         await cacheService.RemoveByIdAsync("tourist:list:favorites", domainEvent.TouristId.ToString());
     }
 }
+
+internal class TouristDeletedEventHandler(
+    ICacheService cacheService) : IDomainEventHandler<TouristDeletedEvent>
+{
+    public async Task HandleAsync(TouristDeletedEvent domainEvent, CancellationToken cancellationToken = default)
+    {
+        await cacheService.RemoveByIdAsync("tourist", domainEvent.TouristId.ToString());
+        await cacheService.RemoveByPrefixAsync("tourist:list");
+    }
+}

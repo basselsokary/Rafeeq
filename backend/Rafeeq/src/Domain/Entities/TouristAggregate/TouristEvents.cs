@@ -51,3 +51,8 @@ public sealed class TouristFavoriteRemovedEvent(Guid TouristId, Guid SiteId) : B
     public Guid TouristId { get; } = TouristId;
     public Guid SiteId { get; } = SiteId;
 }
+
+public sealed class TouristDeletedEvent(Guid TouristId) : BaseEvent
+{
+    public Guid TouristId { get; } = TouristId;
+}

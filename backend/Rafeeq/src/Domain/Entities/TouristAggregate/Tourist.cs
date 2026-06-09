@@ -173,6 +173,11 @@ public class Tourist : BaseEntity, IAggregateRoot
         }
     }
 
+    public void Delete()
+    {
+        RaiseDomainEvent(new TouristDeletedEvent(Id));
+    }
+
     public bool IsFavorite(Guid siteId)
     {
         return _favourites.Any(f => f.SiteId == siteId);
