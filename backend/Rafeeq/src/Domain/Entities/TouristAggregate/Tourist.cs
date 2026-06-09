@@ -66,7 +66,7 @@ public class Tourist : BaseEntity, IAggregateRoot
 
     public string GetFullName() => $"{FirstName} {LastName}";
 
-    public Result UpdateProfile(string firstName, string lastName, string nationality)
+    public Result UpdateProfile(string firstName, string lastName, string? nationality)
     {
         if (string.IsNullOrWhiteSpace(firstName))
             return TouristErrors.FirstNameRequired;
@@ -79,7 +79,7 @@ public class Tourist : BaseEntity, IAggregateRoot
 
         FirstName = firstName.Trim();
         LastName = lastName.Trim();
-        Nationality = nationality.Trim();
+        Nationality = nationality?.Trim();
 
         UpdateLastModified();
         RaiseDomainEvent(new TouristProfileUpdatedEvent(Id, firstName, lastName));

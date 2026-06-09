@@ -7,7 +7,7 @@ namespace Application.Commands.Users.Tourists;
 public sealed record UpdateProfileCommand(
     string FirstName,
     string LastName,
-    string Nationality) : ICommand;
+    string? Nationality) : ICommand;
 
 internal sealed class UpdateProfileCommandHandler(
     IUnitOfWork unitOfWork,

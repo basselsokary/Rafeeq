@@ -22,7 +22,8 @@ internal sealed class UpdateProfileCommandValidator : AbstractValidator<UpdatePr
             .WithMessage(errors[TouristErrors.LastNameExceededLength.Code]);
 
         RuleFor(x => x.Nationality)
-            .NotEmpty()
+            .MaximumLength(DomainConstants.Tourist.MaxNationalityLength)
+            .When(x => !string.IsNullOrEmpty(x.Nationality))
             .WithMessage(errors[TouristErrors.NationalityRequired.Code]);
     }
 }
