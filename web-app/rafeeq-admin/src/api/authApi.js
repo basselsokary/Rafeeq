@@ -20,5 +20,8 @@ export const refresh = () =>
     return res;
   });
 
+export const changePassword = (body) =>
+  api.post(`${BASE}/change-password`, body);
+
 
 export const getMe = () => api.get(`${BASE}/me`);
