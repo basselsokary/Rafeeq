@@ -55,7 +55,7 @@ internal sealed class TripQueryService(
                             .OrderBy(s => s.VisitOrder)
                             .Select(s => new
                             {
-                                s.Id,
+                                s.SiteId,
                                 s.SiteName,
                                 s.SiteImageUrl,
                                 s.SiteType,
@@ -89,7 +89,7 @@ internal sealed class TripQueryService(
                 (int)d.EstimatedDayDuration.TotalMinutes,
                 d.Notes,
                 d.Sites.Select(s => new TripSiteDto(
-                    s.Id,
+                    s.SiteId,
                     s.SiteName,
                     s.SiteImageUrl,
                     s.SiteType,

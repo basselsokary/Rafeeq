@@ -4,7 +4,7 @@ using Domain.Enums;
 namespace Application.DTOs.Trips;
 
 public sealed record TripSiteDto(
-    Guid Id,
+    Guid SiteId,
     string SiteName,
     string SiteImageUrl,
     SiteType SiteType,
