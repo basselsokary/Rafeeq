@@ -14,6 +14,7 @@ import SponsorsPage from './pages/sponsors/SponsorsPage';
 import SponsorDetailPage from './pages/sponsors/SponsorDetailPage';
 import UsersPage from './pages/users/UsersPage';
 import UserDetailPage from './pages/users/UserDetailPage';
+import ProfilePage from './pages/users/ProfilePage';
 import './styles/global.css';
 import 'leaflet/dist/leaflet.css';
 import './styles/map.css';
@@ -109,6 +110,12 @@ export default function App() {
             <Route path="/users/:id" element={
               <ProtectedRoute roles={[ROLES.superAdmin, ROLES.admin]}>
                 <Layout><UserDetailPage /></Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/users/profile" element={
+              <ProtectedRoute>
+                <Layout><ProfilePage /></Layout>
               </ProtectedRoute>
             } />
           </Route>
