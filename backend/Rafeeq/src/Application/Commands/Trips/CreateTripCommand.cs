@@ -7,7 +7,6 @@ using Domain.Common.Interfaces;
 using Domain.Entities.TripAggregate;
 using Domain.Enums;
 using Domain.ValueObjects;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Commands.Trips;
 
@@ -87,7 +86,7 @@ internal sealed class CreateTripCommandHandler(
             dayIndex++;
             var dayNumber = planDay.Day > 0 ? planDay.Day : dayIndex;
             var date = command.StartDate.AddDays(dayNumber - 1);
-            var dayBudget = BuildDayBudget(command.EstimatedBudget, planDay.DayBudgetEgp);
+            var dayBudget = BuildDayBudget(command.EstimatedBudget, planDay.DayBudgetEgp ?? 0);
 
             var tripDayResult = trip.AddTripDay(date, dayBudget);
             if (tripDayResult.Failed)
@@ -176,14 +175,15 @@ internal sealed class CreateTripCommandHandler(
         if (itinerarySiteNames.Count == 0)
             return sitesByName;
 
-        var itinerarySites = await siteQueryService.GetByNamesAsync(
+        var itinerarySites = await siteQueryService.GetByEnglishNamesAsync(
             itinerarySiteNames,
+            language: userContext.Language,
             cancellationToken: cancellationToken);
 
         foreach (var site in itinerarySites)
         {
-            if (!sitesByName.ContainsKey(site.Name))
-                sitesByName[site.Name] = site;
+            if (!sitesByName.ContainsKey(site.Key))
+                sitesByName[site.Key] = site.Value;
         }
 
         return sitesByName;

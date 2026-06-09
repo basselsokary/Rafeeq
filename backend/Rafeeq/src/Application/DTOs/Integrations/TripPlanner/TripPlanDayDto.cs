@@ -6,7 +6,7 @@ public sealed record TripPlanDayDto(
     List<double> StartLocation,
     List<TripStopDto> Itinerary,
     decimal DayTicketCostEgp,
-    decimal DayBudgetEgp,
+    decimal? DayBudgetEgp,
     double TotalTimeMinutes,
     bool FallbackUsed,
     int FallbackLevel);

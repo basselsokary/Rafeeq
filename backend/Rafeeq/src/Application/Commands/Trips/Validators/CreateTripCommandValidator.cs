@@ -44,7 +44,9 @@ internal sealed class CreateTripCommandValidator : AbstractValidator<CreateTripC
         RuleFor(x => x.EstimatedBudget)
             .GreaterThanOrEqualTo(0)
             .When(x => x.EstimatedBudget.HasValue)
-            .WithMessage(errors[MoneyErrors.NegativeAmount.Code]);
+            .WithMessage(errors[MoneyErrors.NegativeAmount.Code])
+            .LessThanOrEqualTo(100_000)
+            .When(x => x.EstimatedBudget.HasValue);
         
         RuleFor(x => x.Tolerance)
             .IsInEnum()
