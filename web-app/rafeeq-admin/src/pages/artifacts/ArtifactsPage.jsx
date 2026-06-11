@@ -289,7 +289,6 @@ export default function ArtifactsPage() {
   
   /* ── Re-fetch when selected site changes ── */
   useEffect(() => {
-    console.log("site changed", selectedSiteId);
     loadStats();
     loadArtifacts({ siteId: selectedSiteId || undefined, search: topSearch, type: typeFilter, pg: 1 });
   }, [selectedSiteId]);
