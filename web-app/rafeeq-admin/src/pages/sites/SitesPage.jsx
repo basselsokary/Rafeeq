@@ -414,25 +414,20 @@ export default function SitesPage() {
             <div>
               {site.isFree
                 ? <span style={{ fontSize: 12, color: 'var(--green)', fontWeight: 700 }}>Free</span>
-                : <div>
-                    <div style={{ fontSize: 9, color: 'var(--outline)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>EGP</div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>
-                      {site.entryTicket?.egyptianTicketPrice?.amount ?? '—'}
-                    </div>
-                  </div>
+                : <span style={{ fontSize: 12, color: 'var(--red)', fontWeight: 700 }}>Paid</span>
               }
             </div>
 
             {/* Stats */}
             <div>
-              {site.averageRating
+              {site.averageRating || site.averageRating >= 0
                 ? <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                       <span style={{ color: 'var(--primary-container)', fontWeight: 700 }}>★</span>
                       <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>{site.averageRating.toFixed(1)}</span>
                     </div>
                     {site.totalRatings > 0 && (
-                      <div style={{ fontSize: 11, color: 'var(--outline)' }}>{site.totalRatings.toLocaleString()} reviews</div>
+                      <div style={{ fontSize: 11, color: 'var(--outline)' }}>{site.totalRatings.toLocaleString()} ratings</div>
                     )}
                   </div>
                 : <span style={{ color: 'var(--outline)', fontSize: 12 }}>—</span>
