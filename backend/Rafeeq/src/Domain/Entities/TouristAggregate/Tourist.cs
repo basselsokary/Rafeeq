@@ -158,7 +158,7 @@ public class Tourist : BaseEntity, IAggregateRoot
         UpdateLastModified();
     }
 
-    public void IncrementReviewCount()
+    public void IncrementRatingCount()
     {
         TotalRatings++;
         UpdateLastModified();

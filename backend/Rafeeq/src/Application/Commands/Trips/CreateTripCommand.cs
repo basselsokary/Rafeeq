@@ -136,6 +136,9 @@ internal sealed class CreateTripCommandHandler(
         var actualCostResult = Money.Create(tripPlan.TripSummary.TotalTicketCostEgp, "EGP");
         trip.UpdateActualCost(actualCostResult.Succeeded ? actualCostResult.Value : null);
 
+        var tourist = await unitOfWork.Tourists.GetByIdAsync(userContext.Id, cancellationToken);
+        tourist?.IncrementTripCount();
+
         await unitOfWork.Trips.AddAsync(trip, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

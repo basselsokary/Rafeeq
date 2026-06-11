@@ -199,44 +199,6 @@ public class Trip : BaseAuditableEntity, IAggregateRoot
         return Result.Success();
     }
     
-    // public void MoveSiteToAnotherDay(Guid siteId, int fromDayNumber, int toDayNumber)
-    // {
-    //     var fromDay = _days.FirstOrDefault(d => d.DayNumber == fromDayNumber);
-    //     var toDay = _days.FirstOrDefault(d => d.DayNumber == toDayNumber);
-        
-    //     if (fromDay == null || toDay == null)
-    //         throw new BusinessRuleValidationException("Invalid day numbers");
-        
-    //     var site = fromDay.Sites.FirstOrDefault(s => s.Id == siteId);
-    //     if (site == null)
-    //         throw new EntityNotFoundException(nameof(TripSite), siteId);
-        
-    //     fromDay.RemoveSite(siteId);
-    //     toDay.AddSite(site);
-    //     RecalculateEstimates();
-    //     MarkAsUpdated();
-    // }
-    
-    // public void StartTrip()
-    // {
-    //     if (Status != TripStatus.Planning)
-    //         throw new BusinessRuleValidationException("Can only start a trip that is in planning status");
-        
-    //     Status = TripStatus.InProgress;
-    //     RaiseDomainEvent(new TripStartedEvent(Id, TouristId));
-    //     MarkAsUpdated();
-    // }
-    
-    // public void CompleteTrip()
-    // {
-    //     if (Status != TripStatus.InProgress)
-    //         throw new BusinessRuleValidationException("Can only complete a trip that is in progress");
-        
-    //     Status = TripStatus.Completed;
-    //     RaiseDomainEvent(new TripCompletedEvent(Id, TouristId));
-    //     MarkAsUpdated();
-    // }
-    
     private void RecalculateEstimates()
     {
         EstimatedTotalDuration = TimeSpan.FromMinutes(_days.Sum(d => d.GetTotalDuration().TotalMinutes));
