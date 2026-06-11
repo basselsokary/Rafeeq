@@ -10,7 +10,6 @@ import { formatEnum } from '../../utils/constants';
 /* ── Enums ─────────────────────────────────────────────── */
 const SPONSOR_TYPES   = ['restaurant','hotel','service','tour','transportation'];
 const SPONSOR_TIERS   = ['bronze','silver','gold','platinum'];
-const SPONSOR_FILTERS = ['All','Active','Inactive','Expired','Gold','Platinum'];
 
 const TIER_CFG = {
   platinum: { bg: 'rgba(148,163,184,.15)', text: '#64748b', border: 'rgba(148,163,184,.5)', label: '💠 Platinum' },
@@ -29,18 +28,6 @@ const TYPE_ICONS = {
   restaurant: '🍽️', hotel: '🏨', shop: '🛍️',
   service: '⚙️', tour: '🗺️', transportation: '🚌',
 };
-
-/* ── Atoms ──────────────────────────────────────────────── */
-function TierBadge({ tier }) {
-  const c = TIER_CFG[tier] || TIER_CFG.bronze;
-  return (
-    <span style={{
-      display: 'inline-block', padding: '3px 9px', borderRadius: 4,
-      fontSize: 10, fontWeight: 700, letterSpacing: '0.07em',
-      background: c.bg, color: c.text, border: `1px solid ${c.border}`,
-    }}>{c.label}</span>
-  );
-}
 
 function StatusDot({ status }) {
   const s = STATUS_CFG[status] || STATUS_CFG.inactive;
@@ -171,9 +158,6 @@ export default function SponsorsPage() {
   const displayed = sponsors.filter(s => {
     if (activeFilter === 'Active'   && s.status !== 'active')   return false;
     if (activeFilter === 'Inactive' && s.status !== 'inactive') return false;
-    if (activeFilter === 'Expired'  && s.status !== 'expired')  return false;
-    if (activeFilter === 'Gold'     && s.tier !== 'gold')       return false;
-    if (activeFilter === 'Platinum' && s.tier !== 'platinum')   return false;
     return true;
   });
 
@@ -195,7 +179,7 @@ export default function SponsorsPage() {
     } finally { setCreating(false); }
   };
 
-  const GRID = '2.2fr 1fr 1fr 1fr 1fr 1.2fr';
+  const GRID = '2.2fr 1fr 1fr 1fr 1.2fr';
 
   const selectStyle = {
     flex: 1, minWidth: 120, padding: '9px 32px 9px 12px',
@@ -238,18 +222,8 @@ export default function SponsorsPage() {
 
       {/* Filter pills */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-          {SPONSOR_FILTERS.map(f => (
-            <button key={f} onClick={() => { setActiveFilter(f); setPage(1); }} style={{
-              padding: '6px 15px', borderRadius: 999, fontSize: 13, fontWeight: 600,
-              border: 'none', cursor: 'pointer', transition: '.15s',
-              background: activeFilter === f ? 'linear-gradient(135deg,var(--primary),var(--primary-container))' : 'var(--surface-container-lowest)',
-              color: activeFilter === f ? '#fff' : 'var(--text-2)',
-              boxShadow: activeFilter === f ? '0 2px 8px rgba(124,87,45,.3)' : '0 0 0 1px rgba(212,196,183,.5)',
-            }}>{f}</button>
-          ))}
-        </div>
-        {(activeFilter !== 'All' || search || typeFilter || tierFilter) && (
+
+        {(typeFilter || tierFilter) && (
           <button onClick={clearFilters} style={{ background: 'none', border: 'none', fontSize: 13, color: 'var(--primary)', cursor: 'pointer', fontWeight: 600 }}>Clear Filters</button>
         )}
       </div>
@@ -282,7 +256,7 @@ export default function SponsorsPage() {
       <div style={{ background: 'var(--surface-container-lowest)', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(29,27,23,.06)' }}>
         {/* Header */}
         <div style={{ display: 'grid', gridTemplateColumns: GRID, padding: '10px 20px', background: 'var(--surface-container-low)', borderBottom: '1px solid rgba(212,196,183,.25)' }}>
-          {['SPONSOR','TYPE','TIER','STATUS','OFFERS','CONTRACT'].map(h => (
+          {['SPONSOR','TYPE','STATUS','OFFERS','CONTRACT'].map(h => (
             <div key={h} style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', color: 'var(--outline)', textTransform: 'uppercase' }}>{h}</div>
           ))}
         </div>
@@ -326,7 +300,7 @@ export default function SponsorsPage() {
             </div>
 
             {/* Tier */}
-            <div><TierBadge tier={s.tier} /></div>
+            {/* <div><TierBadge tier={s.tier} /></div> */}
 
             {/* Status */}
             <div onClick={e => e.stopPropagation()}>

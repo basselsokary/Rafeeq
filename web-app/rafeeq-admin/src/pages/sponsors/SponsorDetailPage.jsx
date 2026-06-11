@@ -253,9 +253,9 @@ function OverviewTab({
             <InfoRow label="Phone"          value={sponsor.contactPhone} />
             <InfoRow label="Email"          value={sponsor.contactEmail} />
             <InfoRow label="Website"        value={sponsor.websiteUrl} />
-            <InfoRow label="Contract Start" value={sponsor.dateRange?.startDate ? new Date(sponsor.dateRange.startDate).toLocaleDateString() : null} />
-            <InfoRow label="Contract End"   value={sponsor.dateRange?.endDate   ? new Date(sponsor.dateRange.endDate).toLocaleDateString()   : null} />
-            <InfoRow label="Contract Valid" value={sponsor.isContractValid != null ? (sponsor.isContractValid ? 'Yes ✅' : 'Expired ❌') : null} />
+            <InfoRow label="Contract Start" value={sponsor.dateRange?.startDate ? new Date(sponsor.dateRange.startDate).toLocaleDateString('en-GB') : null} />
+            <InfoRow label="Contract End"   value={sponsor.dateRange?.endDate   ? new Date(sponsor.dateRange.endDate).toLocaleDateString('en-GB')   : null} />
+            <InfoRow label="Contract Valid" value={sponsor.dateRange?.startDate && sponsor.dateRange?.endDate ? (new Date()>= new Date(sponsor.dateRange.startDate) && new Date() <= new Date(sponsor.dateRange.endDate) ? 'Yes ✅' : 'Expired ❌') : null} />
             <InfoRow label="Coordinates"    value={sponsor.location ? `${sponsor.location.latitude}, ${sponsor.location.longitude}` : null} />
             <InfoRow label="Total Redemptions" value={sponsor.totalRedemptions} />
             {sponsor.createdByName && <InfoRow label="Created By" value={`${sponsor.createdByName} — ${new Date(sponsor.createdAt).toLocaleString()}`} />}
