@@ -47,7 +47,6 @@ public class SponsorsController : ApiBaseController
 	}
 
 	[HttpGet("nearby")]
-	[Authorize(Policy = Policies.TouristOnly)]
 	public async Task<ActionResult<List<NearbySponsorDto>>> GetNearby(
 		[FromQuery] double latitude,
 		[FromQuery] double longitude,
