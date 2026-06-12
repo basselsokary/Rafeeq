@@ -42,7 +42,7 @@ internal class CachedSponsorQueryService(ISponsorQueryService inner, IMemoryCach
         double latitude,
         double longitude,
         SponsorFilters filters,
-        double radiusKm = 3,
+        double radiusKm = 30,
         int count = 10,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)

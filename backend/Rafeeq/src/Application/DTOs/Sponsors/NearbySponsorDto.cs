@@ -8,9 +8,7 @@ public record NearbySponsorDto(
     SponsorType Type,
     double Latitude,
     double Longitude,
-    double DistanceKm,
     string? PrimaryImageUrl,
-    double AverageRating,
     bool HasActiveOffers,
     int ActiveOffersCount,
     string TypeDisplay = "");

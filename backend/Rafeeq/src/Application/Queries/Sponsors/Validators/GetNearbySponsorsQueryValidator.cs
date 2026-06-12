@@ -32,7 +32,7 @@ internal sealed class GetNearbySponsorsQueryValidator : AbstractValidator<GetNea
         RuleFor(x => x.RadiusKm)
             .GreaterThan(0)
             .WithMessage(errors[ValidationErrors.NumberMustBeGreaterThanZero.Code])
-            .LessThanOrEqualTo(20)
+            .LessThanOrEqualTo(40)
             .WithMessage(errors[ValidationErrors.MaximumLengthExceeded.Code]);
     }
 }

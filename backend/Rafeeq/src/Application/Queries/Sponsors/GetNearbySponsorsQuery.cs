@@ -10,7 +10,7 @@ public sealed record GetNearbySponsorsQuery(
     double Longitude,
     SponsorFilters Filters,
     int Count = 10,
-    int RadiusKm = 3) : IQuery<List<NearbySponsorDto>>;
+    int RadiusKm = 30) : IQuery<List<NearbySponsorDto>>;
 
 internal sealed class GetNearbySponsorsQueryHandler(
     ISponsorQueryService queryService,

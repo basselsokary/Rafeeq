@@ -250,7 +250,7 @@ internal sealed class SponsorQueryService(
         double latitude,
         double longitude,
         SponsorFilters filters,
-        double radiusKm = 3,
+        double radiusKm = 30,
         int count = 10,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
@@ -265,7 +265,8 @@ internal sealed class SponsorQueryService(
                 s.Location.Latitude >= latitude - latDelta &&
                 s.Location.Latitude <= latitude + latDelta &&
                 s.Location.Longitude >= longitude - lonDelta &&
-                s.Location.Longitude <= longitude + lonDelta);
+                s.Location.Longitude <= longitude + lonDelta &&
+                s.Status == SponsorStatus.Active);
         
         var candidates = await query
             .AsSplitQuery()
@@ -294,9 +295,7 @@ internal sealed class SponsorQueryService(
                 x.Sponsor.Type,
                 x.Sponsor.Location.Latitude,
                 x.Sponsor.Location.Longitude,
-                x.Distance,
                 x.Sponsor.MainImageUrl,
-                0,
                 x.Sponsor.Offers.Any(o => o.IsActive && o.ValidityPeriod.StartDate <= now && o.ValidityPeriod.EndDate >= now),
                 x.Sponsor.Offers.Count(o => o.IsActive && o.ValidityPeriod.StartDate <= now && o.ValidityPeriod.EndDate >= now)))
             .ToListAsync(cancellationToken);

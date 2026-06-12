@@ -51,11 +51,11 @@ public class SponsorsController : ApiBaseController
 	public async Task<ActionResult<List<NearbySponsorDto>>> GetNearby(
 		[FromQuery] double latitude,
 		[FromQuery] double longitude,
-		[FromQuery] int radiusKm,
 		[FromQuery] SponsorType? type,
 		[FromQuery] SponsorTier? tier,
 		[FromQuery] bool? activeOnly,
 		[FromServices] IQueryHandler<GetNearbySponsorsQuery, List<NearbySponsorDto>> queryHandler,
+		[FromQuery] int radiusKm = 30,
 		CancellationToken cancellationToken = default)
 	{
 		var filters = new SponsorFilters(type, tier, activeOnly);
