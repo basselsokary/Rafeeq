@@ -19,12 +19,14 @@ internal class JwtTokenGenerator(IOptions<JwtOptions> jwtSettings)
 
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+        Console.WriteLine($"Generating JWT for user: {user.UserName}, Roles: {string.Join(", ", roles)}");
+        Console.WriteLine($"User email: {user.Email}");
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email!),
+            new(ClaimTypes.Email, user.Email!),
             new(JwtRegisteredClaimNames.PreferredUsername, user.UserName!),
         };
 

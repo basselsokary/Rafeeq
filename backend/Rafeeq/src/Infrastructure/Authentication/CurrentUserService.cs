@@ -107,7 +107,7 @@ internal class CurrentUserService(IHttpContextAccessor httpContextAccessor) : IU
 
             var id = UserId;
             var userName = user.FindFirstValue(JwtRegisteredClaimNames.PreferredUsername)!;
-            var email = user.FindFirstValue(JwtRegisteredClaimNames.Email)!;
+            var email = user.FindFirstValue(ClaimTypes.Email)!;
             var roles = user.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
 
             return new UserDto(id, userName, email, roles);
