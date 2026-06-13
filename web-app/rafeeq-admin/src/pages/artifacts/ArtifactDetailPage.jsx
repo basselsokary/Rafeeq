@@ -190,7 +190,6 @@ export default function ArtifactDetailPage() {
       setEditOpen(false);
       load();
     } catch (e) {
-      console.error('Update failed:', e.response?.data || e);
       toast('Update failed', 'error');
     } finally { setSaving(false); }
   };
@@ -213,7 +212,6 @@ export default function ArtifactDetailPage() {
       toast('Featured status updated', 'success');
     } catch (e) {
       setArtifact(a => ({ ...a, isFeatured: prev }));
-      console.error('Featured update failed:', e.response?.data || e);
       toast('Featured update failed', 'error');
     } finally { setFeaturedSaving(false); }
   };
