@@ -3,7 +3,6 @@ using Application.Common.Interfaces.Localization;
 using Application.Common.Interfaces.QueryServices;
 using Application.DTOs.Common;
 using Application.DTOs.Sites;
-using Application.DTOs.Sponsors;
 
 namespace Application.Queries.Home;
 
@@ -30,7 +29,9 @@ public sealed class GetHomeDataQueryHandler(
                 cancellationToken: cancellationToken);
 
         var featuredDealsTask = sponsorQueryService
-            .GetActiveOffersAsync(cancellationToken: cancellationToken);
+            .GetActiveOffersAsync(
+                language: userContext.Language,
+                cancellationToken: cancellationToken);
 
         Task<List<SiteSummaryDto>>? nearbyTask = null;
 
