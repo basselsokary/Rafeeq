@@ -15,6 +15,7 @@ public class SitesController : ApiBaseController
     public async Task<ActionResult<PagedResult<SiteListDto>>> GetAll(
         [FromQuery] string? searchTerm,
         [FromQuery] SiteType? type,
+        [FromQuery] SiteStatus? status,
         [FromQuery] Guid? city,
         [FromQuery] bool? isFree,
         [FromQuery] int? minRating,
@@ -24,7 +25,7 @@ public class SitesController : ApiBaseController
 		[FromQuery] int pageSize = 20,
 		CancellationToken cancellationToken = default)
     {
-        var filters = new SiteFilters(type, city, isFree, minRating, maxRating);
+        var filters = new SiteFilters(type, city, isFree, minRating, maxRating, Status: status);
         var paging = new PagingParameters(page, pageSize);
 
         var query = new GetSitesQuery(filters, paging, searchTerm);
