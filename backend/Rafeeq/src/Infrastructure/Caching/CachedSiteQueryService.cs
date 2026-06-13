@@ -294,7 +294,8 @@ internal class CachedSiteQueryService(ISiteQueryService inner, IMemoryCache cach
         var isFree = filters.IsFree?.ToString() ?? "all";
         var minRating = filters.MinRating?.ToString(CultureInfo.InvariantCulture) ?? "all";
         var maxRating = filters.MaxRating?.ToString(CultureInfo.InvariantCulture) ?? "all";
-        return $"type={type}:city={city}:free={isFree}:min={minRating}:max={maxRating}";
+        var status = filters.Status?.ToString() ?? "all";
+        return $"type={type}:city={city}:free={isFree}:min={minRating}:max={maxRating}:status={status}";
     }
 
     private static string FormatBounds(BoundingBox bounds)
