@@ -10,4 +10,5 @@ public record SponsorOfferSummaryDto(
     string Description,
     MoneyDto? DiscountAmount,
     int? DiscountPercentage,
+    string? PromoCode,
     int DaysLeft);

@@ -523,6 +523,7 @@ internal sealed class SponsorQueryService(
                 x.OfferLocalized.Description,
                 x.Offer.DiscountAmount != null ? new MoneyDto(x.Offer.DiscountAmount.Amount, x.Offer.DiscountAmount.Currency, x.Offer.DiscountAmount.ToString()) : null,
                 x.Offer.DiscountPercentage,
+                x.Offer.PromoCode,
                 EF.Functions.DateDiffDay(now, x.Offer.ValidityPeriod.EndDate)))
             .ToListAsync(cancellationToken);
     }
