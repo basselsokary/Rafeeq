@@ -7,4 +7,5 @@ public record SiteFilters(
     Guid? City,
     bool? IsFree,
     int? MinRating,
-    int? MaxRating);
+    int? MaxRating,
+    SiteStatus? Status = null);

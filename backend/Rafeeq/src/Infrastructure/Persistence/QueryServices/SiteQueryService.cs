@@ -1045,6 +1045,11 @@ internal sealed class SiteQueryService(
             query = query.Where(s => s.Type == filters.Type);
         }
 
+        if (filters.Status is not null)
+        {
+            query = query.Where(s => s.Status == filters.Status);
+        }
+
         if (filters.City.HasValue && filters.City.Value != Guid.Empty)
         {
             query = query.Where(s => s.CityId == filters.City.Value);
