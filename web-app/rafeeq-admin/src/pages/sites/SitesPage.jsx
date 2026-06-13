@@ -214,8 +214,10 @@ export default function SitesPage() {
       const newId = res.data?.value?.id ?? res.data?.value ?? res.data?.id ?? res.data?.data?.id ?? res.data?.data ?? res.data;
       newId ? navigate(`/sites/${newId}`) : loadSites(page);
     } catch (e) {
-      console.error('Create site failed:', e.response?.data || e);
-      toast('Failed to create site', 'error');
+      Object.values(e.response?.data.errors)
+        .flat()
+        .forEach(error => toast(error, 'error'));
+      toast(e.response?.data.detail, 'error');
     } finally { setCreating(false); }
   };
 

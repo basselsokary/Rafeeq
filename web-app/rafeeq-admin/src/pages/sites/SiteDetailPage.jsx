@@ -312,7 +312,9 @@ export default function SiteDetailPage() {
       setLoading(true);
       const res = await getSiteById(id);
       setSite(res.data?.value ?? res.data);
-    } catch { toast('Failed to load site', 'error'); }
+    } catch (e) {
+      toast(e.response?.data.detail || 'Failed to load site', 'error');
+    }
     finally { setLoading(false); }
   }, [id]);
 
