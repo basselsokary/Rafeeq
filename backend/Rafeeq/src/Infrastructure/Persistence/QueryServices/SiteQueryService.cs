@@ -91,7 +91,7 @@ internal sealed class SiteQueryService(
             auditInfo);
     }
 
-    public Task<PagedResult<SiteListDto>> GetByStatusAsync(
+    public async Task<PagedResult<SiteListDto>> GetByStatusAsync(
         SiteStatus status,
         SiteType type,
         PagingParameters paging,
@@ -104,7 +104,7 @@ internal sealed class SiteQueryService(
             .ThenByDescending(s => s.AverageRating)
             .ThenByDescending(s => s.TotalRating);
 
-        return ToPagedResultAsync(
+        return await ToPagedResultAsync(
             query,
             paging,
             ConvertSiteToListDto(language),
@@ -368,7 +368,7 @@ internal sealed class SiteQueryService(
     }
 
 
-    public Task<List<SiteListDto>> GetFeaturedAsync(
+    public async Task<List<SiteListDto>> GetFeaturedAsync(
         int count = 10,
         Guid? city = null,
         LanguageCode language = LanguageCode.English,
@@ -382,7 +382,7 @@ internal sealed class SiteQueryService(
             query = query.Where(s => s.CityId == city.Value);
         }
 
-        return query
+        return await query
             .OrderByDescending(s => s.IsFeatured)
             .ThenByDescending(s => s.AverageRating)
             .ThenByDescending(s => s.TotalRating)
@@ -487,7 +487,7 @@ internal sealed class SiteQueryService(
             .ToListAsync(cancellationToken);
     }
 
-    public Task<List<SiteMapMarkerDto>> GetWithinBoundsAsync(
+    public async Task<List<SiteMapMarkerDto>> GetWithinBoundsAsync(
         BoundingBox bounds,
         SiteFilters filters,
         int count = 20,
@@ -509,7 +509,7 @@ internal sealed class SiteQueryService(
         
         query = ApplyFilters(query, filters);
         
-        return query
+        return await query
             .OrderByDescending(s => s.IsFeatured)
             .ThenByDescending(s => s.AverageRating)
             .Take(count)
@@ -724,7 +724,7 @@ internal sealed class SiteQueryService(
             .ToListAsync(cancellationToken);
     }
 
-    public Task<PagedResult<SiteListDto>> SearchAsync(
+    public async Task<PagedResult<SiteListDto>> SearchAsync(
         string searchTerm,
         SiteFilters filters,
         PagingParameters paging,
@@ -744,14 +744,14 @@ internal sealed class SiteQueryService(
             .ThenByDescending(s => s.AverageRating)
             .ThenByDescending(s => s.TotalRating);
         
-        return ToPagedResultAsync(
+        return await ToPagedResultAsync(
             query,
             paging,
             ConvertSiteToListDto(language),
             cancellationToken);
     }
 
-    public Task<List<SiteLookupDto>> SearchAsync(
+    public async Task<List<SiteLookupDto>> SearchAsync(
         string searchTerm,
         int count = 10,
         CancellationToken cancellationToken = default)
@@ -762,7 +762,8 @@ internal sealed class SiteQueryService(
                 lc.Language == LanguageCode.English &&
                 lc.Name.Contains(term)));
         
-        return query.Take(count)
+        return await query
+            .Take(count)
             .OrderByDescending(s => s.AverageRating)
             .Select(s => new SiteLookupDto(
                 s.Id,
@@ -950,13 +951,13 @@ internal sealed class SiteQueryService(
             data.AuditInfo);
     }
 
-    public Task<AdminSiteNearestTransportationLocalizedContentDto?> GetNearestTransportationLocalizedContentByIdAsync(
+    public async Task<AdminSiteNearestTransportationLocalizedContentDto?> GetNearestTransportationLocalizedContentByIdAsync(
         Guid siteId,
         Guid transportationId,
         Guid contentId,
         CancellationToken cancellationToken = default)
     {
-        return context.NearestTransportations.AsNoTracking()
+        return await context.NearestTransportations.AsNoTracking()
             .Where(t => t.SiteId == siteId && t.Id == transportationId)
             .SelectMany(t => t.LocalizedContents)
             .Where(lc => lc.Id == contentId)
@@ -976,9 +977,9 @@ internal sealed class SiteQueryService(
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<List<ImageDto>> GetImagesAsync(Guid siteId, CancellationToken cancellationToken = default)
+    public async Task<List<ImageDto>> GetImagesAsync(Guid siteId, CancellationToken cancellationToken = default)
     {
-        return Sites
+        return await Sites
             .Where(s => s.Id == siteId)
             .SelectMany(s => s.Images)
             .OrderBy(i => i.DisplayOrder)
@@ -992,12 +993,12 @@ internal sealed class SiteQueryService(
             )).ToListAsync(cancellationToken);
     }
 
-    public Task<ImageDto?> GetImageByIdAsync(
+    public async Task<ImageDto?> GetImageByIdAsync(
         Guid siteId,
         Guid imageId,
         CancellationToken cancellationToken = default)
     {
-        return Sites
+        return await Sites
             .Where(s => s.Id == siteId)
             .SelectMany(s => s.Images)
             .Where(i => i.Id == imageId)
@@ -1131,8 +1132,8 @@ internal sealed class SiteQueryService(
         return dashboardDto ?? new AdminSiteDashboardDto(0, 0, 0, 0, 0, 0);
     }
 
-    public Task<bool> AnyAsync(Guid siteId, CancellationToken cancellationToken)
+    public async Task<bool> AnyAsync(Guid siteId, CancellationToken cancellationToken)
     {
-        return context.Sites.AnyAsync(s => s.Id == siteId, cancellationToken);
+        return await context.Sites.AnyAsync(s => s.Id == siteId, cancellationToken);
     }
 }

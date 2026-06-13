@@ -360,11 +360,11 @@ internal sealed class SponsorQueryService(
                 data.CreatedAt);
     }
 
-    public Task<List<ImageDto>> GetImagesAsync(
+    public async Task<List<ImageDto>> GetImagesAsync(
         Guid sponsorId,
         CancellationToken cancellationToken = default)
     {
-        return Sponsors
+        return await Sponsors
             .Where(s => s.Id == sponsorId)
             .SelectMany(s => s.Images)
             .OrderBy(i => i.DisplayOrder)
@@ -378,12 +378,12 @@ internal sealed class SponsorQueryService(
             .ToListAsync(cancellationToken);
     }
 
-    public Task<ImageDto?> GetImageByIdAsync(
+    public async Task<ImageDto?> GetImageByIdAsync(
         Guid sponsorId,
         Guid imageId,
         CancellationToken cancellationToken = default)
     {
-        return Sponsors
+        return await Sponsors
             .Where(s => s.Id == sponsorId)
             .SelectMany(s => s.Images)
             .Where(i => i.Id == imageId)
@@ -456,12 +456,12 @@ internal sealed class SponsorQueryService(
         return entities;
     }
 
-    public Task<AdminOfferLocalizedContentDto?> GetOfferLocalizedContentByIdAsync(
+    public async Task<AdminOfferLocalizedContentDto?> GetOfferLocalizedContentByIdAsync(
         Guid offerId,
         Guid contentId,
         CancellationToken cancellationToken = default)
     {
-        return context.Offers.AsNoTracking()
+        return await context.Offers.AsNoTracking()
             .Where(t => t.Id == offerId)
             .SelectMany(t => t.LocalizedContents)
             .Where(lc => lc.Id == contentId)
@@ -482,22 +482,13 @@ internal sealed class SponsorQueryService(
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<List<SponsorOfferSummaryDto>> GetActiveOffersAsync(
+    public async Task<List<SponsorOfferSummaryDto>> GetActiveOffersAsync(
         int count = 10,
         LanguageCode language = LanguageCode.English,
         CancellationToken cancellationToken = default)
     {
         var now = DateTime.UtcNow;
-
-        return GetActiveOffersInternalAsync(count, language, now, cancellationToken);
-    }
-
-    private async Task<List<SponsorOfferSummaryDto>> GetActiveOffersInternalAsync(
-        int count,
-        LanguageCode language,
-        DateTime now,
-        CancellationToken cancellationToken)
-    {
+        
         await using var db = await _factory.CreateDbContextAsync(cancellationToken);
 
         return await db.Sponsors.AsNoTracking()
@@ -645,11 +636,11 @@ internal sealed class SponsorQueryService(
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<List<AdminOfferLocalizedContentDto>> GetOfferLocalizedContentsAsync(
+    public async Task<List<AdminOfferLocalizedContentDto>> GetOfferLocalizedContentsAsync(
         Guid offerId,
         CancellationToken cancellationToken = default)
     {
-        return context.Offers.AsNoTracking()
+        return await context.Offers.AsNoTracking()
             .Where(t => t.Id == offerId)
             .SelectMany(t => t.LocalizedContents)
             .Select(lc => new AdminOfferLocalizedContentDto(
@@ -739,8 +730,8 @@ internal sealed class SponsorQueryService(
         return dashboardData ?? new AdminSponsorDashboardDto(0, 0, 0, 0, 0);
     }
 
-    public Task<bool> AnyAsync(Guid sponsorId, CancellationToken cancellationToken)
+    public async Task<bool> AnyAsync(Guid sponsorId, CancellationToken cancellationToken)
     {
-        return context.Sponsors.AnyAsync(s => s.Id == sponsorId, cancellationToken);
+        return await context.Sponsors.AnyAsync(s => s.Id == sponsorId, cancellationToken);
     }
 }

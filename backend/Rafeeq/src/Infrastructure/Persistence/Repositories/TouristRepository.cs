@@ -8,9 +8,9 @@ namespace Infrastructure.Persistence.Repositories;
 internal sealed class TouristRepository(ApplicationDbContext context)
     : BaseRepository<Tourist>(context), ITouristRepository
 {
-    public Task<VisitedSite?> GetVisitedSiteAsync(Guid touristId, Guid siteId, CancellationToken cancellationToken = default)
+    public async Task<VisitedSite?> GetVisitedSiteAsync(Guid touristId, Guid siteId, CancellationToken cancellationToken = default)
     {
-        return DbContext.VisitedSites
+        return await DbContext.VisitedSites
             .FirstOrDefaultAsync(vs => vs.TouristId == touristId && vs.SiteId == siteId, cancellationToken);
     }
 
@@ -22,9 +22,9 @@ internal sealed class TouristRepository(ApplicationDbContext context)
             .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
     }
 
-    public Task<Tourist?> GetWithVisitedSitesAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Tourist?> GetWithVisitedSitesAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return DbSet
+        return await DbSet
             .Include(u => u.VisitedSites)
             .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
     }

@@ -293,8 +293,8 @@ internal sealed class ArtifactQueryService(
         return dashboardData ?? new AdminArtifactDashboardDto(0, 0);
     }
 
-    public Task<bool> AnyAsync(Guid artifactId, CancellationToken cancellationToken)
+    public async Task<bool> AnyAsync(Guid artifactId, CancellationToken cancellationToken)
     {
-        return context.Artifacts.AnyAsync(a => a.Id == artifactId, cancellationToken);
+        return await context.Artifacts.AnyAsync(a => a.Id == artifactId, cancellationToken);
     }
 }

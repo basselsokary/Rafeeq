@@ -8,11 +8,11 @@ namespace Infrastructure.Persistence.Repositories;
 internal sealed class AttractionRepository(ApplicationDbContext context)
     : BaseRepository<Attraction>(context), IAttractionRepository
 {
-    public Task<Attraction?> GetWithImagesAsync(Guid id, CancellationToken cancellationToken = default)
-        => DbSet.Include(a => a.Images)
+    public async Task<Attraction?> GetWithImagesAsync(Guid id, CancellationToken cancellationToken = default)
+        => await DbSet.Include(a => a.Images)
             .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
 
-    public Task<Attraction?> GetWithLocalizedContentsAsync(Guid id, CancellationToken cancellationToken = default)
-        => DbSet.Include(a => a.LocalizedContents)
+    public async Task<Attraction?> GetWithLocalizedContentsAsync(Guid id, CancellationToken cancellationToken = default)
+        => await DbSet.Include(a => a.LocalizedContents)
             .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
 }

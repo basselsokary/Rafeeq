@@ -8,8 +8,8 @@ namespace Infrastructure.Persistence.Repositories;
 internal sealed class ReviewRepository(ApplicationDbContext context)
     : BaseRepository<Review>(context), IReviewRepository
 {
-    public Task<bool> HasUserReviewedSiteAsync(Guid userId, Guid siteId, CancellationToken cancellationToken = default)
-        => DbSet
+    public async Task<bool> HasUserReviewedSiteAsync(Guid userId, Guid siteId, CancellationToken cancellationToken = default)
+        => await DbSet
             .AnyAsync(
             r => r.TouristId == userId && r.SiteId == siteId,
             cancellationToken);

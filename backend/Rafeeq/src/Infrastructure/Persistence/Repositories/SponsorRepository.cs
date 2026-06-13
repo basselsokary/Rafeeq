@@ -8,9 +8,9 @@ namespace Infrastructure.Persistence.Repositories;
 internal sealed class SponsorRepository(ApplicationDbContext context)
     : BaseRepository<Sponsor>(context), ISponsorRepository
 {
-    public Task<Offer?> GetOfferByIdAsync(Guid offerId, CancellationToken cancellationToken = default)
+    public async Task<Offer?> GetOfferByIdAsync(Guid offerId, CancellationToken cancellationToken = default)
     {
-        return DbContext.Offers
+        return await DbContext.Offers
             .Include(o => o.LocalizedContents)
             .FirstOrDefaultAsync(o => o.Id == offerId, cancellationToken);
     }
@@ -19,14 +19,13 @@ internal sealed class SponsorRepository(ApplicationDbContext context)
         => await DbSet.Include(s => s.Images)
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
 
-    public Task<Sponsor?> GetWithLocalizedContentsAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Sponsor?> GetWithLocalizedContentsAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return DbSet.Include(s => s.LocalizedContents)
+        return await DbSet.Include(s => s.LocalizedContents)
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
     }
 
     public async Task<Sponsor?> GetWithOffersAsync(Guid id, CancellationToken cancellationToken = default)
         => await DbSet.Include(s => s.Offers)
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
-
 }
