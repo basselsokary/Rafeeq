@@ -195,7 +195,7 @@ export default function SiteForm({ initial = null, onSubmit, loading, onCancel }
 
           <div className="form-row">
             <div className="form-group">
-              <label>Name (default language) {!isEdit && '*'}</label>
+              <label>English Name (default language) {!isEdit && '*'}</label>
               <input
                 required={!isEdit}
                 disabled={isEdit}
