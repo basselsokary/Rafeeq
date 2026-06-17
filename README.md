@@ -135,3 +135,4 @@ MIT License — see [LICENSE](LICENSE) for details.
 <div align="center">
   Graduation Project · Egypt 🇪🇬
 </div>
+Reviewed project structure and setup
