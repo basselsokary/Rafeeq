@@ -136,3 +136,4 @@ MIT License — see [LICENSE](LICENSE) for details.
   Graduation Project · Egypt 🇪🇬
 </div>
 Reviewed project structure and setup
+"fix: update email for contribution tracking" 
